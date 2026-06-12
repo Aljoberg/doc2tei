@@ -10,16 +10,23 @@ PDFs were actually the *original* way of parsing documents, but they were *reall
 
 But then a colleague of mine got an idea of converting it to a word document, and it actually had STRUCTURE and text in CONTAINERS
 
-I immediately rewrote the whole program to handle .docx files, however that required a parser from PDF to .docx (in our case, ABBYY FineReader)
+I immediately rewrote the whole program to handle .docx files, however the program now required a parser from PDF to .docx (in our case, ABBYY FineReader)
 
-And searchable documents are damn well searchable but not consistent or structured at all
+We didn't really want to be vendor locked, so after 2 days of making everything with .docx,
+the final decision was that in the end, the program should mainly support PDF files and not .docx files
+
+<small>*fuuuuuu-*</small>
+
+So what's next to be done is remake the program so that it supports searchable PDF documents, or both (PDF & .docx)
+
+And searchable PDF documents are damn well searchable but not consistent or structured at all
 
 So converting a PDF to TEI would require defining a lot of precise coordinates in the config
 & the library for reading the PDF would probably misinterpret texts
 
 This is because (i assume) the text in a searchable PDF is just characters at a specific x & y value
 
-This means that to know whether the text is a word, if there's any breaks in between, and so on, means you have to measure the space between two characters
+This means that to know whether the text is a word, if there's any breaks in between and so on, you have to measure the space between two characters
 
 This is *very* fragile and specific, so misintepretations happen in the library for PDFs
 
