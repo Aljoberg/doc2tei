@@ -168,9 +168,7 @@ if __name__ == "__main__":
 
     args = p.parse_args()
 
-    doc = Document(args.input)
-
-    frames = get_frames(doc)
+    frames = get_frames(args.input)
 
     with open("meow.txt", "w", encoding="utf-8") as f, redirect_stdout(f):
         for i, (poses, text) in enumerate(frames.items(), start=1):

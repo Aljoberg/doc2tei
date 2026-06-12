@@ -1,7 +1,8 @@
-# EXAMPLE config file
-# for 7. seja zbora republik in pokrajin Skupščine SFRJ iz 26. decembra 1978
+# EXAMPLE config file for 7. seja zbora republik in pokrajin Skupščine SFRJ iz 26. decembra 1978
 # starts with page 7
 # works upto the appendixes
+# pdfs are too big to go in this repo, so find them elsewhere
+
 
 from collections import OrderedDict
 import re
@@ -64,7 +65,7 @@ def speaker_action(x: int, y: int, w: int, h: int, para: Paragraph):
 
 
 # config explanation is in readme
-CONFIG: Config = {
+config: Config = {
     "center": {
         "CHAIRMAN": {
             "alignment": WD_PARAGRAPH_ALIGNMENT.CENTER,
