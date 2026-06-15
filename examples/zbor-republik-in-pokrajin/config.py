@@ -17,7 +17,7 @@ from engine import (
     push,
     append,
 )
-from type_decs import Config
+from type_decs import WordConfig
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx import Document
 from docx.oxml.ns import qn
@@ -74,7 +74,7 @@ def speaker_action(chunks: Chunk):
 
 
 # config explanation is in readme
-CONFIG: Config = {
+CONFIG: WordConfig = {
     "mode": "word",
     "alignments": {
         "center": {
@@ -204,7 +204,7 @@ def get_frames_pdf(filename: str):
         page.extract_text(
             visitor_text=lambda text, cm, tm, font_dict, font_size: chunks.append(
                 make_chunk(
-                    text=text, cm=cm, tm=tm, font_dict=font_dict, font_size=font_size
+                    text=text, x=cm, y=tm, font_name=font_dict, size=font_size
                 )
             )
         )

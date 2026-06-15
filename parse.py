@@ -2,10 +2,7 @@ import argparse
 from typing import cast
 import xml.etree.ElementTree as ET
 from contextlib import redirect_stdout
-from docx import Document
-from docx.text.paragraph import Paragraph
-from docx.text.run import Run
-from engine import Chunk, PDFChunk, WordChunk, make_chunk
+from engine import Chunk, PDFChunk, WordChunk
 
 import engine
 from engine import append, commit_children, pop, root, stack

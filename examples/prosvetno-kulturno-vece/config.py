@@ -15,7 +15,7 @@ from engine import (
     push,
     append,
 )
-from type_decs import Config, WordRuleGroup
+from type_decs import WordConfig, WordRuleGroup
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx import Document
 from docx.oxml.ns import qn
@@ -162,7 +162,7 @@ body_rules: WordRuleGroup = {
 # figure it out
 # explained in zbor-republik-in-pokrajin already
 # + the readme
-CONFIG: Config = {
+CONFIG: WordConfig = {
     "mode": "word",
     "alignments": {
         "left": {

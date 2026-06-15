@@ -1,9 +1,10 @@
 import re
 import xml.etree.ElementTree as ET
-from typing import Literal, Any
+from typing import Literal, Any, Callable
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 from type_decs import (
+    Action,
     StackEntry,
     WordAction,
 )
@@ -72,9 +73,9 @@ class PDFChunk:
     bold: bool | None
     italic: bool | None
     font_size: float
-    cm: list[float]
-    tm: list[float]
-    font_dict: dict[str, Any]
+    # cm: list[float]
+    # tm: list[float]
+    # font_dict: dict[str, Any]
 
 
 def get_para_xywh(para: Paragraph):
@@ -101,10 +102,10 @@ def make_chunk(
     parent_paragraph: Paragraph | None = None,
     *,
     text: str | None = None,
-    cm: list[float] | None = None,
-    tm: list[float] | None = None,
-    font_dict: dict[str, Any] | None = None,
-    font_size: float | None = None,
+    x: float | None = None,
+    y: float | None = None,
+    font_name: str | None = None,
+    size: float | None = None,
 ) -> Chunk:
     if isinstance(word_prop, Run) and isinstance(parent_paragraph, Paragraph):
         run = word_prop
@@ -122,20 +123,20 @@ def make_chunk(
         )
     # i fucking hate the python type checker
     assert text is not None
-    assert cm is not None
-    assert tm is not None
-    assert font_dict is not None
-    assert font_size is not None
+    assert x is not None
+    assert y is not None
+    assert font_name is not None
+    assert size is not None
     return PDFChunk(
-        x=tm[4],
-        y=tm[5],
+        x=x,
+        y=y,
         text=text,
-        bold="bold" in font_dict["/BaseFont"].lower(),
-        italic="italic" in font_dict["/BaseFont"].lower(),
-        font_size=font_size,
-        cm=cm,
-        tm=tm,
-        font_dict=font_dict,
+        bold="bold" in font_name.lower(),
+        italic="italic" in font_name.lower(),
+        font_size=size,
+        # cm=x,
+        # tm=y,
+        # font_dict=font_name,
     )
 
 
@@ -342,7 +343,7 @@ def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):
 
 def pop_and_push_to(
     *pop_args: str, tag: str, chunked: bool = True, **attribs: str
-) -> WordAction:
+) -> Action:
     # the normalest action
     # pops to pop_args and pushes the tag
     def action(chunk: Chunk):

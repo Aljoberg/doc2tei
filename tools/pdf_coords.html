@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PDF coordinate measure (cm[4] / cm[5])</title>
+    <!--
+  Measures PDF *user-space* coordinates under the cursor.
+
+  These are the same coordinates pypdf reports in the cm/tm matrices that
+  extract_text() hands to a visitor_text callback:
+      origin = bottom-left of the page, y grows upwards, units = points (1/72").
+  So the live "x" readout corresponds to cm[4] and "y" to cm[5].
+
+  Needs internet on first load to pull PDF.js from a CDN (the browser then
+  caches it). Opening the PDF itself is fully local - it never leaves your
+  machine. Just double-click this file.
+-->
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+      body {
+        font:
+          13px/1.4 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Consolas,
+          monospace;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        grid-template-columns: 1fr 260px;
+        grid-template-areas: "bar bar" "view panel";
+        height: 100vh;
+        background: #1e1e1e;
+        color: #ddd;
+      }
+      #bar {
+        grid-area: bar;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        background: #2a2a2a;
+        border-bottom: 1px solid #000;
+      }
+      #bar button,
+      #bar label.btn {
+        font: inherit;
+        cursor: pointer;
+        background: #3a3a3a;
+        color: #eee;
+        border: 1px solid #555;
+        border-radius: 5px;
+        padding: 4px 9px;
+      }
+      #bar button:hover,
+      #bar label.btn:hover {
+        background: #484848;
+      }
+      #bar input[type="number"] {
+        width: 48px;
+        font: inherit;
+        padding: 2px 4px;
+        background: #1e1e1e;
+        color: #eee;
+        border: 1px solid #555;
+        border-radius: 4px;
+      }
+      .sep {
+        width: 1px;
+        align-self: stretch;
+        background: #555;
+        margin: 0 2px;
+      }
+      #readout {
+        margin-left: auto;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        font-size: 14px;
+      }
+      #readout b {
+        color: #ffd166;
+        font-size: 16px;
+      }
+      .muted {
+        color: #888;
+      }
+
+      #view {
+        grid-area: view;
+        overflow: auto;
+        position: relative;
+        background: #141414;
+        padding: 16px;
+      }
+      #wrap {
+        position: relative;
+        margin: 0 auto;
+        width: max-content;
+        box-shadow:
+          0 0 0 1px #000,
+          0 8px 30px rgba(0, 0, 0, 0.6);
+      }
+      #pdf {
+        display: block;
+        background: #fff;
+      }
+      #overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+      }
+
+      #panel {
+        grid-area: panel;
+        overflow: auto;
+        background: #232323;
+        border-left: 1px solid #000;
+        padding: 10px;
+      }
+      #panel h3 {
+        margin: 4px 0 8px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #9ad;
+      }
+      .mk {
+        background: #2c2c2c;
+        border: 1px solid #3a3a3a;
+        border-radius: 6px;
+        padding: 6px 8px;
+        margin-bottom: 6px;
+        position: relative;
+      }
+      .mk .idx {
+        color: #ffd166;
+        font-weight: bold;
+      }
+      .mk .co {
+        color: #8fd;
+      }
+      .mk .dl {
+        color: #f99;
+        font-size: 11px;
+      }
+      .mk button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+        background: transparent;
+        color: #c66;
+        border: none;
+        font: inherit;
+      }
+      #empty {
+        color: #777;
+        font-style: italic;
+      }
+      #drop {
+        position: absolute;
+        inset: 16px;
+        border: 2px dashed #555;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #888;
+        font-size: 15px;
+        pointer-events: none;
+      }
+      #banner {
+        display: none;
+        background: #5a1f1f;
+        color: #fdd;
+        padding: 8px 10px;
+        grid-area: bar;
+      }
+      kbd {
+        background: #111;
+        border: 1px solid #444;
+        border-radius: 4px;
+        padding: 0 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bar">
+      <label class="btn"
+        >Open PDF<input id="file" type="file" accept="application/pdf" hidden
+      /></label>
+      <div class="sep"></div>
+      <button id="prev">◀</button>
+      <span
+        >pg <input id="pageNum" type="number" min="1" value="1" />/<span
+          id="pageCount"
+          >–</span
+        ></span
+      >
+      <button id="next">▶</button>
+      <div class="sep"></div>
+      <button id="zoomOut">−</button>
+      <span id="zoomLbl">150%</span>
+      <button id="zoomIn">+</button>
+      <button id="fit">Fit width</button>
+      <div class="sep"></div>
+      <button id="clear">Clear marks</button>
+      <span class="muted" id="pageSize"></span>
+      <div id="readout">
+        <span>x (cm[4]) <b id="rx">–</b></span>
+        <span>y (cm[5]) <b id="ry">–</b></span>
+      </div>
+    </div>
+
+    <div id="view">
+      <div id="wrap" hidden>
+        <canvas id="pdf"></canvas>
+        <canvas id="overlay"></canvas>
+      </div>
+      <div id="drop">Drop a PDF here, or click <b>&nbsp;Open PDF</b></div>
+    </div>
+
+    <div id="panel">
+      <h3>Markers (click on page)</h3>
+      <div id="empty">
+        No markers yet.<br />Click anywhere on the page to drop one. Each shows
+        its PDF point and the Δ to the previous marker on the same page.
+      </div>
+      <div id="marks"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.min.js"></script>
+    <script>
+      const $ = (id) => document.getElementById(id);
+
+      if (!window.pdfjsLib) {
+        document.body.insertAdjacentHTML(
+          "afterbegin",
+          '<div id="banner" style="display:block">Could not load PDF.js from the CDN. ' +
+            "You need internet for the first load (it is cached afterwards).</div>",
+        );
+      }
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js";
+
+      const pdfCanvas = $("pdf"),
+        overlay = $("overlay"),
+        wrap = $("wrap");
+      let pdfDoc = null,
+        pageNum = 1,
+        scale = 1.5,
+        viewport = null;
+      let cursor = null; // {x,y,px,py} in viewport + pdf coords
+      let markers = []; // {page, px, py}
+
+      const fmt = (n) => (n >= 0 ? " " : "") + n.toFixed(2);
+
+      async function loadPDF(data) {
+        pdfDoc = await pdfjsLib.getDocument({ data }).promise;
+        pageNum = 1;
+        markers = [];
+        $("pageCount").textContent = pdfDoc.numPages;
+        $("pageNum").max = pdfDoc.numPages;
+        $("drop").style.display = "none";
+        wrap.hidden = false;
+        refreshMarkers();
+        await render();
+      }
+
+      async function render() {
+        if (!pdfDoc) return;
+        const page = await pdfDoc.getPage(pageNum);
+        const dpr = window.devicePixelRatio || 1;
+        viewport = page.getViewport({ scale });
+
+        for (const c of [pdfCanvas, overlay]) {
+          c.width = Math.floor(viewport.width * dpr);
+          c.height = Math.floor(viewport.height * dpr);
+          c.style.width = viewport.width + "px";
+          c.style.height = viewport.height + "px";
+        }
+        const ctx = pdfCanvas.getContext("2d");
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, pdfCanvas.width, pdfCanvas.height);
+        await page.render({
+          canvasContext: ctx,
+          viewport,
+          transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : undefined,
+        }).promise;
+
+        const v = page.view; // [x0,y0,x1,y1] in pts
+        $("pageSize").textContent =
+          `page ${(v[2] - v[0]).toFixed(1)} × ${(v[3] - v[1]).toFixed(1)} pt` +
+          (v[0] || v[1] ? ` (origin offset ${v[0]},${v[1]})` : "");
+        $("pageNum").value = pageNum;
+        $("zoomLbl").textContent = Math.round(scale * 100) + "%";
+        drawOverlay();
+      }
+
+      // mouse position -> viewport coords (independent of devicePixelRatio / CSS zoom)
+      function toViewport(e) {
+        const r = pdfCanvas.getBoundingClientRect();
+        return {
+          x: (e.clientX - r.left) * (viewport.width / r.width),
+          y: (e.clientY - r.top) * (viewport.height / r.height),
+        };
+      }
+
+      function label(ctx, text, x, y) {
+        ctx.font = "12px ui-monospace, monospace";
+        const w = ctx.measureText(text).width;
+        let lx = x + 10,
+          ly = y - 10;
+        if (lx + w + 8 > viewport.width) lx = x - w - 18;
+        if (ly - 14 < 0) ly = y + 22;
+        ctx.fillStyle = "rgba(0,0,0,.78)";
+        ctx.fillRect(lx - 4, ly - 13, w + 8, 17);
+        ctx.fillStyle = "#ffd166";
+        ctx.fillText(text, lx, ly);
+      }
+
+      function drawOverlay() {
+        if (!viewport) return;
+        const dpr = window.devicePixelRatio || 1;
+        const ctx = overlay.getContext("2d");
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, viewport.width, viewport.height);
+
+        // persistent markers on this page
+        markers.forEach((m, i) => {
+          if (m.page !== pageNum) return;
+          const [vx, vy] = viewport.convertToViewportPoint(m.px, m.py);
+          ctx.strokeStyle = "#3df";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(vx - 7, vy);
+          ctx.lineTo(vx + 7, vy);
+          ctx.moveTo(vx, vy - 7);
+          ctx.lineTo(vx, vy + 7);
+          ctx.stroke();
+          ctx.fillStyle = "#3df";
+          ctx.beginPath();
+          ctx.arc(vx, vy, 2.5, 0, 7);
+          ctx.fill();
+          label(ctx, `#${i + 1} ${fmt(m.px)}, ${fmt(m.py)}`, vx, vy);
+        });
+
+        // live crosshair
+        if (cursor) {
+          ctx.strokeStyle = "rgba(255,80,80,.7)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(cursor.x, 0);
+          ctx.lineTo(cursor.x, viewport.height);
+          ctx.moveTo(0, cursor.y);
+          ctx.lineTo(viewport.width, cursor.y);
+          ctx.stroke();
+          label(
+            ctx,
+            `${fmt(cursor.px)}, ${fmt(cursor.py)}`,
+            cursor.x,
+            cursor.y,
+          );
+        }
+      }
+
+      function refreshMarkers() {
+        const box = $("marks");
+        box.innerHTML = "";
+        $("empty").style.display = markers.length ? "none" : "block";
+        let prevOnPage = null;
+        markers.forEach((m, i) => {
+          let delta = "";
+          if (prevOnPage && prevOnPage.page === m.page) {
+            const dx = m.px - prevOnPage.px,
+              dy = m.py - prevOnPage.py;
+            delta = `<div class="dl">Δ ${fmt(dx)}, ${fmt(dy)}  |Δ|=${Math.hypot(dx, dy).toFixed(2)}</div>`;
+          }
+          prevOnPage = m;
+          const el = document.createElement("div");
+          el.className = "mk";
+          el.innerHTML =
+            `<span class="idx">#${i + 1}</span> <span class="muted">pg ${m.page}</span>` +
+            `<div class="co">x ${fmt(m.px)}<br>y ${fmt(m.py)}</div>${delta}` +
+            `<button title="delete" data-i="${i}">✕</button>`;
+          box.appendChild(el);
+        });
+        box.querySelectorAll("button").forEach(
+          (b) =>
+            (b.onclick = () => {
+              markers.splice(+b.dataset.i, 1);
+              refreshMarkers();
+              drawOverlay();
+            }),
+        );
+      }
+
+      // ---- events ----
+      pdfCanvas.addEventListener("mousemove", (e) => {
+        const { x, y } = toViewport(e);
+        const [px, py] = viewport.convertToPdfPoint(x, y);
+        cursor = { x, y, px, py };
+        $("rx").textContent = px.toFixed(2);
+        $("ry").textContent = py.toFixed(2);
+        drawOverlay();
+      });
+      $("view").addEventListener("mouseleave", () => {
+        cursor = null;
+        $("rx").textContent = $("ry").textContent = "–";
+        drawOverlay();
+      });
+      pdfCanvas.addEventListener("click", (e) => {
+        const { x, y } = toViewport(e);
+        const [px, py] = viewport.convertToPdfPoint(x, y);
+        markers.push({ page: pageNum, px, py });
+        refreshMarkers();
+        drawOverlay();
+      });
+
+      $("file").addEventListener("change", async (e) => {
+        const f = e.target.files[0];
+        if (f) loadPDF(await f.arrayBuffer());
+      });
+      const view = $("view");
+      view.addEventListener("dragover", (e) => {
+        e.preventDefault();
+      });
+      view.addEventListener("drop", async (e) => {
+        e.preventDefault();
+        const f = e.dataTransfer.files[0];
+        if (f && f.type === "application/pdf") loadPDF(await f.arrayBuffer());
+      });
+
+      $("prev").onclick = () => {
+        if (pageNum > 1) {
+          pageNum--;
+          render();
+        }
+      };
+      $("next").onclick = () => {
+        if (pdfDoc && pageNum < pdfDoc.numPages) {
+          pageNum++;
+          render();
+        }
+      };
+      $("pageNum").onchange = () => {
+        const n = Math.min(
+          Math.max(1, +$("pageNum").value | 0),
+          pdfDoc ? pdfDoc.numPages : 1,
+        );
+        pageNum = n;
+        render();
+      };
+      $("zoomIn").onclick = () => {
+        scale = Math.min(8, scale * 1.25);
+        render();
+      };
+      $("zoomOut").onclick = () => {
+        scale = Math.max(0.1, scale / 1.25);
+        render();
+      };
+      $("fit").onclick = async () => {
+        if (!pdfDoc) return;
+        const page = await pdfDoc.getPage(pageNum);
+        const base = page.getViewport({ scale: 1 });
+        scale = (view.clientWidth - 48) / base.width;
+        render();
+      };
+      $("clear").onclick = () => {
+        markers = [];
+        refreshMarkers();
+        drawOverlay();
+      };
+
+      window.addEventListener("keydown", (e) => {
+        if (e.target.tagName === "INPUT") return;
+        if (e.key === "ArrowLeft") $("prev").click();
+        if (e.key === "ArrowRight") $("next").click();
+        if (e.key === "+" || e.key === "=") $("zoomIn").click();
+        if (e.key === "-") $("zoomOut").click();
+      });
+    </script>
+  </body>
+</html>
