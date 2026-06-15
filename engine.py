@@ -1,12 +1,14 @@
 import re
 import xml.etree.ElementTree as ET
-from typing import Literal
+from typing import Literal, Any
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 from type_decs import (
     StackEntry,
-    Action,
+    WordAction,
 )
+from dataclasses import dataclass
+from docx.oxml.ns import qn
 
 root = ET.Element("TEI", version="3.3.0", xmlns="http://www.tei-c.org/ns/1.0")
 text_elem = ET.SubElement(root, "text")
@@ -28,6 +30,113 @@ visited_time = False
 AUTO_ANNOTATE = ["ITALIC", "BOLD", "REFERENCE"]
 # gets changed every parse_text, because of them line breaks
 is_first_run = True
+# strip next chunk
+lstrip_next = True
+
+
+from typing import Protocol
+
+
+class Chunk(Protocol):
+    x: float
+    y: float
+    text: str
+    bold: bool | None
+    italic: bool | None
+
+
+@dataclass
+class WordChunk:
+    # one chunk of text
+    # will be the FRAME (container)'s x & y on word
+    # and the actual x & y for pdf
+    x: float
+    y: float
+    w: int
+    h: int
+    text: str
+    bold: bool | None
+    italic: bool | None
+    run: Run
+    paragraph: Paragraph
+
+
+@dataclass
+class PDFChunk:
+    # one chunk of text
+    # will be the FRAME (container)'s x & y on word
+    # and the actual x & y for pdf
+    x: float
+    y: float
+    text: str
+    bold: bool | None
+    italic: bool | None
+    font_size: float
+    cm: list[float]
+    tm: list[float]
+    font_dict: dict[str, Any]
+
+
+def get_para_xywh(para: Paragraph):
+    p = para._p
+
+    pPr = p.find(qn("w:pPr"))
+    if pPr is None:
+        raise ValueError("pPr is None")
+
+    framePr = pPr.find(qn("w:framePr"))
+    if framePr is None:
+        raise ValueError("framePr is None")
+
+    return (
+        int(framePr.get(qn("w:x")) or 0),
+        int(framePr.get(qn("w:y")) or 0),
+        int(framePr.get(qn("w:w")) or 0),
+        int(framePr.get(qn("w:h")) or 0),
+    )
+
+
+def make_chunk(
+    word_prop: Run | None = None,
+    parent_paragraph: Paragraph | None = None,
+    *,
+    text: str | None = None,
+    cm: list[float] | None = None,
+    tm: list[float] | None = None,
+    font_dict: dict[str, Any] | None = None,
+    font_size: float | None = None,
+) -> Chunk:
+    if isinstance(word_prop, Run) and isinstance(parent_paragraph, Paragraph):
+        run = word_prop
+        x, y, w, h = get_para_xywh(parent_paragraph)
+        return WordChunk(
+            x=x,
+            y=y,
+            w=int(w),
+            h=int(h),
+            text=run.text,
+            bold=run.bold,
+            italic=run.italic,
+            run=run,
+            paragraph=parent_paragraph,
+        )
+    # i fucking hate the python type checker
+    assert text is not None
+    assert cm is not None
+    assert tm is not None
+    assert font_dict is not None
+    assert font_size is not None
+    return PDFChunk(
+        x=tm[4],
+        y=tm[5],
+        text=text,
+        bold="bold" in font_dict["/BaseFont"].lower(),
+        italic="italic" in font_dict["/BaseFont"].lower(),
+        font_size=font_size,
+        cm=cm,
+        tm=tm,
+        font_dict=font_dict,
+    )
 
 
 def commit_children(stack_instance: StackEntry):
@@ -98,6 +207,8 @@ def pop_to(*parent_tags: str, invert: bool = False):
                 popped["element"].tag == "note"
                 and popped["element"].attrib.get("type") == "speaker"
             ):
+                # TODO what is this sorcery magic
+                # remove it now aljo
                 # got all chunks of the speaker - need to add a <u>
                 push(
                     "u",
@@ -142,16 +253,14 @@ def tag_is_on_top(tag: str, **attribs):
     return False
 
 
-def append(
-    *runs: Run, para_idx: int, should_annotate: list[str] | Literal[True] = True
-):
+def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):
     # appends runs to children
     # takes care of italic bold & references (which can appear anywhere)
     # and spaces between runs
     # or spaces between newlines
     # or both
     # we love microsoft
-    global is_first_run
+    global is_first_run, lstrip_next
     if should_annotate is True:
         should_annotate = AUTO_ANNOTATE
     else:
@@ -160,58 +269,86 @@ def append(
             if ann not in AUTO_ANNOTATE:
                 raise ValueError(f"value {ann} does not exist in {AUTO_ANNOTATE}")
 
-    for run in runs:
-        print(f"RUN: {repr(run.text)}, {run._element.xml}")
+    for chunk in chunks:
+        print(
+            f"RUN: {repr(chunk.text)}, {chunk.run._element.xml if isinstance(chunk, WordChunk) else 'meow'}"
+        )
+        if lstrip_next:
+            chunk.text = chunk.text.lstrip()
+            lstrip_next = False
         if (
             "ITALIC" in should_annotate
-            and run.italic
+            and chunk.italic
             and stack[-1]["element"].tag != "emph"
         ):
             push("emph")
         elif (
             "ITALIC" in should_annotate
-            and not run.italic
+            and not chunk.italic
             and stack[-1]["element"].tag == "emph"
         ):
             pop_to("emph", invert=True)
-        if "BOLD" in should_annotate and run.bold and stack[-1]["element"].tag != "hi":
+        if (
+            "BOLD" in should_annotate
+            and chunk.bold
+            and stack[-1]["element"].tag != "hi"
+        ):
             push("hi", rend="bold")
         elif (
             "BOLD" in should_annotate
-            and not run.bold
+            and not chunk.bold
             and stack[-1]["element"].tag == "hi"
         ):
             pop_to("hi", invert=True)
-        t = run.text.strip()
-        if "REFERENCE" in should_annotate and run.font.superscript:
-            # note reference
+        t = chunk.text.strip()
+        if isinstance(chunk, WordChunk):
+            if "REFERENCE" in should_annotate and chunk.run.font.superscript:
+                # note reference
+                serialized = re.sub(r"[^a-zA-Z0-9]", "", t)
+                push("ref", target=f"#note{serialized}")
+                chunk.text = t  # so there's no leading or trailing spaces in the ref, i guess? that sounds like the right thing, but who knows, we're doing tei here ffs
+            elif (
+                "REFERENCE" in should_annotate
+                and not chunk.run.font.superscript
+                and stack[-1]["element"].tag == "ref"
+            ):
+                pop_to("ref", invert=True)
+        elif (
+            isinstance(chunk, PDFChunk)
+            and "REFERENCE" in should_annotate
+            and chunk.font_size == 7.0
+        ):
             serialized = re.sub(r"[^a-zA-Z0-9]", "", t)
             push("ref", target=f"#note{serialized}")
-            run.text = t  # so there's no leading or trailing spaces in the ref, i guess? that sounds like the right thing, but who knows, we're doing tei here ffs
+            chunk.text = t  # so there's no leading or trailing spaces in the ref, i guess? that sounds like the right thing, but who knows, we're doing tei here ffs
         elif (
-            "REFERENCE" in should_annotate
-            and not run.font.superscript
+            isinstance(chunk, PDFChunk)
+            and "REFERENCE" in should_annotate
+            and chunk.font_size != 7.0
             and stack[-1]["element"].tag == "ref"
         ):
             pop_to("ref", invert=True)
 
         # me when
-        if not is_first_run or run.text.startswith("\n"):
-            print("appened space", para_idx)
+        if not is_first_run or chunk.text.startswith("\n"):
+            print("appened space")
             children.append(
                 " "
             )  # NOTE: this is *supposed to be* a newline, but in TEI it should suit more as a space, probably
             is_first_run = False
-            run.text = run.text.lstrip("\n")
-        children.append(run.text)
+        chunk.text = chunk.text.strip("\n")  # TODO remove, this is magic behavior
+        children.append(chunk.text)
 
 
-def pop_and_push_to(*pop_args: str, tag: str, **attribs: str) -> Action:
+def pop_and_push_to(
+    *pop_args: str, tag: str, chunked: bool = True, **attribs: str
+) -> WordAction:
     # the normalest action
     # pops to pop_args and pushes the tag
-    def action(x: int, y: int, w: int, h: int, paragraph: Paragraph):
+    def action(chunk: Chunk):
         # we love closures
-        pop_to(*pop_args)
-        push(tag, **attribs)
+        if not chunked or not tag_is_on_top(tag, **attribs):
+            pop_to(*pop_args)
+            push(tag, **attribs)
 
     return action

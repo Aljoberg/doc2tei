@@ -39,3 +39,6 @@ So yeah, good luck to whoever wants to use this as a PDF
 Will refactor the code to support both
 
 :3
+
+## todos
+- standardize cosmetic stuff (bold & italic & reference)
