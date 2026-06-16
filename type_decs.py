@@ -10,12 +10,9 @@ if TYPE_CHECKING:
     from engine import WordChunk, PDFChunk, Chunk
 
 
-class StackEntry(TypedDict):
-    element: ET.Element[str]
-    children: list[str | ET.Element[str]]
-    last_elem: ET.Element[str] | None
-    cosmetic: bool
-
+# i have yet to rewrite the following paragraph
+# ai wrote it and i cannot be asked to document the whole fucking config
+# + it's subject to change still
 
 # --- rule config types ---
 #
@@ -37,7 +34,7 @@ class StackEntry(TypedDict):
 # a zone can also have a "run_immediate" callable which runs every time a
 # paragraph lands in that zone, before any rule is checked.
 
-# ParaTest = Callable[[float, float, int, int, Paragraph], bool | None]
+
 WordRunTest = Callable[["WordChunk"], bool | None]
 WordAction = Callable[["WordChunk"], None]
 WordAppendFunc = Callable[["WordChunk"], Any]
@@ -47,7 +44,7 @@ RunImmediate = Callable[[], None]
 
 class WordRule(TypedDict, total=False):
     alignment: WD_PARAGRAPH_ALIGNMENT
-    test_run: WordRunTest | Literal["_else"]
+    test: WordRunTest | Literal["_else"]
     action: WordAction
     append_func: WordAppendFunc
     after_append: WordAfterPush
@@ -69,7 +66,7 @@ RunImmediate = Callable[[], None]
 
 
 class PDFRule(TypedDict, total=False):
-    test_run: PDFRunTest | Literal["_else"]
+    test: PDFRunTest | Literal["_else"]
     action: PDFAction
     append_func: PDFAppendFunc
     after_append: PDFAfterPush
@@ -86,7 +83,6 @@ class PDFConfig(TypedDict):
 Rule = WordRule | PDFRule
 RuleGroup = WordRuleGroup | PDFRuleGroup
 Action = Callable[["Chunk"], None]
-# Config = WordConfig | PDFConfig
 
 
 class WordCosmeticAnnotation(TypedDict):

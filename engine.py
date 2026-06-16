@@ -1,14 +1,13 @@
 import re
 import xml.etree.ElementTree as ET
-from typing import Literal, Any, cast, overload
+from typing import Literal, Any, Protocol, cast, overload
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 from type_decs import (
     Action,
     CosmeticAnnotations,
     PDFCosmeticAnnotation,
-    StackEntry,
-    WordAction,
+    # StackEntry,
     WordCosmeticAnnotation,
 )
 from dataclasses import dataclass, field
@@ -22,8 +21,18 @@ debate.text, debate.tail = "", ""
 children: list[str | ET.Element[str]] = (
     []
 )  # reference to the innermost stack tag's children (we won't have portals..... hopefully..........)
+
+
+@dataclass
+class StackEntry:
+    element: ET.Element[str]
+    children: list[str | ET.Element[str]]
+    last_elem: ET.Element[str] | None
+    cosmetic: bool
+
+
 stack: list[StackEntry] = [
-    {"element": debate, "children": children, "last_elem": None, "cosmetic": False}
+    StackEntry(element=debate, children=children, last_elem=None, cosmetic=False)
 ]  # le stack of open tags
 # if we visited time, it's the chairman's turn
 visited_time = False
@@ -40,18 +49,6 @@ lstrip_next = True
 COSMETIC_ANNOTATIONS: CosmeticAnnotations
 
 
-from typing import Protocol
-
-# class LineChunk(Protocol):
-#     x: float
-#     y: float
-#     text: str
-#     bold: bool | None
-#     italic: bool | None
-#     # list of Chunks inside the linechunk
-#     runs: "list[Chunk]"
-
-
 class Chunk(Protocol):
     x: float
     y: float
@@ -62,9 +59,6 @@ class Chunk(Protocol):
 
 @dataclass
 class WordChunk:
-    # one chunk of text
-    # will be the FRAME (container)'s x & y on word
-    # and the actual x & y for pdf
     x: float
     y: float
     w: int
@@ -88,19 +82,17 @@ class PDFLineChunk:
 
 @dataclass
 class PDFChunk:
-    # one chunk of text - a whole visual line on pdf (a frame). `x`/`y` are the
-    # line's starting position, `text` is the full line; `bold`/`italic`/
-    # `font_size` describe its first run, which is enough for the config to
-    # classify the line. `runs` keeps the per-font pieces so the line can be
-    # appended with its formatting (italic/bold/reference) intact - if it's set,
-    # append() emits the runs instead of `text`.
+    # one chunk of text
+    # :D
     x: float
     y: float
     text: str
     bold: bool | None
     italic: bool | None
     font_size: float
-    _line_chunk: Any = field(default=None, init=False, repr=False)
+    _line_chunk: Any = field(
+        default=None, init=False, repr=False
+    )  # so we don't get lint errors, since we don't provide the line chunk at init
 
     @property
     def line_chunk(self) -> PDFLineChunk:
@@ -130,6 +122,7 @@ def get_para_xywh(para: Paragraph):
     )
 
 
+# good dx, or something
 @overload
 def make_chunk(word_prop: Run, parent_paragraph: Paragraph) -> WordChunk: ...
 @overload
@@ -199,9 +192,9 @@ def commit_children(stack_instance: StackEntry):
     # but that's not commited to the element yet (ET.Element)
     # so we gotta actually append it
     # he boutta become a single mom with 30 kids
-    last_elem = stack_instance["last_elem"]
-    elem = stack_instance["element"]
-    for child in stack_instance["children"]:
+    last_elem = stack_instance.last_elem
+    elem = stack_instance.element
+    for child in stack_instance.children:
         if isinstance(child, str) and last_elem is None:
             elem.text = (elem.text or "") + child
         elif isinstance(child, str) and last_elem is not None:
@@ -220,7 +213,7 @@ def commit_children(stack_instance: StackEntry):
             last_elem = child
             last_elem.tail = ""
 
-    stack_instance["last_elem"] = last_elem
+    stack_instance.last_elem = last_elem
 
 
 @overload
@@ -252,7 +245,7 @@ def push(
     elem.text = ""
     elem.tail = ""
     stack.append(
-        {"element": elem, "children": children, "last_elem": None, "cosmetic": cosmetic}
+        StackEntry(element=elem, children=children, last_elem=None, cosmetic=cosmetic)
     )
     is_first_run = True
 
@@ -262,13 +255,12 @@ def pop():
     # and returns it to their parent <3
     global children
     elem = stack.pop()
-    # elem["children"] = children  # probably not needed
     # strip the trailing space of the last child
     if children and isinstance(children[-1], str):
         children[-1] = children[-1].rstrip()
     commit_children(elem)
-    stack[-1]["children"].append(elem["element"])
-    children = stack[-1]["children"]
+    stack[-1].children.append(elem.element)
+    children = stack[-1].children
 
     return elem
 
@@ -288,11 +280,11 @@ def pop_to(*parent_tags: str | ET.Element[str], invert: bool = False):
     ]
 
     if invert:
-        while len(stack) > 1 and stack[-1]["element"].tag in str_parent_tags:
+        while len(stack) > 1 and stack[-1].element.tag in str_parent_tags:
             popped = pop()
             if (
-                popped["element"].tag == "note"
-                and popped["element"].attrib.get("type") == "speaker"
+                popped.element.tag == "note"
+                and popped.element.attrib.get("type") == "speaker"
             ):
                 # TODO what is this sorcery magic
                 # remove it now aljo
@@ -301,22 +293,22 @@ def pop_to(*parent_tags: str | ET.Element[str], invert: bool = False):
                     "u",
                     who="".join(
                         (i.text or "") if isinstance(i, ET.Element) else i
-                        for i in popped["children"]
+                        for i in popped.children
                     ),
                 )  # need to get better logic for @who
     else:
-        while len(stack) > 1 and stack[-1]["element"].tag not in str_parent_tags:
+        while len(stack) > 1 and stack[-1].element.tag not in str_parent_tags:
             popped = pop()
             if (
-                popped["element"].tag == "note"
-                and popped["element"].attrib.get("type") == "speaker"
+                popped.element.tag == "note"
+                and popped.element.attrib.get("type") == "speaker"
             ):
                 # got all chunks of the speaker - need to add a <u>
                 push(
                     "u",
                     who="".join(
                         (i.text or "") if isinstance(i, ET.Element) else i
-                        for i in popped["children"]
+                        for i in popped.children
                     ),
                 )  # need to get better logic for @who
 
@@ -334,35 +326,25 @@ def tag_is_on_top(tag: str | ET.Element[str], **attribs: str):
     if isinstance(tag, ET.Element):
         attribs = tag.attrib
         tag = tag.tag  # me when
-    # walk down past any cosmetic wrappers (emph/hi/...) and ask whether the
-    # first *structural* element is the one we're after - tag AND attribs must
-    # match. only the topmost structural element counts as "on top".
+
+    # ignore any cosmetic elements and match the first structural element
     for entry in reversed(stack):
-        if entry["cosmetic"]:
+        if entry.cosmetic:
             continue
-        return entry["element"].tag == tag and all(
-            val == entry["element"].attrib.get(key) for key, val in attribs.items()
+        return entry.element.tag == tag and all(
+            val == entry.element.attrib.get(key) for key, val in attribs.items()
         )
-    # while i == 1 or stack[-i + 1]["element"].tag in ["emph", "hi"]: # TODO import from config
-    #     # we're on a cosmetic element (which doesn't alter structure, which is what this function is asking for)
-    #     # so we shift the checks by 1 and try again
-    #     # a do-while loop would've helped >:(
 
-    #     if stack[-i]["element"].tag == tag and all(
-    #         val == stack[-i]["element"].attrib.get(key) for key, val in attribs.items()
-    #     ):
-    #         return True
-
-    #     i += 1
     return False
 
 
 def is_before_layout(tag: ET.Element[str]):
+    # is the (cosmetic) tag before any layout / structural elements (i still haven't decided how to call these lmao)
     for entry in reversed(stack):
-        if not entry["cosmetic"]:
+        if not entry.cosmetic:
             return False
-        if entry["cosmetic"] and all(
-            val == entry["element"].attrib.get(key) for key, val in tag.attrib.items()
+        if entry.cosmetic and all(
+            val == entry.element.attrib.get(key) for key, val in tag.attrib.items()
         ):
             return True
 
@@ -370,6 +352,8 @@ def is_before_layout(tag: ET.Element[str]):
 
 
 def tag(tag: str, **attribs: str):
+    # helper for tag
+    # may remove if it's too confusing
     return ET.Element(tag, attribs)
 
 
@@ -387,14 +371,11 @@ def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):
         # if you can't beat the type checker, become the type checker
         for ann in should_annotate:
             if ann not in COSMETIC_ANNOTATIONS:
-                raise ValueError(f"value {ann} does not exist in {COSMETIC_ANNOTATIONS.keys()}")
+                raise ValueError(
+                    f"value {ann} does not exist in {COSMETIC_ANNOTATIONS.keys()}"
+                )
 
     for chunk in chunks:
-        # if isinstance(chunk, PDFChunk) and chunk.runs is not None:
-        #     # a line chunk
-        #     # append all child char chunks
-        #     append(*chunk.runs, should_annotate=should_annotate)
-        #     continue
         print(
             f"RUN: {repr(chunk.text)}, {chunk.run._element.xml if isinstance(chunk, WordChunk) else 'meow'}"
         )
@@ -405,14 +386,11 @@ def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):
         if isinstance(chunk, PDFChunk):
             for name, annotation in COSMETIC_ANNOTATIONS.items():
                 annotation = cast(PDFCosmeticAnnotation, annotation)
-                print("meowo", annotation, stack, name in should_annotate, is_before_layout(annotation["tag"]))
                 if (
                     name in should_annotate
                     and not is_before_layout(annotation["tag"])
                     and annotation["test"](chunk)
                 ):
-                    print("resnično")
-                    print(annotation)
                     if "append_func" in annotation:
                         annotation["append_func"](chunk)
                     else:
@@ -443,59 +421,6 @@ def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):
                 ):
                     pop_to(annotation["tag"], invert=True)
 
-        # if (
-        #     "ITALIC" in should_annotate
-        #     and chunk.italic
-        #     and stack[-1]["element"].tag != "emph"
-        # ):
-        #     push("emph")
-        # elif (
-        #     "ITALIC" in should_annotate
-        #     and not chunk.italic
-        #     and stack[-1]["element"].tag == "emph"
-        # ):
-        #     pop_to("emph", invert=True)
-        # if (
-        #     "BOLD" in should_annotate
-        #     and chunk.bold
-        #     and stack[-1]["element"].tag != "hi"
-        # ):
-        #     push("hi", rend="bold")
-        # elif (
-        #     "BOLD" in should_annotate
-        #     and not chunk.bold
-        #     and stack[-1]["element"].tag == "hi"
-        # ):
-        #     pop_to("hi", invert=True)
-        # t = chunk.text.strip()
-        # if isinstance(chunk, WordChunk):
-        #     if "REFERENCE" in should_annotate and chunk.run.font.superscript:
-        #         # note reference
-        #         serialized = re.sub(r"[^a-zA-Z0-9]", "", t)
-        #         push("ref", target=f"#note{serialized}")
-        #         chunk.text = t  # so there's no leading or trailing spaces in the ref, i guess? that sounds like the right thing, but who knows, we're doing tei here ffs
-        #     elif (
-        #         "REFERENCE" in should_annotate
-        #         and not chunk.run.font.superscript
-        #         and stack[-1]["element"].tag == "ref"
-        #     ):
-        #         pop_to("ref", invert=True)
-        # elif (
-        #     isinstance(chunk, PDFChunk)
-        #     and "REFERENCE" in should_annotate
-        #     and chunk.font_size == 7.0
-        # ):
-        #     serialized = re.sub(r"[^a-zA-Z0-9]", "", t)
-        #     push("ref", target=f"#note{serialized}")
-        #     chunk.text = t  # so there's no leading or trailing spaces in the ref, i guess? that sounds like the right thing, but who knows, we're doing tei here ffs
-        # elif (
-        #     isinstance(chunk, PDFChunk)
-        #     and "REFERENCE" in should_annotate
-        #     and chunk.font_size != 7.0
-        #     and stack[-1]["element"].tag == "ref"
-        # ):
-        #     pop_to("ref", invert=True)
-
         # me when
         if not is_first_run or chunk.text.startswith("\n"):
             print("appened space")
@@ -516,7 +441,6 @@ def pop_and_push_to(
         # we love closures
         if not chunked or not tag_is_on_top(tag, **attribs):
             pop_to(*pop_args)
-            print(f"pushed {chunk=}, {tag=}, {pop_args=}")
             push(tag, attribs=attribs)
 
     return action

@@ -41,4 +41,7 @@ Will refactor the code to support both
 :3
 
 ## todos
-- standardize cosmetic stuff (bold & italic & reference)
+
+- [x] standardize cosmetic stuff (bold & italic & reference)
+- [ ] move the fuckin speaker thing from the pop_to, or wherever it is
+- [ ] make more examples

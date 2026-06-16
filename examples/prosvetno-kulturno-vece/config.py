@@ -29,7 +29,7 @@ def ref_entry_action(chunk: WordChunk):
         pop_to("u", "div")
         push(
             "note",
-            **{"xml:id": f"#note{serialized}"},
+            attribs={"xml:id": f"#note{serialized}"},
             place="foot",
             n=serialized,
         )
@@ -83,7 +83,7 @@ session_front_rules: WordRuleGroup = {
         # one centered all caps paragraph in a small container
         # but the ocr is kinda inconsistent so we anchor on "PREDSEDAVA"
         "alignment": WD_PARAGRAPH_ALIGNMENT.CENTER,
-        "test_run": lambda chunk: chunk.h < 1500
+        "test": lambda chunk: chunk.h < 1500
         and (
             chunk.paragraph.text.strip().startswith("PREDSEDAVA")
             or chunk.paragraph.text.strip().isupper()
@@ -93,7 +93,7 @@ session_front_rules: WordRuleGroup = {
     "TIME": {
         # "Početak u 9 č 10 min" - italic, shares the chairman's frame
         # (some have a stray bold run in the middle, hence the prefix test)
-        "test_run": lambda chunk: chunk.h < 1500
+        "test": lambda chunk: chunk.h < 1500
         and (
             chunk.paragraph.text.strip().startswith("Početak")
             or all(r.italic for r in chunk.paragraph.runs)
@@ -103,7 +103,7 @@ session_front_rules: WordRuleGroup = {
     "CONTENTS": {
         # opened by the SADRZAJ heading, keeps eating paragraphs until
         # some other rule (chairman, a title, ...) pops the note
-        "test_run": lambda chunk: (
+        "test": lambda chunk: (
             chunk.paragraph.text.strip().upper().startswith("SADR")
             or tag_is_on_top("note", type="contents")
         ),
@@ -119,7 +119,7 @@ body_rules: WordRuleGroup = {
         # marker. an inline reference inside body text is a superscript run
         # that ISN'T the paragraph's first run - that one falls through to
         # append(), which turns it into an inline <ref>.
-        "test_run": lambda chunk: (
+        "test": lambda chunk: (
             chunk.run.font.superscript is True
             and chunk.run._element is chunk.paragraph.runs[0]._element
         ),
@@ -128,7 +128,7 @@ body_rules: WordRuleGroup = {
     },
     "GENERIC_NOTE": {
         # a note about something that happened, such as "seja se je zakljucila"
-        "test_run": lambda chunk: (
+        "test": lambda chunk: (
             chunk.paragraph.alignment == WD_PARAGRAPH_ALIGNMENT.CENTER
             and chunk.italic
         ),
@@ -138,7 +138,7 @@ body_rules: WordRuleGroup = {
     "SPEAKER": {
         # "Predsednik Nikola Sekulić:" / "Janez Vipotnik:"
         # a short paragraph with a bold run that ends with a colon
-        "test_run": lambda chunk: (
+        "test": lambda chunk: (
             any(r.bold for r in chunk.paragraph.runs)
             and chunk.paragraph.text.strip().endswith(":")
             and len(chunk.paragraph.text.strip()) < 100
@@ -147,7 +147,7 @@ body_rules: WordRuleGroup = {
     },
     "SEG": {
         # indented - start of odstavek
-        "test_run": lambda chunk: chunk.paragraph.paragraph_format.first_line_indent
+        "test": lambda chunk: chunk.paragraph.paragraph_format.first_line_indent
         != 0
         and chunk.paragraph.text.startswith(chunk.text),
         "action": pop_and_push_to(
@@ -169,7 +169,7 @@ CONFIG: WordConfig = {
             "SEJA_DATE": {
                 # "OD 15. MAJA 1964. GODINE" - looks like the declaration, so
                 # match on the "OD " prefix first
-                "test_run": lambda chunk: (
+                "test": lambda chunk: (
                     is_session_title(chunk)
                     and chunk.paragraph.text.strip().startswith("OD ")
                 ),
@@ -178,14 +178,14 @@ CONFIG: WordConfig = {
             "SEJA_NUM": {
                 # "6. SEDNICA" / "8. ZAJEDNIČKA SEDNICA" - bold in some
                 # sessions, not in others, so anchor on the text
-                "test_run": lambda chunk: (
+                "test": lambda chunk: (
                     is_session_title(chunk) and "SEDNICA" in chunk.paragraph.text
                 ),
                 "action": pop_and_push_to("div", tag="head", type="sessionNumber"),
             },
             "SEJA_DECLARATION": {
                 # "PROSVETNO-KULTURNO VEĆE" - whatever else the title block holds
-                "test_run": lambda chunk: is_session_title(chunk),
+                "test": lambda chunk: is_session_title(chunk),
                 "action": pop_and_push_to("div", tag="head", type="session"),
             },
             **body_rules,

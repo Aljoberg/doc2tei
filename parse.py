@@ -6,7 +6,7 @@ from engine import Chunk, PDFChunk, WordChunk
 
 import engine
 from engine import append, commit_children, pop, root, stack
-from config_pdf import CONFIG, COSMETIC_ANNOTATIONS, get_frames
+from config import CONFIG, COSMETIC_ANNOTATIONS, get_chunks
 from type_decs import (
     PDFRule,
     PDFRunTest,
@@ -17,6 +17,7 @@ from type_decs import (
 )
 
 
+# only used for word
 def get_center_point(c: Chunk):
     # yes
     if isinstance(c, WordChunk):
@@ -34,7 +35,6 @@ def do_rule_chores(
     rule: Rule,
     chunk: Chunk,
 ):
-    print(chunk, rule)
     if isinstance(chunk, WordChunk):
         rule = cast(WordRule, rule)
         if "action" in rule:
@@ -50,9 +50,7 @@ def do_rule_chores(
     elif isinstance(chunk, PDFChunk):
         rule = cast(PDFRule, rule)
         if "action" in rule:
-            print("acting the urle", rule, chunk)
             rule["action"](cast(PDFChunk, chunk))
-            print("did le act")
         if "append_func" in rule:
             rule["append_func"](cast(PDFChunk, chunk))
         else:
@@ -70,38 +68,37 @@ def match_rules(
     if callable(run_immediate):
         run_immediate()
 
-    # individual run rules
-    # if a container generates multiple elements (such as a heading)
-    # maybe should come before paragraph matching
-    run_rules = {k: v for k, v in group.items() if not callable(v) and "test_run" in v}
-    if run_rules:
+    # match rules
+    # woah
+    chunk_rules = {k: v for k, v in group.items() if not callable(v) and "test" in v}
+    if chunk_rules:
         handled = False
-        # for run in paragraph.runs:
         if not chunk.text or chunk.text == "\n":
             # stop it, get some help
             return False
+
         run_else: tuple[str, Rule] | None = None
-        for key, rule in run_rules.items():
+        for key, rule in chunk_rules.items():
             if (
                 "alignment" in rule
                 and isinstance(chunk, WordChunk)
                 and chunk.paragraph.alignment != rule["alignment"]
             ):
                 continue
-            test_run = rule["test_run"]
-            if test_run == "_else":
+            test = rule["test"]
+            if test == "_else":
                 run_else = (key, rule)
                 continue
             if isinstance(chunk, WordChunk):
-                test_run = cast(WordRunTest, test_run)
-                if test_run(chunk):
+                test = cast(WordRunTest, test)
+                if test(chunk):
                     print(f"{key}: {chunk.text}")
                     do_rule_chores(rule, chunk)
                     handled = True
                     break
             elif isinstance(chunk, PDFChunk):
-                test_run = cast(PDFRunTest, test_run)
-                if test_run(chunk):
+                test = cast(PDFRunTest, test)
+                if test(chunk):
                     print(f"{key}: {chunk.text}")
                     do_rule_chores(rule, chunk)
                     handled = True
@@ -145,7 +142,6 @@ def parse_text(chunk: Chunk):
     alignments = CONFIG["alignments"]
     matched = False
     if isinstance(chunk, WordChunk):
-        w, h = chunk.w, chunk.h
         if (
             4550 < center < 6560 and "center" in alignments
         ):  # TODO unmagic the magic numbers
@@ -187,10 +183,11 @@ if __name__ == "__main__":
 
     args = p.parse_args()
 
-    chunks = get_frames(args.input)
+    chunks = get_chunks(args.input)
 
-    engine.COSMETIC_ANNOTATIONS = COSMETIC_ANNOTATIONS
+    engine.COSMETIC_ANNOTATIONS = COSMETIC_ANNOTATIONS  # me when i assign to a constant
 
+    # behold the absolute peak of debugging
     with open("meow.txt", "w", encoding="utf-8") as f, redirect_stdout(f):
         for chunk in chunks:
             parse_text(chunk)
