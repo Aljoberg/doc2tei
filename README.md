@@ -42,6 +42,7 @@ Will refactor the code to support both
 
 ## todos
 
+- [ ] fix config.py so that it works for the whole document (misaligned scans made it FUUUCKIN tedious)
 - [x] standardize cosmetic stuff (bold & italic & reference)
 - [ ] move the fuckin speaker thing from the pop_to, or wherever it is
 - [ ] make more examples

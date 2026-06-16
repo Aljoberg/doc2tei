@@ -158,7 +158,7 @@ CONFIG: PDFConfig = {
             },
             "SEG": {
                 # starts a bit indented
-                "test": lambda chunk: 59 < chunk.x < 74,
+                "test": lambda chunk: 59.5 < chunk.x < 60,
                 "action": pop_and_push_to(
                     "u", "div", tag="seg", chunked=False
                 ),  # each paragraph is its own chunk and they repeat, so we just kill the previous seg by setting chunked=False
@@ -192,79 +192,121 @@ CONFIG: PDFConfig = {
 # each child chunk has a .line_chunk property that carries the line chunk it's in
 # then it just yields each child chunk
 def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
-    import pdfplumber
+    # raw pdfminer.six instead of pdfplumber: pdfplumber wraps every glyph in a
+    # ~25-key dict and runs resolve_all/process_attr on each (~1.4x overhead),
+    # but get_chunks only needs x/y/font/size and regroups the chars itself. so
+    # we read LTChars straight off each page in content-stream order - which is
+    # exactly what pdfplumber's default (laparams=None) produced; verified to be
+    # an identical char sequence, so the magic coordinates in the rules still hold.
+    from pdfminer.pdfpage import PDFPage
+    from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+    from pdfminer.converter import PDFLayoutAnalyzer
+    from pdfminer.layout import LTChar
 
     threshold = 1.5  # space treshold
     line_treshold = 2  # ......line treshold
 
-    with pdfplumber.open(filename) as pdf:
-        page = pdf.pages[0]  # lolz
+    rm = PDFResourceManager()
 
-        # group into lines
-        lines: list[list[dict]] = []
-        cur: list[dict] = []
-        prev_y = None
-        for char in page.chars:
-            if prev_y is not None and abs(char["y0"] - prev_y) > line_treshold:
+    class CharCollector(PDFLayoutAnalyzer):
+        # collects every glyph on a page as a pdfplumber-style char dict
+        def __init__(self):
+            super().__init__(rm, laparams=None)
+            self.chars: list[dict] = []
+
+        def receive_layout(self, ltpage: Any):
+            def walk(obj: Any):
+                for item in obj:
+                    if isinstance(item, LTChar):
+                        self.chars.append(
+                            {
+                                "text": item.get_text(),
+                                "x0": item.x0,
+                                "x1": item.x1,
+                                "y0": item.y0,
+                                "fontname": item.fontname,
+                                "size": item.size,
+                            }
+                        )
+                    elif hasattr(item, "__iter__"):  # LTFigure etc. - recurse in
+                        walk(item)
+
+            walk(ltpage)
+
+    device = CharCollector()
+    interpreter = PDFPageInterpreter(rm, device)
+
+    with open(filename, "rb") as f:
+        for page in PDFPage.get_pages(f):
+            device.chars = []
+            interpreter.process_page(page)
+            page_chars = device.chars
+
+            # group into lines
+            lines: list[list[dict]] = []
+            cur: list[dict] = []
+            prev_y = None
+            for char in page_chars:
+                if prev_y is not None and abs(char["y0"] - prev_y) > line_treshold:
+                    lines.append(cur)
+                    cur = []
+                cur.append(char)
+                prev_y = char["y0"]
+            if cur:
                 lines.append(cur)
-                cur = []
-            cur.append(char)
-            prev_y = char["y0"]
-        if cur:
-            lines.append(cur)
 
-        for line in lines:
-            # group as much of the line as we can into runs
-            runs: list[dict] = []
-            prev: dict | None = None
-            for char in line:
-                gap = bool(prev) and char["x0"] - prev["x1"] > threshold
-                can_be_grouped = (
-                    runs  # there's at least one run
-                    and runs[-1]["fontname"]
-                    == char["fontname"]  # and it's the same font
-                    and runs[-1]["size"] == char["size"]  # and the same size
-                )
-                if gap and runs:
-                    runs[-1]["text"] += " "
-                if can_be_grouped:
-                    # if the text is the same, append it to the previous run directly
-                    runs[-1]["text"] += char["text"]
-                else:
-                    # if not, make a new run with the new stuff
-                    runs.append(
-                        {
-                            "text": char["text"],
-                            "x0": char["x0"],
-                            "y0": char["y0"],
-                            "fontname": char["fontname"],
-                            "size": char["size"],
-                        }
+            for line in lines:
+                # group as much of the line as we can into runs
+                runs: list[dict] = []
+                prev: dict | None = None
+                for char in line:
+                    gap = bool(prev) and char["x0"] - prev["x1"] > threshold
+                    can_be_grouped = (
+                        runs  # there's at least one run
+                        and runs[-1]["fontname"]
+                        == char["fontname"]  # and it's the same font
+                        and runs[-1]["size"] == char["size"]  # and the same size
                     )
-                prev = char
-            runs[-1]["text"] += " "  # trailing space keeps lines apart
+                    if gap and runs:
+                        runs[-1]["text"] += " "
+                    if can_be_grouped:
+                        # if the text is the same, append it to the previous run directly
+                        runs[-1]["text"] += char["text"]
+                    else:
+                        # if not, make a new run with the new stuff
+                        runs.append(
+                            {
+                                "text": char["text"],
+                                "x0": char["x0"],
+                                "y0": char["y0"],
+                                "fontname": char["fontname"],
+                                "size": char["size"],
+                            }
+                        )
+                    prev = char
+                runs[-1]["text"] += " "  # trailing space keeps lines apart
 
-            # actually make the chunks we grouped
-            run_chunks = [
-                make_chunk(
-                    text=r["text"],
-                    x=r["x0"],
-                    y=r["y0"],
-                    font_name=r["fontname"],
-                    size=r["size"],
+                # actually make the chunks we grouped
+                run_chunks = [
+                    make_chunk(
+                        text=r["text"],
+                        x=r["x0"],
+                        y=r["y0"],
+                        font_name=r["fontname"],
+                        size=r["size"],
+                    )
+                    for r in runs
+                ]
+
+                first = runs[0]
+                line_chunk = make_chunk(
+                    text="".join(r["text"] for r in runs),
+                    x=first["x0"],
+                    y=first["y0"],
+                    runs=run_chunks,
                 )
-                for r in runs
-            ]
+                for run in run_chunks:
+                    run.line_chunk = line_chunk
 
-            first = runs[0]
-            line_chunk = make_chunk(
-                text="".join(r["text"] for r in runs),
-                x=first["x0"],
-                y=first["y0"],
-                runs=run_chunks,
-            )
-            for run in run_chunks:
-                run.line_chunk = line_chunk
-
-            engine.is_first_run = True
-            yield from run_chunks
+                engine.is_first_run = True
+                yield from run_chunks

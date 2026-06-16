@@ -126,7 +126,8 @@ def parse_text(chunk: Chunk):
 
     center = get_center_point(chunk)
 
-    if 1100 < y < 1600:
+    # TODO unmagic
+    if 724 < y < 742:
         # header, likely
         # this is fragile because i don't have a way of figuring what a header is
         # in the doc i'm making it's got 3 elements so i can just seek by 3
