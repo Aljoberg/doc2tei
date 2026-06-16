@@ -43,7 +43,7 @@ def ref_entry_action(chunk: WordChunk):
         pop_to("u", "div")
         push(
             "note",
-            **{"xml:id": f"#note{serialized}"},
+            attribs={"xml:id": f"#note{serialized}"},
             place="foot",
             n=serialized,
         )
@@ -170,6 +170,7 @@ CONFIG: WordConfig = {
 # it is still locked to Paragraphs
 # i'll change this api later
 # more in readme
+# hierarchy: https://excalidraw.com/#json=6zgIYa5HL8Dkw5XrnjylJ,V0_vwcrdj5NJ4S2al3o_rg
 def get_frames(filename: str):
     doc = Document(filename)
 
@@ -203,9 +204,7 @@ def get_frames_pdf(filename: str):
     for page in pdf.pages:
         page.extract_text(
             visitor_text=lambda text, cm, tm, font_dict, font_size: chunks.append(
-                make_chunk(
-                    text=text, x=cm, y=tm, font_name=font_dict, size=font_size
-                )
+                make_chunk(text=text, x=cm, y=tm, font_name=font_dict, size=font_size)
             )
         )
 

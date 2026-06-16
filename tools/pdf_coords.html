@@ -3,14 +3,28 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PDF coordinate measure (cm[4] / cm[5])</title>
+    <title>PDF coordinate measure (pdfplumber x0/x1 · y0/y1)</title>
     <!--
-  Measures PDF *user-space* coordinates under the cursor.
+  Measures coordinates under the cursor in pdfplumber's convention.
 
-  These are the same coordinates pypdf reports in the cm/tm matrices that
-  extract_text() hands to a visitor_text callback:
-      origin = bottom-left of the page, y grows upwards, units = points (1/72").
-  So the live "x" readout corresponds to cm[4] and "y" to cm[5].
+  PDF.js convertToPdfPoint hands us *user-space* coordinates:
+      origin = bottom-left of the page box, y grows upwards, units = points (1/72").
+  pdfplumber reports a char's bbox as x0/x1 (from the left) and either
+  y0/y1 (from the bottom, y up) or top/bottom (from the top, y down). We derive
+  all of those from the page's view box (page.view = the CropBox, [bx0,by0,bx1,by1]):
+
+      pdfplumber x          = ux                (matches x0 / x1)
+      pdfplumber y0 / y1    = uy - by0          (distance from box bottom, y up)
+      pdfplumber top/bottom = (by1 - by0) - uy  (distance from box top,   y down)
+
+  Note pdfplumber does NOT subtract the box's left origin from x (so x = ux as-is),
+  but it DOES measure y from the box bottom. For the common page (box origin 0,0)
+  these all coincide with raw user space. The raw user-space x/y is still shown
+  (muted) so you can also cross-check pypdf's cm[4]/cm[5] matrices.
+
+  Caveats this mapping does NOT handle: page /Rotate (pdfplumber applies the
+  rotation, PDF.js reports unrotated user space) - a warning is shown when a page
+  is rotated. CropBox differing from MediaBox is rare and uses page.view here.
 
   Needs internet on first load to pull PDF.js from a CDN (the browser then
   caches it). Opening the PDF itself is fully local - it never leaves your
@@ -95,6 +109,9 @@
       }
       .muted {
         color: #888;
+      }
+      .warn {
+        color: #f1a14a;
       }
 
       #view {
@@ -220,9 +237,12 @@
       <div class="sep"></div>
       <button id="clear">Clear marks</button>
       <span class="muted" id="pageSize"></span>
+      <span class="warn" id="rotWarn"></span>
       <div id="readout">
-        <span>x (cm[4]) <b id="rx">–</b></span>
-        <span>y (cm[5]) <b id="ry">–</b></span>
+        <span>x0/x1 <b id="rx">–</b></span>
+        <span>y0/y1 <b id="ry">–</b></span>
+        <span>top/bot <b id="rtop">–</b></span>
+        <span class="muted">user xy <span id="ruser">–, –</span></span>
       </div>
     </div>
 
@@ -238,7 +258,8 @@
       <h3>Markers (click on page)</h3>
       <div id="empty">
         No markers yet.<br />Click anywhere on the page to drop one. Each shows
-        its PDF point and the Δ to the previous marker on the same page.
+        its pdfplumber coords (x0/x1, y0/y1, top/bottom) and the Δ to the
+        previous marker on the same page.
       </div>
       <div id="marks"></div>
     </div>
@@ -263,11 +284,22 @@
       let pdfDoc = null,
         pageNum = 1,
         scale = 1.5,
-        viewport = null;
-      let cursor = null; // {x,y,px,py} in viewport + pdf coords
-      let markers = []; // {page, px, py}
+        viewport = null,
+        pageView = [0, 0, 0, 0]; // current page.view = CropBox [bx0,by0,bx1,by1]
+      let cursor = null; // {x,y,ux,uy,pp} viewport + user-space + pdfplumber coords
+      let markers = []; // {page, ux, uy, vb} (vb = that page's view box)
 
       const fmt = (n) => (n >= 0 ? " " : "") + n.toFixed(2);
+
+      // user-space (ux,uy) -> pdfplumber coords, using a page's view box vb.
+      function toPdfPlumber(ux, uy, vb) {
+        const h = vb[3] - vb[1]; // page height in pts
+        return {
+          x: ux, // pdfplumber x0 / x1 (box left origin is NOT subtracted)
+          yUp: uy - vb[1], // pdfplumber y0 / y1   (distance from box bottom)
+          top: h - uy, // pdfplumber top/bottom (distance from box top)
+        };
+      }
 
       async function loadPDF(data) {
         pdfDoc = await pdfjsLib.getDocument({ data }).promise;
@@ -302,10 +334,14 @@
           transform: dpr !== 1 ? [dpr, 0, 0, dpr, 0, 0] : undefined,
         }).promise;
 
-        const v = page.view; // [x0,y0,x1,y1] in pts
+        const v = page.view; // [x0,y0,x1,y1] in pts (CropBox)
+        pageView = v;
         $("pageSize").textContent =
           `page ${(v[2] - v[0]).toFixed(1)} × ${(v[3] - v[1]).toFixed(1)} pt` +
-          (v[0] || v[1] ? ` (origin offset ${v[0]},${v[1]})` : "");
+          (v[0] || v[1] ? ` (box origin ${v[0]},${v[1]})` : "");
+        $("rotWarn").textContent = page.rotate
+          ? `⚠ page rotated ${page.rotate}° — pdfplumber coords will differ`
+          : "";
         $("pageNum").value = pageNum;
         $("zoomLbl").textContent = Math.round(scale * 100) + "%";
         drawOverlay();
@@ -343,7 +379,7 @@
         // persistent markers on this page
         markers.forEach((m, i) => {
           if (m.page !== pageNum) return;
-          const [vx, vy] = viewport.convertToViewportPoint(m.px, m.py);
+          const [vx, vy] = viewport.convertToViewportPoint(m.ux, m.uy);
           ctx.strokeStyle = "#3df";
           ctx.lineWidth = 1;
           ctx.beginPath();
@@ -356,7 +392,8 @@
           ctx.beginPath();
           ctx.arc(vx, vy, 2.5, 0, 7);
           ctx.fill();
-          label(ctx, `#${i + 1} ${fmt(m.px)}, ${fmt(m.py)}`, vx, vy);
+          const p = toPdfPlumber(m.ux, m.uy, m.vb);
+          label(ctx, `#${i + 1} ${fmt(p.x)}, ${fmt(p.yUp)}`, vx, vy);
         });
 
         // live crosshair
@@ -371,7 +408,7 @@
           ctx.stroke();
           label(
             ctx,
-            `${fmt(cursor.px)}, ${fmt(cursor.py)}`,
+            `${fmt(cursor.pp.x)}, ${fmt(cursor.pp.yUp)}`,
             cursor.x,
             cursor.y,
           );
@@ -384,18 +421,24 @@
         $("empty").style.display = markers.length ? "none" : "block";
         let prevOnPage = null;
         markers.forEach((m, i) => {
+          const p = toPdfPlumber(m.ux, m.uy, m.vb);
           let delta = "";
           if (prevOnPage && prevOnPage.page === m.page) {
-            const dx = m.px - prevOnPage.px,
-              dy = m.py - prevOnPage.py;
-            delta = `<div class="dl">Δ ${fmt(dx)}, ${fmt(dy)}  |Δ|=${Math.hypot(dx, dy).toFixed(2)}</div>`;
+            const pp = toPdfPlumber(
+              prevOnPage.ux,
+              prevOnPage.uy,
+              prevOnPage.vb,
+            );
+            const dx = p.x - pp.x,
+              dtop = p.top - pp.top; // Δ in pdfplumber's top-down y
+            delta = `<div class="dl">Δx ${fmt(dx)}, Δtop ${fmt(dtop)}  |Δ|=${Math.hypot(dx, dtop).toFixed(2)}</div>`;
           }
           prevOnPage = m;
           const el = document.createElement("div");
           el.className = "mk";
           el.innerHTML =
             `<span class="idx">#${i + 1}</span> <span class="muted">pg ${m.page}</span>` +
-            `<div class="co">x ${fmt(m.px)}<br>y ${fmt(m.py)}</div>${delta}` +
+            `<div class="co">x0/x1 ${fmt(p.x)}<br>y0/y1 ${fmt(p.yUp)}<br>top/bot ${fmt(p.top)}</div>${delta}` +
             `<button title="delete" data-i="${i}">✕</button>`;
           box.appendChild(el);
         });
@@ -412,21 +455,25 @@
       // ---- events ----
       pdfCanvas.addEventListener("mousemove", (e) => {
         const { x, y } = toViewport(e);
-        const [px, py] = viewport.convertToPdfPoint(x, y);
-        cursor = { x, y, px, py };
-        $("rx").textContent = px.toFixed(2);
-        $("ry").textContent = py.toFixed(2);
+        const [ux, uy] = viewport.convertToPdfPoint(x, y);
+        const pp = toPdfPlumber(ux, uy, pageView);
+        cursor = { x, y, ux, uy, pp };
+        $("rx").textContent = pp.x.toFixed(2);
+        $("ry").textContent = pp.yUp.toFixed(2);
+        $("rtop").textContent = pp.top.toFixed(2);
+        $("ruser").textContent = `${ux.toFixed(2)}, ${uy.toFixed(2)}`;
         drawOverlay();
       });
       $("view").addEventListener("mouseleave", () => {
         cursor = null;
-        $("rx").textContent = $("ry").textContent = "–";
+        $("rx").textContent = $("ry").textContent = $("rtop").textContent = "–";
+        $("ruser").textContent = "–, –";
         drawOverlay();
       });
       pdfCanvas.addEventListener("click", (e) => {
         const { x, y } = toViewport(e);
-        const [px, py] = viewport.convertToPdfPoint(x, y);
-        markers.push({ page: pageNum, px, py });
+        const [ux, uy] = viewport.convertToPdfPoint(x, y);
+        markers.push({ page: pageNum, ux, uy, vb: pageView.slice() });
         refreshMarkers();
         drawOverlay();
       });

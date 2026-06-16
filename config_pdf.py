@@ -11,21 +11,16 @@ from engine import (
     WordChunk,
     make_chunk,
     pop_and_push_to,
+    tag,
     tag_is_on_top,
     pop_to,
     push,
     append,
 )
-from type_decs import PDFConfig
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-from docx import Document
-from docx.oxml.ns import qn
+from type_decs import PDFConfig, PDFCosmeticAnnotations
 
 # if we visited time, it's the chairman's turn
 visited_time = False
-
-speaker_cache: list[Chunk] = []
-speaker_valid_count = 0
 
 
 def ref_entry_action(chunk: PDFChunk):
@@ -45,7 +40,7 @@ def ref_entry_action(chunk: PDFChunk):
         pop_to("u", "div")
         push(
             "note",
-            **{"xml:id": f"#note{serialized}"},
+            attribs={"xml:id": f"#note{serialized}"},
             place="foot",
             n=serialized,
         )
@@ -67,13 +62,41 @@ def generic_note_action(chunk: Chunk):
     push("hi", rend="italic")  # i guess
 
 
-def speaker_action(chunks: Chunk):
+def speaker_action(chunk: Chunk):
     # only open a new speaker note if we're not already inside one
-    # (a follow-up speaker paragraph just appends into the open note)
+    # (a follow-up speaker line just appends into the open note)
     if not tag_is_on_top("note", type="speaker"):
         pop_to("div")
         push("note", type="speaker")
 
+
+def leading_caps(text: str) -> int:
+    # counts leading capitalized letters
+    # :O
+    n = 0
+    for ch in text:
+        if ch.islower():
+            break
+        if ch.isupper():
+            n += 1
+    return n
+
+
+COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
+    "ITALIC": {"test": lambda chunk: chunk.italic, "tag": tag("emph")},
+    "BOLD": {"test": lambda chunk: chunk.bold, "tag": tag("hi", rend="bold")},
+    "REFERENCE": {
+        "test": lambda chunk: (
+            chunk.run.font.superscript
+            if isinstance(chunk, WordChunk)
+            else chunk.font_size == 7.0
+        ),
+        "tag": tag("ref"),
+        "append_func": lambda chunk: push(
+            "ref", target=f'#note{re.sub(r"[^a-zA-Z0-9]", "", chunk.text.strip())}'
+        ),
+    },
+}
 
 # config explanation is in readme
 CONFIG: PDFConfig = {
@@ -81,202 +104,167 @@ CONFIG: PDFConfig = {
     "alignments": {
         "any": {
             "SEJA_DECLARATION": {
-                "test_run": lambda chunk: 570 < chunk.y < 590 and chunk.bold,
+                "test_run": lambda chunk: (
+                    605 < chunk.y < 610 or tag_is_on_top("head", type="session")
+                )
+                and chunk.bold,
                 "action": pop_and_push_to("div", tag="head", type="session"),
             },
             "TIME": {
-                "test_run": lambda chunk: 570 < chunk.y < 590 and chunk.italic,
+                "test_run": lambda chunk: 590 < chunk.y < 600 and chunk.italic,
                 "action": pop_and_push_to("div", tag="time"),
                 "after_append": lambda: globals().update({"visited_time": True}),
             },
             "CHAIRMAN": {
-                "test_run": lambda chunk: tag_is_on_top("time")
-                or tag_is_on_top("note", type="chairman"),
+                "test_run": lambda chunk: (
+                    tag_is_on_top("time") or tag_is_on_top("note", type="chairman")
+                )
+                and not chunk.italic
+                and chunk.x > 174,
                 "action": pop_and_push_to("div", tag="note", type="chairman"),
             },
             "SEJA_SECTION": {
-                "test_run": lambda chunk: chunk.text.isupper() and 176 < chunk.x < 383,
+                "test_run": lambda chunk: chunk.text.isupper()
+                and tag_is_on_top("div", type="debateSection")
+                and 194 < chunk.x < 360,
                 "action": pop_and_push_to("div", tag="head", type="sessionSection"),
             },
             # ---
-            "run_immediate": lambda: globals().update({"visited_time": False}) or setattr(engine, "is_first_run", True),
+            "run_immediate": lambda: globals().update({"visited_time": False})
+            or setattr(engine, "is_first_run", True),
             # ---
             "REFERENCE_ENTRY": {
                 "test_run": lambda chunk: chunk.font_size == 7.0
-                and chunk.text.isdigit(),
+                and chunk.text.strip().isdigit(),
                 "action": ref_entry_action,
                 "append_func": ref_append,
             },
             "GENERIC_NOTE": {
-                "test_run": lambda chunk: 383 < chunk.x < 474 and chunk.italic,
+                # guard against whitespace: a lone reconstructed space can land in
+                # this x-band with the italic font of the line it trails, which
+                # would otherwise spuriously open a note (e.g. after the <time>)
+                "test_run": lambda chunk: 323 < chunk.x < 457
+                and chunk.line_chunk.italic
+                and chunk.text.strip() != "",
                 "action": generic_note_action,
                 "append_func": lambda chunk: append(
                     chunk, should_annotate=["REFERENCE"]
                 ),
             },
             "SPEAKER": {
-                "test_run": lambda chunk: 43 < chunk.x < 49
-                and chunk.text.isupper()
-                and (
-                    not speaker_cache.clear()
-                    if speaker_valid_count >= 3
-                    else globals().update(
-                        {"speaker_valid_count": speaker_valid_count + 1}
-                    )
-                ),
-                "action": pop_and_push_to("div", tag="note", type="speaker")
+                # a left-margin line (x < 55, i.e. not indented) that opens with a
+                # long run of capitals is a speaker heading, e.g.
+                # "PREDSEDNIK ZORAN POLIČ (SR Slovenija):"
+                "test_run": lambda chunk: chunk.x < 55
+                and leading_caps(chunk.text) >= 3,
+                "action": speaker_action,
             },
             "SEG": {
-                "test_run": lambda chunk: 58 < chunk.x < 66.5,
-                "action": pop_and_push_to("u", "div", tag="seg")
-            }
+                # a paragraph starts with an indented first line (~x=60), while its
+                # continuation lines sit at the margin (~x=44) and just fall through
+                # to append into the open <seg>. chunked=False => one <seg> per
+                # paragraph.
+                "test_run": lambda chunk: 59 < chunk.x < 74,
+                "action": pop_and_push_to("u", "div", tag="seg", chunked=False),
+            },
         },
-        # "center": {
-        #     "SEJA_DECLARATION": {
-        #         "alignment": WD_PARAGRAPH_ALIGNMENT.CENTER,
-        #         "test_run": lambda chunk: chunk.bold,  # bold baby
-        #         "action": pop_and_push_to("div", tag="head", type="session"),
-        #     },
-        #     "TIME": {
-        #         "alignment": WD_PARAGRAPH_ALIGNMENT.CENTER,
-        #         "test_run": lambda run: run.italic
-        #         and not visited_time,  # italic my beloved
-        #         "action": pop_and_push_to("div", tag="time"),
-        #         # this should've been extracted into its own function with "global visited_time; visited_time = True"
-        #         # but it's so small that this is acceptable (by my standards, at least)
-        #         "after_append": lambda: globals().update({"visited_time": True}),
-        #     },
-        #     "CHAIRMAN": {
-        #         "alignment": WD_PARAGRAPH_ALIGNMENT.CENTER,
-        #         "test_run": lambda chunk: tag_is_on_top("time")
-        #         or tag_is_on_top(
-        #             "note", type="chairman"
-        #         ),  # if we're in time, next is chairman
-        #         "action": pop_and_push_to("div", tag="note", type="chairman"),
-        #     },
-        #     "SEJA_SECTION": {
-        #         # isn't bolded or italic, so it's a 'del seje', or something
-        #         "alignment": WD_PARAGRAPH_ALIGNMENT.CENTER,
-        #         "test_run": "_else",
-        #         "action": pop_and_push_to("div", tag="head", type="sessionSection"),
-        #     },
-        # },
-        # "_else": {
-        #     # if we're not centered anymore, everything that depends on visited_time has been visited
-        #     # so we clear it for future time declarations
-        #     # this is fragile, will need to change visited_time
-        #     "run_immediate": lambda: globals().update({"visited_time": False}),
-        #     "REFERENCE_ENTRY": {
-        #         # opomba :O
-        #         # a footnote *definition* leads its paragraph with the superscript
-        #         # marker. an inline reference inside body text is a superscript run
-        #         # that ISN'T the paragraph's first run - that one falls through to
-        #         # append(), which turns it into an inline <ref>.
-        #         "test_run": lambda chunk: (
-        #             chunk.run.font.superscript  # is a superscript
-        #             and chunk.run._element
-        #             is chunk.paragraph.runs[
-        #                 0
-        #             ]._element  # and is the first element in the paragraph
-        #         ),
-        #         "action": ref_entry_action,
-        #         "append_func": ref_append,
-        #     },
-        #     "GENERIC_NOTE": {
-        #         # a note about something that happened, such as "seja se je zakljucila"
-        #         "test_run": lambda chunk: (
-        #             chunk.paragraph.alignment == WD_PARAGRAPH_ALIGNMENT.CENTER
-        #             and chunk.italic
-        #         ),
-        #         "action": generic_note_action,
-        #         "append_func": lambda chunk: append(
-        #             chunk, should_annotate=["REFERENCE"]
-        #         ),
-        #     },
-        #     "SPEAKER": {
-        #         # this is REALLY BAD detection but wtf am i supposed to do
-        #         "test_run": lambda chunk: (
-        #             chunk.paragraph.paragraph_format.first_line_indent == 0
-        #             and chunk.text[:3].isupper()
-        #         ),
-        #         "action": speaker_action,
-        #     },
-        #     "SEG": {
-        #         # indented - start of odstavek
-        #         "test_run": lambda chunk: chunk.paragraph.paragraph_format.first_line_indent
-        #         != 0
-        #         and chunk.paragraph.text.startswith(chunk.text),
-        #         "action": pop_and_push_to(
-        #             "u",
-        #             "div",
-        #             tag="seg",
-        #             chunked=False,
-        #         ),  # close any open seg; land on the enclosing <u>
-        #     },
-        # },
     },
 }
 
-
-# get frames of document
-# this can be changed if you need to parse something other than a doc
-# it should return a dict of {(x, y, w, h): [para1, para2, para3]}
-# it is still locked to Paragraphs
-# i'll change this api later
-# more in readme
-# def get_frames(filename: str):
-#     doc = Document(filename)
-
-#     for para in doc.paragraphs:
-#         p = para._p
-
-#         pPr = p.find(qn("w:pPr"))
-#         if pPr is None:
-#             continue
-#         framePr = pPr.find(qn("w:framePr"))
-#         if framePr is None:
-#             continue
-
-#         # x, y, w, h = get_para_xywh(para)
-
-#         for run in para.runs:
-#             print(f"----- RUNNNNNNN ------: {run.text}")
-#             yield make_chunk(run, para)
-
-
 # for pdf:
+# this guy thinks he can write docs
+
+
+# a searchable pdf is just a soup of positioned characters - there are no words,
+# lines or paragraphs. get_frames only does the document-agnostic part: it
+# reassembles the characters into visual lines (the "frames"), reconstructing the
+# spacing (a gap wider than `threshold` between two chars is a space, and every
+# line ends with one so consecutive lines don't fuse). every line is yielded as a
+# single chunk whose `.text` is the whole line and whose `.x`/`.y` mark where it
+# starts - all the document-specific judgement (what is a speaker, an indent, a
+# note ...) lives in the config rules. the per-font pieces of the line are kept in
+# `.runs` so it can still be appended with its italic/bold/reference formatting.
 def get_frames(filename: str) -> Generator[Chunk, Any, Any]:
     import pdfplumber
+
+    threshold = 1.5
+    line_treshold = 2
 
     with pdfplumber.open(filename) as pdf:
         page = pdf.pages[0]
 
-        prev = None
-
-        treshold = 1.5
-
-        # chunks: list[str] = []
-
+        # group into lines
+        lines: list[list[dict]] = []
+        cur: list[dict] = []
+        prev_y = None
         for char in page.chars:
-            engine.is_first_run = True
-            print(char["x0"] - prev["x1"] if prev else "meow")
-            if prev and abs(char["x0"] - prev["x1"]) > treshold:  # lowkey just abs bro
-                # chunks.append(" ")
-                yield make_chunk(
-                    text=" ",
-                    x=prev["x1"],
-                    y=prev["y1"],
-                    font_name=prev["fontname"],
-                    size=prev["size"],
+            if prev_y is not None and abs(char["y0"] - prev_y) > line_treshold:
+                lines.append(cur)
+                cur = []
+            cur.append(char)
+            prev_y = char["y0"]
+        if cur:
+            lines.append(cur)
+
+        for line in lines:
+            # group as much of the line as we can into runs
+            runs: list[dict] = []
+            prev: dict | None = None
+            for char in line:
+                gap = bool(prev) and char["x0"] - prev["x1"] > threshold
+                can_be_grouped = (
+                    runs
+                    and runs[-1]["fontname"]
+                    == char["fontname"]  # if it's the same font
+                    and runs[-1]["size"] == char["size"]  # and the same size
                 )
-            # chunks.append(char["text"])
-            yield make_chunk(
-                text=char["text"],
-                x=char["x0"],
-                y=char["y0"],
-                font_name=char["fontname"],
-                size=char["size"],
+                if gap and runs:
+                    runs[-1]["text"] += " "
+                if can_be_grouped:
+                    # if the text is the same, append it to the previous run directly
+                    runs[-1]["text"] += char["text"]
+                else:
+                    # if not, make a new run with the new stuff
+                    runs.append(
+                        {
+                            "text": char["text"],
+                            "x0": char["x0"],
+                            "y0": char["y0"],
+                            "fontname": char["fontname"],
+                            "size": char["size"],
+                        }
+                    )
+                prev = char
+            runs[-1]["text"] += " "  # trailing space keeps lines apart
+
+            # actually make the chunks we grouped
+            run_chunks = [
+                make_chunk(
+                    text=r["text"],
+                    x=r["x0"],
+                    y=r["y0"],
+                    font_name=r["fontname"],
+                    size=r["size"],
+                )
+                for r in runs
+            ]
+            print("le run chunks")
+            print(run_chunks)
+            first = runs[0]
+            # i should probably make a LineChunk or something, rather than separating the two by the existence of "runs" on the chunk
+            # anyway, make a line chunk with info about the whole line
+            # this is useful if we wanna check leading caps or things like that
+            # might make it just yield run_chunks directly, idk what's more intuitive
+            # since "lines" are kinda magic as well, they're just checks whether the y value changed by more than 2
+            line_chunk = make_chunk(
+                text="".join(r["text"] for r in runs),
+                x=first["x0"],
+                y=first["y0"],
+                runs=run_chunks,
             )
-            # yield char["text"]
-            print(char["text"], char["x0"], char["top"])
-            prev = char
+            for run in run_chunks:
+                run.line_chunk = line_chunk
+            # cast(PDFChunk, line_chunk).runs = cast("list[PDFChunk]", run_chunks)
+            engine.is_first_run = True
+            # yield line_chunk
+            yield from run_chunks  # TODO ask robert about design

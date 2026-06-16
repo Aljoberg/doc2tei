@@ -6,12 +6,11 @@ from engine import Chunk, PDFChunk, WordChunk
 
 import engine
 from engine import append, commit_children, pop, root, stack
-from config import CONFIG, get_frames
+from config_pdf import CONFIG, COSMETIC_ANNOTATIONS, get_frames
 from type_decs import (
     PDFRule,
     PDFRunTest,
     WordRule,
-    WordRuleGroup,
     Rule,
     RuleGroup,
     WordRunTest,
@@ -35,6 +34,7 @@ def do_rule_chores(
     rule: Rule,
     chunk: Chunk,
 ):
+    print(chunk, rule)
     if isinstance(chunk, WordChunk):
         rule = cast(WordRule, rule)
         if "action" in rule:
@@ -50,7 +50,9 @@ def do_rule_chores(
     elif isinstance(chunk, PDFChunk):
         rule = cast(PDFRule, rule)
         if "action" in rule:
+            print("acting the urle", rule, chunk)
             rule["action"](cast(PDFChunk, chunk))
+            print("did le act")
         if "append_func" in rule:
             rule["append_func"](cast(PDFChunk, chunk))
         else:
@@ -186,6 +188,8 @@ if __name__ == "__main__":
     args = p.parse_args()
 
     chunks = get_frames(args.input)
+
+    engine.COSMETIC_ANNOTATIONS = COSMETIC_ANNOTATIONS
 
     with open("meow.txt", "w", encoding="utf-8") as f, redirect_stdout(f):
         for chunk in chunks:

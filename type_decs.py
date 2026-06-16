@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, TypedDict, Literal, Any, TYPE_CHECKING
+from typing import Callable, NotRequired, TypedDict, Literal, Any, TYPE_CHECKING
 import xml.etree.ElementTree as ET
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
@@ -14,6 +14,7 @@ class StackEntry(TypedDict):
     element: ET.Element[str]
     children: list[str | ET.Element[str]]
     last_elem: ET.Element[str] | None
+    cosmetic: bool
 
 
 # --- rule config types ---
@@ -86,3 +87,23 @@ Rule = WordRule | PDFRule
 RuleGroup = WordRuleGroup | PDFRuleGroup
 Action = Callable[["Chunk"], None]
 # Config = WordConfig | PDFConfig
+
+
+class WordCosmeticAnnotation(TypedDict):
+    test: WordRunTest
+    tag: ET.Element[str]
+    append_func: NotRequired[WordAppendFunc]
+
+
+WordCosmeticAnnotations = dict[str, WordCosmeticAnnotation]
+
+
+class PDFCosmeticAnnotation(TypedDict):
+    test: PDFRunTest
+    tag: ET.Element[str]
+    append_func: NotRequired[PDFAppendFunc]
+
+
+PDFCosmeticAnnotations = dict[str, PDFCosmeticAnnotation]
+
+CosmeticAnnotations = WordCosmeticAnnotations | PDFCosmeticAnnotations
