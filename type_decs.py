@@ -7,7 +7,7 @@ from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 if TYPE_CHECKING:
     # only needed for type hints; importing at runtime would create a cycle
     # (engine imports type_decs for StackEntry/Action)
-    from engine import WordChunk, PDFChunk, Chunk
+    from engine import WordChunk, PDFChunk, Chunk, StackEntry
 
 
 # i have yet to rewrite the following paragraph
@@ -36,10 +36,11 @@ if TYPE_CHECKING:
 
 
 WordRunTest = Callable[["WordChunk"], bool | None]
-WordAction = Callable[["WordChunk"], None]
+WordAction = Callable[["WordChunk"], Any]
 WordAppendFunc = Callable[["WordChunk"], Any]
-WordAfterPush = Callable[[], None]
-RunImmediate = Callable[[], None]
+WordAfterPush = Callable[[], Any]
+RunImmediate = Callable[[], Any]
+OnPop = Callable[["StackEntry"], Any]
 
 
 class WordRule(TypedDict, total=False):
@@ -56,13 +57,13 @@ WordRuleGroup = dict[str, WordRule | RunImmediate]
 class WordConfig(TypedDict):
     mode: Literal["word"]
     alignments: dict[str, WordRuleGroup]
+    on_pop: NotRequired[OnPop]
 
 
 PDFRunTest = Callable[["PDFChunk"], bool | None]
-PDFAction = Callable[["PDFChunk"], None]
+PDFAction = Callable[["PDFChunk"], Any]
 PDFAppendFunc = Callable[["PDFChunk"], Any]
-PDFAfterPush = Callable[[], None]
-RunImmediate = Callable[[], None]
+PDFAfterPush = Callable[[], Any]
 
 
 class PDFRule(TypedDict, total=False):
@@ -78,6 +79,7 @@ PDFRuleGroup = dict[str, PDFRule | RunImmediate]
 class PDFConfig(TypedDict):
     mode: Literal["pdf"]
     alignments: dict[str, PDFRuleGroup]
+    on_pop: NotRequired[OnPop]
 
 
 Rule = WordRule | PDFRule

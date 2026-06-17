@@ -5,12 +5,14 @@
 
 
 import re
+import xml.etree.ElementTree as ET
 from typing import Any, Generator
 import engine
 from engine import (
     Chunk,
     PDFChunk,
     WordChunk,
+    StackEntry,
     make_chunk,
     pop_and_push_to,
     tag,
@@ -49,6 +51,22 @@ def generic_note_action(chunk: Chunk):
     pop_to("div")
     push("note")
     push("hi", rend="italic")
+
+
+def speaker_to_utterance(popped: StackEntry):
+    # runs for every element pop_to() closes. when a speaker <note> finishes,
+    # all its chunks are in - so we open a <u> (utterance) carrying the speaker's
+    # text as @who.
+    print(popped)
+    print("ON POP RANNN")
+    if popped.element.tag == "note" and popped.element.attrib.get("type") == "speaker":
+        push(
+            "u",
+            who="".join(
+                (i.text or "") if isinstance(i, ET.Element) else i
+                for i in popped.children
+            ),
+        )  # need to get better logic for @who
 
 
 def leading_caps(text: str) -> int:
@@ -91,6 +109,7 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
 # le config
 CONFIG: PDFConfig = {
     "mode": "pdf",
+    "on_pop": speaker_to_utterance,
     "alignments": {
         # all alignments
         # any other values are only used in .docx mode
@@ -158,7 +177,25 @@ CONFIG: PDFConfig = {
             },
             "SEG": {
                 # starts a bit indented
-                "test": lambda chunk: 59.5 < chunk.x < 60,
+                "test": lambda chunk: (
+                    print(chunk.x, chunk.font_size, chunk, "seg", f"{chunk.previous=}")
+                    or (((True
+                    if chunk.previous is None
+                    else print(
+                        chunk.x,
+                        chunk.previous.x,
+                        abs(chunk.x - chunk.previous.x),
+                        chunk.y,
+                        chunk.previous.y,
+                        abs(chunk.y - chunk.previous.y),
+                    )
+                    or (
+                        abs(chunk.x - chunk.previous.x) > 240
+                        or abs(chunk.y - chunk.previous.y) > 230
+                    ))
+                    or (59.5 < chunk.x < 62 or 288 < chunk.x < 301))
+                    and 9.9 < chunk.font_size < 10.1)
+                ),
                 "action": pop_and_push_to(
                     "u", "div", tag="seg", chunked=False
                 ),  # each paragraph is its own chunk and they repeat, so we just kill the previous seg by setting chunked=False
@@ -237,6 +274,7 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
     interpreter = PDFPageInterpreter(rm, device)
 
     with open(filename, "rb") as f:
+        prev_run: PDFChunk | None = None
         for page in PDFPage.get_pages(f):
             device.chars = []
             interpreter.process_page(page)
@@ -287,16 +325,27 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                 runs[-1]["text"] += " "  # trailing space keeps lines apart
 
                 # actually make the chunks we grouped
-                run_chunks = [
-                    make_chunk(
+                run_chunks: list[PDFChunk] = []
+                for r in runs:
+                    prev_run = make_chunk(
                         text=r["text"],
                         x=r["x0"],
                         y=r["y0"],
                         font_name=r["fontname"],
                         size=r["size"],
+                        previous=prev_run,
                     )
-                    for r in runs
-                ]
+                    run_chunks.append(prev_run)
+                # run_chunks = [
+                #     make_chunk(
+                #         text=r["text"],
+                #         x=r["x0"],
+                #         y=r["y0"],
+                #         font_name=r["fontname"],
+                #         size=r["size"],
+                #     )
+                #     for r in runs
+                # ]
 
                 first = runs[0]
                 line_chunk = make_chunk(

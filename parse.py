@@ -6,7 +6,7 @@ from engine import Chunk, PDFChunk, WordChunk
 
 import engine
 from engine import append, commit_children, pop, root, stack
-from config import CONFIG, COSMETIC_ANNOTATIONS, get_chunks
+from config import CONFIG, COSMETIC_ANNOTATIONS, get_chunks, speaker_to_utterance
 from type_decs import (
     PDFRule,
     PDFRunTest,
@@ -187,6 +187,7 @@ if __name__ == "__main__":
     chunks = get_chunks(args.input)
 
     engine.COSMETIC_ANNOTATIONS = COSMETIC_ANNOTATIONS  # me when i assign to a constant
+    engine.on_pop = CONFIG.get("on_pop")
 
     # behold the absolute peak of debugging
     with open("meow.txt", "w", encoding="utf-8") as f, redirect_stdout(f):

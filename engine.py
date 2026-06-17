@@ -1,11 +1,12 @@
 import re
 import xml.etree.ElementTree as ET
-from typing import Literal, Any, Protocol, cast, overload
+from typing import Literal, Any, Callable, Protocol, cast, overload
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 from type_decs import (
     Action,
     CosmeticAnnotations,
+    OnPop,
     PDFCosmeticAnnotation,
     # StackEntry,
     WordCosmeticAnnotation,
@@ -47,6 +48,9 @@ is_first_run = True
 lstrip_next = True
 
 COSMETIC_ANNOTATIONS: CosmeticAnnotations
+
+# on pop hook
+on_pop: OnPop | None = None
 
 
 class Chunk(Protocol):
@@ -93,6 +97,7 @@ class PDFChunk:
     _line_chunk: Any = field(
         default=None, init=False, repr=False
     )  # so we don't get lint errors, since we don't provide the line chunk at init
+    previous: PDFChunk | None = None
 
     @property
     def line_chunk(self) -> PDFLineChunk:
@@ -127,7 +132,7 @@ def get_para_xywh(para: Paragraph):
 def make_chunk(word_prop: Run, parent_paragraph: Paragraph) -> WordChunk: ...
 @overload
 def make_chunk(
-    *, text: str, x: float, y: float, font_name: str, size: float
+    *, text: str, x: float, y: float, font_name: str, size: float, previous: PDFChunk | None
 ) -> PDFChunk: ...
 @overload
 def make_chunk(
@@ -145,6 +150,7 @@ def make_chunk(
     font_name: str | None = None,
     size: float | None = None,
     runs: list[PDFChunk] | None = None,
+    previous: PDFChunk | None = None,
 ):
     if isinstance(word_prop, Run) and isinstance(parent_paragraph, Paragraph):
         run = word_prop
@@ -174,6 +180,7 @@ def make_chunk(
             runs=runs,
         )
     else:
+        print(f"PREVIOUS MAKE CHUNK: {previous}")
         assert font_name is not None
         assert size is not None
         return PDFChunk(
@@ -183,6 +190,7 @@ def make_chunk(
             bold="bold" in font_name.lower(),
             italic="italic" in font_name.lower(),
             font_size=size,
+            previous=previous
         )
 
 
@@ -262,6 +270,9 @@ def pop():
     stack[-1].children.append(elem.element)
     children = stack[-1].children
 
+    if on_pop is not None:
+        on_pop(elem)
+
     return elem
 
 
@@ -281,36 +292,10 @@ def pop_to(*parent_tags: str | ET.Element[str], invert: bool = False):
 
     if invert:
         while len(stack) > 1 and stack[-1].element.tag in str_parent_tags:
-            popped = pop()
-            if (
-                popped.element.tag == "note"
-                and popped.element.attrib.get("type") == "speaker"
-            ):
-                # TODO what is this sorcery magic
-                # remove it now aljo
-                # got all chunks of the speaker - need to add a <u>
-                push(
-                    "u",
-                    who="".join(
-                        (i.text or "") if isinstance(i, ET.Element) else i
-                        for i in popped.children
-                    ),
-                )  # need to get better logic for @who
+            pop()
     else:
         while len(stack) > 1 and stack[-1].element.tag not in str_parent_tags:
-            popped = pop()
-            if (
-                popped.element.tag == "note"
-                and popped.element.attrib.get("type") == "speaker"
-            ):
-                # got all chunks of the speaker - need to add a <u>
-                push(
-                    "u",
-                    who="".join(
-                        (i.text or "") if isinstance(i, ET.Element) else i
-                        for i in popped.children
-                    ),
-                )  # need to get better logic for @who
+            pop()
 
 
 @overload
