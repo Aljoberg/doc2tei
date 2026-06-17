@@ -94,10 +94,11 @@ class PDFChunk:
     bold: bool | None
     italic: bool | None
     font_size: float
+    page_num: int
     _line_chunk: Any = field(
         default=None, init=False, repr=False
     )  # so we don't get lint errors, since we don't provide the line chunk at init
-    previous: PDFChunk | None = None
+    previous: PDFChunk | None = field(default=None, repr=False)
 
     @property
     def line_chunk(self) -> PDFLineChunk:
@@ -129,14 +130,14 @@ def get_para_xywh(para: Paragraph):
 
 # good dx, or something
 @overload
-def make_chunk(word_prop: Run, parent_paragraph: Paragraph) -> WordChunk: ...
+def make_chunk(word_prop: Run, parent_paragraph: Paragraph, *, page_num: int) -> WordChunk: ...
 @overload
 def make_chunk(
-    *, text: str, x: float, y: float, font_name: str, size: float, previous: PDFChunk | None
+    *, text: str, x: float, y: float, font_name: str, size: float, previous: PDFChunk | None, page_num: int
 ) -> PDFChunk: ...
 @overload
 def make_chunk(
-    *, text: str, x: float, y: float, runs: list[PDFChunk]
+    *, text: str, x: float, y: float, runs: list[PDFChunk], page_num: int
 ) -> PDFLineChunk: ...
 
 
@@ -151,6 +152,7 @@ def make_chunk(
     size: float | None = None,
     runs: list[PDFChunk] | None = None,
     previous: PDFChunk | None = None,
+    page_num: int
 ):
     if isinstance(word_prop, Run) and isinstance(parent_paragraph, Paragraph):
         run = word_prop
@@ -180,7 +182,6 @@ def make_chunk(
             runs=runs,
         )
     else:
-        print(f"PREVIOUS MAKE CHUNK: {previous}")
         assert font_name is not None
         assert size is not None
         return PDFChunk(
@@ -190,7 +191,8 @@ def make_chunk(
             bold="bold" in font_name.lower(),
             italic="italic" in font_name.lower(),
             font_size=size,
-            previous=previous
+            previous=previous,
+            page_num=page_num
         )
 
 

@@ -22,7 +22,6 @@ from engine import (
     append,
 )
 from type_decs import PDFConfig, PDFCosmeticAnnotations
-from rich import print
 
 
 def ref_entry_action(chunk: PDFChunk):
@@ -106,6 +105,17 @@ def is_seg(chunk: PDFChunk) -> bool:
     return in_indent_band and 9.9 < chunk.font_size < 10.1
 
 
+def nth_previous(chunk: PDFChunk, n: int) -> PDFChunk | None:
+    # returns nth previous chunk
+    # or None if we run out of them
+    cur: PDFChunk | None = chunk
+    for _ in range(n):
+        if cur is None:
+            return None
+        cur = cur.previous
+    return cur
+
+
 # cosmetic annotations -- things that can appear inside anything and do not alter layout or structure of the document
 # find the pyramid on https://excalidraw.com/#json=s5d5fPvL0PFW2FxKaYbm4,XXCL3rpalK3FEg9lBwiKHQ
 COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
@@ -171,19 +181,31 @@ CONFIG: PDFConfig = {
                 "action": pop_and_push_to("div", tag="note", type="chairman"),
             },
             "SEJA_SECTION": {
-                "test": lambda chunk: chunk.text.isupper()  # if we're all caps
-                and tag_is_on_top("div", type="debateSection")  # and outside everything
-                and 194 < chunk.x < 360,  # and at the coords
+                # a session-section heading (e.g. "NADALJEVANJE SEJE" - the session
+                # resumes after a break). it's all-caps, centered, and sits near the
+                # top of a fresh page. we deliberately do NOT require debateSection
+                # on top: a resumed session opens mid-content, still buried in the
+                # previous speaker's note/utterance - and the action pops back to
+                # <div> anyway, so being "outside everything" isn't a precondition.
+                "test": lambda chunk: (
+                    chunk.text.isupper()  # all caps
+                    and 194 < chunk.x < 360  # centered band
+                    # near a page top: a run a few back still sits on the previous
+                    # page. walked safely so the first runs of the doc don't crash.
+                    and (prev := nth_previous(chunk, 4)) is not None
+                    and chunk.page_num != prev.page_num
+                ),
                 "action": pop_and_push_to("div", tag="head", type="sessionSection"),
             },
             # --- not centered ---
             "REFERENCE_ENTRY": {
-                "test": lambda chunk: chunk.font_size == 7.0  # if we're smol
-                and chunk.text.strip().isdigit()
+                "test": lambda chunk: chunk.font_size == 7.0
+                or chunk.font_size == 6.0  # if we're smol
+                and chunk.text.strip().isdigit()  # and a digit
                 and (
                     print(chunk.line_chunk, "line chunk reference eentry")
                     or chunk is chunk.line_chunk.runs[0]
-                ),  # and a digit
+                ),
                 "action": ref_entry_action,
                 "append_func": ref_append,
             },
@@ -251,8 +273,8 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
     from pdfminer.converter import PDFLayoutAnalyzer
     from pdfminer.layout import LTChar
 
-    threshold = 1.5  # space treshold
-    line_treshold = 6  # ......line treshold
+    threshold = 1.7  # space treshold
+    line_treshold = 4.871  # ......line treshold
 
     rm = PDFResourceManager()
 
@@ -287,7 +309,7 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
 
     with open(filename, "rb") as f:
         prev_run: PDFChunk | None = None
-        for page in PDFPage.get_pages(f):
+        for page_num, page in enumerate(PDFPage.get_pages(f)):
             device.chars = []
             interpreter.process_page(page)
             page_chars = device.chars
@@ -315,6 +337,10 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                 runs: list[dict] = []
                 prev: dict | None = None
                 for char in line:
+                    bool(prev) and print(
+                        char["x0"] - prev["x1"],
+                        f"diff in x of {char["text"]=}, {prev["text"]=}, text={"".join(i["text"] for i in line)}",
+                    )
                     gap = bool(prev) and char["x0"] - prev["x1"] > threshold
                     if (
                         char["text"] == " "
@@ -356,18 +382,9 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                         font_name=r["fontname"],
                         size=r["size"],
                         previous=prev_run,
+                        page_num=page_num,
                     )
                     run_chunks.append(prev_run)
-                # run_chunks = [
-                #     make_chunk(
-                #         text=r["text"],
-                #         x=r["x0"],
-                #         y=r["y0"],
-                #         font_name=r["fontname"],
-                #         size=r["size"],
-                #     )
-                #     for r in runs
-                # ]
 
                 first = runs[0]
                 line_chunk = make_chunk(
@@ -375,6 +392,7 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                     x=first["x0"],
                     y=first["y0"],
                     runs=run_chunks,
+                    page_num=page_num,
                 )
                 for run in run_chunks:
                     run.line_chunk = line_chunk
