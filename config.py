@@ -22,6 +22,7 @@ from engine import (
     append,
 )
 from type_decs import PDFConfig, PDFCosmeticAnnotations
+from rich import print
 
 
 def ref_entry_action(chunk: PDFChunk):
@@ -79,6 +80,30 @@ def leading_caps(text: str) -> int:
         if ch.isupper():
             n += 1
     return n
+
+
+def is_seg(chunk: PDFChunk) -> bool:
+    # a <seg> is a body paragraph; we spot its first line by the indent. every
+    # column indents a paragraph opening ~15pt past the lines that wrap under
+    # it. the scan is misaligned page-to-page (even pages sit ~8pt left), so we
+    # match the indent *band* of both columns - col1 lands at x~52 or ~60, col2
+    # at x~292 or ~300 - instead of one exact x. wrapped/continuation lines sit
+    # at the column's left margin (~36/44 and ~276/284) and fall outside.
+    #
+    # only a line's first run can open a paragraph (later runs are mid-line). a
+    # column/page jump - a big move from the previous run - always opens one,
+    # and is the only thing that lets us read a 9pt line at a column top as body
+    # rather than a 9pt footnote line. everywhere else we hold body to 10pt, so
+    # the footnotes (also 9pt) don't get mistaken for paragraphs.
+    if chunk is not chunk.line_chunk.runs[0]:
+        return False
+
+    prev = chunk.previous
+    if prev is None or abs(chunk.x - prev.x) > 240 or abs(chunk.y - prev.y) > 230:
+        return 8.9 < chunk.font_size < 10.1  # column / page top -> always body
+
+    in_indent_band = 48 < chunk.x < 64 or 287 < chunk.x < 303
+    return in_indent_band and 9.9 < chunk.font_size < 10.1
 
 
 # cosmetic annotations -- things that can appear inside anything and do not alter layout or structure of the document
@@ -154,7 +179,11 @@ CONFIG: PDFConfig = {
             # --- not centered ---
             "REFERENCE_ENTRY": {
                 "test": lambda chunk: chunk.font_size == 7.0  # if we're smol
-                and chunk.text.strip().isdigit(),  # and a digit
+                and chunk.text.strip().isdigit()
+                and (
+                    print(chunk.line_chunk, "line chunk reference eentry")
+                    or chunk is chunk.line_chunk.runs[0]
+                ),  # and a digit
                 "action": ref_entry_action,
                 "append_func": ref_append,
             },
@@ -176,26 +205,8 @@ CONFIG: PDFConfig = {
                 "action": pop_and_push_to("div", tag="note", type="speaker"),
             },
             "SEG": {
-                # starts a bit indented
-                "test": lambda chunk: (
-                    print(chunk.x, chunk.font_size, chunk, "seg", f"{chunk.previous=}")
-                    or (((True
-                    if chunk.previous is None
-                    else print(
-                        chunk.x,
-                        chunk.previous.x,
-                        abs(chunk.x - chunk.previous.x),
-                        chunk.y,
-                        chunk.previous.y,
-                        abs(chunk.y - chunk.previous.y),
-                    )
-                    or (
-                        abs(chunk.x - chunk.previous.x) > 240
-                        or abs(chunk.y - chunk.previous.y) > 230
-                    ))
-                    or (59.5 < chunk.x < 62 or 288 < chunk.x < 301))
-                    and 9.9 < chunk.font_size < 10.1)
-                ),
+                # a body paragraph; detection lives in is_seg (indent band + jump)
+                "test": is_seg,
                 "action": pop_and_push_to(
                     "u", "div", tag="seg", chunked=False
                 ),  # each paragraph is its own chunk and they repeat, so we just kill the previous seg by setting chunked=False
@@ -241,7 +252,7 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
     from pdfminer.layout import LTChar
 
     threshold = 1.5  # space treshold
-    line_treshold = 2  # ......line treshold
+    line_treshold = 6  # ......line treshold
 
     rm = PDFResourceManager()
 
@@ -263,6 +274,7 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                                 "y0": item.y0,
                                 "fontname": item.fontname,
                                 "size": item.size,
+                                **vars(item),  # yeah fuck you
                             }
                         )
                     elif hasattr(item, "__iter__"):  # LTFigure etc. - recurse in
@@ -285,6 +297,11 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
             cur: list[dict] = []
             prev_y = None
             for char in page_chars:
+                if prev_y is not None:
+                    print(
+                        f"y pos, {char["text"]=} {abs(char["y0"] - prev_y)=}, cur={"".join(i["text"] for i in cur)}"
+                    )
+                    print(char)
                 if prev_y is not None and abs(char["y0"] - prev_y) > line_treshold:
                     lines.append(cur)
                     cur = []
@@ -299,6 +316,10 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                 prev: dict | None = None
                 for char in line:
                     gap = bool(prev) and char["x0"] - prev["x1"] > threshold
+                    if (
+                        char["text"] == " "
+                    ):  # spaces are not a thing in pdfs, but they are if they cut off a word, apparently
+                        break  # last thing in the line anyway
                     can_be_grouped = (
                         runs  # there's at least one run
                         and runs[-1]["fontname"]
@@ -322,7 +343,8 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                             }
                         )
                     prev = char
-                runs[-1]["text"] += " "  # trailing space keeps lines apart
+                else:
+                    runs[-1]["text"] += " "  # trailing space keeps lines apart
 
                 # actually make the chunks we grouped
                 run_chunks: list[PDFChunk] = []
