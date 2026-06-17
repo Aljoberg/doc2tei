@@ -101,8 +101,8 @@ def is_seg(chunk: PDFChunk) -> bool:
     if prev is None or abs(chunk.x - prev.x) > 240 or abs(chunk.y - prev.y) > 230:
         return 8.9 < chunk.font_size < 10.1  # column / page top -> always body
 
-    in_indent_band = 44 < chunk.x < 64 or 287 < chunk.x < 303
-    return in_indent_band and 9.9 < chunk.font_size < 10.1
+    in_indent_band = 41 < chunk.x < 64 or 287 < chunk.x < 303
+    return in_indent_band and (9.0 <= chunk.font_size < 10.1 and not tag_is_on_top("note", place="foot"))
 
 
 def nth_previous(chunk: PDFChunk, n: int) -> PDFChunk | None:
@@ -229,9 +229,13 @@ CONFIG: PDFConfig = {
                 ),
             },
             "SPEAKER": {
-                "test": lambda chunk: chunk.x < 55  # not indented
+                "test": lambda chunk: (
+                    0 < chunk.x < 55 or 271 < chunk.x < 293
+                )  # not indented
                 and leading_caps(chunk.text)
-                >= 3,  # and more than 3 uppercase letters at the start
+                >= 5,  # and more than 5 uppercase letters at the start
+                # this used to be 3 but "SFRJ" appeared at the start
+                # yippie
                 "action": pop_and_push_to("div", tag="note", type="speaker"),
             },
             "SEG": {
@@ -311,7 +315,7 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
             for char in page_chars:
                 if prev_y is not None and (
                     prev_y - char["y0"] > line_treshold
-                    or abs(prev_y - char["y0"]) > line_treshold * 2
+                    or abs(prev_y - char["y0"]) > line_treshold * 5
                 ):
                     lines.append(cur)
                     cur = []
