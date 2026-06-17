@@ -263,11 +263,22 @@ def pop():
     # and returns it to their parent <3
     global children
     elem = stack.pop()
-    # strip the trailing space of the last child
+    # strip the trailing space off the last text node. for a block element we
+    # just drop it. but a cosmetic element is inline, so that space is the gap to
+    # whatever follows it in the parent - eating it fuses the words ("od carin " +
+    # "in" -> "carinin"). so for cosmetics we move the space OUT, to sit right
+    # after the element: it survives as a separator mid-text, and still gets
+    # cleaned by the parent's own rstrip when the cosmetic ends a block.
+    moved_space = ""
     if children and isinstance(children[-1], str):
-        children[-1] = children[-1].rstrip()
+        stripped = children[-1].rstrip()
+        if elem.cosmetic and stripped != children[-1]:
+            moved_space = " "
+        children[-1] = stripped
     commit_children(elem)
     stack[-1].children.append(elem.element)
+    if moved_space:
+        stack[-1].children.append(moved_space)
     children = stack[-1].children
 
     if on_pop is not None:
