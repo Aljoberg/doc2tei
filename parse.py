@@ -126,8 +126,9 @@ def parse_text(chunk: Chunk):
 
     center = get_center_point(chunk)
 
-    # TODO unmagic
-    if 724 < y < 742:
+
+    header = CONFIG.get("header")
+    if header is not None and header[0] < y < header[1]:
         # header, likely
         # this is fragile because i don't have a way of figuring what a header is
         # in the doc i'm making it's got 3 elements so i can just seek by 3

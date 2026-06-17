@@ -80,6 +80,8 @@ class PDFConfig(TypedDict):
     mode: Literal["pdf"]
     alignments: dict[str, PDFRuleGroup]
     on_pop: NotRequired[OnPop]
+    # parse_text's running-header skip band (ymin, ymax); None opts out
+    header: NotRequired[tuple[float, float]]
 
 
 Rule = WordRule | PDFRule

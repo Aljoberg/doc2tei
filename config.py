@@ -101,7 +101,7 @@ def is_seg(chunk: PDFChunk) -> bool:
     if prev is None or abs(chunk.x - prev.x) > 240 or abs(chunk.y - prev.y) > 230:
         return 8.9 < chunk.font_size < 10.1  # column / page top -> always body
 
-    in_indent_band = 48 < chunk.x < 64 or 287 < chunk.x < 303
+    in_indent_band = 44 < chunk.x < 64 or 287 < chunk.x < 303
     return in_indent_band and 9.9 < chunk.font_size < 10.1
 
 
@@ -114,6 +114,16 @@ def nth_previous(chunk: PDFChunk, n: int) -> PDFChunk | None:
             return None
         cur = cur.previous
     return cur
+
+
+def is_page_top(chunk: PDFChunk) -> bool:
+    # checks if chunk is on page top
+    # skips header (still magic values, to be fixed)
+    # and junk chunks
+    prev = chunk.previous
+    while prev is not None and (724 < prev.y < 742 or len(prev.text.strip()) <= 2):
+        prev = prev.previous
+    return prev is not None and prev.page_num != chunk.page_num
 
 
 # cosmetic annotations -- things that can appear inside anything and do not alter layout or structure of the document
@@ -145,6 +155,7 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
 CONFIG: PDFConfig = {
     "mode": "pdf",
     "on_pop": speaker_to_utterance,
+    "header": (724, 742),
     "alignments": {
         # all alignments
         # any other values are only used in .docx mode
@@ -165,13 +176,18 @@ CONFIG: PDFConfig = {
                 "action": pop_and_push_to("div", tag="head", type="session"),
             },
             "TIME": {
-                "test": lambda chunk: 590 < chunk.y < 600
-                and chunk.italic,  # if we're at the coordinates and italic
+                "test": lambda chunk: chunk.italic  # time is italic
+                and (
+                    590 < chunk.y < 600  # initial coords
+                    # or the "Začetek ob" that follows a session section
+                    or tag_is_on_top("head", type="sessionSection")
+                ),
                 "action": pop_and_push_to("div", tag="time"),
             },
             "CHAIRMAN": {
                 "test": lambda chunk: (
-                    tag_is_on_top("time")
+                    chunk.text.strip().startswith("PREDSEDUJE")
+                    or tag_is_on_top("time")
                     or tag_is_on_top(
                         "note", type="chairman"
                     )  # if the last tag was time or we're already in chairman
@@ -181,31 +197,23 @@ CONFIG: PDFConfig = {
                 "action": pop_and_push_to("div", tag="note", type="chairman"),
             },
             "SEJA_SECTION": {
-                # a session-section heading (e.g. "NADALJEVANJE SEJE" - the session
-                # resumes after a break). it's all-caps, centered, and sits near the
-                # top of a fresh page. we deliberately do NOT require debateSection
-                # on top: a resumed session opens mid-content, still buried in the
-                # previous speaker's note/utterance - and the action pops back to
-                # <div> anyway, so being "outside everything" isn't a precondition.
+                # "nadaljevanje seje" or stuff like that
                 "test": lambda chunk: (
                     chunk.text.isupper()  # all caps
-                    and 194 < chunk.x < 360  # centered band
-                    # near a page top: a run a few back still sits on the previous
-                    # page. walked safely so the first runs of the doc don't crash.
-                    and (prev := nth_previous(chunk, 4)) is not None
-                    and chunk.page_num != prev.page_num
+                    and 194 < chunk.x < 360  # centered
+                    and is_page_top(chunk)  # first body line on a fresh page
                 ),
                 "action": pop_and_push_to("div", tag="head", type="sessionSection"),
             },
             # --- not centered ---
             "REFERENCE_ENTRY": {
-                "test": lambda chunk: chunk.font_size == 7.0
-                or chunk.font_size == 6.0  # if we're smol
+                "test": lambda chunk: (
+                    chunk.font_size == 7.0 or 6.9 < chunk.font_size < 7.0
+                )  # if we're smol
                 and chunk.text.strip().isdigit()  # and a digit
                 and (
-                    print(chunk.line_chunk, "line chunk reference eentry")
-                    or chunk is chunk.line_chunk.runs[0]
-                ),
+                    print(f"{chunk.line_chunk=}") or chunk is chunk.line_chunk.runs[0]
+                ),  # and the first thing in the line
                 "action": ref_entry_action,
                 "append_func": ref_append,
             },
@@ -227,7 +235,7 @@ CONFIG: PDFConfig = {
                 "action": pop_and_push_to("div", tag="note", type="speaker"),
             },
             "SEG": {
-                # a body paragraph; detection lives in is_seg (indent band + jump)
+                # segment
                 "test": is_seg,
                 "action": pop_and_push_to(
                     "u", "div", tag="seg", chunked=False
@@ -236,20 +244,6 @@ CONFIG: PDFConfig = {
         },
     },
 }
-
-# for pdf:
-# this guy thinks he can write docs
-
-
-# a searchable pdf is just a soup of positioned characters - there are no words,
-# lines or paragraphs. get_frames only does the document-agnostic part: it
-# reassembles the characters into visual lines (the "frames"), reconstructing the
-# spacing (a gap wider than `threshold` between two chars is a space, and every
-# line ends with one so consecutive lines don't fuse). every line is yielded as a
-# single chunk whose `.text` is the whole line and whose `.x`/`.y` mark where it
-# starts - all the document-specific judgement (what is a speaker, an indent, a
-# note ...) lives in the config rules. the per-font pieces of the line are kept in
-# `.runs` so it can still be appended with its italic/bold/reference formatting.
 
 
 # since a searchable pdf is just a soup of characters at a specific x & y value
@@ -262,12 +256,9 @@ CONFIG: PDFConfig = {
 # each child chunk has a .line_chunk property that carries the line chunk it's in
 # then it just yields each child chunk
 def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
-    # raw pdfminer.six instead of pdfplumber: pdfplumber wraps every glyph in a
-    # ~25-key dict and runs resolve_all/process_attr on each (~1.4x overhead),
-    # but get_chunks only needs x/y/font/size and regroups the chars itself. so
-    # we read LTChars straight off each page in content-stream order - which is
-    # exactly what pdfplumber's default (laparams=None) produced; verified to be
-    # an identical char sequence, so the magic coordinates in the rules still hold.
+    # we use pdfminer to extract things more efficiently
+    # because as a program written in python performance is our top priority
+    # naturally
     from pdfminer.pdfpage import PDFPage
     from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
     from pdfminer.converter import PDFLayoutAnalyzer
@@ -296,7 +287,6 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                                 "y0": item.y0,
                                 "fontname": item.fontname,
                                 "size": item.size,
-                                **vars(item),  # yeah fuck you
                             }
                         )
                     elif hasattr(item, "__iter__"):  # LTFigure etc. - recurse in
@@ -319,12 +309,10 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
             cur: list[dict] = []
             prev_y = None
             for char in page_chars:
-                if prev_y is not None:
-                    print(
-                        f"y pos, {char["text"]=} {abs(char["y0"] - prev_y)=}, cur={"".join(i["text"] for i in cur)}"
-                    )
-                    print(char)
-                if prev_y is not None and abs(char["y0"] - prev_y) > line_treshold:
+                if prev_y is not None and (
+                    prev_y - char["y0"] > line_treshold
+                    or abs(prev_y - char["y0"]) > line_treshold * 2
+                ):
                     lines.append(cur)
                     cur = []
                 cur.append(char)
@@ -337,10 +325,6 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                 runs: list[dict] = []
                 prev: dict | None = None
                 for char in line:
-                    bool(prev) and print(
-                        char["x0"] - prev["x1"],
-                        f"diff in x of {char["text"]=}, {prev["text"]=}, text={"".join(i["text"] for i in line)}",
-                    )
                     gap = bool(prev) and char["x0"] - prev["x1"] > threshold
                     if (
                         char["text"] == " "
