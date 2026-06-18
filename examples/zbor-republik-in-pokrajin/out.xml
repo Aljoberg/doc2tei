@@ -1,0 +1,969 @@
+<TEI version="3.3.0"
+	xmlns="http://www.tei-c.org/ns/1.0">
+	<text>
+		<body>
+			<div type="debateSection">
+				<head type="session">
+					<hi rend="bold">SEDMA SEJA ZBORA REPUBLIK IN POKRAJIN</hi>
+				</head>
+				<time>
+					<emph>(26. decembra 1978 ob 9,05)</emph>
+				</time>
+				<note type="chairman">PREDSEDUJE PREDSEDNIK ZBORA ZORAN POLIČ</note>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ 
+					<emph>(SR Slovenija):</emph>
+				</note>
+				<u who="#ZoranPolič">
+					<seg>Tovarišice in tovariši delegati, začenjam sedmo sejo zbora republik in pokrajin skupščine SFRJ.</seg>
+					<seg>Ugotavljam, da smo sklepčni in da lahko zbor veljavno odloča.</seg>
+					<seg>Delegati v zboru Ivo Klemenčič, Andrija Mijuškovič, Hakija Pozderac, Lozinka Papič, Djuro Vekič, Edina Rešidovič in Milovan Djokanovič so sporočili, da so zadržani. •</seg>
+					<seg>Delegatom smo poslali zapisnik šeste seje zbora, ki je bila 6. decembra 1978.</seg>
+					<seg>Ima kdo kakšno pripombo k zapisniku? (Ne.)</seg>
+					<seg>Ker ni pripomb, bomo zapisnik podpisali.</seg>
+					<seg>Na vrsti je določitev dnevnega reda.</seg>
+					<seg>V aktu o sklicu te seje zbora ste predlagali dnevni red.</seg>
+					<seg>Ima kdo kakšen predlog za spremembo ali dopolnitev? (Ne.)</seg>
+					<seg>Ker ni predlogov za spremembo in dopolnitev, ugotavljam, da je zbor sprejel dnevni red, kot je predlagan v aktu o sklicu te seje.</seg>
+					<seg>Usklajevanje stališč o nekaterih aktih še ni dokončano. Pričakujemo, da bodo stališča usklajena med delom zbora.</seg>
+					<seg>Preden bomo obravnavali vprašanja po sprejetem dnevnem redu, bi vas rad obvestil o naslednjem.</seg>
+					<seg>V dogovoru s predsednikom zveznega zbora skupščine SFRJ predlagam, da skupaj z delegati tega zbora poslušamo ekspoze predsednika zveznega izvršnega sveta tovariša Veselina Djuranoviča o predlogu resolucije o politiki uresničevanja družbenega plana Jugoslavije od leta 1976 do leta 1980 v letu 1979.</seg>
+					<seg>Se vsi delegati strinjate s tem predlogom? (Da.)</seg>
+					<seg>Predlagam, da poslušamo odgovore na delegatska vprašanja in nova vprašanja po ekspozeju zveznega izvšnega sveta.</seg>
+					<seg>Je kdo proti temu? 
+						<hi rend="bold">(Ne.)</hi>
+					</seg>
+					<seg>Da bi omogočili zveznemu zboru skupščine SFRJ obravnavo sprememb proračuna federacije za to leto, predlagamo, da pred ekspozejem opravimo razpravo o aktih, naštetih v 1. do 6. točki dnevnega reda.</seg>
+					<seg>V skladu s prvim odstavkom 113. člena poslovnika skupščine SFRJ vas obveščam, da je bil predlog odloka o načinu urejanja in izdajanja stenografskih zapiskov s sej zborov skupščine SFRJ, ki ga enakopravno sprejmeta oba zbora, sprejet na prejšnjih sejah v različnem besedilu, kot smo vas že takrat obvestili. Zato bomo v dogovoru s predsednikom zveznega zbora zaprosili komisijo za obveščanje kot predlagateljico in zakonodajnopravni komisiji obeh zborov, da preučijo 
+						<hi rend="bold">sporna</hi> vprašanja in da pride ta odlok po tem na eno izmed prihodnjih sej skladno s poslovnikom vnovič na dnevni red sej obeh zborov.
+					</seg>
+					<seg>Ker smo se o tem dogovorili, prehajamo zdaj na dnevni red.</seg>
+					<seg>Na vrstije 
+						<emph>prva</emph> točka dnevnega reda:
+					</seg>
+					<seg>
+						<hi rend="bold">Določitev predloga zakona o spremembah zakona o določitvi skupnega. obsega proračunskih odhodkov federacije za leto 1978</hi>
+					</seg>
+					<seg>Članom zbora smo poslali besedilo tega zakonskega predloga, ki je pripravljen na podlagi usklajenih stališč skupščin republik in skupščin avtonomnihpokrajin.</seg>
+					<seg>Poslali smo vam tudi stališča skupščin vseh republik in avtonomnih pokrajin in poročila odbora za finance, zakonodajnopravne komisije zbora in komisije skupščine SFRJ za ugotavljanje istovetnosti besedil v jezikih narodov Jugoslavije.'</seg>
+					<note xml:id="#note1" place="foot" n="1">Gradivo v zvezi s to točko dnevnega reda je na voljo v informacijsko-dokumentacijski službi skupščine 
+						<hi rend="bold">SFRJ v</hi> skladu s poslovnikom skupščine 
+						<hi rend="bold">SFRJ.</hi>
+					</note>
+					<seg>Začenjam obravnavo.</seg>
+					<seg>Želi kdo besedo? (Nihče.)</seg>
+					<seg>Se vse delegacije strinjajo, da določimo ta zakonski predlog v predlaganem besedilu (Da.)</seg>
+					<seg>Ker se vse delegacije strinjajo in imajo pooblastila svojih skupščin, se bomo zdaj dokončno izrekli.</seg>
+					<seg>Je delegacija skupščine SR Bosne in Hercegovine za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Slovenije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+					<seg>Delegacija skupščina SAP Kosova? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija sabora SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR Črne gore? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel predlog zakona o spremembah zakona o določitvi skupnega obsega proračunskih odhodkov federacije za leto 1978.</seg>
+					<seg>Morebitni presežek prihodkov nad odhodki bo uporabljen predvsem za poravnavo neporavnanih obveznosti nasproti nekaterim uporabnikom proračuna federacije za leto 1978.</seg>
+					<seg>Se delegati strinjajo s takšnim sklepom? (Strinjajo se.)</seg>
+					<seg>Želi kdo besedo? (Nihče.)</seg>
+					<seg>Je kdo proti temu? (Ne.)</seg>
+					<seg>Torej se strinjamo s sklepom.</seg>
+					<seg>Na vrsti je 
+						<emph>druga</emph> točka dnevnega reda:
+					</seg>
+					<seg>
+						<hi rend="bold">Določitev predloga odloka o spremembah</hi> in 
+						<hi rend="bold">dopolnitvah odloka o določitvi prihodkov od carin</hi> in drugih 
+						<hi rend="bold">uvoznih davščin, ki se v letu 1978 odstopajo Interesni skupnosti Jugoslavije za ekonomske odnose s tujino</hi>
+					</seg>
+					<seg>Delegatom smo poslali besedilo, tega odloka, ki je pripravljen na podlagi usklajenih stališč skupščin republik in avtonomnih pokrajin. Poslali smo vam tudi stališča skupščin vseh republik in avtonomnih pokrajin in poročila odbora za finance, zakonodajnopravne komisije in komisije skupščine SFRJ za ugotavljanje istovetnosti besedil vjezikih narodov Jugoslavije.
+						<ref target="#note3">3</ref>
+					</seg>
+					<seg>Začenjam obravnavo.</seg>
+					<seg>želi kdo besedo? {Nihče.)</seg>
+					<seg>Se delegacije strinjajo, da določimo ta zakonski predlog v predlaganem besedilu? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, njihove skupščine pa so jih pooblastile, da se lahko izrečejo o zakonu v celoti, se bomo zdaj o njem izrekli. ? Zakon je objavljen 
+						<emph>v</emph> Uradnem listu 
+						<hi rend="bold">SFRJ,</hi> št. 70 z dne 29. decembra 1978.3 Gradivo je na voljo v informacijsko-dokumentacijski službi skupščine SFRJ v skladu s skupščinskim poslovnikom.
+					</seg>
+					<seg>Je delegacija skupščine SR Bosne in Hercegovine za? {Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Slovenije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Kosova? (Da.)</seg>
+					<seg>Delegacija sabora SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR Črne gore? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel predlog odloka o predlaganem besedilu.4</seg>
+					<seg>Na vrsti je 
+						<emph>tretja</emph> točka dnevnega reda:
+					</seg>
+					<seg>
+						<hi rend="bold">Določitev predloga odloka o spremembi odloka o določitvi skupnega</hi> zneska 
+						<hi rend="bold">deviz za potrebe federacije v letu 1979</hi>
+					</seg>
+					<seg>Članom zbora smo poslali besedilo predloga tega odloka, ki je pripravljen na podlagi usklajenih stališč skupščin republik: in avtonomnih pokrajin.</seg>
+					<seg>Poslali smo vam tudi stališča skupščin republik in avtonomnih pokrajin in poročila odbora za finance, zakonodajnopravne komisije zbora in komisije skupščine SFRJ za ugotavljanje istovetnosti besedil v jezikih narodov Jugoslavije.</seg>
+					<seg>Začenjam obravnavo.</seg>
+					<seg>Želi kdo besedo? (Nihče.)</seg>
+					<seg>Se vse delegacije strinjajo, da določimo ta zakonski predlog v predlaganem besedilu? (Strinjajo se.)</seg>
+					<seg>Ker so se vse delegacije strinjale in imajo pooblastila, da se izrečejo o zakonu v celoti, se bomo zdaj o njem izrekli.</seg>
+					<seg>Je delegacija skupščine SR Bosne in Hercegovine za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Slovenije? {Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Kosova? (Da.)</seg>
+					<seg>Delegacija sabora SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR Črne gore? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel predlog tega odloka v predlaganem besedilu,°</seg>
+					<note xml:id="#note4" place="foot" n="4">Odlok o spremembah in dopolnitvah odloka o določitvi· prihodkov od carin in drugih uvoznih davščin je objavljen v Uradnem listu SFRJ, št. 70 z dne 29. decembra 1978.</note>
+					<note xml:id="#note5" place="foot" n="5">Odlok o določitvi skupnega zneska deviz za potrebe federacije v letu 1978 je objavljen v Uradnem listu SFRJ, št. 70 z dne 29. decembra 1978,</note>
+					<seg>Na vrsti je 
+						<emph>četrta</emph> točka dnevnega reda: 
+						<hi rend="bold">Določitev</hi> pred.loga 
+						<hi rend="bold">zakona</hi> o 
+						<hi rend="bold">spremembah</hi> in 
+						<hi rend="bold">dopolnitvah zakona o zveznih upravnih taksah</hi>
+					</seg>
+					<seg>Članom zbora smo poslali besedilo tega zakonskega predloga, ki je pripravljen na podlagi usklajenih stališč skupščin republik in avtonomnih pokrajin. Poslali smo vam tudi stališča skupščin republik in avtonomnih pokrajin,6 in poročila odbora za finance, zakonodajnopravne komisije zbora in komisije skupščine SFRJ 
+						<emph>za</emph> ugotavljanje istovetnosti besedil v jezikih narodov Jugoslavije.'
+					</seg>
+					<seg>Začenjam obravnavo. Želi kdo besedo? (Nihče.) Ker se vse delegacije strinjajo in ker imajo pooblastila, se bomo zdaj izrekli o zakonskem predlogu v celoti.</seg>
+					<seg>Je delegacija skupščine SR Bosne in Hercegovine za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.) Delegacija skupščine SR Slovenije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Kosova? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija sabora SR Hrvatske? (Da.) Delegacija skupščine SR Črne gore? (Da.) Ker so se vse delegacije izrekle za, objavljam, da je zbor republik in pokrajin sprejel v predlaganem besedilu predlog zakona o spremembah in dopolnitvah zakona o zveznih upravnih taksah.* Na vrsti Je 
+						<emph>peta</emph> točka dnevnega reda:
+					</seg>
+					<seg>
+						<hi rend="bold">Določitev predloga zakona o spremembah</hi> in 
+						<hi rend="bold">dopolnitvah zakona o kontroli kakovosti kmetijskih</hi> in živil
+						<hi rend="bold">skih proizvodov v zunanjetrgovinskem prometu</hi>
+					</seg>
+					<note xml:id="#note6" place="foot" n="6">Priloge 1-8.</note>
+					<note xml:id="#note7" place="foot" n="7">Priloge 9-11. Zakon je objavljen v Uradnem listu 
+						<hi rend="bold">SFRJ,</hi> št. 70 z dne 29. decembra 1978.
+					</note>
+					<seg>Članom zbora smo poslali besedilo tega zakonskega predloga, ki je pripravljan na podlagi usklajenih stališč skupščin republik in skupščin avtonomnih pokrajin. Poslali smo vam tudi stališča skupščin vseh republik in skupščin avtonomnih pokrajin.* in poročila odbora za trg in cene, zakonodajnopravne komisije zbora in komisije skupščine SFRJ za ugotavljanje istovetnosti besedil v jezikih narodov Jugoslavije! ° Začenjam obravnavo. Želi kdo besedo? (Nihče.) Se vse delegacije strinjajo s tem, da določimo ta zakonski predlog v predlaganem besedilu? (Da.)</seg>
+					<seg>Ker so se vse delegacije strinjale in imajo pooblastila svojih skupščin, se bomo zdaj izrekli o zakonskem predlogu v celoti. Je delegacija skupščine SR Bosne in Hercegovine za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Slovenije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.) Delegacija skupščine SAP Vojvodine? (Da.) Delegacija skupščine SAP Kosova? (Da.) Delegacija sabora SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR Črne gore? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel v predlaganem besedilu predlog zakona o spremembah in dopolnitvah zakona o kontroli kakovosti kmetijskih in živilskih proizvodov v zunanjetrgovin- skem prometu.'' Kakor smo se dogovorili na začetku, bomo zdaj prekinili sejo in ob 9,30 nadaljevali delo v veliki dvorani.</seg>
+					<seg>Predlagam, da nadaljujemo delo našega zbora 15 minut po skupni seji.</seg>
+				</u>
+				<note>
+					<hi rend="italic">{Seja je bila prekinjena ob 9,15.)</hi>
+				</note>
+				<note xml:id="#note9" place="foot" n="9">Priloge 12-19.</note>
+				<note xml:id="#note10" place="foot" n="10">Priloge 20, 21 in 11. 11 Zakon je objavljen v Uradnem listu 
+					<hi rend="bold">SFRJ,</hi> št. 70 z dne 29. decembra 1978.
+				</note>
+				<note type="chairman">PREDSEDUJE PREDSEDNIK ZBORA REPUBLIK IN 
+					<hi rend="bold">POKRAJIN</hi> ZORAN POLIČ
+				</note>
+				<note type="speaker">PREDSEDUJOČI ZORAN POLIČ 
+					<emph>(SR Slovenija):</emph>
+				</note>
+				<u who="#ZoranPolič">
+					<seg>Tovarišice in tovariši delegati, na podlagi drugega odstavka 103. člena poslovnika skupščine SFRJ sta zbora sklenila imeti skupno sejo, da bi poslušala ekspoze predsednika zveznega izvršnega sveta v zvezi s predlogom resolucije o politiki uresničevanja družbenega plana Jugoslavije od leta 1976 do leta 1980 v letu 1979.</seg>
+					<seg>Besedo ima predsednik zveznega izvršnega sveta tovariš Veselin Djuranovič.</seg>
+				</u>
+				<note type="speaker">VESELIN DJURANOVIČ, predsednik ZIS:</note>
+				<u who="#VeselinDjuranovič">
+					<seg>Tovarišice in tovariši delegati! Ne bom bral vsega ekspozeja, marveč samo en del l1 a</seg>
+					<seg>Opozorim naj vas, da je v uvodu, na prvi in drugi strani tega besedila do poglavja I razložen potek dela za sprejetje resolucije o uresničevanju srednjeročnega načrta v letu 1979 s pristavkom, da je bila dosežena popolna enotnost družbenopolitičnih dejavnikov v oceni temeljnih, razvojnih in ekonomskih tokov in v oblikovanju najpomembnejših nalog za prihodnje leto, kar je bistveni pogoj tudi za uspešno uresničevanje politike, ki jo bomo opredelili z resolucijo in dokumenti, ki jih sprejmemo hkrati z njo.</seg>
+					<seg>Za družbeni razvoj v letu 1979 je značilna nadaljnja rast gospodarske dejavnosti v smeri uresničevanja ciljev družbenega načrta in nadaljnjih naporov za razvoj socialističnih, samoupravnih in družbenoekonomskih odnosov ob uporabi zakona o združenem delu in drugih zakonov, ki smo jih izdali v preteklem obdobju.</seg>
+					<seg>Po najnovejših podatkih smo v letu 1978 dosegli za približno 9 odstotkov večjo industrijsko proizvodnjo, za prek 3 odstotke večjo storilnost dela, za prek 4 odstotke večjo zaposlenost, za približno 11 odstotkov več investicij 
+						<emph>v</emph> osnovna sredstva gospodarstva, realni osebni dohodki na zaposlenega naj bi se povečali za približno 6 11? Popolno besedilo ekspozeja je na voljo v informacijsko
+					</seg>
+					<seg>dokumentacijski službi skupščine 
+						<hi rend="bold">SFRJ.</hi>
+					</seg>
+					<seg>odstotkov, primanjkljaj v plačilni bilanci bo manjši kot v letu 1977, absolutno in relativno naj bi se tudi zmanjšale izgube v gospodarstvu. Pričakujemo relativno zadovoljivo proizvodnjo osnovnih kmetijskih pridelkov - tudi če bi šlo za neugodne vremenske razmere.</seg>
+					<seg>Uspehi, doseženi v materialnem razvoju v letu 1978, so pripomogli k temu, da smo temeljne cilje in naloge iz družbenega načrta Jugoslavije od leta 1976 do 1980 uspešneje izpolnjevali. Zdaj lahko ugotovimo, da smo v prvih treh letih uresničevanja družbenega načrta dosegli naslednjo poprečno letno rast: družbeni proizvod celotnega gospodarstva se je povečal za približno 6 odstotkov, industrijska proizvodnja za približno 7 odstotkov, storilnost dela za 2,2 odstotka, zaposlenost za dobre 4 odstotke, celotne investicije v osnovna sredstva gospodarstva za približno 11 odstotkov, rast kmetijske proizvodnje pa je bila živahna, čeprav so bili rezultati v letu 1978 nekoliko slabši. Realni osebni dohodki na zaposlenega so se povečali za 4,3 odstotka, življenjski standard za okoli 6 odstotkov, primanjkljaj v plačilni bilanci pa smo spravili v okvire, ki jih je predvideval družbeni načrt (zaradi tega, ker v letu 1976 ni bilo primanjkljaja in ker smo se leta 1978 približali ravni, s kakršno smo računali v družbenem načrtu). Vse tokaže, da gre za pomembne uspehe v materialnem razvoju in za nadaljnje dinamično ustvarjanje proizvodnih zmogljivosti.</seg>
+					<seg>Hkrati se je nadaljeval procesrazvoja socialističnih samoupravnih odnosov. V letu 1978 smo vložili še veliko truda za uresničevanje zakona o združenem delu. Dejavnost se je nadaljevala v smeri nadaljnjega uveljavljanja družbenoekonomske vsebine dohodka, razčlenjevali smo temelje pridobivanja dohodka, izboljšali razmerja v razporejanju dohodka in čistega dohodka, razvijali odnose med delavci v združenem delu, izboljšali samoupravno organiziranje združenega dela, predvsem v temeljnih organizacijah združenega dela in njihovih odnosih v OZD, pri čemer smo sistem samoupravnega organiziranja institucionalno domala v celoti dogradili.g</seg>
+					<seg>Nekoliko slabše in počasneje se je v letu 1978 razvijal proces preobražanja bančništva in finančnega področja kot tudi ekonomskih odnosov s tujino - na temeljih novih zakonskih predpisov na teh področjih. Kmalu se bo končal proces organiziranja bank - z ustanavitvijo internih, temeljnih in združenih bank, pri čemer naj bi prišlo do bistvenih sprememb po zakonskih rešitvah. Tudi v izvajanju novih zakonov s področja ekonomskih odnosov s tujino je pretežno končana faza institucionalizacije. Ustanovili smo samoupravne interesne skupnosti republik in avtonomnih pokrajin, kljub vsem pomanjkljivostim smo prešli na sistem enotne projekcije plačilne in devizne bilance države s plačilno-bilančnimi in deviznimi pozicijami republik in pokrajin. Ustanovili smo 63 sekcij za izboljšanje ekonomskih odnosov s tujino, v katere se je vključilo približno 1.600 organizacij združenega dela. Nastale so možnosti, da pospešimo proces konstituiranja in funkcioniranja skupnih gospodarskih predstavništev v tujini.</seg>
+					<seg>Nadaljevalo se je delo za izdajo številnih zveznih zakonskih predpisov s področja gospodarskega in političnega sistema.</seg>
+					<seg>Izdani so bili zakon o temeljih sistema državne uprave, o zveznem izvršnem svetu, o zveznih upravnih organih kot tudi zakon o organizaciji in delovnem področju zveznih upravnih organov in zveznih organizacij, ki smo jih že začeli uporabljati. V fazi sprejemanja pa je zakon o družbenih svetih.</seg>
+					<seg>Vse opisano kaže, da se precej živahno razvija izdajanje novih zakonskih predpisov in tudi izvajanje že izdanih, s čimer naj bi v celoti gradili naš gospodarski in politični sistem.</seg>
+					<seg>Nadaljnje besedilo na peti, šesti, sedmi in osmi strani govori o nekaterih neugodnih težnjah in vzrokih, ki jih le-ti povzročajo. Tu opozarjam na poglabljanje neskladnosti med dejansko razpoložljivim dohodkom na eni strani in vsemi oblikami porabe na drugi strani; na preveliko domačo konjunkturo in neskladnost v blagovno-denarnih razmerjih - počasnejšo rast storilnosti dela od predvidene in premajhno uveljavljenost kakovostnih dejavnikov gospodarjenja; pojav nekoliko močnejših inflacijskih teženj v zadnjih mesecih leta; težave v uresničevanju politike uravnotežene blagovne menjave s tujino in utrjevanja plačilne bilance. Poleg tega so dane ocene sedanjih gospodarskih gibanj v svetu in napovedi možnega razvoja svetovnega gospodarstva v letu 1979.</seg>
+					<seg>Poleg doseženih uspehov, ki so veliki, so omenjene tudi neugodne težnje, da bi se lahko, upoštevaje vse to, izoblikovale temeljne opredelitve politike uresničevanja družbenega načrta v letu 1979.</seg>
+					<seg>V se nakazane značilnosti družbenoekonomskih tokov in razmerij nedvomno potrjujejo ocene, da so tu elementi gospodarske nestabilnosti in da je nevarnost, da se še povečajo. Zato se je bilo treba brez pomišljanja odločiti za to, da mora biti politika družbenoekonom-. skega razvoja v letu· 1979 naravnana k zagotavljanju več-</seg>
+					<seg>je stabilnosti v gospodarskih tokovih in družbenih odnosih in da je treba tudi dinamiko gospodarske rasti bolje uskladiti z doslednim izvajanjem politike ekonomske stabilizacije. Prav zaradi tega je v predlogu politike uresničevanja družbenega načrta v letu 1979 poudarek na kakovostni gospodarski rasti, na ekonomski stabilizaciji in v skladu s tem na ustrezni dinamiki gospodarske rasti.</seg>
+					<seg>Ko je zvezni izvršni svet določil to najpomembnejšo usmeritev, je sodil, da je bitko za kakovostno gospodarsko rast in ekonomsko stabilizacijo v letu 1979 mogoče uspešno izvojevati, če bo več skladnosti med ekonomsko stabilizacijo in dinamiko razvoja oziroma če bo gospodarska rast nekoliko bolj umirjena.</seg>
+					<seg>V skladu s tem smo predlagali, naj bi stopnja rasti družbenega proizvoda celotnega gospodarstva znašala okoli 6 odstotkov, kar je za točko nižje od poprečne letne stopnje rasti družbenega proizvoda celotnega gospodarstva, predvidene v srednjeročnem načrtu, in naj bi stopnja rasti industrijske proizvodnje znašala 7 odstotkov, kar je prav tako za točko nižja od tiste, ki je predvidena v srednjeročnem načrtu. Dejansko gre za stopnje rasti, ki so približno tolikšne kot poprečne stopnje rasti v teh treh letih srednjeročnega načrta.</seg>
+					<seg>Nekoliko bolj umirjene stopnje rasti v letu 1979 si ni mogoče razlagati tako, da odstopamo od usmeritve k dinamični rasti, še manj pa razumeti kot nekaj, kar je v nasprotju s cilji in nalogami srednjeročnega načrta, in gledati na to neodvisno od že nakazanih stališč v petletnem načrtu. Nasprotno, takšna politika izvira iz vsebine in smisla temeljnih opredelitev srednjeročnega načrta v globoki medsebojni odvisnosti in pogojenosti dinamike rasti in politike ekonomske stabilizacije.</seg>
+					<seg>Stabilizacija ekonomskih tokov in kakovostnih sprememb v procesu družbene reprodukcije je eden temeljnih ciljev družbenega načrta Jugoslavije od leta 1976 do 1980. Družbeni načrt Jugoslavije je postavil povsem jasno nalogo: ,,ustvariti pogoje, da bo bolj dinamičen in skladnejši gospodarski in socialni razvoj postal temelj večje in trajnejše stabilnosti'.</seg>
+					<seg>Že takrat, na začetku načrtnega obdobja, ko smo izoblikovali takšno zasnovo, smo računali, da bo zelo težavna in zapletena naloga ustvariti pogoje za trajnejšo stabilnost. Da je res tako, da smo v načrtu računali z neugodnimi pogoji za uresničitev postavljenih ciljev, kaže dejstvo, da smo v njem zapisali tole:</seg>
+					<seg>,,V izjemno zapletenih pogojih bi bilo treba s skupno dogovorjeno dejavnostjo in ukrepi ekonomske politike zagotoviti, da letna stopnja gospodarske rasti ne bo manjša od približno pet, industrije pa od 6 odstotkov."</seg>
+					<seg>Predlagana razvojna politika za leto 1979 z bolj umirjeno stopnjo rasti dejansko izhaja iz ocene, da ni potrebnih pogojev za uresničitev omenjenih stopenj gospodarske rasti, da pa tudi niso tako neugodni, da bi se morali odločiti za najnižjo stopnjo gospodarske rasti, s katero smo v družbenem načrtu računali v tako ime- 
+						<hi rend="bold">seja 13</hi>
+					</seg>
+					<seg>novanih izjemno zapletenih razmerah. Ni odveč dodati, da so v teh razmerjih predlagane stopnje rasti dinamične, kot so precej dinamične tudi stopnje rasti, dosežene v prvih treh letih srednjeročnega načrta.</seg>
+					<seg>Ko se zvezni izvršni svet opredeljuje za predlagano razvojno politiko v prihodnjem letu s poudarkom na ekonomski stabilnosti in na kakovosti rasti, hkrati opozarja na najtesnejšo povezanost med predlagano politiko družbenoekonomskega razvoja in razvojem socialističnih samoupravnih družbenoekonomskih odnosov. Zato resolucija tudi sloni na jasni opredelitvi, da moramo prihodnje leto nepreklicno ustaviti nadaljnjo slabitev materialnih temeljev samoupravljanja in začeti proces postopne, vendar pa nenehne krepitve. Znano je, da že nekaj let izrazito peša akumulativna sposobnost OZD, čeprav proizvodne sile družbe močno naraščajo. Nedvomno gre za enega največjih problemov v sedanji fazi razvoja naše družbe. Zato mora biti tudi glavna smer naše akcije in glavni in odločilni boj izbojevan s tem, da uskladimo vse oblike porabe z realno razpoložljivim dohodkom oziroma družbenim proizvodom, in sicer na tak način in v takih razmerjih, da bomo ne samo zanesljivo ustavili nadaljnjo slabitev materialne podlage združenega dela, marveč zagotovili postopno, a obvezno krepitev njegove akumulativne in reproduktivne sposobnosti.</seg>
+					<seg>Nesporno je, da mora hkrati s tem teči intenzivna dejavnost za večjo storilnost dela, za povečano učinkovitost gospodarjenja in za ustvarjanje večjega dohodka, kar sedanje proizvodne in gospodarske zmogljivosti tudi realno omogočajo. Napori za uskladitev vseh oblik porabe z realno razpoložljivim dohodkom, da je rezultat tega krepitev akumulativnosti združenega dela, ne morejo rešiti aktualnih problemov krepitve materialne podlage samoupravljanja, če storilnost dela in učinkovitost gospodarjenja nista v središču pozornosti in dejavnosti organizacij združenega dela.</seg>
+					<seg>Predlagana razvojna politika za leto 1979 vključuje zahtevo, da zagotovimo precej ugodnejša gibanja na področju ekonomskih odnosov s tujino. Razlogi za to opredelitev so jasni. Treba je preprečiti, da bi se še naprej zmanjševal naš delež v mednarodni menjavi, povečeval trgovinski primanjkljaj in primanjkljaj v plačilni bHanci v celoti in da bi naraščala zadolženost naše države nasproti tujini. Nedvomno gre za izredno težavno in zahtevno nalogo, vendar si moramo odločno prizadevati za njeno uspešno uresničitev.</seg>
+					<seg>V letu 1979 je protiinflacijska politika zelo pomembna. Glavne možnosti za uspešno uresničevanje protiinflacijske politike vidimo predvsem v usklajevanju vseh oblik porabe z realno ustvarjenim dohodkom, v razvijanju storilnosti dela in učinkovitosti gospodarjenja, v uresničevanju realnih razmerij med ponudbo in povpraševanjem in doslednem vztrajanju pri politiki cen, vsebovani v resoluciji.</seg>
+					<seg>Največjega pomena je politika razporejanja dohodka in čistega dohodka in razporejanja sredstev za čiste osebne dohodke, dejansko usklajevanje oblik porabe z razpoložljivim družbenim proizvodom oziroma dohodkom. Stališča glede tega, vsebovana v resoluciji, narekujejo, naj celotna končna poraba raste počasneje od družbenega proizvoda in dohodka, osebna poraba in celotni osebni dohodki pa naj rastejo počasneje od dohodka, medtem ko naj čisti osebni dohodki naraščajo počasneje od ustvarjenega čistega dohodka, celotna sredstva za kritje splošnih in skupnih potreb pa naj naraščajo počasneje od nominalne rasti dohodka in družbenega proizvoda, sredstva za skupno porabo v organizacijah združenega dela pa počasneje od dohodka. Z doslednim uresničevanjem teh stališč je mogoče zagotoviti popolnejšo skladnost med porabo in realno ustvarjenim dohodkom ter večje izločanje za krepitev materialne podlage združenega dela.</seg>
+					<seg>Letos in v prejšnjih letih se nam ni posrečilo uresničiti enakih ali zelo podobnih stališč glede tega. Opredelitve so ostale deklarativne, pri čemerje naraščalo nezadovoljstvo zaradi nemoči, da bi uresničili dogovorjeno politiko. Zato si v letu 1979 ne smemo privoščiti, da bi se ponovilo kaj podobnega, ker bi bile materialne in družbene posledice dosti resnejše in hujše.</seg>
+					<seg>Nedvomno mora odločilna bitka za spremembe na področju delitve družbenega proizvoda in dohodka v skladu s predlagano razvojno politiko potekati v temeljnih organizacijah združenega dela, v delovnih organizacijah, v skupščinah samoupravnih interesnih skupnosti in družbenopolitičnih skupnosti. Na skoraj 26.000 temeljnih organizacijah združenega dela in delovnih skupnosti na področju gospodarstva, skoraj 
+						<emph>5</emph> .500 samoupravnih interesnih skupnostih kakor tudi 512 občinskih skupščinah in prav tako skupščinah republik in avtonomnih pokrajin leži izredno velika odgovornost za uresničitev predlagane politike. Delegacije združenega dela v skupščinah samoupravnih interesnih skupnosti in družbenopolitičnih skupnosti morajo dejansko čimbolj odgovorno sprejemati odločitve, s katerimi bodo zagotovile, da bodo stopnje prispevkov iz dohodka in osebnih dohodkov čimbolj dosledno izražale stališča glede uskladitve vseh oblik porabe z realno ustvarjenim dohodkom.
+					</seg>
+					<seg>V tem pogledu je posebnega pomena obveznost iz zakona o združenem delu, da se morajo delavci v temeljnih organizacijah združenega dela najprej izreči o predlaganih prispevnih stopnjah. To načelo je treba uveljaviti dejansko in ne le formalno. Zato je treba temeljito obrazložiti predloge prispevnih stopenj. To bi bila hkrati močna spodbuda za uresničitev načela svobodne menjave dela. Tako bi prišli na dnevni red realni programi razvoja družbenih dejavnosti, kakovost in cene njihovih storitev in dejanski rezultati njihovega dela. Pri tem moramo upoštevati, da je to izjemno zapleten proces tudi zato, ker je razvoj negospodarskih družbenih dejav-e 
+						<hi rend="bold">Zbor republik in pokrajin</hi>
+					</seg>
+					<seg>nosti dosegel visoko raven in da je precej težav v reševanju številnih razvojnih in sprotnih problemov v teh dejavnostih. Po drugi strani pa lahko po tej poti zaostrimo vprašanje racionalnega razvoja teh dejavnosti, ekstenzivnosti v njihovem razvoju kot tudi probleme njihove strukture itd.</seg>
+					<seg>Hkrati s tem moramo kritično preučiti temeljne rešitve v samoupravnih sporazumih o razporejanju da- hodka in čistega dohodka in o delitvi sredstev za osebne dohodke delavcev, da bi še jasneje in celoviteje opredeli- li merila, po katerih potekata razporejanje in delitev.</seg>
+					<seg>Tukaj naj poudarim tudi pomen razprav v temeljnih organizacijah združenega dela ob primerjalnih kazalnikih poslovnih in finančnih uspehov, ki jih lahko dobi od službe družbenega knjigovodstva, kot tudi, da je treba opustiti prakso, da prihaja pogosto do sprememb predpisov o izkazovanju in sistemu obračuna dohodka, zaradi česar ga ni mogoče primerjati z dohodkom iz prejšnjega leta. Naj omenim opozorilo službe družbenega knjigovodstva, da je bil tudi v tem letu nominalno izkazani dohodek, ki pomeni izhodiščno podlago za razporejanje in porabo, večji od dejanskega dohodka za lO in več točk. Na to ne smemo pozabiti, ko sprejemamo zaključni račun za leto 1978.</seg>
+					<seg>Naslednja, za uresničitev politike stabilnega razvoja v letu 1979 bistvena naloga je, da uskladimo rast investicij z realno razpoložljivimi sredstvi. Tu nastajajo trije veliki problemi:</seg>
+					<seg>Prvič, obseg investiranja v osnovna sredstvaje glede na družbeni proizvod zelo velik. Podatki kažejo, da je to razmerje presegalo 34 odstotkov, z investicijami v obratna sredstva pa presega 40 odstotkov. Očitno to ni v skladu z našimi realnimi možnostmi, niti s predvideno politiko družbenega načrta.</seg>
+					<seg>Drugič, problem je tudi neugodna struktura virov, iz katerih se napaja tako močna investicijska poraba. Najmanjši delež v financiranju investicij imajo sredstva organizacij združenega dela. če bi ustavili vse nadaljnje investicije, tekočih investicij nekaj let ne bi mogli kriti s sredstvi organizacij združenega dela. Zato prevladujejo tista sredstva za investicije, ki jih črpamo iz domačih in tujih kreditov in tako nenehno rasteta zadolženost gospodarstva in zadolženost države v tujini. Pri vsem tem uporabljamo precejšen del obratnih sredstev za investicije. Po nekaterih podatkih pride okoli 25 odstotkov vseh virov za financiranje investicij za kratkoročne kredite.</seg>
+					<seg>Tretjič, problem, na katerega žal premalo mislimo, je majhna učinkovitost investicij. To se kaže tudi na globalnem torišču razvoja, saj je stopnja investicij v osnovna sredstva za dobri dve točki nad stopnjo, predvideno v družbenem načrtu, medtem ko je stopnja rasti družbenega proizvoda celotnega družbenega gospodarstva približno za eno točko pod predvideno. Dinamika gospodarske rasti dejansko ne kaže učinkovitosti celotnih visokih investicij.</seg>
+					<seg>Težko je oporekati oceni, po kateri je treba glavni vzrok takšnih gibanj v investicijski porabi iskati v tem, da delavci v združenem delu le delno odločajo o • razpolaganju z investicijskimi sredstvi oziroma da se o gradnji objektov in angažiranju sredstev za investiranje zvečine odloča v poslovnih krogih ali pod vplivom negospodarskih struktur, kar formalno zavijajo v samoupravne sklepe.</seg>
+					<seg>Razvojna politika v prihodnjem letu bo torej težila k temu, da se bodo nosilci investicijskih sklepov lotili nujne akcije in konkretnih ukrepov, da bi rast investicij uskladili z realno razpoložljivimi sredstvi in da bi tako zmanjšali obseg investicij. To načelno opredelitev je treba uresničiti z vso odgovornostjo, da bo res dala ustrezne rezultate, pa tudi z vso zavzetostjo stvar dognati tako, da bodo imele prednost investicije, ki bistveno prisnevajo k urejanju strukturalnih problemov gospodarstva in ki so v prid glavnim ciljem razvojne politike. Dosledno uresničevanje omenjene naloge terja, da nekoliko zavremo nove investicije v prihodnjem letu. Predlagana razvojna politika 
+						<emph>za</emph> prihodnje leto se zavzema za to, da odločno odpravimo negospodarsko investiranje, prekoračevanje rokov in načrtovanih sredstev, ter za hitrejše dokončanje začetih objektov, kar bo zelo pomembno za povečanje učinkovitosti naložb, hitrejšo učinkovitost vloženih sredstev in 
+						<emph>za</emph> zmanjšanje napetosti v investicijskih bilancah.
+					</seg>
+					<seg>Nedvomno je obseg proračuna federacije dosegel raven, ki zahteva temeljito preučitev sistema financiranja federacije oziroma temeljito bilančno oceno dejanskih možnosti družbe, da zagotovi tolikšen obseg porabe na stonnji federacije. Bistvo financiranja izdatkov federacije pravzaprav ni v tem, kako kriti proračunski primanjkljaj, temveč v tem, da uravnovesimo izdatke in dohodke federacije v skladu z zakonom o financiranju federacije.</seg>
+					<seg>Ko zahtevamo, naj se zmanjšajo izdatki federacije, se pri tem zdi, kot da vendarle premalo upoštevamo, da se več kot 93 odstotkov izdatkov federacije nanaša na financiranje politike, ki smo jo sprejeli na področju ljudske obrambe, varnosti, zunanje politike, dodatnih sredstev za gospodarsko manj razvite republike in Socialistično avtonomno pokrajino Kosovo in za borčevsko in invalidsko varstvo in da način financiranja posameznih vrst teh izdatkov temelji na tem avtomatizmu, kar izhaja iz politike in načina financiranja, kot sta določena z družbenim načrtom od leta 1976 do 1980, in da se primanjkljaj proračuna federacije ne more zmanjšati, ne da bi spremenili začrtano politiko ali pa način financiranja omenjenih izdatkov.</seg>
+					<seg>Zvezni izvršni svet se zavzema za stališča, da i treba prihodn' le; hu , +: a, aa je</seg>
+					<seg>prnodnje leto obvezno pripraviti vse potreb d ku 
+						<ref target="#notetacisko">tac'isko- »trebno oKumentacijsko-analitično gradivo za izdelavo temeli na katerem bi dosegli dogovor o verifikaci:: „'Ua,: :.u n Kac1p1 sistema financiranja federacije oziroma ustreznihs memb</ref>
+					</seg>
+					<seg>. • soremem v razmerju do sedanjega. Izhodišče in naša odločna 7. 
+						<hi rend="bold">seja</hi> 15
+					</seg>
+					<seg>usmeritev pri tem morata biti, k.ar zadeva obseg izdatkov kakor tudi način financiranja, da zagotovimo, da bo rast proračunske porabe federacije ostala strogo v mejah rasti družbenega proizvoda.</seg>
+					<seg>Vprašanje, kako pokriti primanjkljaj v proračunu federacije v letu 1979, je bilo predmet posebne pozornosti v razpravah o proračunu. Zelo glasna je bila zahteva, naj bi nehali z angažiranjem sredstev primarne emisije za kritje proračunskega primanjkljaja federacije. Pa vendar te zahteve ne bo mogoče realizirati v prihodnjem letu.</seg>
+					<seg>Zvezni izvršni svet ugotavlja nasploh večstranske negativne učinke angažiranja sredstev primarne emisije za kritje proračunskega primanjkljaja federacije. Večkrat je bil obravnavan problem deficitarnega financiranja federacije in načina kritja primanjkljaja. Zvezni izvršni svet meni, da je realna le politika postopnega ali časovno vezanega odpravljanja uporabe sredstev primarne emisije za kritje proračunskega primanjkljaja federacije, razen izjemno, kadar to določa zakon. Prevzel je obveznost, da predloži program o tem med prihodnjim letom. Pozitivno je, da začenjamo uresničevati to politiko že leta 1979, ko bomo zmanjšali za 10 odstotkov sredstva primarne emisije za proračunske potrebe federacije oziroma relativno nekaj več.</seg>
+					<seg>Vprašanje, ki zasluži večjo pozornost v okviru predlagane politike, še bolj pa med njenim uresničevanjem, so opredelitve glede rasti cen. Ko je bil govor o nekaterih osnovnih gospodarskih gibanjih v letu 1978, smo že opozorili na krepitev inflacijskih teženj. Stopnja inflacije, če jo merimo po drobnoprodajnih cenah, je v decembru 1978 dosegla v primerjavi z decembrom 1977 okoli 15 do 16 odstotkov. Toda poprečna stopnja inflacije od januarja do decembra 1978 v primerjavi z enakim obdobjem leta 1977 znaša 13 odstotkov.</seg>
+					<seg>Zvezni izvršni svet je menil in meni, da je treba· politiko ekonomske stabilizacije določneje definirati na področju cen. Ostati pri stališču, da gremo z rastjo do letošnje ravni, praktično pomeni ostati pri isti intenzivnosti inflacije. Mi pa hočemo inflacijsko stopnjo znižati. Potemtakem odločitev, naj rastejo cene v letu 1979 za petino počasneje kot letos, pomeni predvsem jasno postaviti cilj, ki ga je treba doseči, to pa pomeni tudi določiti odgovornost vseh družbenih dejavnikov, da ravnajo v skladu s to odločitvijo in prispevajo k njeni uresničitvi. To hkrati pomeni mobilizacijo v družbi za dosego tega cilja.</seg>
+					<seg>Zdaj je priložnost, da opozorim na dejstvo, da postopno, toda vse bolj popuščata odgovornost in zavzetost družbenih dejavnikov, ki odločajo o cenah, v primerjavi s politiko, ki jo, določita resolucija in dogovor o cenah. To ima resne posledice za položaj nekaterih delov združenega dela. Tako so se od vseh vrst cen cene industrijskih proizvodov, ki so v pristojnosti feder-acije, v letu 1978 najmanj zvišale. Rast cen na drobno je skoraj dvakrat večja od rasti proizvajalskih cen. Seveda</seg>
+					<seg>se s tem breme stabilizacije zvrača na del delavskega razreda v industriji. Tega bremena ta del delavskega razreda ne more prenašati dolgo časa, zato obstaja potencialna nevarnost, da se pospeši tudi rast cen industrijskih proizvodov. Vse to opozarja, da se morajo vsi družbeni dejavniki na vseh ravneh obnašati zelo odgovorno, ko uresničujejo politiko cen. Zvezni izvršni svet se zavzema zlasti za to, da bi zagotovili, da se bodo vsi dosledno ravnali po dogovorih in sporazumih o cenah, saj je to bistven pogoj, da dosežemo postavljene naloge.</seg>
+					<seg>Tudi ob tej priložnosti moramo poudariti, da je izvoz bistven, življenjski člen razvojne politike v prihodnjem letu pa tudi v vsem naslednjem obdobju. Naloga, zapisana v resolucijo o družbenem razvoju v letu 1979- da izvoz realno povečamo najmanj za S, uvoz pa za 2 odstotka, pri čemer se: ne sme povečati predvideni primanjkljaj v enotni projekciji plačilne in devizne bilance Jugoslavije - kaže vso težavnost in zapletenost boja za uresničitev teh odnosov. Dejansko je treba za dobrih dvakrat realno povečati izvoz glede na poprečje, doseženo v prvih treh letih srednjeročnega načrta. Pri tem pa se konkurenčnost našega blaga na svetovnem trgu ni povečala, zaostrili so se protekcionistični ukrepi v industrijsko razvitih državah, ki so se poleg tega odločile, da bodo svoje probleme reševale s politiko razmeroma nizkih stopenj rasti in zmanjševanja primanjkljaja v plačilni bilanci.</seg>
+					<seg>Bistven pogoj za stabilizacijo plačilne bilance in dinamiko gospodarske rasti je, da zagotovimo večji izvoz. Pa ne samo to. če, smo se odločili za bolj umirjeno domačo konjunkturo, to dejansko pomeni, naj bi strukturo in izbiro naše proizvodnje bolj prilagodili izrazitejši izvozni usmeritvi. Uresničitev načrtovane stopnje izvoza vsekakor narekuje, da se okrepi boj za kakovost proizvodov in za boli konkurenčne cene, to pa terja večjo storilnost dela in učinkovitejše poslovanje pa tudi dosti boljšo organiziranost v celotnem nastopanju naših delovnih organizacij v tujini. Dokaj visok primanjkljaj v blagovni menjavi s tujinoje eden poglavitnih problemov države. Zaradi počasnega spreminjanja gospodarske strukture se potreba po uvozu blaga ne zmanjšuje.</seg>
+					<seg>Kolikšen pomen ima začrtana politika sprememb gospodarske strukture za uravnoteženo blagovno menjavo in zmanjšanje trgovinskega primanjkljaja ter za boljše vključevanje našega gospodarstva v mednarodno delitev dela, kaže nekaj primerov. V enajstih mesecih tega leta smo uvozili železne rude, surovega železa, surovega jekla, valjanih in vlečenih proizvodov črne metalurgije v vrednosti 585 milijonov dolarjev, proizvodov s področja bazične kemije pa v vrednosti 1,1 milijarde dolarjev. Pospešena graditev objektov na teh proizvodnih področjih bi omogočila, da bi se že v prihodnjem letu zmanjšal uvoz naštetih proizvodov in v tem obsegu zmanjšal trgovinski primanjkljaj. Ali še en primer: V letu 1978 
+						<hi rend="bold">republik</hi> in pokrajin bomo uvozili za približno 2,5 milijarde dolarjev opreme. če bi v tem letu dosegli dogovorjeno razmerje med domačo in uvoženo opremo 60:40, bi bila vrednost uvoza opreme manjša za približno 500 milijonov dolarjev, s tem pa bi bil ves uvoz za približno S odstotkov manjši. Torej moramo tudi v prihodnjem letu nastopati po dveh tirih: povečati izvoz in nadomestiti uvoz s pospešeno gradnjo in dograditvijo objektov, katerih proizvodnja naj bi zmanjšala uvoz. V obeh primerih gre za razvojne in ekonomske temelje, ne pa za omejitev uvoza. Rad bi poudaril, da zvezni izvršni svet odločno vztraja pri stališču, da se je treba v skladu z vsem tem lotiti tudi ustreznih ukrepov, če bodo neizpolnjene postavljene naloge vodile do večjega primanjkljaja v plačilni bilanci, da bo primanjkljaj v plačilni bilanci ostal v okvirih načrtovanega. Zvezni izvršni svet ne more sprejeti nekaterih pripomb, da bi probleme uvoza in izvoza obravnaval zgolj s stališča plačilne bilance in da bi temu podredil svojo politiko. Predvsem to ni politika samo zveznega izvršnega sveta, temveč politika, ki je jasno začrtana z družbenim načrtom Jugoslavije in vrsto najpomembnejših dokumentov, ki opredeljujejo našo politiko ekonomskih odnosov s tujino. To je politika, ki je zelo jasno izoblikovana, da se mora uvoz blaga gibati v okvirih plačilnobilančnih zmogljivosti države in da morata biti politika zadolževanja v tujini ter stopnja zadolženosti takšni, da ne bosta neugodno vplivali na zunanjo likvidnost države, da omogočata posojila pod najboljšimi pogoji in v skladu z možnostmi njihovega odplačevanja.
+					</seg>
+					<seg>Pri vsem tem je pomen celotnega izvozno-uvoznega instrumentarija zelo velik. Na tem področju je več perečih vprašanj, ki izhajajo iz dejstva, da se v izvoznouvoznem režimu še vedno ohranja močna vloga države z vsemi slabostmi, ki. izhajaj) iz tega. V prihodnjem letu moramo to problematiko celoviteje preučiti in ustrezno ukrepati. V tem pogledu se soočamo tudi s številnimi perečimi vprašanji v politiki in instrumentariju za napredek in spodbujanje izvoza. Poglavitni problem je, da je sedanji instrumentarij spodbujanja pretežno skupek rešitev, podedovan iz prejšnjih časov, ter da obstajajo ne le težave, marveč tudi odpori v sprejemanju in vgrajevanju novih rešitev, ki pa so nujno potrebne. Ponekod se močno trudijo, da bi obdržali doslej ustvarjena razmerja, neodvisno od tega, koliko dejansko spodbujajo izvoz. Nekaj popravkov smo že sprejeli, vendar kliub temu obstaja naloga, da v letu 1979 določimo v bistvu novo zasnovo spodbujanja izvoza, ki ustreza tudi novim razmeram in politiki, ki izhaja iz novih sistemskih rešitev. Zlasti moramo poiskati način, kako spodbuditi proces združevanja dela in sredstev zaradi povečanja izvoza in uresničevanja dohodka kot tudi del politike izboljšanja blagovne menjave s tujino, kot tudi da se na podlagi dogovorjenih enotnih meril nadaljuje uresničevanje takšne politike spodbujanja v • republikah in avtonomnih pokrajinah.</seg>
+					<seg>Predlog resolucije predvideva, da se denarna masa ne bo povečala za več kot nominalna rast družbenega proizvoda. Upoštevaje predvideno rast družbenega proizvoda in povečanje cen na drobno, naj bi se denarna masa povečala za približno 18 odstotkov. Primarna emisija denarja, ki ustreza predvidenemu povečanju denarne mase, pa naj bi se usmerila v potrebe gospodarstva, v monetizacijo in selektivno kreditiranje, izpolnjevanje zakonskih obveznosti, pokrivanje primanjkljaja zveznega proračuna in za deblokiranje dela sredstev depozitov družbenopolitičnih skupnosti. Izkušnje iz tega leta kažejo, da v tem pogledu prihaja do problemov, čeprav moramo ugotoviti, da smo dosegli večjo ekspanzijo monetizacije, kot je bilo predvideno. Gre za večjo rast denarne mase od načrtovane, kar spodbuja inflacijske impulze, in za neustrezno dinamiko uporabljanja denarne mase, kar je vodilo do večjih sprememb pri preskrbovanju gospodarstva s potrebnim denarjem. Od tod potreba, da bi gibanje denarne mase bolj uskladili z gibanji v gospodarstvu, kar naj bi zagotovili s trimesečnim spremljanjem vseh gibanj, z ukrepi, ki naj bi imeli za cilj razvijati proces nekreditne monetizacije, in iskanjem optimalnega razmerja pri razporejanju večje denarne mase v potrebe monetizacije in za kolektivno kreditiranje. Vse to bi morali delati tako, da bi tudi v tem delu družbene reprodukcije zavladalo združeno delo.</seg>
+					<seg>Tovarišice in tovariši delegati, sedanji energetski položaj narekuje, da spregovorimo nekaj tudi o problemu energetike. S tem problemom se ne spopadamo prvič. Redukcije električne energije so reden pojav od leta 1973 pa vse do danes, izjema je bilo le leto 1977. Poprečne letne redukcije so bile večje in v posameznih letih znatnejše kot letos. Omejitve so se v tem letu skoncentrirale bolj na en mesec, zatoje bilo bolj boleče posledice čutiti predvsem v gospodinjstvih. V zvezi s tem je eno izmed najbolj perečih vprašanj, ki se danes porajajo v javnosti - kje so vzroki za to? Ob odgovoru na to vprašanje moram omeniti, daje nanj odgovoril družbeni načrt Jugoslavije od leta 1976 do 1980, prav tako pa tudi zasnove dolgoročnega razvoja od leta 1975 do 1985. Takrat smo ugotovili, da v energetiko premalo vlagamo, zatoje bila le-ta uvrščena kot prednostna v razvoju. Potem je prišlo do občutnih sprememb glede vlaganja. Medtem ko so se letna vlaganja v razvoj elektroenergetike od leta 1971 do leta 1974 gibala na ravni 12,9 odstotka do 15,4 odstotka njihovega deleža v celotnih investicijah v industriji,je bil delež teh vlaganj v prvih treh letih sedanjega srednjeročnega načrta 24,8, 22,1 in 23,0 odstotka v celotnih vlaganjih v industriji. Seveda se bodo učinki teh naložb pokazali kasneje. Potemtakem je prvi in glavni vzrok 7. 
+						<hi rend="bold">seja</hi> 17
+					</seg>
+					<seg>nenehnih redukcij električne energije premajhno vlaganje v prejšnjem obdobju.</seg>
+					<seg>Drugi. bistveni vzrok je počasna graditev in podaljšanje rokov za dokončanje elektrarn, ki jih gradimo. Od še·stih termoelektrarn, ki jih gradimo, bi morala ena začeti redno obratovati leta 1977, štiri leta 1978 in ena leta 1979. Če bi te termoelektrarne začele redno obratovati v načrtovanih rokih, bi bil energetski problem manjši. Zaradi teh zakasnitev pa znaša celoten primanjkljaj približno 4,9 milijarde kilovatnih ur. Velja dodati, da bi moralo po načrtovanih rokih poleg naštetih elektrarn leta 1979 začeti obratovati še pet elektrarn. Toda zaradi zakasnitev v graditvi so ti roki že zdavnaj premaknjeni, zato bomo imeli v letu 1979 za še približno sedem milijard kilovatnih ur poprečno manjšo proizvodnjo. Dobršen delež v prekoračitvi teh rokovje v zakasnitvah nekaterih tujih dobaviteljev opreme. Če bi te elektrarne začele obratovati v predvidenih rokih, bi imeli zagotovljeno tudi ustrezno rezervo v sistemu.</seg>
+					<seg>Tretji pomemben vzrok, kateremu zdaj ne posvečamo dovolj pozornosti, se nanaša na soglasja za 
+						<hi rend="bold">priklju</hi>ček novih porabnikov na prenosno distributivno omrežje. Načelno se med elektrogospodarstvom in velikimi porabniki s pogodbami urejajo medsebojna razmerja in udeležba porabnikov v delitvi zmogljivosti električne energije, odvisno od tega pa se tudi od višine vlaganja določi prednost v. preskrbi takšnega porabnika. Pri srednjih in manjših industrijskih porabnikih električne energije obstajajo velike razlike v načinu urejanja razmerij z elektrogospodarskimi organizacijami. Veliko je razlogov za trditev, da se dajejo energetska soglasja tudi, kadar vsa ta razmerja niso urejena, zato gradijo nove proizvodne zmogljivosti in jih spuščajo v obratovanje, ne da bi si poprej zagotovili preskrbo z električno energijo. Posledice tega so znane - neskladnost med potrebami in možnostmi, kar obremenjuje energetske bilance.
+					</seg>
+					<seg>četrti vzrok so nekateri odmiki od politike razvoja energetike, začrtane v srednjeročnem načrtu, kar neugodno vpliva na izkoriščanje domačih virov. Tako imajo denimo termoelektrarne na tekoče gorivo, ki so v gradnji, in tiste, ki so že projektirane, skupno moč 940 megavatov. Če izhajamo iz tega, da se politika razvoja energetike, ki je sprejeta, zavzema za gradnjo teh elektrarn samo izjemno, potem je nesporno, da se z graditvijo teh zmogljivosti v tem obsegu spodkopuje omenjena politika. Vsekakor to slabi usmeritev k izkoriščanju domačih virov.</seg>
+					<seg>Peti vzrok je v tem, da ni rešeno vprašanje rezerv v elektroenergetskem sistemu. V družbenem načrtu Jugoslavije je zapisano: „Menimo, da bodo rezerve zmogljivosti za proizvodnjo električne energije znašale v letu 1978 približno 15 odstotkov predvidene porabe." To stališče je bilo sprejeto zato, ker družbeni načrt določa naslednje: ,,Ob neugodnih hidroloških razmerah so možne redukcije proizvodnje električne energije za</seg>
+					<seg>približno 3 do 4 milijarde kilovatnih ur na leto. Zato je nujno zagotoviti tudi rezervo v zmogljivostih premoga za približno 4 do 5 milijonov ton." Problem rezerv torej ostaja v energetskem sistemu odprt. Pri tem poudarjam, da pomeni stopnja zanesljivosti preskrbe porabnikov enega od glavnih ekonomskih problemov.</seg>
+					<seg>Družbeni načrt Jugoslavije nalaga republikam in avtonomnima pokrajinama, da spodbujajo in podpirajo pobude za to, naj bi v okviru samoupravnih interesnih skupnosti proizvajalcev in porabnikov električne energije s samoupravnimi sporazumi zagotovili graditev potrebnih zmogljivosti v skladu s skupno ocenjenim obsegom porabe. Prav tako morajo organizacije združenega dela, zlasti veliki porabniki energije, s samoupravnimi sporazumi z interesnimi skupnostmi elektrogospodarstvu zagotoviti dolgoročno preskrbo z električno energijo. Zaostajanje samoupravnega interesnega organiziranja in premajhen vpliv porabnikov energije na poslovanje in razvoj elektrogospodarstva kot tudi nerazvita dohodkovna razmerja med njimi so odločilno vplivali na vse vzroke, ki sem jih omenil. Pravzaprav želim s tem reči, da prevzema združeno delo v republikah in avtonomnih pokrajinah največjo odgovornost za uspešno reševanje problemov elektrogospodarstva.</seg>
+					<seg>Izpolnjevanje teh nalog družbenega načrtaje ključna točka v reševanju sprotnih in razvojnih problemov energetike, zaradi česar ni treba česarkoli spreminjati glede vsebine nalog in nosilcev posla. Poleg tega je to popolnoma v skladu s sistemom družbenoekonomskih odnosov, z novim sistemom družbenega načrtovanja in načeli dohodka.</seg>
+					<seg>Energetski položaj očitno narekuje, da si čimbolj prizadevamo za to, da bi pospešili gradnjo energetskih objektov, namenjenih za proizvodnjo in proces energije, ki smo se je že lotili, ter premogovnikov in objektov, namenjenih za sekundarno predelavo nafte, saj je čutiti hudo neskladje med zmogljivostmi primarne in sekundarne predelave nafte. Hkrati bi morali sprejeti ukrepe za varčevanje z vsemi oblikami energije ter jih dosledno uresničevati, posebej pa se dogovoriti o pogojih, s katerimi naj bi omejevali gradnjo energetskih objektov, ki bi uporabljali mazut. Ko opozarjamo na vse te naloge kot na najbolj pomembne in najbolj neposredne v prihodnjem letu, moramo poudariti pomemben uspeh, ki smo ga dosegli z gradnjo prve faze prenosnega 380-kilovoltnega omrežja, s čimer so povezani vsi pomembni proizvajalci in porabniki energije v državi. Tudi ves elektroenergetski sistem je tako postal tehnično-tehnološka celota. Vse to bo precej omililo težave s pomanjkanjem električne energije in nas usmerjalo k temu, da bi bolj intenzivno zaokrožili gradnjo prenosnega omrežja, s čimer bi postal ves sistem večja tehnološko-tehnična celota.</seg>
+					<seg>Prihodnje leto je treba izpolniti še dve veliki nalogi: pripraviti energetsko bilanco za obdobje od 1981 do 1985 in pospešeno nadaljevati že začeto delo</seg>
+					<seg>za oblikovanje zasnove dolgoročnega razvoja energetike do leta 2000.</seg>
+					<seg>Doseženi uspehi v razvoju kmetijsko-industrijskega kompleksa v prvih treh letih družbenega načrta so trden temelj za razvoj proizvodnje hrane tudi v letu 1979, kar je bistvena naloga načrta in dejavnik stabilizacije celotnih tokov družbene reprodukcije. Medtem ko se je proizvodnja hrane v prvih dveh letih uresničevanja dogovora o razvoju kmetijske industrije povečala nekoliko hitreje, kot je bilo načrtovano, se je letos zaradi neugodnih vremenskih razmer kmetijska proizvodnja zmanjšala. Vendar se je v živilski industriji ohranila' visoka stopnja rasti proizvodnje. Kljub temu bo pridelek osnovnih poljščin, razen koruze, skupaj z razpoložljivimi tržnimi rezervami zadoščal za kritje potreb v prehrani našega prebivalstva, nekateri proizvodi pa nam bodo ostali tudi za izvoz.</seg>
+					<seg>Dejstvo je, da smo v prejšnjem obdobju ustvarili boljše rezultate v materialni proizvodnji hrane kot v urejanju družbenoekonomskih cxlnosov. To nam nalaga, da si prihodnje leto posebej prizadevamo za hitrejše razvijanje samoupravnih družbenoekonomskih odnosov na tem področju - s samoupravnim sporazumevanjem o bilancah proizvodnje in porabe, rezervah in drugih elementih. S tem bomo pospešili povezovanje proizvodnje, prometa blaga in porabe na dohodkovnih temeljih.</seg>
+					<seg>V uresničevanju politike hitrejšega razvoja gospodarsko manj razvitih republik in SAP Kosova v prvih treh letih srednjeročnega načrta so gospodarsko manj razvite republike dosegle bolj dinamično gospodarsko rast, kot je znašalo poprečje za vso državo, česar pa ni mogoče trditi za razvoj Socialistične avtonomne pokra- jine Kosova. Nasprotno, v prvih letih načrta se je stopnja rasti precej znižala in s tem je tudi zaostal razvoj Kosova, kar pa ni v skladu s sprejeto politiko.</seg>
+					<seg>Nekaj živahnejša rast v gospodarsko manj razvitih republikah opozarja, da sprejeta politika že prinaša uspehe. Tako ustvarjamo večjo možnost za njihov hitrejši razvoj v letu 1979, s čimer bi se približali sprejetim sklepom, naj bi bila stopnja rasti družbenega proizvoda le-teh za 20 do 25 odstotkov višja od poprečja za državo v celoti.</seg>
+					<seg>Toda kljub temu še vedno obstajajo številni vzroki, ki zavirajo hitrejši razvoj gospodarsko manj razvitih republik in SAP Kosova. Na primer majhna proizvodna sposobnost gospodarstva in premajhna lastna sredstva za hitrejši razvoj, večja stopnja zadolženosti gospodarstva, manjša učinkovitost investicij in skromnejša storilnost dela, sorazmerno večje izgube v gospodarstvu, premajhen pretok sredstev, znanja in tehnologije na ta območ- ja itd. Vse to od nas zahteva večje napore za reševanje teh problemov. Federacija bo še naprej dosleno izpolnjevala dogovorjene obveznosti. Ostaja pereč problem spodbujanja hitrejšega razvoja teh družbenopolitičnih skupnosti z združevanjem dela in sredstev na dohodkov-</seg>
+					<seg>nih temeljih in skupnem interesu, kar je eden izmed pogojev dogovorjene politike.</seg>
+					<seg>Problemi razvoja 
+						<hi rend="bold">SAP K</hi>asova so bolj zapleteni, kot smo domnevali. To ugotovimo tudi iz dejstva, da razvoj kljub izpolnjevanju vseh dogovorjenih obveznosti in uveljavljanju posebnih in dopolnilnih ukrepov poteka počasneje od razvoja naše države v celoti. Leta 1978 je bila še posebno majhna rast industrijske proizvodnje. Zaradi tega je treba probleme razvoja SAP Kosova celoviteje preučiti in iz tega povzeti ustrezne ocene in sklepe. Zvezni izvršni svet bo to stanje preučil skupaj z izvršnim svetom Socialistične avtonomne pokrajine Kosova in bo o tem poročal skupščini do konca marca 1979.
+					</seg>
+					<seg>Tovarišice in tovariši delegati, doslednega uresničevanja v družbenem načrtu določene politike za leto 1979 si ni mogoče zamisliti, če ne bomo hkrati poskrbeli za dobro organiziranost in učinkovito akcijo, v kateri bomo morali, prvič, še naprej intenzivno uveljavljati nove sistemske rešitve in usposabljati vse institucije gospodarskega in političnega sistema za čimbolj vsestransko uveljavljanje združenega dela in vseh njegovih asociacij, tako da bodo zares same odločale o družbeni reprodukciji, drugič, učinkovito uresničevati ukrepe ekonomske politike iz pristojnosti federacije, republik in avtonomnih pokrajin, zapisane v resoluciji, in jih med letom še izpopolnjevati v skladu z gospodarskimi gibanji in rezultati, ki jih bomo dosegali, in tretjič, skrbeti za nenehno, intenzivno in dobro usklajeno akcijo zavednih subjektivnih sil, kajti brez njihovega stalnega prizadevanja ne bo mogoče ustvariti potrebnega idejnopolitičnega ozračja in popolne politične mobilnosti za dosledno uresničevanje politike gospodarske stabilizacije.</seg>
+					<seg>Dovolite mi, da poleg že povedanega konkretneje opozorim na nekatere naloge. V določenem smislu ima preobrazba celotnega področja ekonomskih odnosov s tujino na samoupravnih temeljih prednostno mesto. Vse kar smo doslej naredili v tem pogledu je samo prvi korak. Z ustanovitvijo samoupravnih interesnih skupnosti • republik in avtonomnih pokrajin za ekonomske odnose s tujino in interesne skupnosti Jugoslavije, s prehodom na enotno projekcijo plačilne in devizne bilance Jugoslavije, s plačilno-bilančnimi in deviznimi pozicijami republik in avtonomnih pokrajin, z ustanovitvijo sekcij za ekonomske odnose s tujino in z opravljenimi pripravami za konstituiranje skupnih gospodarskih predstavništev in podobnim smo ustvarili organizacijsko in institucionalno podlago za samoupravni mehanizem na področju ekonomskih odnosov s tujino.</seg>
+					<seg>Zdaj nas čaka delo, da vzpostavimo samoupravno socialistično vsebino teh odnosov. Zato je to ena najpomembnejših nalog v prihodnjem letu. Najpomembnejše in najnujnejše delo v zvezi s tem je razvit sistem načrtovanja ekonomskih odnosov s tujino, predvsem v organizacijah združenega dela, potem pa tudi v samoupravnih interesnih skupnostih republik in avtonomnih 19</seg>
+					<seg>pokrajin, načrtovanje dotoka in odtoka deviz in načrtovanje kreditnih odnosov s tujino. Se naprej moramo razviti delo za sklenitev samoupravnih sporazumov o združevanju dela in sredstev, na podlagi katerih bi določili delež v pridobivanju deviz prek vzajemnega proizvodnega, finančnega in drugega sodelovanja. Hkrati s tem moramo sklepati samoupravne sporazume o združevanju dela in sredstev, na podlagi katerih se ureja postopek za združevanje deviz za skupne razvojne programe, skupni prihodek in dohodek, skupno proizvodnjo blaga in opravljanje storitev, s katerimi prispevamo k večjemu deviznemu dotoku. Ko spreminjamo stara razmerja v proizvodnji blaga za izvoz, mora to pomeniti, da devize ne pripadajo samo končnemu izvozniku, marveč vsem udeležencem v proizvodnji in prodaji blaga za izvoz v sorazmerju z njihovim prispevkom.</seg>
+					<seg>Za vzpostavitev organiziranega nastopa vsega našega gospodarstva v odnosih s tujino, kar je zdaj ena najšibkejših točk naših ekonomskih odnosov s tujino, imajo izjemen pomen akcije za ekonomske odnose s tujino. Njihov pomen, položaj in vloga se šele morajo uveljaviti.</seg>
+					<seg>Hkrati moramo storiti vse potrebno, da bi čim bolj organizirali delo skupnih gospodarskih predstavništev in da bi se ta usposobila za opravljanje svoje zelo odgovorne funkcije.</seg>
+					<seg>Treba je izboljšati odnose, vzpostavljene z enotno projekcijo plačilne in devizne bilance Jugoslavije, ter plačilno-bilančnimi in deviznimi pozicijami republik in avtonomnih pokrajin. Truditi se moramo, da bi popolnoma zagotovili spremljanje izvajanja projekcij ter plačilno-bilančnih in deviznih pozicij, saj zdaj ne spremljamo dovolj in učinkovito gibanja storitev in kreditnofinančnih razmerij s tujino, s projekcijo pa moramo zagotoviti spremljanje dinamike po trimesečjih in ne samo celoten znesek za vse leto, vrhu tega pa moramo zagotoviti vrednost uvoza blaga po namenih za vsako republiko in avtonomno pokrajino, ne pa samo skupni znesek za leto dni.</seg>
+					<seg>Tudi na področju samoupravne organiziranosti bančništva in finančnih tokov v celoti, nas čakajo v prihodnjem letu zelo pomembne naloge. Njihov pomen je velik, predvsem zato, ker se še ni bistveno zmanjšala odvisnost organizacij združenega dela od poslovnih bank v procesu financiranja preproste in razširjene reprodukcije in ker je kreditno razmerje še naprej prevladujoče. Ta problem pa moramo opazovati v najtesnejši povezavi z nizko lastno akumulacijo združenega dela in s počasnim procesom združevanja dela in sredstev, kar tudi krepi kreditna razmerja.</seg>
+					<seg>Od uspešnega reševanja teh problemov je v marsičem odvisno, kako bomo premagali kreditna razmerja med organizacijami združenega dela in poslovnimi bankami oziroma kako bomo uresničili samoupravne odnose v bančništvu, ki so temeljni pogoj za spodbujanje teh procesov. Pri tem ima posebno mesto funkcija na-</seg>
+					<seg>črtovanja v okviru poslovnega bančništva. Ta se doslej ni dovolj razvila. Prihodnje leto, ko bomo začeli sprejemati nove srednjeročne programe, bo izredna priložnost, da se hkrati z oživljanjem sistema samoupravnega družbenega načrta na novi podlagi razvija tudi funkcija načrtovanja v bankah.</seg>
+					<seg>S stališča nadaljnjega razvoja družbenoekonomskih odnosov in graditve demokratične podlage za usklajevanje samoupravnih interesov ima največji pomen sprejetje novih srednjeročnih načrtov in družbenega načrta Jugoslavije od leta 1981 do 1985. V zvezi s tem moramo v letu 1979 opraviti zelo zahtevne in velike naloge. Pomen uspešnega izpolnjevanja teh nalog je daljnosežen, ker moramo v tem procesu v praksi uporabiti vse temeljne sestavine novega sistema samoupravnega načrtovanja. Tudi v zvezi s tem moramo poudariti, da ima dosledna in ustvarjalna uporaba sistemskih rešitev iz novega zakona o samoupravnem načrtovanju odločilen pomen za nadaljnji razvoj socialističnih samoupravnih odnosov, za nadaljnjo popolno uveljavitev združenega dela kot odločujočega dejavnika družbene reprodukcije.</seg>
+					<seg>številni problemi, ki spremljajo naš razvoj v zadnjih letih, prav tak.o pa številni vzroki, ki porajajo nestabilnost v družbenoekonomskih tokovih in odnosih, so v marsičem posledica obstoja starih odnosov v načrtovanju razvoja, čeprav smo že mnogo spremenili. To se najbolj občuti v neskladnosti razvojnih programov organizacij združenega dela, premajhni dohodkovni motiviranosti in povezanosti na področju razširjene reprodukcije, v nerazvitosti dohodkovnih razmerij na temeljih združevanja dela in sredstev, v premajhni dohodkovni povezanosti na področju ekonomskih odnosov s tujino, v porajanju številnih problemov zaradi neustrezne delitve dela, v še vedno ne dovolj razviti proizvodni kooperaciji, v nerazvitosti odnosov združenega dela v materialni proizvodnji in združenega dela v neproizvodnih družbenih dejavnostih na temeljih načel svobodne menjave dela itd.</seg>
+					<seg>Zaradi vsega tega se pojavlja zelo odgovorna naloga za vse samoupravne subjekte - temeljne in druge organizacije združenega dela, samoupravne interesne skupnosti in organizacije, družbenopolitične skupnosti itd. - da se lotijo priprav za sprejetje srednjeročnih načrtov, ki bi jih morali opraviti pretežno v prihodnjem letu, zelo organizirano in koordinirano.</seg>
+					<seg>Tovarišice in tovariši delegati, tudi letos smo dosegli pomembne uspehe v krepitvi ogromne sposobnosti družbene samozaščite naše samoupravne socialistične skupnosti. Sistem splošne ljudske obrambe in družbene samozaščite, kot je poudaril na enajstem kongresu ZKJ tovariš Tito, gradimo kot sestavni del družbenega sistema socialističnega samoupravljanja. Znatno se je razširila in okrepila angažiranost vseh subjektov pri uresničevanju nalog splošne ljudske obrambe in družbene samozaščite. Bojna sposobnost naših oboroženih sil - jugo- 
+						<hi rend="bold">Zbor republik in pokrajin</hi>
+					</seg>
+					<seg>slovanske ljudske armade in teritorialne obrambe - je večja kot kdajkoli poprej in te sile so skupaj z vsemi našimi človeškimi in materialnimi potenciali usposobljene za učinkovit oborožen boj ter tudi za vse druge oblike odpora proti vsakemu morebitnemu napadalcu in so pripravljene ubraniti našo neodvisnost, suverenost in ozemeljsko celovitost.</seg>
+					<seg>Z uspehi pri krepitvi materialne baze in podružblja- nja splošne ljudske obrambe in družbene samozaščite smo ustvarili objektivne možnosti, da v letu 1979 še hitreje razvijamo in krepimo obrambo in zaščito kot redno funkcijo delovnih ljudi in občanov ter vseh drugih subjektov družbe. V letu 1979 se bo nadaljeval proces modernizacije oboroženih sil. Jugoslovanska ljudska armada se bo še naprej izpopolnjevala v vseh oblikah oboroženega boja, da bi bila kadarkoli pripravljenapreprečiti nenadno agresijo in da bi lahko uspešno mobilizirala vse obrambne sestavine družbe.</seg>
+					<seg>Že leta in leta je stanje varnosti v naši državi zelo dobro. K takšnemu stanju najbolj prispevata naš uspešni družbenopolitični in družbenogospodarski razvoj na samoupravnih socialističnih temeljih in nenehna krepitev mednarodnega položaja in ugleda naše države. Medtem ko v nekaterih državah naraščajo terorizem, nasilje in druge oblike ogrožanja varnosti državljanov, lahko rečemo, da se v naši državi nenehno krepi stabilnost družbene ureditve in varnosti sploh.</seg>
+					<seg>Organi za notranje zadeve, ki delujejo v okvirih svojih zakonskih pristojnosti v našem sistemu družbene samozaščite, uspešno uresničujejo naloge, ki jih imajo pri varovanju družbene ureditve, družbenega premoženja, miru in varnosti delovnih ljudi in občanov. Aktivnost vseh dejavnikov družbene samozaščite in večja učinkovitost organov za notranje zadeve se kažeta tudi v zmanjšanju obsega kriminala. Celotno število kaznivih dejanj kaže že več let težnjo upadanja. Lani je bilo na primer število takih dejanj za 14 odstotkov manjše kot leta 1976. Prav tako nismo imeli primerov obsežnejših ali hujših kršitev državnega reda in mira.</seg>
+					<seg>Nikakor pa ne moremo biti zadovoljni s stanjem na področju prometne varnosti. Kljub prizadevanjem za okrepitev varnosti prometa se v letu 1978 stanje ni kaj prida izboljšalo - po nepopolnih podatkih za prvih devet mesecev je v prometnih nesrečah izgubilo življenje 3.682, ranjenih pa je bilo 48.825 ljudi. Narašča tudi škoda zaradi požarov. Letos bo znašala približno poldrugo milijardo dinarjev. Zaradi tega moramo posvetiti posvečanju varnosti prometa in krepitvi protipožarne zaščite posebno pozornost.</seg>
+					<seg>Tovarišice in tovariši delegati, Jugoslavija se je v tem letu dosledno zavzemala za razvijanje vsestranskega sodelovanja na temeljih neodvisnosti, spoštovanja suverenosti, popolne enakopravnosti, nevmešavanja v notranje zadeve in obojestranske koristi ter se hkrati opirala na temeljna načela politike neuvrščenosti kot svoje traj-</seg>
+					<seg>ne usmeritve. V skladu s tem je posvečala nenehno pozornost nadaljnjemu razvijanju dvostranskih odnosov z vsemi državami, aktivno pa je sodelovala na mednarodnem področju v vseh prizadevanjih miroljubnih in demokratičnih sil, da bi čim hitreje in čim odločneje spremenili neenakopravne politične in gospodarske odnose, da bi zavrli nadaljnje slabljenje politike popuščanja, preprečili nadaljnjo oboroževalno tekmo, poiskali miroljubne rešitve za obstoječa krizna stanja na posameznih območjih in sploh okrepili prizadevanja za mirno reševanje povečanih sporov med posameznimi državami.</seg>
+					<seg>Med nedvomne uspehe takšne mednarodne dejavnosti naše države sodijo srečanja na najvišji in visoki politični ravni z mnogimi državami z vseh strani sveta ki so po svojem pomenu in vplivu dostikrat močno presegala dvostranske okvire, a tudi širjenje ekonomskega, znanstvenotehničnega, kulturnega in drugega sodelovanja, sporazumno urejanje odnosov na različnih področjih itd.</seg>
+					<seg>Posebno pozornost smo posvečali vsestranskemu razvijanju sodelovanja z našimi sosedami in si hkrati prizadevali, da bi s skupnimi napori in dobro voljo našli rešitve tudi za pereča vprašanja v odnosih s posameznimi sosednimi državami.</seg>
+					<seg>Jugoslaviji je bila naklonjena čast in zaupana odgovornost, da je priredila konferenco zunanjih ministrov neuvrščenih držav, ki je bila julija letos v Beogradu. Trdno smo prepričani, da so enotnost in solidarnost neuvrščenih držav, ki sta se v celoti uveljavili na tej konferenci, in njeni sklepi, nanašajoči se na bistvena med- narodna vprašanja in smeri delovanja gibanja neuvrščenosti, velik prispevek k okrepitvi vloge in akcijske sposobnosti neuvrščenih držav kot čedalje vplivnejšega dejavnika sodobnih mednarodnih odnosov.</seg>
+					<seg>Naša država se je aktivno udeležila priprav in dela posebnega zasedanja generalne skupščine OZN, posvečenega razorožitvi. Pobudo za to zasedanje je dal predsednik Tito na konferenci neuvrščenih držav v Colombu.</seg>
+					<seg>Naj omenim, da se je marca letos končal beograjski sestanek 
+						<hi rend="bold">KEVS, s</hi> katerim smo zagotovili kljub neugodnemu mednarodnemu konteksu kontinuiteto procesa 
+						<hi rend="bold">KEVS,</hi> in da je politika popuščanja varnosti in sodelovanja v Evropi, na temelju skupno sprejete helsinške sklepne listine - realna in nenadomestljiva pot.
+					</seg>
+					<seg>Tako kakor zmeraj, je tudi k letošnji zunanjepolitični dejavnosti naše države in njeni ugledni vlogi na mednarodnem področju veliko prispeval predsednik republike tovariš Tito, čigar vloga in ugled v svetu sta splošno priznani.</seg>
+					<seg>Čeprav ne bom obravnaval mednarodni položaj, želim samo poudariti, da bo ta položaj tudi v prihodnje zelo zapleten in poln nasprotij. Zato se moramo v celoti zavedati možnosti in okoliščin, v katerih bomo delovali na mednarodnem področju. 
+						<hi rend="bold">7. seja 21</hi>
+					</seg>
+					<seg>Naša država bo skupaj z vsemi drugimi neuvrščeni</seg>
+					<seg>mi državami prispevala čim več k uspešni pripravi in</seg>
+					<seg>poteku številnih pomembnih sestankov neuvrščenih</seg>
+					<seg>držav, zlasti pa novega vrha neuvrščenih držav v Havani.</seg>
+					<seg>Bistveno za uspeh konference v Havani je, da v</seg>
+					<seg>pripravah nanjo in v njenem poteku sodelujejo vse ne</seg>
+					<seg>uvrščene države, tako da se bodo na temelju demokra</seg>
+					<seg>tičnega usklajevanja lahko vsestransko uveljavili interesi</seg>
+					<seg>in prizadevanja gibanja kot celote. Priprave in delo kon</seg>
+					<seg>ference v Havani morajo potekati v znamenju varovanja</seg>
+					<seg>enotnosti gibanja neuvrščenosti na temeljih njegove na</seg>
+					<seg>čelne neblokovske usmeritve v korist vseh neuvrščenih</seg>
+					<seg>držav. ker je to izraz njihove trajne opredelitve za to, da</seg>
+					<seg>bi se gibanje utrdilo in se akcijsko okrepilo kot neodvisen dejavnik v mednarodnih tokovih. Pomembna dejavnost in naloge nas čakajo tudi na</seg>
+					<seg>področju boja za nov mednarodni gospodarski red. O</seg>
+					<seg>teh vprašanjih bodo razpravljali na celi vrsti pomembnih</seg>
+					<seg>mednarodnih srečanj. Naj omenim sestanek skupine 77</seg>
+					<seg>držav v razvoju, ki bo na ministrski ravni februarja 1979</seg>
+					<seg>v Tanzaniji, peto konferenco OZN za trgovino in razvoj</seg>
+					<seg>v okviru UNCTAD, ki bo maja v Manili, in priprave na</seg>
+					<seg>posebno zasedanje generalne skupščine OZN o vpraša</seg>
+					<seg>njih novega mednarodnega gospodarskega reda.</seg>
+					<seg>V letu 1979 bodo na vrsti tudi pomembna pogaja</seg>
+					<seg>nja za sklenitev novega sporazuma o sodelovanju med Jugoslavijo in EGS. Med dosedanjimi pogajanji so se po</seg>
+					<seg>kazali določeni problemi, glede katerih še niso dosežena soglasja. To pomeni, da nas na tem področju čakajo</seg>
+					<seg>prihodnje leto velike naloge.</seg>
+					<seg>Jugoslavija se bo še naprej prizadevala za nadaljnje razvijanje vsestranskega bilateralnega sodelovanja z drugimi državami. če hočemo na tem področju doseči večje uspehe in izkoristiti mnoge možnosti, moramo zagotoviti še boljšo organiziranost in večjo koordinacijo, ki naj bi ne omejevala iniciativ in interesov vseh naših republik in avtonomnih pokrajin, kakor tudi vseh drugih subjektov in samoupravnih struktur, temveč jih še spodbujala in povezovala. V tem prizadevanju je treba kajpada posvečati nenehno pozornost našim odnosom s sosednimi in vsemi drugimi državami v Evropi, ravno tako pa tudi vsem neuvrščenim državam in državam v razvoju, kajti kljub mnogim našim prizadevanjem in praktičnim ukrepom naše dvostransko sodelovanje z nekaterimi državami ali celo širšimi območji zaostaja, zlasti kar zadeva našo skupno politično dejavnost v okviru gibanja neuvrščenosti, v Združenih narodih in drugje.</seg>
+					<seg>Zavedamo se, da so naštete naloge težke, zahtevne in odgovorne, vendar smo hkrati trdno prepričani, da je to prava pot.</seg>
+				</u>
+				<note type="speaker">PREDSEDUJOČI ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Zaključujem sejo in sporočam, da bo zvezni zbor nadaljeval sejo takoj, zbor republik in pokrajin pa po 15-minutnem odmoru.</seg>
+				</u>
+				<note>
+					<hi rend="italic">(Skupni del seje seje končal</hi>
+				</note>
+				<note>
+					<hi rend="italic">ob 10,35.) ZBORA REPUBLIK IN POKRAJIN</hi>
+				</note>
+				<note type="chairman">PREDSEDUJE PREDSEDNIK ZBORA ZORAN POLIČ</note>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Tovarišice in tovariši, nadaljujmo delo.</seg>
+					<seg>Preden preidemo k posameznim točkam dnevnega reda, bomo poslušali odgovore na postavljena vprašanja.</seg>
+					<seg>Prosim, da me pooblastite, da lahko spremenim zaporedje posameznih točk dnevnega reda, ker nekateri odbori še niso končali dela in o nekaterih vprašanjih ne bi mogli razpravljati, kot je določeno v dnevnem redu. Najprej bomo obravnavali tiste točke, ki so 
+						<emph>že</emph> pripravljene, če pa kakšna še ne bo pripravljena, bomo prekinili sejo. Se strinjate s tem? (Strinjajo se.)
+					</seg>
+					<seg>Na vrsti je prvo delegatsko vprašanje, ki ga je na prejšnji seji postavil zveznemu izvršnemu svetu prof. dr. Ljubisav Markovič.</seg>
+					<seg>Odgovoril bo član zveznega izvršnega sveta in predsednik zveznega komiteja za delo, zdravstvo in socialno varstvo Svetozar Pepovski.</seg>
+				</u>
+				<note type="speaker">SVETOZAR PEPOVSKI, 
+					<emph>član ZIS in predsednik zveznega komiteja za delo, zdravstvo in socialno varstvo:</emph>
+				</note>
+				<u who="#SvetozarPepovski">
+					<seg>Tovariš predsednik, tovarišice in tovariši delegati, delegat Ljubisav Markovič je v tem zboru postavil vprašanje:</seg>
+					<seg>Ali je zvezni izvršni svet prek pristojnih zveznih</seg>
+					<seg>organov in organizacij kaj ukrenil, da bi poiskali</seg>
+					<seg>možnosti, da bi z drugačno organizacijo delovnega</seg>
+					<seg>časa vplivali na večjo produktivnost dela?</seg>
+					<seg>Vprašanje, ki ga je postavil delegat Markovič, je po sodbi zveznega izvršnega sveta zelo pomembno in pereče, hkrati pa je tudi kompleksno, zato ga ni mogoče zajeti v običajne okvire ustnega odgovora na delegatsko vprašanje. Treba bo pripraviti izčrpnejšo informacijo o tej problematiki.</seg>
+					<seg>Če se delegat Markovič strinja s takšnim načinom, je zvezni izvršni svet pripravljen naložiti ustreznim zvez-</seg>
+					<seg>nirn upravnim organom in zveznim organizacijam, da v sodelovanju s pristojnimi organi in organizacijami v republikah in pokrajinah, zvezno gospodarsko zbornico, svetom Zveze sindikatov Jugoslavije in stalno konferenco mest in občin preuči vse vidike urejanja, razporejanja, začetka, konca in učinkovite izrabe delovnega časa, vključno vprašanje premakljivega urnika. Takšno informacijo bi poslali skupščini SFRJ v pregled in morebitno obravnavo.</seg>
+				</u>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Ker ni delegata Markoviča, ali želi morda kdo izmed članov delegacije postaviti dopolnilno vprašanje? (Nihče.)</seg>
+					<seg>Predlagam, naj zvezni izvršni svet oziroma tovariš Pepovski pošlje pismeni odgovor tovarišu Markoviču. Menim, da smo vsi za to, da bi se lotili takšnega dela, o kateremje govoril tovariš Pepovski in da. bi se potem, ko bomo dobili. popolno gradivo, izrekli o problemih v zvezi s tem vprašanjam.</seg>
+					<seg>Drugo vprašanje zveznemu izvršnemu svetuje postavil delegat Savo Lakič.</seg>
+					<seg>Odgovoril bo član zveznega izvršnega sveta in predsednik zveznega komiteja za energetiko in industrijo Stojan Matkalijev.</seg>
+				</u>
+				<note type="speaker">STOJAN MATKALIJEV, 
+					<emph>član ZIS in predsednik zveznega komiteja za energetiko in industrijo:</emph>
+				</note>
+				<u who="#StojanMatkalijev">
+					<seg>Tovariš predsednik, tovariši delegati, delegat Socialistične republike Črne gore v zboru republik in pokrajin skupščine SFRJ Savo Lakič je postavil zveznemu izvršnemu svetu vprašanje:</seg>
+					<seg>Ali so kakšne težave v odobravanju in registriranju</seg>
+					<seg>pogodb o vlaganju sredstev tujih oseb v domače 
+						<hi rend="bold">Zbor republik in pokrajin</hi>
+					</seg>
+					<seg>organizacije združenega dela in ali pristojni zvezni</seg>
+					<seg>organ - zvezni komite za energetiko in industrijo ravna v skladu s 45. členom zakona o vlaganju sredstev tujih oseb v domače organizacije združenega dela?</seg>
+					<seg>Od uveljavitve zakona o vlaganju sredstev tujih oseb v domače organizacije združenega dela (Uradni list SFRJ, št. 18 iz leta 1978) pa do 20. decembra 1978 je bilo zveznemu komiteju za energetiko in industrijo predloženih v odobritev 18 pogodb o vlaganju sredstev tujih oseb v domače organizacije združenega dela. Od tega števila so bile doslej odobrene štiri pogodbe. K devetim pogodbam so bile v zakonskem roku dane pripombe, medtem ko komisija zveznega izvršnega sveta za obravnavanje pogodb o vlaganju sredstev tujih oseb v domače organizacije združenega dela obravnava pet pogodb.</seg>
+					<seg>Pri odobravanju pogodb o vlaganju se zvezni komite za energetiko in industrijo ubada s precejšnjimi težavami. Gre za to, da te pogodbe niso usklajene z zakonom o vlaganju sredstev tujih oseb v domače organizacije združenega dela in zakonom o združenem delu. Večina pogodb istoveti skupno poslovanje z organizacijo združenega dela, ki ima na voljo ta sredstva, kar povzroča vmešavanje pogodbenikov v statusne in druge samoupravne pravice organizacij združenega dela in delavcev, ki delajo v njej.</seg>
+					<seg>Težave nastajajo tudi pri določanju višine deleža tujih oseb v dohodku, ustvarjenem s skupnim poslovanjem. Po 17. členu zakona so tuje osebe udeležene v dohodku, ustvarjenem s skupnim poslovanjem, v sorazmerju s prispevkom, ki je bil dan pri ustvarjanju tega dohodka na podlagi vloženih sredstev. Ta zakonska določba govori o sorazmerju vloženih sredstev v skupno poslovanje.</seg>
+					<seg>Pogodbeniki pa vložijo tako imenovano ustanoviteljsko vlogo, ki je občutno manjša od sredstev, potrebnih za realizacijo projekta, in na tej podlagi se določajo relativna razmerja vlog v skupno poslovanje, ki rabi kot podlaga za udeležbo v dohodku in za vračilo vrednosti vloženih sredstev. Zakon določa v 2. členu, da pridobi tuja oseba v okviru udeležbe v dohodku, ustvarjenem s skupnim poslovanjem, pravico do vračila vrednosti vloženih sredstev in pravico do nadomestila za gospodarjenje s temi sredstvi. Ta zakonska določba je razčlenjena v 1 q_ členu, ki določa, da se morajo pri določitvi maksimalne višine nadomestila za gospodarjenje z vloženimi sredstvi upoštevati določena merila.</seg>
+					<seg>Večje število predloženih pogodb se ne ravna po omenjenih merilih ob določitvi maksimalne višine nadomestila za gospodarjenje z vloženimi sredstvi. 
+						<hi rend="bold">Težave</hi> nastajajo v izvajanju 32. člena zakona, ki določa,da ima tuja oseba v primeru prenehanja pogodbe o vlaganju ali prenehanja domače organizacije združenega dela pravico do vračila vrednosti vloženih sredstev oziroma do vračila v znesku, ki je ostal, če je šlo za delno vračilo
+					</seg>
+					<seg>vrednosti, ali v povečanem oziroma zmanjšanem znesku na podlagi meril, določenih s pogodbo o vlaganju, odvisno od dohodka, ustvarjenega s skupnim poslovanjem.</seg>
+					<seg>Zakon določa, da ima tuja oseba pravico do vračila ostanka vrednosti vloženih sredstev oziroma ostanka vrednosti vloženih sredstev v povečanem oziroma zmanjšanem znesku, odvisno od dohodka, ustvarjenega v skupnem poslovanju. V nasprotju s tem pa predvideva večina pogodb ocenjeno ali knjigovodsko vrednost sredstev skupnega poslovanja kot podlago za določitev višine vrednostnih sredstev, ki jih je treba vrniti tuji osebi. Če bi sprejeli ta model, bi tuja oseba vselej prejela več od zneska, ki ga je vložila, neodvisno od dohodka, ustvarjenega s skupnim poslovanjem.</seg>
+					<seg>Zakon ni odgovoril na vprašanje, kako ravnati, če želijo na podlagi prej sklenjenih in odobrenih pogodb pogodbeniki še naprej vlagati v skupno poslovanje, bodisi da to storijo sami, ali se jim pridruži druga tuja oseba. Gre za to, da prejšnji predpisi niso poznali razporeditve dohodka, kot to nalaga novi zakon. V postopku ut odobritev pogodb o vlaganju se komite ubada tudi z vzporednimi zmogljivostmi, nezagotovljenimi viri financiranja itd. Organi, ki odobravajo pogodbe o vlaganju, se soočajo z naštetimi in drugimi problemi. Prisiljeni so dajati pripombe k pogodbam in svetovati spremembe in dopolnitve, pri čemer dajejo primeren enomesečni rok, da se pogodba uskladi s predpisi. Ni redek primer, da je vlagatelj zahteval podaljšanje roka za uskladitev pogodbe s predpisi.</seg>
+					<seg>To so poglavitni razlogi, zakaj zvezni komite za energetiko in industrijo ne more vselej, v vseh primerih, izdati odločbe v šestdesetih dneh, ko sprejme zahtevo. Komite bi se lahko ravnal po zakonskem roku, če bi se odločil, da zavrne pogodbe, ki niso usklajene z novimi predpisi, kar pa bi. bila najbolj neugodna rešitev za pogodbenike. Takšno ravnanje komiteja ne bi bilo v skladu z zakonom o splošnem upravnem postopku, ki nalaga organu, ki vodi postopek, da vlagatelja opozori na pomanjkljivosti in mu da primeren rok, v katerem mora zahtevo uskladiti s predpisi.</seg>
+					<seg>S tem ko komite pošlje pripombe k pogodbam, izpolni zakonsko obveznost, vlagatelj zahteve pa mora uskladiti pogodbe s predpisi in jih poslati komiteju v nadaljnji postopek. Organ, ki je pooblaščen z zakonom, da presoja zakonitost pogodbe o vlaganju (to pa je komisija zveznega izvršnega sveta), meni, da bi morali biti v postopku odobravanja teh pogodb bolj prožni, da bi pogodbenikom omogočili, da uskladijo pogodbe s predpisi tudi takrat, kadar se ni mogoče ravnati po roku iz 45. člena zakona.</seg>
+				</u>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Želi tovariš Lakič postaviti dopolnilno vprašanje? (Ne.) 25</seg>
+					<seg>Želi še kdo izmed delegatov postaviti na tej seji vprašanje zveznemu izvršnemu svetu?</seg>
+					<seg>Besedo ima delegat Berislav Šefer.</seg>
+				</u>
+				<note type="speaker">
+					<hi rend="bold">BERISLAV</hi> ŠEFER 
+					<emph>(SR Hrvatska):</emph>
+				</note>
+				<u who="#BerislavŠefer">
+					<seg>Tovariš predsednik, tovarišice in tovariši, v letu 1978 so bile resne motnje v preskrbi trga z izdelki široke porabe in z nekaterimi energetskimi in drugimi surovinami. Znane so motnje na trgu z naftnimi derivati, kavo, južnim sadjem in drugimi proizvodi.</seg>
+					<seg>V zvezi s tem prosim zvezni izvršni svet, da odgovori na. vprašanje:</seg>
+					<seg>1. Ali je zvezni izvršni svet odkril vzroke motenj v</seg>
+					<seg>preskrbi v letu 1978, in kaj je ukrenil v svoji</seg>
+					<seg>pristojnosti, da bi motnje odpravil'?</seg>
+					<seg>2. Ali se je določanje materialnih bilanc izkazalo kot zadovoljivo sredstvo za urejanje blagovnih</seg>
+					<seg>tokov? Ali so bili naknadni kontingenti, mimo</seg>
+					<seg>določenih bilanc, odobreni pravočasno za stalno</seg>
+					<seg>preskrbo trga?</seg>
+					<seg>3. Ali meni zvezni izvršni svet, da so za leto 1979 zagotovljni ekonomski in drugi pogoji za to, da se odpravijo motnje na trgu?</seg>
+					<seg>Ker je to vprašanje zelo pereče, bi bil hvaležen, če bi zvezni izvršni svet lahko o temkaj spregovoril že danes, pri čemer pa puščam možnost, da bi dobili popolnejši odgovor na prihodnji seji.</seg>
+				</u>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Bo lahko predstavnik zveznega izvršnega sveta odgovoril na tej seji?</seg>
+					<seg>Besedo ima tovariš Imer Pulja.</seg>
+				</u>
+				<note type="speaker">IMER PULJA, 
+					<emph>zvezni sekretar za trg in splošne gospodarske zadeve</emph>
+				</note>
+				<u who="#ImerPulja">
+					<seg>Tovariš predsednik, tovarišice in tovariši delegati, izjavim lahko, da je zvezni izvršni svet ob popolnem sodelovanju z republiškimi in pokrajinskima izvršnima svetoma in njihovimi organi pazljivo spremljal vsa gibanja na trgu vse leto in v skladu z nastalim položajem, zlasti na nekaterih blagovnih področjih, kjer so se pojavile motnje, predlagal in izpeljal ustrezne ukrepe, ne le ob popolnem sodelovanju republiških in pokrajinskih organov, marveč tudi ustreznih asociacij združenega dela. Toda kljub ukrepom je bilo na trgu nekaj motenj v nekaterih blagovnih tokovih.</seg>
+					<seg>Glavni vzrok, ki je pripeljal do teh motenj na trgu v tem letu moramo iskati predvsem v prenapetih razmer-</seg>
+					<seg>jih na področju delitve dohodka, ki so pripeljala do prenapetih razmerij v blagovno-denarnih odnosih na jugoslovanskem trgu. To se zlasti kaže na področju investicijske dejavnosti, na področju gradbeništva, kjer je prišlo do največjih motenj na trgu, kot je pomanjkanje gradbenega materiala, zlasti cementa, žaganega lesa, keramičnih ploščic itd. Drugi razlog, ki je pripeljal do tega, da nismo mogli dovolj uskladiti razmerij na trgu, čeprav smo Jih pravočasno 
+						<hi rend="bold">razkrili,</hi> je v tem, da so nas plačilno-bilančni razlogi prisiljevali, da iščemo rešitve v tem, da smo uvažali s tistih območij, na katerih nismo imeli težav v plačilni bilanci. Izjavim lahko, da kljub obetom, da bomo dobili določene količine reprodukcijskega materiala, kot je cement, nismo mogli uvoziti celotnih količin, s katerimi smo računali. Računali smo, da bomo uvozili približno milijon ton cementa, do konca tega leta pa nismo uvozili niti pol tega. Tretji razlog, ki je pripeljal do motenj na trgu, je v tem, da smo na področju ekonomskih odnosov s tujino uvedli nove kakovostne spremembe, s katerimi temeljne organizacije združenega dela in republike, in pokrajini prevzemajo del odgovornosti za izvrševanje plačilne in devizne bilance vse skupnosti. V tem času bi morali zaradi teh sprememb prenesti večji del odgovornosti zaradi premajhne usposobljenosti, zlasti interesnih skupnosti za ekonomske odnose s tujino. Danes ste slišali tudi v ekspozeju, da nas čakajo v letu 1979 na tem področju zelo resne naloge. Zgodilo se je, da ni bilo mogoče pravočasno zagotoviti ustreznih deviznih sredsev za uvoz kave in južnega sadja. To sta temeljni področji, na katerih je prišlo do motenj na jugoslovanskem trgu. Drugič, imeli smo različne režime (pogojevanje uvoza z izvozom), ki so povzročali, da dinamika prihajanja ustreznih količin blaga ni mogla biti usklajena z zahtevami jugoslovanskega trga. Če je nastal zdaj problem uvoza kave, to ni zato, ker so predvidene majhne količine uvoza kave. Letos smo v bilanci uvoza kave računali, da bo znašala poraba približno 52.000 ton, to je približno 1 O do 12 odstotkov več kot smo porabili v letu 1977. Jugoslavija je v letu 1977 porabila 47.000 ton kave (imeli smo 4.000 ton rezerve), tako da je celotna količina, ki je bila na voljo v Jugoslaviji, presegla 56.000 ton. Toda zaradi dinamike pogojevanja uvoza z izvozom in regionalnega usmerjanja je bilo zavrto dinamično prihajanje kave in zato je prišlo tudi do temu primernih motenj na trgu. Prepričan sem, da bomo imeli čez nekaj dni kavo - uvožene so vse količine - in trg bo normalno preskrbljen. Kadar nastane ,,psihoza", ljudje kupujejo večje količine, kot jih potrebujejo, znano paje, da ni razlogov za to. Druge težave so povezane z uvozom južnega sadja. Čeprav je režim njegovega uvoza popolnoma sproščen, in čeprav so dana ustrezna dovoljenja za uvoz, je bilo to
+					</seg>
+					<seg>pogojeno z nekaterimi razmerji med uvozom in izvozom, tako da je bilo na jugoslovanski trg v letu 1978 uvoženih približno 23.000 ton manj južnega sadja, kot smo računali, da ga bo porabila Jugoslavija v tem letu.</seg>
+					<seg>Tretji razlog, ki je povzročil nekatere težave, so različni pogoji gospodarjenja v posameznih blagovnih tokovih v Jugoslaviji. Do nekaterih motenj in neredne preskrbe trga je prišlo na področju uvoza nekaterih naftnih derivatov, zlasti mazuta. Trdim lahko, da je prišlo do teh motenj ne le zato, ker so v uvozni bilanci predvidene manjše količine, marveč zato, ker so bile domače cene mazuta nižje od cen uvoženega mazuta zaradi razlik v uvoznih davščinah. Od predvidenih količin, s katerimi smo računali v bilanci za leto 1978, bi morali uvoziti približno milijon ton mazuta, uvozili pa smo komaj pol tega. Povsem normalno je, da so se pojavile težave, vendar zaradi posredovanja direkcije za rezerve industrijskih izdelkov te motnje niso imele hujših posledic: sicer so zagotovljeni normalni pogoji za preskrbo trga z vsemi drugimi naftnimi derivati, saj smo v letu 1978 dovolili še dopolnilni uvoz surove nafte in avans, tako da bodo ob koncu tega in v začetku prihodnjega leta zagotovljene zadostne količine za normalno preskrbo trga, predvsem s temi drugimi vrstami derivatov.</seg>
+					<seg>Posebej želim poudariti, da je prišlo do podobnega položaja tudi v zvezi s tekočim plinom.</seg>
+					<seg>Povsem drugačen pa je položaj, kar zadeva motnje na trgu, zaradi pogojev gospodarjenja glede izvoznih možnosti. V Jugoslaviji je nastal problem, da ne moremo uporabljati stanovanj, ker proizvaja električne števce na primer samo en proizvajalec. Zaradi izvozne stimulacije - zdaj je ugoden položaj na svetovnem trgu - je proizvajalec pustil jugoslovanski trg nepreskrbljen, ker je za te napreve dosegal v izvozu za približno 8 odstotkov višjo ceno kot na domačem trgu. Na tem področju smo ukrenili vse za uvoz. V prihodnje se moramo resneje potruditi, da bi tam, kjer so motnje zaradi razlik v blagovnem režimu, izenačili blagovne režime za izvoz in za uvoz določenega blaga, da ne bi prišlo do motenj na jugoslovanskem trgu.</seg>
+					<seg>Zdaj je na primer kljub temu, da ni bilančnih razlogov za to, da bi prišlo do izvoza na nekaterih blagovnih področjih - na primer živilskem - težnja, da bi se usmerili k izvozu. Zakaj redne izvozne stimulacije in še dopolnilne že ustvarjajo zaradi razmer na svetovnem trgu ugodne možnosti. Takšen izvoz pa utegne ogroziti normalno preskrbo trga. To bo posebej obravnaval zvezni izvršni svet in ustrezno ukrepal.</seg>
+					<seg>Zvezni izvršni svet je bil vse leto zelo dejaven v reševanju problemov normalnega preskrbovanja trga, vendar pa je bila investicijska dejavnost eden največjih vzrokov nestabilnosti na trgu.</seg>
+					<seg>Drugič, menimo, da je praksa, ki smo jo začeli uvajati pri ustvarjanju materialnih bilanc za približno 140 osnovnih izdelkov reprodukcijskega materiala in</seg>
+					<seg>surovin, dobra, saj začenjajo za uvoz na enem izmed najbolj občutljivih sektorjev - preskrbi trga z reprodukcijskim materialom, prevzemati odgovornost temeljne organizacije združenega dela. Res so se pokazale nekatere slabosti, nekateri problemi, vendarje ta praksa vse boljša in 
+						<emph>že</emph> imamo, kar je najbolj pozitivno, samoupravne in družbene dogovore v okvirih ustreznih asociacij za čimbolj normalno preskrbo trga. Ta praksa , mora biti še intenzivnejša, pri čemer pa moramo seveda odstranjevati slabosti. Zato moramo v tej smeri nadaljevati, saj je to najboljša rešitev, hkrati pa tudi v skladu z družbenoekonomskimi- odnosi.
+					</seg>
+					<seg>Zvezni izvršni svet bo v skladu z začrtano politiko skupščine SFRJ v letu 1979 najustrezneje ukrepal v skladu z začrtano politiko na področju blagovno-denarnih razmerij, da bi ne prišlo do motenj. Treba je ukrepati učinkovito in skladno z začrtano politiko, da bi posredovali na trgu, in to s popolnim sodelovanjem z republikami in pokrajinama in ustreznimi asociacijami združenega dela.</seg>
+				</u>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Želi delegat Berislav Šefer postaviti dopolnilno vprašanje?</seg>
+				</u>
+				<note type="speaker">
+					<hi rend="bold">BERISLAV</hi> ŠEFER 
+					<emph>(SR Hrvatska):</emph>
+				</note>
+				<u who="#BerislavŠefer">
+					<seg>Hvala tovarišu Imetju Pulju, da je že danes odgovoril in dal pojasnila v zvezi s temi vprašanji.</seg>
+					<seg>Iz odgovora ugotovimo, da je zvezni izvršni svet to obravnaval in se zavzel za ta vprašanja, ostaja pa dejstvo, da je bila neredna preskrba problem v letu 1978 in na prehodu v leto 1979. Menim, da so fizični primanjkljaj blaga, in to zelo velik, in motnje na trgu, veliki problemi, mimo katerih ne moremo iti. Zato prosim, da na moja vprašanja pripravijo tudi pismene odgovore, ki bi jih lahko preučili. Prosim, da v ta odgovor konkretno vključimo - 
+						<hi rend="bold">ker se</hi> bo to zgodilo januarja - tudi prehodni položaj na začetku leta.
+					</seg>
+				</u>
+				<note type="speaker">
+					<hi rend="bold">PREDSEDNIK ZORAN POLIČ:</hi>
+				</note>
+				<u who="#ZoranPolič">
+					<seg>Želi še kdo izmed delegatov postaviti vprašanje zveznemu izvršnemu svetu ali organu v federaciji? (Nihče.)</seg>
+					<seg>Tovarišice in tovariši, nadaljujmo delo.</seg>
+					<seg>Izkoristil bom pooblastilo, ki ste mi ga dali, da preidemo k petnajsti točki dnevnega reda, ker odbor za družbeni načrt in razvojno politiko še ni končal dela in za to še niste dobili poročila. 27</seg>
+					<seg>Na vrsti je 
+						<emph>petnajsta</emph> točka dnevnega reda:
+					</seg>
+					<seg>Osnutek delovnega programa zveznega zbora skupščine 
+						<hi rend="bold">SFRJ -</hi> mnenje
+					</seg>
+					<seg>Članom zbora smo poslali osnutek delovnega programa zveznega zbora, prav tako pa tudi poročilo zakonodajnopravne komisije zbora republik in pokrajin.' 3</seg>
+					<seg>Začenjam obravnavo.</seg>
+					<seg>želi kdo besedo? (Nihče.)</seg>
+					<seg>Ker daje naš zbor po drugem odstavku 121. člena poslovnika skupščine SFRJ mnenje zveznemu zboru skupščine SFRJ o osnutku njegovega delovnega programa, predlagam, da sprejme zbor te sklepe:</seg>
+					<seg>1. Zbor republik in pokrajin nima pripomb k osnutku delovnega programa zveznega zbora skupščine SFRJ za leto 1979.</seg>
+					<seg>2. Zbor republik in pokrajin in njegova delovna telesa bodo preučila 
+						<hi rend="bold">zakone,</hi> ki jih vsebuje poročilo zakonodajnopravne komisije s seje 25. decembra letos, da bi o -tem dala svoje mnenje zveznemu zboru in njegovim telesom.
+					</seg>
+					<seg>Sprejme zbor ta sklepa? (Sprejme.)</seg>
+					<seg>Ker smo sklepa sprejeli, ju bomo poslali zveznemu zboru skupščine SFRJ.</seg>
+					<seg>Na vrsti je 
+						<emph>štirinajsta</emph> točka dnevnega reda:
+					</seg>
+					<seg>
+						<hi rend="bold">Določitev predloga delovnega programa zbora republik in pokrajin za leto 1979 in predlog delovnega načrta zbora od januarja do marca 1979</hi>
+					</seg>
+					<seg>Članom zbora smo poslali predlog delovnega programa zbora' ° in predlog delovnega načrta, ki je pripravljen na podlagi usklajenih stališč skupščin republik in avtonomnih pokrajin. Poslali smo tudi stališča skupščin republik in avtonomnih pokrajin,'* mnenji zveznega zbora skupščine SFRJ in zveznega izvršnega sveta
+						<ref target="#note15">15 jn poročila delovnih teles, zbora.
+							<ref target="#note16">1 6</ref>
+						</ref>
+					</seg>
+					<seg>Poslali smo vam tudi predlog delovnega načrta zbora republik in pokrajin od januarja do marca 1979 in informacijo o delu za izpolnitev delovnega programa zbora republik in pokrajin od septembra do decembra 1978,
+						<ref target="#note17">17</ref>
+					</seg>
+					<seg>Naknadno smo vam poslali poročilo odbora za vprašanja združevanja v gospodarstvu, ki vsebuje predloge za spremembe v predlogu delovnega programa (opredeljene posamezne teme iz delovnega področja tega odbora).l 
+						<ref target="#note8">8 13 Priloga 22.</ref>
+					</seg>
+					<note xml:id="#note13" place="foot" n="13">Priloga 23.</note>
+					<note xml:id="#note14" place="foot" n="14">Priloge 24-31.1
+						<emph>5</emph> Prilogi 32 in 33. ° Priloge 34-36.17 Priloga 37.
+						<hi rend="bold">u: .. -</hi> Priloga 37a.
+					</note>
+					<seg>V dogovoru z vodji delegacij in predsedniki delovnih teles zbora kot tudi v skladu s prejšnjo prakso v delu zbora so v predlog delovnega programa zbora vnešena tudi vsa vprašanja, ki niso bila uresničena v prejšnjem delovnem programu. Zato so predlagali v predlog delovnega načrta zbora od januarja do marca za posamezne seje zbora več pomembnih tematskih vprašanj, da bodo delovna telesa zbora, ki spremljajo stanje njihove pripravljenosti, presodila, katera bo mogoče obravnavati na posameznih sejah zbora.</seg>
+					<seg>Začenjam obravnavo predloga delovnega programa zbora.</seg>
+					<seg>Želi kdo besedo? (Nihče.)</seg>
+					<seg>Se vse delegacije strinjajo, da določimo delovni program zbora republik in pokrajin za· leto 1979 v predlaganem besedilu in s predlaganimi spremembami in dopolnitvami, danimi v poročilu odbora za vprašanja združevanja v gospodarstvu? (Strinjajo se.)</seg>
+					<seg>Ker so se vse delegacije strinjale z določitvijo predloga delovnega programa in imajo pooblastila svojih skupščin, da se lahko izrečejo o predlogu v celoti, se bomo zdaj o njem dokončno izrekli.</seg>
+					<seg>Je delegacija skupščine SR Bosne in Hercegovine za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Slovenije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Kosova? (Da.)</seg>
+					<seg>Delegacija sabora SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR Črne gore? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel predlog delovnega programa zbora za leto 1979 v predlaganem besedilu in s spremembami, danimi v poročilu odbora 
+						<emph>za</emph> vprašanja združevanja v gospodarstvu.
+					</seg>
+					<seg>Začenjem obravnavo predloga delovnega načrta zbora republik in pokrajin od januarja do marca 1979.</seg>
+					<seg>Želi kdo besedo? (Nihče.)</seg>
+					<seg>Predlog tega delovnega načrta zbora dajem na glasovanje.</seg>
+					<seg>Kdor je 
+						<emph>za,</emph> naj, prosim, dvigne roko. (Vsi.)
+					</seg>
+					<seg>Je kdo 
+						<emph>proti?</emph> (Nihče.)
+					</seg>
+					<seg>Se je kdo 
+						<emph>vzdržal</emph> glasovanja? (Nihče.)
+					</seg>
+					<seg>Objavljam, da je zbor sprejel tudi delovni načrt zbora republik in pokrajin od januarja do marca 1979.</seg>
+					<seg>Tovarišice in tovariši, ker nam čas dopušča, mi dovolite, da spregovorim nekaj besed o delovnem programu, ki smo ga pravkar sprejeli.</seg>
+					<seg>Menim, da lahko na današnji seji po šestmesečnem skupnem delu ugotovimo, da je zbor republik in pokrajin tega sklica skupščine SFRJ nadaljeval delo zbora prejšnjega sklica in izkoristil njegove izkušnje, z veliko zavzetostjo vseh delegacij in delovnih teles zbora ter prizadevanj republik in avtonomnih pokrajin, da nastopajo kar se da načelno pri usklajevanju stališč, in 
+						<hi rend="bold">Zbor republik in pokrajin</hi>
+					</seg>
+					<seg>preučil več pomembnih vprašanj in sprejel ustrezne akte.</seg>
+					<seg>Ker smo nekaj vprašanj, predvidenih za obravnavo v tem letu, preložili na prihodnje leto, je to zahtevalo, da se delo v zvezi z njimi pospešeno nadaljuje, da bi jih preučili in sprejeli ustrezne akte v prvem trimesečju prihodnjega leta.</seg>
+					<seg>Seveda bo delo v zvezi z nekaterimi zahtevnejšimi zakoni, kot sta zakon o temeljih sistema cen in o družbeni kontroli cen in zakon o kompenzacijah, trajalo nekolik.o dlje, čeprav je bilo že veliko storjenega v zvezi z njima v zveznem izvršnem svetu in v tem zboru, prav tako pa tudi v ustreznih zveznih svetih, zato bomo morali še bolj organizirati naše delo, da bi te zakone sprejeli v predvidenih novih rokih.</seg>
+					<seg>Kakor vidite, čaka naš zbor po sprejetem delovnem programu tudi v letu 1 979 veliko pomembnih in zapletenih vprašanj, katerih obravnava bo terjala tudi naprej visoko stopnjo medsebojnega razumevanja, dobro organizacijo dela v zboru in popolno sinhronizacijo dela med tem zborom, republiškimi in pokrajinskima skupščinama, zveznim izvršnim svetom in ustreznimi organi in družbenopolitičnimi organizacijami v federaciji. Poleg naštetih zakonov so tu na prvem mestu opravila v zvezi s spremljanjem uresničevanja začrtane politike, s čimer se moramo intenzivneje ukvarjati kot doslej, v zvezi s pripravami na prihodnji srednjeročni in dolgoročni družbeni načrt Jugoslavije in merilih za ugotavljanje stopnje razvitosti republik in avtonomnih pokrajin, na podlagi katerih bomo določili, katere med njimi bodo štele za manj razvite po letu 1980, kot tudi v zvezi s sprejetjem resolucije za leto 1980 in drugimi akti, ki jih sprejmemo skupaj z resolucijo.</seg>
+					<seg>Velike naloge čakajo zbor tudi v zvezi z odkrivanjem in določanjem temeljnih nalog zbora do izteka mandata te skupščine, o čemer je pripravljeno delovno gradivo, ki naj rabi kot temelj za prvo izmenjavo mnenj o teh vprašanjih, prav tako pa tudi v zvezi z zboljševanjem dela zbora.</seg>
+					<seg>Na prvem mestu so vprašanja napredka delovne metode za pripravo in sprejetje delovnih programov in načrtov in ustvarjanje pogojev za široko vključevanje vseh zainteresiranih dejavnikov v zvezi s predlaganimi vprašanji, ki naj jih vsebujejo delovni programi, kot tudi v pripravljanju gradiva 
+						<emph>za</emph> ta vprašanja, v zvezi z določanjem narave in vsebine aktov, s katerimi se zagotavlja uresničevanje družbenega načrta po posameznih letih, kot tudi v zvezi z drugimi akti, ki se sprejmejo hkrati z njim (skupna devizna politika, projekcija plačilne in devizne bilance idr.), širša uporaba instituta predhodnega postopka v obravnavanju teh aktov, sodelovanje z zainteresiranimi organi in organizacijami pri sprejemanju aktov in obravnavanju posameznih vprašanj kot tudi način in čas dajanja in vsebine poročil, ki jih daje zvezni izvršni svet skupščini SFRJ v zvezi z uresničevanjem razvojne politike in drugimi vprašanji.
+					</seg>
+					<seg>K takšnemu delu nas silijo tudi nove rešitve v poslovniku ter pridobljene izkušnje. V spremembah in dopolnitvah poslovnika zbora iz aprila letos sta zagotovljena širše odpiranje zbora in krepitev vloge družbenopolitičnih organizacij in drugih družbenih dejavnikov v njegovem delu. Spremembe o načinu dela družbenopolitičnih organizacij, predvsem v Socialistični zvezi delovnega ljudstva Jugoslavije, kot tudi nove rešitve v poslovniku, naj veliko prispevajo k učinkovitejšemu funkcioniranju delegatskega skupščinskega sistema, s tem pa tudi k hitrejšemu in globljemu spoznavanju problemov in reševanju le-teh.</seg>
+					<seg>Pozitivne uspehe je obrodilo dejstvo, da so skupščini SFRJ pošiljali delovne verzije osnutka resolucije in osnutkov drugih aktov, ki se sprejmejo hkrati z resolucijo, kot tudi njihova obravnava v zboru in delovnih telesih pristojnih zborov republiških in pokrajinskih skupščin. Zelo koristna je bila tudi razprava v zboru o uresničevanju politike hitrejšega razvoja gospodarsko manj razvitih republik in Socialistične avtonomne pokrajine Kosova tik pred začetkom dela za uskladitev stališč republiških in pokrajinskih skupščin o osnutku resolucije, kar je olajšalo delo za uskladitev stališč o tem delu osnutka resolucije. To koristno prakso bi morali nadaljevati in jo še razširiti. To predvsem pomeni, da bomo morali obravnavati številne parcialne probleme, ki bodo pozneje skupaj predstavljali delovno gradivo za izpolnjevanje nalog za prihodnje leto, končno pa tudi dokument o tej politiki.</seg>
+					<seg>Da bi izpolnili vse te naloge, je pomembno, da zvezni izvršni svet in ustrezni zvezni upravni organi in zvezne organizacije, s katerimi morajo sodelovati tudi drugi organi in institucije, pravočasno pripravijo predvidene akte in gradivo. Upoštevajoč težave zveznega izvršnega sveta, da pravočasno pripravi ustrezno gradivo, je bilo med usklajevanjem stališč o osnutku programa delovnih teles zbora sprejetih več predlogov zveznega izvršnega sveta za premik rokov za pripravo in obravnavo posameznih analiz in drugega gradiva. S- tem smo ogrozili enakomerno obremenitev dela zbora, zato moramo posebej paziti na to, da bi se ravnali po teh spremenjenih rokih in da bi vse začrtane naloge ob posebni zavzetosti zbora in njegovih delovnih teles opravili v drugem polletju prihodnjega leta. Zato bodo morala delovna telesa zbora skladno s svojim delovnim področjem stalno spremljajo uresničevanje programa začrtanih nalog, da vzdržujejo tesne stike s predstavniki zveznega izvršnega sveta in ustreznimi organi in organizacijami, ki se ukvarjajo s pripravo posameznih predlogov in gradiva, in predlagajo in izvajajo ustrezne ukrepe za pospešitev tega dela, da bi pravočasno pripravili ustrezno gradivo v zboru.</seg>
+					<seg>Tovarišice in tovariši delegati, obravnavanje in reševanje teh vprašanj v zboru je bistveno pomembno za nadaljnjo rast in krepitev materialne podlage naše skupnosti, zlasti za nadaljnji razvoj našega delegatskega 7. 
+						<hi rend="bold">seja</hi> 29
+					</seg>
+					<seg>sistema v celoti. To nalaga našemu zboru, da se s še večjim ustvarjalnim poletom loti izpolnjevanja teh •nalog. Prepričan sem, da se bodo delegati in delegacije ter delovna telesa zbora, kot so to delala že doslej, maksimalno potrudila, da bi vsa ta opravila opravili pravočasno v sodelovanju z ustreznimi organi in organizacijami.</seg>
+					<seg>Tovarišice in tovariši, z obravnavo le-tega smo uspešno izpolnili čas.</seg>
+					<seg>Na vrsti je 
+						<emph>šesta</emph> točka dnevnega reda:
+					</seg>
+					<seg>
+						<hi rend="bold">Določitev predloga resolucije o politiki uresničevanja družbenega plana Jugoslavije od leta 1976 do leta 1980 v letu 1979</hi>
+					</seg>
+					<seg>Članom zbora smo poslali besedilo predloga resolucije, poleg tega pa tudi stališča skupščin vseh republik in avtonomnih pokrajin1 9 kot tudi poročila delovnih teles zbora in komisije skupščine 
+						<hi rend="bold">SFRJ</hi> za ugotavljanje istovetnosti besedil v jezikih narodov in narodnosti Jugoslavije.2 0
+					</seg>
+					<seg>Naknadno smo vam poslali poročili odbora za družbeni načrt in razvojno politiko in odbora za finance, ki vsebuje ta vprašanja, o katerih so bila stališča usklajena naknadno, poslali pa smo vam tudi poročilo zakonodajnopravne komisije.2
+						<ref target="#note1">1</ref>
+					</seg>
+					<seg>Skupaj z delegati zveznega zbora smo poslušali ekspoze predsednika zveznega izvršnega sveta o predlogu resolucije.</seg>
+					<seg>Začenjam obravnavo.</seg>
+					<seg>Želi kdo besedo?</seg>
+					<seg>Besedo ima delegat Ljubisav Markovič.</seg>
+				</u>
+				<note type="speaker">LJUBISAV 
+					<hi rend="bold">MARKOVIČ,</hi> predsednik odbora zbora 
+					<emph>republik in pokrajin za družbeni načrt in razvojno politiko:</emph>
+				</note>
+				<u who="#LjubisavMarkovič">
+					<seg>Tovariš predsednik, tovarišice in tovariši, zboru lahko poročam, da je delo v zvezi z resolucijo o ekonomski politiki za leto 1979 uspešno končano. Delo je potekalo do pred kratkim, kar po svoje dokazuje, kako pozorno v tem zboru obravnavamo in usklajujemo vsa vprašanja naše skupne politike.</seg>
+					<seg>Nekoliko prej smo razdelili pismeno gradivo, ki govori o usklajevanju in skupnem delu kot tudi o nekaterih spremembah in dopolnitvah, ki so jih sprejeli v odboru za družbeni načrt in razvojno politiko v zvezi z besedilom predloga resolucije.</seg>
+					<note xml:id="#note19" place="foot" n="19">Priloge 38 do 45.
+						<ref target="#note20">20 priloge od 46 do 49 
+							<emph>in</emph> 11.
+						</ref>
+					</note>
+					<note xml:id="#note21" place="foot" n="21">Priloge 50-52. Drugo gradivo je na voljo v informacijskodokumentacijski službi.</note>
+					<seg>Sklepam, da imajo delegati možnost, da se seznanijo s temi dopolnitvami ali dokončnimi stališči, ki so sicer znana, saj je potekalo to sklepno usklajevanje v povezavi s stališči, ki so jih imele delegacije skupščin republik in skupščin avtonomnih pokrajin.</seg>
+					<seg>Če so v zvezi s temi zadevami še kakšna dodatna vprašanja, jih bomo pojasnili.</seg>
+					<seg>V zvezi z našim delom za sestavo dokumenta o ekonomski politiki moram dati nekaj pojasnil. Seveda bom previden, da pred spoštovanimi kolegi ne bi prikazoval znanega ozračja razprav in prepričevanja, ki že dneve in tedne izpolnjuje te dvorane in odmeva v republiških in pokrajinskih skupščinah po vsej državi.</seg>
+					<seg>Nedvomno je resolucija delo prave družbene kooperacije vseh subjektov in organov federacije in sad globokega sodelovanja, velike prizadevnosti.</seg>
+					<seg>Poleg obrazloženih stališč republiških in pokrajinskih skupščin v tem zboru smo doživljali širše politično ozračje dosežkov in potreb socialističnega in samoupravnega razvoja naše družbe (kongresi Zveze komunistov in drugih družbenopolitičnih organizacij, nadaljnji napredek v družbeni zavesti in drugo). Zanesljivo lahko trdimo, da je bil vse to svojevrsten dejavnik naših prizadevanj za to, da rešimo ne tako preprosta protislovja našega gospodarskega razvoja.</seg>
+					<seg>Vsekakor so pomembni tudi konkretni predlogi, ki so jih dali v zvezi s posameznimi vprašanji organi družbenopolitičnih organizacij. Pregled dela odbora za družbeni načrt bi nudil še ustreznejšo dokumentacijo. To delo datira iz srede leta, iz časa obravnavanja poročila ZIS o izpolnjevanju načrta, o razvoju dejavnosti posebnega pomena, in poteka prek izmenjave mnenj o delovni verziji resolucije in končno prek obsežnih razprav o analizah gospodarskega razvoja, ki so bile predložene hkrati z osnutkom resolucije.</seg>
+					<seg>Člani odbora so se že temeljito seznanili problemi, nasprotji in potrebami ekonomske reprodukcije. Če upoštevamo njihove izkušnje v vprašanjih ekonomske politike, potem lahko razumemo, kako pospešeno in kakovostno so potekale razprave v sklepni fazi dela za dokument o skupni ekonomski politiki.</seg>
+					<seg>Odbor je imel v svojem delu enoten političen in ekonomski položaj. Gre za enako ali popolnoma skladno splošno opredelitev skupščin vseh republik in pokrajin. Vse skupščine so se nedvomno izrekle za politiko ekonomske stabilizacije in naloge dinamične gospodarsim rasti v kontekstu takšne politike ali pa kot njen dejavnik. Toda ta splošen položaj ne rešuje samodejno problemov, ne družbene odgovornosti. Poleg tega vsebuje skupno stališče hkratne naloge v več smereh: usklajevanje razmerij materialne reprodukcije, dinamična gospodarska rast, realen obseg investicij, spremembe v proizvodni strukturi glede na petletni načrt, napori v korist manj razvitih republik in zlasti SAP Kosova, razširitev položaja združenega dela in nadaljnje samoupravno konstituiranje reprodukcije, izboljšanje med- 
+						<hi rend="bold">Zbor republik in pokrajin</hi>
+					</seg>
+					<seg>narodnega gospodarskega položaja države, višja raven gospodarjenja in načrtovanja itd.</seg>
+					<seg>O teh vprašanjih so republike razložile svoja stališča in zahteve, ki jihje bilo treba med delovnim postopkom odbora uskladiti kot skupni interes.</seg>
+					<seg>Odgovornost je seveda v tem, da stojijo za posameznimi stališči objektivne potrebe v posameznih republikah in pokrajinah. To niso navadne želje ali izgubljanje občutka za skupnost, temveč objektivne razlike v razvitosti, strukturi prebivalstva in drugih posebnostih, problemih itd., kar povzroča, da nekatere republike ali pokrajini bolj poudarjajo nekatera vprašanja ekonomskega življenja, nekatere razsežnosti problemov. To dejstvo samo potrjuje pomembnost solidnih razprav, dejstev, potrpežljivega pojasnjevanja in naporov za to, da bi poiskali skupne rešitve.</seg>
+					<seg>Naše delo v odboru je bilo zato v pravem pomenu besede kolektivno, polno sporov in pojasnjevanj pa tudi popolnega razumevanja, strpnosti in svetovanj. Razlike nas niso pustile ravnodušne do vprašanj, niti. nismo mislili, da mora biti naša poglavitna naloga glasovanje.</seg>
+					<seg>Zdi se mi, da smo se nenehno sporazumevali, prepričevali, včasih vsi v en glas nudili rešitve, oporekali drug drugemu in odkrivali pota k skupnemu stališču. Pri tem so bili neogibni in mučni trenutki omahovanja, ocenjevanja neposrednega odločanja ali osebnega izrekanja na podlagi osebne odgovornosti in odgovornosti delegacij.</seg>
+					<seg>Pravo podobo dobimo, če temu delovnemu sodelovanju dodamo udeležbo članov in predstavnikov zveznega izvršnega sveta. Ti so seveda zastopali stališča zveznega izvršnega sveta, včasih ostajali osamljeni, se prilagajali, vendar vedno na podlagi dejstev, in potrpežljivo ponavljali razloge za določeno stališče, vse dotlej dokler ni zmagala moč drugih dejstev. Seveda so številna stališča resolucije odbori in predstavniki zveznega izvršnega sveta skupaj oblikovali in pilili.</seg>
+					<seg>Še ena pripomba o resoluciji, vendar ne kot o vsebini ekonomske politike. Gre za njeno obliko. Kot dokument je videti resolucija obsežna, če upoševamo naravo našega političnega sistema in njeno funkcijo instrumenta letne politike. Kot takšna pa je dokument tudi o stanju družbenega urejanja naše reprodukcije. Zato gre pri resoluciji za vsebino, ki jo moramo urejati na podlagi drugih ekonomskih in pravnih instrumentov, kar je po svoje povzročalo probleme v delu odbora.</seg>
+					<seg>Pomanjkanje nekaterih družbenih dogovorov, povezanih z izpolnjevanjem nalog petletnega načrta, nekaterih pomembnih zakonov o urejanju ekonomskih odnosov, kot je na primer zakon o sistemu in družbeni kontroli cen itd., so po svoje ustvarjali in še ustvarjajo težave v oblikovanju učinkovite politike družbenega urejanja. Toda pazljivo delo za opredelitev posameznih razmerij in nalog, solidno usklajeno s splošnimi odnosi in projekcijami gospodarske rasti, delitve in izmenjave, raven podajanja in opredeljevanja politike - so prispeva-</seg>
+					<seg>li k temu, da lahko štejemo resolucijo kot instrument učinkovitega urejanja ekonomskega življenja. Seveda terja to ustrezno obnašanje vseh gospodarskih in političnih subjektov ter odgovorno in učinkovito izvajanje tistih številnih nalog, ki prehajajo v pristojnost izvršnih in samoupravnih organov, kot tudi določeno dejavnost, vsebovano v politični funkciji in delovnem programu zbora republik in pokrajin za leto 1979.</seg>
+					<seg>Zbor prosim, da določi predlog resolucije o politiki uresničevanja družbenega plana Jugoslavije v letu 1979 s spremembami in dopolnitvami, o katerih so nas obvestili odbori za družbeni načrt, za finance in za ekonomske odnose s tujino.</seg>
+				</u>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Želi še kdo izmed delegatov besedo?</seg>
+					<seg>Besedo ima delegat Stojan Čosev.</seg>
+				</u>
+				<note type="speaker">STOJAN ČOSEV, 
+					<emph>predsednik odbora zbora republik in pokrajin za trg in cene:</emph>
+				</note>
+				<u who="#StojanČosev">
+					<seg>Tovariš predsednik, tovarišice in tovariši delegati, ob usklajevanju stališč o osnutku resolucije o politiki uresničevanje družbenega plana Jugoslavije v letu 1979 na področju trga in cen je bilo temeljno izhodišče politika ekonomske stabilizacije. Na tem temelju naj bi dogovorjeni temelji politike cen zagotovili, da inflacijska gibanja ne bi stekla v takšno smer, ki bi utegnila ogroziti uresničevanje ciljev in nalog družbenega načrta Jugoslavije in razvrednotiti že doseženih uspehov v materialnem in družbenem razvoju države.</seg>
+					<seg>V tem pogledu so izhodišče sklepi enajstega kongresa Zveze komunistov Jugoslav.ije in stališča republiških in pokrajinskih skupščin, ki se zavzemajo za to, da bi se odločneje oprijeli doslednega uresničevanja in učinkovitega funkcioniranja celovitega sistema socialističnih samoupravnih proizvajalnih odnosov. Pri tem je bilo podčrtano, da je uresničevanje politike ekonomske stabilizacije ena bistvenih družbenoekonomskih nalog.</seg>
+					<seg>V tem smislu se moramo odločno prizadevati, da bi dosegli večjo in gospodarnejšo proizvodnjo v skladu s potrebami trga; da bi družbeno gospodarno uporabljali dohodek; določali in izpolnjevali programe varčevanja z vsemi reprodukcijskimi sredstvi v združenem delu kot v družbi sploh; odločno izvajali protiinflacijsko politiko na področju porabe kreditno-monetarne in davčne politike ter na vseh drugih področjih ekonomske dejav-, nosti, zlasti na področju cen in življenjskih stroškov ter onemogočali pojave, da bi s pritiski na cene skušali reševati probleme neučinkovitega poslovanja z naglimi spremembami v gospodarski strukturi; določali realne investicijske programe nosilcev družbene reprodukcije itd. 7. 
+						<hi rend="bold">seja</hi> 31
+					</seg>
+					<seg>Zlasti je poudarjeno, da bi morali graditi politiko in sistem rezerv na vseh ravneh, ki bodo gospodarno in učinkovito vplivale in bile hkrati v neodtujljivi funkciji združenega dela pomemben dejavnik utrjevanja proizvodnje in trga ter zavarovanja države za primer izrednih potreb.</seg>
+					<seg>Razvijanje enotnega jugoslovanskega trga kot bistven pogoj za racionalno družbeno delitev dela ter skladen in učinkovit razvoj proizvajalnih sil države, enakopravnosti delovnih ljudi in organizacij združenega dela ter njihovega širšega dohodkovnega povezovanja na podlagi učinkovanja ekonomskih zakonitosti ob družbenem usmerjanju gospodarskega razvoja - je prav tako eno pomembnih vprašanj uresničevanja politike ekonomske stabilizacije. V tem pogledu je treba še naprej ukrepati in se odločno zavzemati za odpravljanje regionalnih pregrad, zagotavljati prosto kroženje blaga in družbenih sredstev, dosegati večjo gibljivost in gospodarnejšo uporabo sredstev družbene akumulacije, skrbeti za neovirano gibanje in združevanje dela in sredstev na enotnem jugoslovanskem trgu itd.</seg>
+					<seg>Izhajajoč iz nalog, določenih v družbenem načrtu Jugoslavije od leta 1976 do leta 1980 in upoštevajoč gibanja in težnje na področju cen v tem letu, so se v odboru za trg in cene pri usklajevanju stališč o osnutku resolucije uveljavila gledišča, naj bi kot minimum zahtev, ki bi jih morali postaviti v izvajanju politike ekonomske stabilizacije in uresničevanja politike cen v letu 1979, ustvarili pogoje za to, da se bo rast cen v industriji in kmetijstvu gibala največ do dosežene rasti cen v industriji v letu 1978. Vemo, da je bila rast cen industrijskih izdelkov v lanskem letu v primerjavi z drugimi cenami najskromnejša; da rastejo cene na drobno in življenjski stroški za približno petino počasneje od gibanj na teh področjih v letu 1978. Spričo dosedanjih problemov na področju stanovanjske graditve, ki v zadnjem času opazno zaostaja v primerjavi z načrtovanimi gibanji in kar vpliva tudi na obseg celotne proizvodnje, prav tako pa glede na to, da je reševanje vprašanj na tem področju bistveno za povečanje produktivnosti dela, je bilo v odboru doseženo soglasje, da bi smelo potekati gibanje cen storitev izključno na podlagi zvišanja stanarin največ za točko nad določenim gibanjem cen storitev nasploh.</seg>
+					<seg>Upoštevaje gibanje cen storitev v letu 1978 in željo, da ne bi šli mimo dogovorjene politike na tem področju tudi v letu 1979, smo se v odboru zavzeli za to, naj tisti, ki odločajo o cenah, zagotovijo, da se bodo v letu 1979 počasneje dvigale cene storitev v tistih družbenopolitičnih skupnostih, v katerih so prekoračili dogovorjeno raven cen na področju storitev, kar naj bi natančno opredelili v dogovoru o izvajanju politike cen v letu 1979.</seg>
+					<seg>Pogoj za uresničevanje dogovorjene politike cen je, da se po eni strani z ukrepi za izvajanje ekonomske politike družbenopolitičnih skupnosti in ustreznimi</seg>
+					<seg>dejavnostmi organizacij združenega dela in drugih samoupravnih organizacij in skupnosti, po drugi strani pa z uresničevanjem v resoluciji predvidenih razmerij v delitvi in uporabi družbenega proizvoda in dohodka, s skladnejšimi globalnimi in strukturnimi blagovno-denarnimi razmerji kot tudi z uresničevanjem dogovorjene politike razvoja ekonomskih odnosov s tujino ter ukrepi ekonomske kreditne in davčne politike - ustvarijo vsi potrebni pogoji za to, da bo rast cen in življenjskih stroškov v letu 1979 zares počasnejša kot v letu 1978, kot je tudi predvideno v resoluciji. Takšna pogojenost oziroma vzpostavitev trdne korelativne zveze med gibanji na posameznih področjih ekonomske politike in izvajanja politike cen je potrebna, saj se prek cen pravzaprav izražajo vsa dogajanja na posameznih področjih gospodarjenja in družbenega življenja, cene pa so odsev vseh ukrepov in akcij kot tudi vseh sprememb in gibanj na posameznih področjih gospodarstva. Če želimo dosledno izvajati politiko ekonomske stabilizacije, je bistveno, da čimprej določimo sistemske rešitve na področju trga in cen, kar še vedno ni popolnoma urejeno, kot se je sicer to že zgodilo na drugih področjih. Zato smo se v odboru zavzeli za to, da bi čimprej, najpozneje pa v prvem polletju prihodnjega leta, sprejeli zakon o temeljih sistema cen in o družbeni kontroli cen. Resolucija predvideva tudi izdajo zakona o temeljih sistema kompenzacij in dograditev sistema blagovnih rezerv federacije, drugih družbenopolitičnih skupnosti in organizacij združenega dela kot pomembnega dejavnika stabilizacije, proizvodnje in trga. Med usklajevanjem stališč o osnutku resolucije je bilo v odboru doseženo soglasje o nekaterih pomembnih vprašanjih, kot so: oblikovanje cen osnovnih kmetijskih pridelkov na podlagi kriterijev in meril iz dogovora o razvoju kmetijskoindustrijskega kompleksa; gibanje drobnoprodajnih cen in življenjskih stroškov kot tudi zagotovitev pospešenega gibanja družbenoekonomskih odnosov na stanovanjskem področju, izvajanje diferencialne politike cen na področju storitev, nadaljnji napori za ustrezno razmestitev skladiščnih prostorov za rezerve živil in industrijskih izdelkov, natančno opredelitev politike potrošniških kreditov in pogojev za njihovo dovoljevanje v skladu z urejanjem razmerij na trgu in v okviru izvajanja politike ekonomske stabilizacije itd. Pri usklajevanju stališč o delu osnutka resolucije, ki se nanaša na področje trga in cen, je bilo poleg pripomb in predlogov skupščin republik in avtonomnih pokrajin slišati tudi mnenja družbenopolitičnih organizacij v federaciji, Gospodarske zbornice Jugoslavije, delovnih teles zveznega zbora skupščine 
+						<hi rend="bold">SFRJ,</hi> zveznega ekonomskega sveta in drugih, ki so jih upoštevali delegati med sprejemanjem resolucije. V procesu usklajevanja stališč o osnutku resolucije je bilo doseženo konstruktivno sodelovanje delegacij iz vseh republik in avtonomnih pokrajin in predstavnikov zveznega izvršnega sveta. Delegacije republik in avtonomnih pokrajin, člani odbora in predstavniki zveznega izvršnega sveta so med tem delom s svojimi predlogi veliko prispevali k temu, da smo našli ustrezne rešitve. To je omogočilo, da je bilo delo za usklajevanje stališč o osnutku resolucije konstruktivno in učinkovito.
+					</seg>
+				</u>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Želi še kdo izmed delegatov besedo? 
+						<hi rend="bold">(Nihče.)</hi>
+					</seg>
+					<seg>Se vse delegacije strinjajo, da določimo predlog te resolucije v predlaganem besedilu, hkrati s spremembami, danimi v poročilih odbora za družbeni načrt in razvojno politiko in odbora za finance? (Strinjajo se.)</seg>
+					<seg>Ker smo se strinjali s predlogom, vse delegacije skupščin republik in avtonomnih pokrajin pa so pooblaščene, da se smejo izreči o predlogu v celoti, se bomo zdaj dokončno izrekli: Je delegacija skupščine SR Bosne in Hercegovine za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Slovenije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Kosova? (Da.)</seg>
+					<seg>Delegacija sabora SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR Črne gore? (Da.)</seg>
+					<seg>Ker so 
+						<ref target="#noteSe">'Se vse delegacije izrekle za, objavljam, da je zbor sprejel predlog te resolucije v predlaganem besedilu skupaj z naknadno usklajenimi stališči skupščin republik in avtonomnih pokrajin o vprašanjih, danih v poročilu odbora za družbeni načrt in razvojno politiko in poročilu odbora za finance.</ref>
+					</seg>
+					<seg>Na vrsti je 
+						<emph>osma</emph> točka dnevnega reda:
+					</seg>
+					<seg>
+						<hi rend="bold">Določitev predloga odloka o ciljih</hi> in 
+						<hi rend="bold">nalogah skupne emisijske</hi> in. 
+						<hi rend="bold">denarne politike in skupnih temeljih kreditne politike v letu 1979</hi>
+					</seg>
+					<seg>Članom zbora smo poslali besedilo predloga tega odloka, ki je pripravljen na podlagi usklajenih stališč skupščin republik in avtonomnih pokrajin.</seg>
+					<seg>Poslali smo vam tudi stališča skupščin vseh republik in avtonomnih pokrajin? in poročilo odbora za kreditno-monetarni sistem, zakonodajnopravne komisije zbora in komisije skupščine SFRJ za ugotavljanje istovetnosti besedil vJezikih narodov Jugoslavije.°</seg>
+					<seg>Začenjam obravnavo.</seg>
+					<seg>Želi kdo besedo? (Nihče.)</seg>
+					<seg>Se vse delegacije strinjajo, da določimo predlog tega odloka v predlaganem besedilu? (Strinjajo se.)</seg>
+					<note xml:id="#note22" place="foot" n="22">Priloge 53-60.28 Priloga 61, 62 in 11. Ker smo se strinjali z določitvijo predloga, delegacije skupščin republik in avtonomnih pokrajin pa imajo pooblastilo, da se lahko v imenu svojih skupščin izrečejo o predlogu tega odloka v celoti, se bomo zdaj o njem izrekli. Je delegacija skupščine SR Bosne in Hercegovine za? (Da.) Delegacija sobranja SR Makedonije? (Da.) Delegacija skupščine SR Slovenije? (Da.) Delegacija skupščine SR Srbije? (Da.) Delegacija skupščine SAP Kosova? (Da.) Delegacija skupščine SAP Vojvodine? (Da.) Delegacija sabora SR Hrvatske? (Da.) Delegacija skupščine, SR črne gore? (Da.) Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel predlog tega odloka v predlaganem besedi- I 
+						<hi rend="bold">24</hi> u. Poročila v zvezi s proračunom in spremljajočimi dokumenti smo razdelili, vendar jih odbor še ni potrdil, dogovorili pa smo se, da bodo potrjena najpozneje do 12,30. Ali počakamo ali bomo imeli kratek odmor? (Odmor.) Dajem 15 minut odmora.
+					</note>
+				</u>
+				<note>
+					<hi rend="italic">(Po odmoru)</hi>
+				</note>
+				<note type="speaker">PREDSEDNIK 
+					<hi rend="bold">ZORAN</hi> POLIČ:
+				</note>
+				<u who="#ZoranPolič">
+					<seg>Tovarišice in tovariši, nadaljujmo delo.</seg>
+					<seg>Na vrsti je 
+						<emph>enajsta</emph> točka dnevnega reda:
+					</seg>
+					<seg>
+						<hi rend="bold">Določitev predloga zakona o določitvi skupnega obsega proračunskih odhodkov federacije za leto 1979</hi>
+					</seg>
+					<seg>Članom zbora smo poslali besedilo tega zakonskega predloga, ki je· pripravljen na podlagi usklajenih stališč skupščin vseh republik in avtonomnihpokrajin.</seg>
+					<seg>Poleg tega smo vam poslali stališča skupščin. vseh republik in avtonomnih pokrajin 
+						<ref target="#note">?° in poročila odbora za· finance, zakonodajnopravne komisije zbora in komisije skupščine SFRJ za ugotavljanje istovetnosti besedil vjezikih narodov Jugoslavije. 2 '6</ref>
+					</seg>
+					<seg>Da bi spoznali vso snov, smo vam poslali osnutek proračuna federacije za leto 1979 in povzetek stališč in sklepov zveznega izvršnega sveta v razpravi o osnutku proračuna federacije za prihodnje leto.</seg>
+					<seg>Začenjam obravnavo.</seg>
+					<seg>Želi kdo besedo?</seg>
+					<seg>Besedo ima delegat Mustafa Sefo.</seg>
+					<note xml:id="#note2" place="foot" n="2">4 Odlok je objavljen v Uradnem listu SFRJ, št. 70 z dne 29. decembra 1978. ?
+						<ref target="#note5">5 Priloge 63-70.
+							<ref target="#note26">26 Priloge 71, 72 in 11.</ref>
+						</ref>
+					</note>
+				</u>
+				<note type="speaker">MUSTAFA SEFO, 
+					<emph>član odbora zbora republik in pokrajin za finance:</emph>
+				</note>
+				<u who="#MustafaSefo">
+					<seg>Tovariš predsednik, tovarišice in tovariši delegati, prosim, da v imenu odbora tega zbora za finance predlagam oziroma na kratko zajamem tudi točke v odloku o določitvi skupnega zneska deviz za potrebe federacije v letu 1979 in v odloku o določitvi prihodkov od carin in drugih uvoznih davščin, ki se v letu 1979 odstopajo Interesni skupnosti Jugoslavije za ekonomske odnose s tujino, ker je to enotno gradivo.</seg>
+					<seg>Predlog zakona o določitvi skupnega obsega proračunskih odhodkov federacije za leto 1979, ki ga mora sprejeti ta zbor, je rezultat medsebojnega razumevanja in naporov vseh udeležencev v postopku za uskladitev stališč, ki ga je dosegel odbor za finance v želji, da temeljito in vsestransko spozna in določi največji obseg in strukturo financiranja proračuna federacije kot sestavnega dela razvojne in stabilizacijske politike v prihodnjem letu.</seg>
+					<seg>Pri tem je bilo izhodišče vseh delegacij republiških in pokrajinskih skupščin v enotnem zavzemanju za to, da sme proračunska poraba federacije rasti samo do predvidene stopnje nominalne rasti družbenega proizvoda jugoslovanskega gospodarstva v skladu s stališči srednjeročnega načrta in dokumentov Zveze komunistov Jugoslavije. Hkrati opozarjamo na pozitivno okoliščino, da se je letos začela razprava o projekciji proračunske porabe federacije za leto 1979 s septembrsko razpravo o predlogu temeljev proračuna in da se je nadaljevala z obravnavo delovne verzije osnutka tega zakona.</seg>
+					<seg>Samo usklajevanje stališč je trajalo nekoliko dlje, ker je bilo vključevanje rasti proračuna v stopnjo rasti družbenega proizvoda kot izhodiščna podlaga vseh republik in pokrajin povezano in bilo odvisno od izida usklajevanja stališč o rebalansu letošnjega proračuna federacije. Po obravnavi zakonskega osnutka in zavzetju stališč v republiških in pokrajinskih skupščinahje zvezni izvršni svet 11. decembra določil in dal dopolnilni predlog k zakonskemu osnutku v želji, da bi ga zasnoval na najnovejših podatkih in ocenah o izpolnjevanju proračuna za to leto, na novih ocenah gospodarskih gibanj v osnutku resolucije o ekonomski politiki države v prihodnjem letu in na ponovni preučitvi vseh elementov, ki vplivajo na proračunske prihodke in odhodke federacije v prihodnjem letu.</seg>
+					<seg>Skupščinske delegacije so imele pooblastila za uskladitev stališč o zakonskem osnutku, naknadno pa so se morale posvetovati s svojimi skupščinami o dopolnilnem predlogu zveznega izvršnega sveta, kar je vplivalo na celotno dolžino postopka usklajevanja. Čeprav so prišle z dopolnilnim predlogom bistvene spremembe v zakonski osnutek in obravnavanje teh sprememb, so delegati in predstavniki zveznega izvršnega sveta pokazali vso pripravljenost, da poiščejo splošno sprejemljive rešitve.</seg>
+					<seg>V tem pogledu Je dal zlasti velik prispevek zvezni izvršni svet, ki je raziskal vse možnosti, da bi ustregel predlogom skupščin in njihovih delegacij za zmanjšanje prvotnega zneska prispevkov republik in pokrajin v proračun federacije s povečanjem njenih izvirnih prihodkov za 1.190 milijonov dinarjev kot tudi z ugoditvijo predlogom nekaterih skupščin, zlasti pa Socialistične avtonomne pokrajine Kosova za premostitev izjemnih bilančnih težav.</seg>
+					<seg>S tem smo se izognili dodatni obremenitvi gospodarstva oziroma njegove akumulativne in reproduktivne sposobnosti, do česar bi prišlo zaradi povečanja prispevkov v proračun federacije.</seg>
+					<seg>Posebej velja omeniti veliko povečanje obsega proračuna, za približno 18,7 odstotka, ki izhaja pretežno iz odhodkov, določenih v družbenem načrtu in aktih skupščine, končno usklajenem z zahtevo, naj raste pod načrtovano stopnjo nominalne rasti družbenega proizvoda, ki se predvideva okoli 19,2 odstotka.</seg>
+					<seg>Tovarišice in tovariši delegati, v tesni povezavi s tem zakonskim osnutkom je odbor usklajeval tudi stališča o dveh odlokih, ki se nanašajo na odstop dela prihodkov od carin in drugih uvoznih davščin v letu 1979 Interesni skupnosti Jugoslavije za ekonomske odnose s tujino in o določitvi skupnega zneska deviz za potrebe federacije v prihodnjem letu.</seg>
+					<seg>Pri usklajevanju prvega odloka je bilo glavno vprašanje, ali so s predlagano stopnjo izločanja odmerjene dejanske potrebe in ali je zagotovljena gospodarna uporaba sredstev za spodbujanje izvoza. Pri tem so menili, da bi morali nadaljnje dograjevanje sistema stimulacije izvoza usmeriti k ustrezni udeležbi združenega dela. Rezultat usklajevanja stališč je bil, da je bil odlok sprejet z večjimi spremembami, s katerimi se je strinjal tudi zvezni izvršni svet.</seg>
+					<seg>Drugi odlok - o določitvi zneska deviz za potrebe federacije, je bil prav tako predmet širše razprave, katere rezultat je sprejeti osnutek tega odloka. Sprejete so obveznosti zveznega izvršnega sveta, da v določenem roku seznani delegate z vsemi vidiki razpolaganja z deviznimi sredstvi federacije in z njihovo vključitvijo v plačilno in devizno bilanco države.</seg>
+					<seg>Prosim zbor, da določi in sprejme predloge vseh treh aktov tako, kot so v njihovih osnutkih, o njihovih predlogih v odboru za finance usklajena stališča skupščin vseh socialističnih republik in socialističnih avtonomnih pokrajin.</seg>
+				</u>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Želi še kdo besedo? (Nihče.)</seg>
+					<seg>Se vse delegacije strinjajo, da določimo ta zakonski predlog v predlaganem besedilu? (Strinjajo se.)</seg>
+					<seg>Ker se vse delegacije strinjajo, imajo pa pooblastila, da glasujejo o zakonskem predlogu v celoti, se bomo zdaj o njem končno izrekli.</seg>
+					<seg>Je delegacija skupščine SR Bosne in Hercegovine za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Slovenije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Kosova? (Da.)</seg>
+					<seg>Delegacija skupščine SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR črne gore? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel v predlaganem besedilu prediog zakona o določitvi skupnega obsega proračunskih odhodkov federacije za leto 1979, 27</seg>
+					<seg>Odbor za finance predlaga po dogovoru s predstavnikom zveznega izvršnega sveta in na podlagi njegove izjave, naj sprejme zbor ta sklep:</seg>
+					<seg>Da bi rešili problem v funkcioniranju družbenih služb v Socialistični avtonomni pokrajini Kosovo, bo zbor republik in pokrajin najpozneje do konca prvega trimesečja 1979 celovito preučil gmotni položaj družbenih služb v pokrajini in predloge za rešitev tega vprašanja, o čemer bo ustrezno gradivo in predloge pripravil zvezni izvršni svet v sodelovanju z izvršnim svetom skupščine Socialistične avtonomne pokrajine Kosova.</seg>
+					<seg>Želi kdo besedo v zvezi s tem sklepom? (Nihče.)</seg>
+					<seg>Kdor je 
+						<emph>za,</emph> naj, prosim, dvigne roko. (Vsi.)
+					</seg>
+					<seg>Je kdo 
+						<emph>proti?</emph>
+					</seg>
+					<seg>Besedo ima delegat Vladimir Jovanovič.</seg>
+				</u>
+				<note type="speaker">VLADIMIR JOVANOVIČ 
+					<emph>(SR Črna gora):</emph>
+				</note>
+				<u who="#VladimirJovanovič">
+					<seg>Tovariš predsednik, tovarišice in tovariši delegati, z nekaterimi delegati sem prebral to poročilo. Nanaša se na probleme SAP Kosova. Nimamo nič proti - prosim, da se to ugotovi - in zato sprejemamo takšno poročilo. Toda pričakovali smo, da bo v poročilu odbora za finance dano tudi stališče ZIS do proračunsko-bilančnega položaja republike Črne gore. V tem smislu poudarja ta problem tudi skupščina republike Črne gore, v aktu o soglasju k skupnemu obsegu odhodkov v federacije, in s katerim bo imela probleme SR Črna gora v letu 1979.</seg>
+					<seg>V vmesnem času smo predlagali amandma, ki naj rabi kot podlaga za usklajevanje. V poročilu odbora za finance sploh ni govor o stališču skupščine SR Črne gore in predlogu, ki je dan v aktu o soglasju, niti ni besede o amandmaju, ki ga je dala delegacija skupščine SR Črne gore k zakonu o skupnem obsegu odhodkov federacije za leto 1979. 27 Zakon je objavljen v Uradnem listu 
+						<hi rend="bold">SFRJ,</hi> št. 70 z dne 29. decembra I 978.
+					</seg>
+					<seg>Preden bi se o čemerkoli izrekel, prosim predstavnika odbora za finance, da pojasni, zakaj v poročilu odbora ni problematike SR Črne gore v zvezi s proračunom in ni opisano razmerje med proračunom Črne gore in skupnimi proračunskimi odhodki federacije za leto 1979.</seg>
+					<seg>Po odgovoru predstavnika odbora za finance bomo videli, kako naj ravnamo.</seg>
+				</u>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Prosim predstavnika odbora, da spregovori.</seg>
+					<seg>Besedo ima delegat Milija Kovačevič.</seg>
+				</u>
+				<note type="speaker">
+					<hi rend="bold">MILIJA KOVAČEVIČ,</hi> predsednik odbora republik in 
+					<emph>pokrajin za finance:</emph>
+				</note>
+				<u who="#MilijaKovačevič">
+					<seg>Ker gre vse tako na hitro, smo zdaj vnovič pregledali poročilo, ki ste ga dobili tudi vi, in v odboru smo dosegli soglasje o posameznih formulacijah. Menimo, da tisto, kar je prišlo v poročilo - tudi datum te seje, ki ga tovariš predsednik ni prebral - ima svoj pomen kot tudi vse tiste obveznosti, ki jih je prevzel zvezni izvršni svet. Z usklajevanjem in oblikovanjem stališč in zahtev črne gore smo zdaj to v odboru uskladili. Tudi delegat Vladimir Jovanovič iz Črne gore je sprejel formulacijo, ki jo je predlagal zvezni izvršni svet in s katero se je odbor strinjal v celoti. , PREDSEDNIK 
+						<hi rend="bold">ZORAN</hi> POLIČ: Tovariši, že dopoldan ste prejeli poročila, na katera se sklicuje odbor. Pravkar me je tajnik opozoril, da se tudi poročilo sklicuje na poročilo z dne 12. tega meseca. V tem poročilu je obravnavan tudi problem Črne gore. Kot sklep je odbor sprejel in predložil dogovor z zveznim izvršnim svetom o ureditvi problema Kosova. Kaže, da bo druge zadeve obravnaval še naprej. To pomeni, da sprejema danes zbor samo zakon in sklep, tisto pa, kar so se dogovorili v odboru, da bo še naprej obravnaval probleme Črne gore, in, kakor so me obvestili, problem Makedonije, je posebna zadeva, o kateri ne sklepamo. Na nobeni seji ne sprejemamo poročil odbora. Poročilo imate - in odbor bo delal naprej. Opravičujem se, tovariši: doslej nikoli nismo sprejemali poročil, razen če ta izrecno ne vsebujejo kakšnih določb, o katerih mora odločati zbor. Te stvari pa bo odbor šele obravnaval in dal svoj predlog zboru. Mi ne spreminjamo zakona. To danes ni predmet obravnavanja, niti predmet tega sklepa. Kolikor vem, zahteva skupščina SR Črne gore posojilo, to paje nekaj drugega, kot je tukaj sklenjeno. Posojila ne obravnava- 7. 
+						<hi rend="bold">seja</hi> 35
+					</seg>
+					<seg>mo v tem zboru, marveč je to stvar zveznega izvršnega sveta, ki rešuje te zadeve iz proračunske rezerve.</seg>
+					<seg>Prosim, želi še kdo besedo?</seg>
+					<seg>Besedo ima delegat Mustafa Sefo.</seg>
+				</u>
+				<note type="speaker">MUSTAFA SEFO, 
+					<emph>član odbora zbora republik in pokrajin za finance:</emph>
+				</note>
+				<u who="#MustafaSefo">
+					<seg>Ker je postavljeno vprašanje poročila odbora, lahko povem, da so v delu našega odbora sodelovali tudi delegati iz Črne gore. Odbor je davi obravnaval poročilo in v zvezi z amandmajem Črne gore sklenil, naj zvezni izvršni svet in izvršni svet Črne gore v prvem trimesečju prihodnjega leta pripravita analizo proračuna in skladno z njo predložita ustrezne ukrepe.</seg>
+					<seg>S takšnim predlogom se je strinjal tudi predstavnik Črne gore. Nimam dokončnega besedila, vendar gre v bistvu 
+						<emph>za</emph> to, da bo v zvezi z amandmajem Črne gore preučen bilančni položaj v Črni gori v prvem trimesečju. To bosta opravila zvezni izvršni svet in izvršni svet Črne gore in na podlagi te analize predlagala ukrepe.
+					</seg>
+				</u>
+				<note type="speaker">VLADIMIR JOVANOVIČ (
+					<emph>SR Črna gora):</emph>
+				</note>
+				<u who="#VladimirJovanovič">
+					<seg>Izjavljam, da nimam nič proti temu predlogu, ki ga je zdaj razložil predstavnik odbora za finance. Normalno pa je, da našo delegacijo moti, da tega ni v dokumentu, ki ga ta zbor upošteva ob sprejemanju zakona o skupnem obsegu odhodkov federacije.</seg>
+					<seg>To govorim zato, ker smo davi dobili poročilo odbora številka 06.3-141/78-32, v katerem je na četrti strani precej nerodna formulacija, h kateri smo dali pripombo in pri tem zahtevali ponovno sejo odbora za finance.</seg>
+					<seg>Pričakovali smo, kar je povsem razumljivo, da bomo dobili na seji zborajasno in precizno formulacijo o tem, kaj se je dogajalo in kaj je bilo sklenjeno v odboru za finance.</seg>
+				</u>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>To nam je pojasnil poročevalec. Gre za to, da se sporazumeta izvršna sveta. Menim, da gre za razliko v sklepih in da mora biti postopek različen. To pomeni, da mora izvršni svet Črne gore čimprej stopiti v stile z zveznim izvršnim svetom, in če bo predložen ukrep, o katerem mora odločiti zbor republik in pokrajin glede obsega proračuna, se pravi njegovega povečanja, potem je to stvar tega zbora. Če pa gre samo za posojilo iz rezerve, gre za dogovor obeh izvršnih svetov, ne pa za odlok tega ali zveznega zbora. Oproščam se, ker sem tudi jaz nekoliko kriv za to, ker sem zahteval od odbora, naj pride poročilo na zbor neredigirano. Ne moremo</seg>
+					<seg>dovoliti, da naš zvezni zbor čaka, da bi lahko razpravljal o proračunu. Ne v zakonu ne v nadaljnjih ukrepih ne bomo ničesar spremenili. Tu torej ni kriv odbor. 
+						<hi rend="bold">Menim,</hi> da je stvar v bistvu čista.
+					</seg>
+					<seg>Prišli smo do glasovanja.</seg>
+					<seg>Kdorje 
+						<emph>za,</emph> naj, prosim, dvigne roko. (Vsi.)
+					</seg>
+					<seg>Je kdo 
+						<emph>proti?</emph> (Nihče.)
+					</seg>
+					<seg>Seje kdo 
+						<emph>vzdržal</emph> glasovanja? (Nihče.)
+					</seg>
+					<seg>Zbor je torej sprejel sklepe, ki jihje predlagal odbor za finance.</seg>
+					<seg>Menim, da mora odbor zdaj paziti na to, da bo med izvršnima svetoma vse razčiščeno, če pa ne bo prišlo do soglasja, ima delegacija vsak trenutek možnost postaviti problem pred ta zbor.</seg>
+					<seg>Na vrsti Je 
+						<emph>dvanajsta</emph> točka dnevnega reda:
+					</seg>
+					<seg>
+						<hi rend="bold">Določitev predloga odloka o določitvi skupnega zneska deviz za potrebe federacije v letu 1979</hi>
+					</seg>
+					<seg>Članom zbora smo poslali besedilo predloga odloka, ki je pripravijen na podlagi usklajenih stališč skupščin vseh republik in avtonomnih pokrajin. Poslali smo vam tudi stališča skupščin vseh republik in avtonomnih pokrajin in poročila odbora za finance, zakonodajnopravne komisije zbora in komisije skupščine SFRJ za ugotavljanje istovetnosti besedil v jezikih narodov Jugoslavije, 
+						<ref target="#note38">38</ref>
+					</seg>
+					<seg>Začenjam obravnavo.</seg>
+					<seg>Želi kdo besedo? (Nihče.)</seg>
+					<seg>Se vse delegacije strinjajo, da določimo predlog tega odloka v predlaganem besedilu? (Da.)</seg>
+					<seg>Ker so se vse delegacije strinjale in ker so pooblaščene, se bomo zdaj izrekli o predlogu odloka v celoti.</seg>
+					<seg>Je delegacija skupščine SR Bosne in Hercegovine za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Slovenije? ((Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Kosova? (Da.)</seg>
+					<seg>Delegacija sabora SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR Črne gore? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel predlog tega odloka.</seg>
+					<note xml:id="#note2" place="foot" n="2">° Gradivo v zvezi s to točko dnevnega reda je na voljo v informacijsko-dokumentacijski službi skupščine v skladu s poslovnikom skupščine.</note>
+					<seg>Na vrstije 
+						<emph>trinajsta</emph> točka dnevnega reda: 
+						<hi rend="bold">Določitev predloga odloka o določitvi prihodkov od</hi>
+					</seg>
+					<seg>carin in 
+						<hi rend="bold">drugih uvoznih davščin, ki se v letu 1979</hi>
+					</seg>
+					<seg>
+						<hi rend="bold">odstopajo Interesni skupnosti Jugoslavije za ekonomske</hi>
+					</seg>
+					<seg>
+						<hi rend="bold">odnose s tujino</hi>
+					</seg>
+					<seg>Članom zbora smo poslali besedilo predloga tega odloka, ki je pripravljen na podlagi usklajenih stališč</seg>
+					<seg>skupščin republik in avtonomnih pokrajin; prav tako</seg>
+					<seg>smo vam poslali stališča skupščin vseh republik in</seg>
+					<seg>avtonomnih pokrajin in poročila odbora za finance,</seg>
+					<seg>zakonodajnopravne komisije zbora in komisije skupšči</seg>
+					<seg>ne SFRJ za ugotavljanje istovetnosti besedil v jezikih narodov Jugoslavije. 2 9</seg>
+					<seg>Začenjam obravnavo.</seg>
+					<seg>Želi kdo besedo? (Nihče.)</seg>
+					<seg>Se vse delegacije strinjajo, da določimo predlog tega</seg>
+					<seg>odloka v predlaganem besedilu? (Strinjajo se.)</seg>
+					<seg>Ker so se vse delegacije strinjale in ker so jih pooblastile skupščine, se bomo zdaj izrekli o predlogu</seg>
+					<seg>odloka v celoti.</seg>
+					<seg>Je delegacija skupščine SR Bosne in Hercegovine</seg>
+					<seg>za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.) 29 Gradivo v zvezi s to točko dnevnega reda je na voljo v informacijsko-dokumentacijski službi skupščine v skladu s poslovnikom skupščine.</seg>
+					<seg>Delegacija skupščine SR Slovenije? (Da.) Delegacija skupščine SR Srbije? (Da.) Delegacija skupščine SAP Kosova? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija sabora SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR Črne gore? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel v predlaganem besedilu predlog odloka o določitvi prihodkov od carin in drugih uvoznih davščin, ki se v letu 1979 odstopajo Interesni skupnosti Jugoslavije za ekonomske odnose s tujino,°</seg>
+					<seg>Tovarišice in tovariši delegati, ostale so nam še tri točke dnevnega reda:</seg>
+					<seg>- določitev predloga odloka o skupni devizni politiki (sedma točka),</seg>
+					<seg>- določitev predloga projekcije plačilne bilance Jugoslavije (deveta točka),</seg>
+					<seg>- določitev predloga projekcije devizne bilance Jugoslavije za leto 1979 (deseta točka).</seg>
+					<seg>Po sporočilu odbora še ne moremo računati, da bi to kmalu dobili. Vabim vas na sprejem in predlagam, da nadaljujemo ob 19. uri.</seg>
+				</u>
+				<note>
+					<hi rend="italic">(Seja je bila prekinjena ob 13,20.) 30 Odlok je objavljen v Uradnem listu 
+						<hi rend="bold">SFRJ,</hi>
+					</hi>št. 70 z dne 29. decembra 1978.
+				</note>
+				<seg>Tovarišice in tovariši, nadaljujmo delo.</seg>
+				<seg>Na vrsti je 
+					<emph>sedma</emph> točka dnevnega reda
+				</seg>
+				<seg>
+					<hi rend="bold">Določitev predloga. odloka o skupni deviznipolitiki Jugoslavije za leto 1979</hi>
+				</seg>
+				<seg>Članom zbora smo poslali besedilo predloga tega odloka, ki je pripravljen na podlagi usklajenih stališč skupščin republik in avtonomnih pokrajin, in poročilo odbora za ekonomske odnose s tujino, ki vsebuje vprašanja, o katerih so bila naknadno usklajena stališča skupščin republik in pokrajin in ki so potemtakem sestavni del predloga odloka.</seg>
+				<seg>Poslali smo vam tudi stališča skupščin vseh republik in avtonomnih pokrajin in poročila zakonodajnopravne komisije zbora in komisije skupščine SFRJ za ugotavljanje istovetnosti besedil v jezikih narodov Jugoslavije.
+					<ref target="#note31">31</ref>
+				</seg>
+				<seg>Začenjam obravnavo.</seg>
+				<seg>Želi kdo besedo? (Nihče.)</seg>
+				<seg>Se vse delegacije strinjajo, da določimo predlog tega odloka v predlaganem besedilu? (Strinjajo se.)</seg>
+				<seg>Ker so se vse delegacije strinjale, imajo pa pooblastila svojih skupščin, da se lahko tudi končno izrečejo, se bomo zdaj izrekli.</seg>
+				<seg>Je delegacija skupščine SR Bosne in Hercegovine 
+					<emph>za?</emph> (Da.)
+				</seg>
+				<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+				<seg>Delegacija skupščine SR Slovenije? (Da.)</seg>
+				<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+				<seg>Delegacija skupščine SAP Kosova? (Da.)</seg>
+				<note xml:id="#note31" place="foot" n="31">Vse gradivo v zvezi s to točko dnevnega reda je na voljo v informacijsko-dokumentacijski službi skupščine 
+					<hi rend="bold">SFRJ v</hi> skladu s poslovnikom skupščine. Delegacija skupščine SAP Vojvodine? (Da.) Delegacija sabora SR Hrvatske? (Da.) Delegacija skupščine SR Črne gore? (Da.) Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel predlog odloka o skupni devizni politiki Jugoslavije za leto 1979 v predlaganem besedilu in z' besedilom, podanim v poročilu odbora za ekonomske odnose s tujino, 2 Na vrsti je 
+					<emph>deveta</emph> točka dnevnega reda: 
+					<hi rend="bold">Določitev predloga projekcije plačilne bilance Jugoslavije za leto 1979</hi> Ker je bilo v zvezi s to točko precej pogovorov in izmenjav mnenj, menim, da je najbolje, da poročevalec odbora za ekonomske odnose s tujino poroča zboru o končnem sklepu odbora glede projekcije. Prosim poročevalca, da spregovori. Besedo ima delegat Asim Kerim. ASAN KERIM, 
+					<emph>poročevalec odbora· zbora republik in pokrajin za ekonomske odnose s tujino:</emph> Tovariš predsednik, tovarišice in tovariši, odbor za ekonomske odnose s tujino predlaga, naj zbor republik in pokrajin ob sprejetju odloka o sprejetju projekcije plačilne bilance Jugoslavije za leto 1979 in odloka o sprejetju projekcije devizne bilance Jugoslavije za leto 1979 sprejme ta sklep: 1. Plačilno-bilančne in devizno-bilančne pozicije socialističnih republik in socialističnih avtonomnih pokrajin, ki po zakonu o deviznem poslovanju in
+				</note>
+				<note xml:id="#note32" place="foot" n="32">Odlok je objavljen v Uradnem listu 
+					<hi rend="bold">SFRJ,</hi> št. 70 z dne 29. decembra 1978. 
+					<hi rend="bold">Zbor republik in pokrajin</hi>
+				</note>
+				<seg>kreditnih odnosih s tujino sestavljajo projekcijo plačilne bilance Jugoslavije za leto 1 979 oziroma projekcije devizne bilance Jugoslavije za leto 1979, se uporabljajo do 31. marca 1979 v besedilu, ki je usklajeno 
+					<emph>v</emph> odboru za ekonomske odnose s tujino, kot ga je predlagal zvezni izvršni svet.
+				</seg>
+				<seg>2. Zvezni izvršni svet bo pripravil in predložil skupščini SFRJ osnutek sprememb in dopolnitev projekcije plačilne bilance Jugoslavije za leto 1979 in projekcije devizne bilance Jugoslavije za leto 1979, plačilno-bilančne in devizno-bilančne pozicije socialističnih republik in socialističnih avtonomnih pokrajin, ki bodo sprejete v postopku, ki je predviden za sprejetje plačilno-bilančnih pozicij v plačilni bilanci Jugoslavije za leti 1979 v roku, ki bo omogočil, da bo ta dokument sprejet do konca prvega četrtletja 1979.</seg>
+				<seg>3. Zvezni izvršni svet naj pospešeno nadaljuje delo za pripravo in sprejetje odloka o metodologiji in merilih za določanje in metodologiji za spremljanje uresničevanja projekcije plačilnobilančnih pozicij in projekcij devizno-bilančnih pozicij republik oziroma avtonomnih pokrajin v enotni projekciji devizne bilance Jugoslavije za leti 1979 in 1980.</seg>
+				<note type="speaker">PREDSEDNIK ZORAN POLIČ:</note>
+				<u who="#ZoranPolič">
+					<seg>Želi še kdo izmed delegatov besedo? (Nihče.) •</seg>
+					<seg>Se vse delegacije strinjajo, da določimo projekcijo plačilne bilance Jugoslavije v predlaganem besedilu? (Strinjajo se.)</seg>
+					<seg>Ker so se vse delegacije strinjale in ker imajo pooblastila svojih skupščin, da se lahko izrečejo o predlogu v celoti, se bomo zdaj končno izrekli.</seg>
+					<seg>Je delegacija skupščine SR Bosne in Hercegovine za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Slovenije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Kosova? (Da.)</seg>
+					<seg>Delegacija sabora SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR Črne gore? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel predlog te projekcije v predlaganem besedilu, 33</seg>
+					<note xml:id="#note3" place="foot" n="3">° Objavljeno 
+						<emph>v</emph> Uradnem listu SFRJ, št. 70 z dne 29. decembra 1978.
+					</note>
+					<seg>Slišali ste sklepe, ki jih predlaga odbor.</seg>
+					<seg>Želi kdo besedo v zvezi s predlaganimi sklepi (Nihče.)</seg>
+					<seg>Predlog sklepov odbora dajem na glasovanje.</seg>
+					<seg>Kdor je 
+						<emph>za,</emph> naj, prosim, dvigne roko. (Vsi.)
+					</seg>
+					<seg>Je kdo 
+						<emph>proti?</emph> (Nihče.)
+					</seg>
+					<seg>Seje kdo 
+						<emph>vzdržal</emph> glasovanja? (Nihče.)
+					</seg>
+					<seg>Ugotavljam, da je zbor sprejel sklep odbora.</seg>
+					<seg>Na vrsti je 
+						<emph>deseta</emph> točka dnevnega reda:
+					</seg>
+					<seg>
+						<hi rend="bold">Določitev predloga projekcije devizne bilance Jugoslavije za leto 1979</hi>
+					</seg>
+					<seg>Začenjam obravnavo.</seg>
+					<seg>Želi kdo besedo? (Nihče.)</seg>
+					<seg>Se vse delegacije strinjajo, da se predlog devizne bilance določi v predlaganem besedilu? (Strinjajo se.)</seg>
+					<seg>Ker so se vse delegacije strinjale, skupščine pa so jih pooblastile, da se lahko izrečejo o predlogu v celoti, se bomo zdaj izrekli.</seg>
+					<seg>Je delegacija skupščine SR Bosne in Hercegovine za? (Da.)</seg>
+					<seg>Delegacija sobranja SR Makedonije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Slovenije? (Da.)</seg>
+					<seg>Delegacija skupščine SR Srbije? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Vojvodine? (Da.)</seg>
+					<seg>Delegacija skupščine SAP Kosova? (Da.)</seg>
+					<seg>Delegacija sabora SR Hrvatske? (Da.)</seg>
+					<seg>Delegacija skupščine SR Črne gore? (Da.)</seg>
+					<seg>Ker so se vse delegacije izrekle za, objavljam, da je zbor sprejel predlog te projekcije o predlaganem besedilu skupaj z odlokom o njenem sprejetju.</seg>
+					<seg>Tovarišice in tovariši, s tem smo končali današnje delo.</seg>
+					<seg>Želim, da bi način, kakor smo doslej skupno delali, veljal tudi v prihodnjem letu. Vsem vam želim veliko uspehov, zdravja in zadovoljstva v letu 1979. (Ploskanje.)</seg>
+				</u>
+				<note>
+					<hi rend="italic">(Seja seje končala ob 19,37)</hi>
+				</note>
+			</div>
+		</body>
+	</text>
+</TEI>

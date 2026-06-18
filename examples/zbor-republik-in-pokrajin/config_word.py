@@ -189,24 +189,4 @@ def get_frames(filename: str):
 
         for run in para.runs:
             print(f"----- RUNNNNNNN ------: {run.text}")
-            yield make_chunk(run, para)
-
-
-# for pdf:
-def get_frames_pdf(filename: str):
-    from pypdf import PdfReader
-
-    pdf = PdfReader(filename)
-
-    # can't yield because stupid extract text function
-
-    chunks: list[Chunk] = []
-
-    for page in pdf.pages:
-        page.extract_text(
-            visitor_text=lambda text, cm, tm, font_dict, font_size: chunks.append(
-                make_chunk(text=text, x=cm, y=tm, font_name=font_dict, size=font_size)
-            )
-        )
-
-    return chunks
+            yield make_chunk(run, para, page_num=0)  # page num not computable

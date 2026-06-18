@@ -6,7 +6,7 @@ from engine import Chunk, PDFChunk, WordChunk
 
 import engine
 from engine import append, commit_children, pop, root, stack
-from config import CONFIG, COSMETIC_ANNOTATIONS, get_chunks, speaker_to_utterance
+from config import CONFIG, COSMETIC_ANNOTATIONS, get_chunks
 from type_decs import (
     PDFRule,
     PDFRunTest,

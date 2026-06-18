@@ -5,6 +5,8 @@
 - is a wip
 - meow :3
 
+### 📖 Writing a config? See [CONFIG.md](CONFIG.md) — the full reference for config files (rules, the engine, cosmetic annotations, `get_chunks`, hooks, and the tooling for finding magic numbers).
+
 ### It only works on .docx files for now, because they actually have structure unlike some formats (khm pdf)
 PDFs were actually the *original* way of parsing documents, but they were *really* inconsistent with me having to hardcode x & y values of text chunks
 
