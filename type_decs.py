@@ -41,6 +41,7 @@ WordAppendFunc = Callable[["WordChunk"], Any]
 WordAfterPush = Callable[[], Any]
 RunImmediate = Callable[[], Any]
 OnPop = Callable[["StackEntry"], Any]
+OnEnd = Callable[[], Any]
 
 
 class WordRule(TypedDict):
@@ -58,6 +59,7 @@ class WordConfig(TypedDict):
     mode: Literal["word"]
     alignments: dict[str, WordRuleGroup]
     on_pop: NotRequired[OnPop]
+    on_end: NotRequired[OnEnd]
 
 
 PDFRunTest = Callable[["PDFChunk"], bool | None]
@@ -80,6 +82,7 @@ class PDFConfig(TypedDict):
     mode: Literal["pdf"]
     alignments: dict[str, PDFRuleGroup]
     on_pop: NotRequired[OnPop]
+    on_end: NotRequired[OnEnd]
 
 
 Rule = WordRule | PDFRule

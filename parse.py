@@ -187,6 +187,9 @@ if __name__ == "__main__":
 
     commit_children(stack[0])
 
+    if "on_end" in CONFIG:
+        CONFIG["on_end"]()
+
     xml = ET.tostring(root, encoding="utf-8")
 
     if not args.out:

@@ -4,6 +4,7 @@
 # examples/zbor-republik-in-pokrajin/config_pdf.py and config.py in the project root are symlinks
 
 
+import json
 import re
 import xml.etree.ElementTree as ET
 from typing import Any, Generator
@@ -65,6 +66,11 @@ def header_test(chunk: PDFChunk):
     return False
 
 
+utterance_speaker_mapping: dict[str, str] = (
+    {}
+)  # {"#SomeName": "Some Name (affiliation)"} -- maps serialized and unserialized - this is probably kind of weird but we'll ball
+
+
 def speaker_to_utterance(popped: StackEntry):
     # runs for every pop
     # The utterance's @who needs to have the whole speaker's info (all chunks, at least)
@@ -78,13 +84,16 @@ def speaker_to_utterance(popped: StackEntry):
         name_surname = re.sub(
             r"^pre\S+\s+|\s*(?:\(|,|:).*$", "", text, flags=re.IGNORECASE
         )  # remove "PREDSEDNIK" and everything after a parenthesis or a comma
-        serialized = "".join(
+        serialized = "#" + "".join(
             word.capitalize() for word in name_surname.split()
         )  # le pascal case
 
+        if serialized not in utterance_speaker_mapping: # the first occurence is probably the most descriptive
+            utterance_speaker_mapping[serialized] = text
+
         push(
             "u",
-            who=f"#{serialized}",
+            who=serialized,
         )
 
 
@@ -143,6 +152,14 @@ def is_page_top(chunk: PDFChunk) -> bool:
     return prev is not None and prev.page_num != chunk.page_num
 
 
+def on_end():
+    # write the speaker utterance mapping somewhere
+    with open(
+        "out/speaker_utterance.json", "w", encoding="utf-8"
+    ) as f:  # TODO unhardcode
+        json.dump(utterance_speaker_mapping, f, ensure_ascii=False)
+
+
 # cosmetic annotations -- things that can appear inside anything and do not alter layout or structure of the document
 # find the pyramid on https://excalidraw.com/#json=s5d5fPvL0PFW2FxKaYbm4,XXCL3rpalK3FEg9lBwiKHQ
 COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
@@ -172,6 +189,7 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
 CONFIG: PDFConfig = {
     "mode": "pdf",
     "on_pop": speaker_to_utterance,
+    "on_end": on_end,
     "alignments": {
         # all alignments
         # any other values are only used in .docx mode
