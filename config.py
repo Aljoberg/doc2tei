@@ -76,7 +76,7 @@ def speaker_to_utterance(popped: StackEntry):
             (i.text or "") if isinstance(i, ET.Element) else i for i in popped.children
         )  # kind of a weird way of getting text, but it's fine alright we're gonna pretend there's no nesting
         name_surname = re.sub(
-            r"^PRE\S+\s+|\s*(?:\(|,|:).*$", "", text
+            r"^pre\S+\s+|\s*(?:\(|,|:).*$", "", text, flags=re.IGNORECASE
         )  # remove "PREDSEDNIK" and everything after a parenthesis or a comma
         serialized = "".join(
             word.capitalize() for word in name_surname.split()
@@ -101,30 +101,23 @@ def leading_caps(text: str) -> int:
 
 
 def is_seg(chunk: PDFChunk) -> bool:
-    # a <seg> is a body paragraph; we spot its first line by the indent. every
-    # column indents a paragraph opening ~15pt past the lines that wrap under
-    # it. the scan is misaligned page-to-page (even pages sit ~8pt left), so we
-    # match the indent *band* of both columns - col1 lands at x~52 or ~60, col2
-    # at x~292 or ~300 - instead of one exact x. wrapped/continuation lines sit
-    # at the column's left margin (~36/44 and ~276/284) and fall outside.
-    #
-    # only a line's first run can open a paragraph (later runs are mid-line). a
-    # column/page jump - a big move from the previous run - always opens one,
-    # and is the only thing that lets us read a 9pt line at a column top as body
-    # rather than a 9pt footnote line. everywhere else we hold body to 10pt, so
-    # the footnotes (also 9pt) don't get mistaken for paragraphs.
+    # are we in a seg?
+    # if we're not at line start, no
     if chunk is not chunk.line_chunk.runs[0]:
         return False
 
+    # if the difference in x or difference in y is more than... these magic numbers, we probably are, but need to check font size
     prev = chunk.previous
     if prev is None or abs(chunk.x - prev.x) > 240 or abs(chunk.y - prev.y) > 230:
         # should maybe add page_num instead of these
         return 8.9 < chunk.font_size < 10.1  # column / page top -> always body
 
+    # because of page misalignment (:D) we have to do whatever this is
     left = 48 if chunk.page_num <= 2 else 41
 
-    in_indent_band = left < chunk.x < 64 or 287 < chunk.x < 303
-    return in_indent_band and (
+    # if we're indented, correct font size and not in a note
+    indented = left < chunk.x < 64 or 287 < chunk.x < 303
+    return indented and (
         9.0 <= chunk.font_size < 10.1 and not tag_is_on_top("note", place="foot")
     )
 

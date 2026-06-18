@@ -1,226 +1,270 @@
-# EXAMPLE config file for some PROSVETNO-KULTURNO VEĆE doc i got sent
-# starts with page 3
-# works upto the... upto the part where it doesn't
-# pdfs are too big to go in this repo, so find them elsewhere
+# config for PROSVETNO-KULTURNO VEĆE pdf
+# THIS CONFIG HAS NOT BEEN TESTED AS MUCH
+# it works as long as it works, but there's some inconsistencies (like bold text not being grouped)
+# but it serves as an example of another config
 
-import re
+
+import xml.etree.ElementTree as ET
+from typing import Any, Generator
 import engine
+import re
 from engine import (
     Chunk,
-    WordChunk,
+    PDFChunk,
+    StackEntry,
     make_chunk,
     pop_and_push_to,
+    tag,
     tag_is_on_top,
     pop_to,
     push,
     append,
 )
-from type_decs import WordConfig, WordRuleGroup
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-from docx import Document
-from docx.oxml.ns import qn
+from type_decs import PDFConfig, PDFCosmeticAnnotations
 
 
-def ref_entry_action(chunk: WordChunk):
-    note_num = chunk.text.strip()
-    serialized = re.sub(r"[^a-zA-Z0-9]", "", note_num)
-    if not tag_is_on_top("note", place="foot", n=serialized):
-        # not already inside this footnote, open it
-        pop_to("u", "div")
+def line_text(chunk: PDFChunk):
+    return chunk.line_chunk.text.strip()
+
+
+def is_line_start(chunk: PDFChunk):
+    return chunk is chunk.line_chunk.runs[0]
+
+
+def is_title(chunk: PDFChunk):
+    return (
+        is_line_start(chunk)
+        and chunk.x < 160
+        and chunk.y > 640
+        and line_text(chunk).isupper()
+    )
+
+
+def is_seg(chunk: PDFChunk) -> bool:
+    if not is_line_start(chunk) or not 10.4 < chunk.font_size < 11.6:
+        return False
+    if chunk.page_num % 2 == 0:
+        # WHY IS THE FORMATTING DIFFERENT ON EVEN PAGES BROOoOOOO
+        return 60 < chunk.x < 72 or 305 < chunk.x < 318
+    return 45 < chunk.x < 56 or 289 < chunk.x < 300
+
+
+def speaker_to_utterance(popped: StackEntry):
+    # same as ZRIP's config
+    if popped.element.tag == "note" and popped.element.attrib.get("type") == "speaker":
+        text = "".join(
+            (i.text or "") if isinstance(i, ET.Element) else i for i in popped.children
+        )  # kind of a weird way of getting text, but it's fine alright we're gonna pretend there's no nesting
+        name_surname = re.sub(
+            r"^pre\S+\s+|\s*(?:\(|,|:).*$", "", text, flags=re.IGNORECASE
+        )  # remove "PREDSEDNIK" and everything after a parenthesis or a comma
+        serialized = "".join(
+            word.capitalize() for word in name_surname.split()
+        )  # le pascal case
+
         push(
-            "note",
-            attribs={"xml:id": f"#note{serialized}"},
-            place="foot",
-            n=serialized,
+            "u",
+            who=f"#{serialized}",
         )
 
 
-def ref_append(chunk: WordChunk):
-    # the marker run (e.g. "1") is recorded as the note's @n by ref_entry_action,
-    # so we don't append it as text. we also don't bulk-append the rest of the
-    # paragraph here - runs aren't guaranteed to be whole, so the footnote body
-    # runs are appended individually as they're parsed, landing inside the note
-    # that ref_entry_action left open on top of the stack.
-    engine.lstrip_next = True
-
-
 def generic_note_action(chunk: Chunk):
-    pop_to("div")  # prolly should add tests like is_tag_on_top
+    pop_to("div")
     push("note")
-    push("hi", rend="italic")  # i guess
-
-
-def speaker_action(chunk: Chunk):
-    # only open a new speaker note if we're not already inside one
-    # (a follow-up speaker paragraph just appends into the open note)
-    if not tag_is_on_top("note", type="speaker"):
-        pop_to("div")
-        push("note", type="speaker")
+    push("hi", rend="italic")
 
 
 def contents_action(chunk: Chunk):
-    # the SADRZAJ frame - every paragraph of it lands in one note
+    # sadržaj
     if not tag_is_on_top("note", type="contents"):
         pop_to("div")
         push("note", type="contents")
 
 
-def is_session_title(chunk: WordChunk):
-    # session container at the start
-    # with info about session name, num, date
-    return (
-        chunk.y < 2000
-        and chunk.h < 3000
-        and chunk.w > 2900
-        and chunk.paragraph.text.strip().isupper()
-    )
-
-
-# the SADRZAJ / PREDSEDAVAO / "Početak u ..." blocks that open a session
-# usually in the right column, but joint sessions center them across the page
-session_front_rules: WordRuleGroup = {
-    "CHAIRMAN": {
-        # one centered all caps paragraph in a small container
-        # but the ocr is kinda inconsistent so we anchor on "PREDSEDAVA"
-        "alignment": WD_PARAGRAPH_ALIGNMENT.CENTER,
-        "test": lambda chunk: chunk.h < 1500
-        and (
-            chunk.paragraph.text.strip().startswith("PREDSEDAVA")
-            or chunk.paragraph.text.strip().isupper()
-        ),
-        "action": pop_and_push_to("div", tag="note", type="chairman"),
+# inline formatting that can appear inside anything
+COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
+    "ITALIC": {
+        "test": lambda chunk: chunk.italic,
+        "tag": tag("emph"),
     },
-    "TIME": {
-        # "Početak u 9 č 10 min" - italic, shares the chairman's frame
-        # (some have a stray bold run in the middle, hence the prefix test)
-        "test": lambda chunk: chunk.h < 1500
-        and (
-            chunk.paragraph.text.strip().startswith("Početak")
-            or all(r.italic for r in chunk.paragraph.runs)
-        ),
-        "action": pop_and_push_to("div", tag="time"),
-    },
-    "CONTENTS": {
-        # opened by the SADRZAJ heading, keeps eating paragraphs until
-        # some other rule (chairman, a title, ...) pops the note
-        "test": lambda chunk: (
-            chunk.paragraph.text.strip().upper().startswith("SADR")
-            or tag_is_on_top("note", type="contents")
-        ),
-        "action": contents_action,
-    },
+    "BOLD": {"test": lambda chunk: chunk.bold, "tag": tag("hi", rend="bold")},
 }
 
-# rules for the two-column debate body, shared by both zones
-body_rules: WordRuleGroup = {
-    "REFERENCE_ENTRY": {
-        # opomba :O
-        # a footnote *definition* leads its paragraph with the superscript
-        # marker. an inline reference inside body text is a superscript run
-        # that ISN'T the paragraph's first run - that one falls through to
-        # append(), which turns it into an inline <ref>.
-        "test": lambda chunk: (
-            chunk.run.font.superscript is True
-            and chunk.run._element is chunk.paragraph.runs[0]._element
-        ),
-        "action": ref_entry_action,
-        "append_func": ref_append,
-    },
-    "GENERIC_NOTE": {
-        # a note about something that happened, such as "seja se je zakljucila"
-        "test": lambda chunk: (
-            chunk.paragraph.alignment == WD_PARAGRAPH_ALIGNMENT.CENTER
-            and chunk.italic
-        ),
-        "action": generic_note_action,
-        "append_func": lambda chunk: append(chunk, should_annotate=["REFERENCE"]),
-    },
-    "SPEAKER": {
-        # "Predsednik Nikola Sekulić:" / "Janez Vipotnik:"
-        # a short paragraph with a bold run that ends with a colon
-        "test": lambda chunk: (
-            any(r.bold for r in chunk.paragraph.runs)
-            and chunk.paragraph.text.strip().endswith(":")
-            and len(chunk.paragraph.text.strip()) < 100
-        ),
-        "action": speaker_action,
-    },
-    "SEG": {
-        # indented - start of odstavek
-        "test": lambda chunk: chunk.paragraph.paragraph_format.first_line_indent
-        != 0
-        and chunk.paragraph.text.startswith(chunk.text),
-        "action": pop_and_push_to(
-            "u",
-            "div",
-            tag="seg",
-            chunked=False,
-        ),  # close any open seg; land on the enclosing <u>
-    },
-}
-
-# figure it out
-# explained in zbor-republik-in-pokrajin already
-# + the readme
-CONFIG: WordConfig = {
-    "mode": "word",
+CONFIG: PDFConfig = {
+    "mode": "pdf",
+    "on_pop": speaker_to_utterance,
     "alignments": {
-        "left": {
+        "any": {
+            "run_immediate": lambda: setattr(engine, "is_first_run", True),
+            # --- session front matter (opening page) ---
             "SEJA_DATE": {
-                # "OD 15. MAJA 1964. GODINE" - looks like the declaration, so
-                # match on the "OD " prefix first
-                "test": lambda chunk: (
-                    is_session_title(chunk)
-                    and chunk.paragraph.text.strip().startswith("OD ")
-                ),
+                # is in title & starts with "OD "
+                "test": lambda chunk: is_title(chunk)
+                and line_text(chunk).startswith("OD "),
                 "action": pop_and_push_to("div", tag="time"),
             },
             "SEJA_NUM": {
-                # "6. SEDNICA" / "8. ZAJEDNIČKA SEDNICA" - bold in some
-                # sessions, not in others, so anchor on the text
-                "test": lambda chunk: (
-                    is_session_title(chunk) and "SEDNICA" in chunk.paragraph.text
-                ),
+                "test": lambda chunk: is_title(chunk) and "SEDNICA" in line_text(chunk),
                 "action": pop_and_push_to("div", tag="head", type="sessionNumber"),
             },
             "SEJA_DECLARATION": {
-                # "PROSVETNO-KULTURNO VEĆE" - whatever else the title block holds
-                "test": lambda chunk: is_session_title(chunk),
+                # if it's not a date or a num (those get matched earlier since dict items are kept in declaration order)
+                "test": is_title,
                 "action": pop_and_push_to("div", tag="head", type="session"),
             },
-            **body_rules,
-        },
-        "right": {
-            **session_front_rules,
-            **body_rules,
-        },
-        "center": {
-            # full-page-width frames (joint sessions center their chairman block across both columns)
-            # no body rules here on purpose - whatever else
-            # is full-width (tables etc.) we can't represent anyway
-            **session_front_rules,
+            "CHAIRMAN": {
+                # all caps or sw PREDSEDAVA
+                "test": lambda chunk: is_line_start(chunk)
+                and 200 < chunk.x < 285
+                and (
+                    line_text(chunk).startswith("PREDSEDAVA")
+                    or line_text(chunk).isupper()
+                ),
+                "action": pop_and_push_to("div", tag="note", type="chairman"),
+            },
+            "TIME": {
+                # either "Početak" or italic
+                "test": lambda chunk: is_line_start(chunk)
+                and 200 < chunk.x < 285
+                and (line_text(chunk).startswith("Početak") or chunk.italic),
+                "action": pop_and_push_to("div", tag="time"),
+            },
+            "CONTENTS": {
+                # sadržaj
+                "test": lambda chunk: line_text(chunk).upper().startswith("SADR")
+                or tag_is_on_top("note", type="contents"),
+                "action": contents_action,
+            },
+            # --- two-column debate body ---
+            "GENERIC_NOTE": {
+                # centered & italic
+                "test": lambda chunk: is_line_start(chunk)
+                and 140 < chunk.x < 280
+                and chunk.line_chunk.italic,
+                "action": generic_note_action,
+                "append_func": lambda chunk: append(chunk, should_annotate=[]),
+            },
+            "SPEAKER": {
+                # bold & ends with a colon
+                "test": lambda chunk: is_line_start(chunk)
+                and line_text(chunk).endswith(":")
+                and len(line_text(chunk)) < 100
+                and any(r.bold for r in chunk.line_chunk.runs),
+                "action": pop_and_push_to("div", tag="note", type="speaker"),
+            },
+            "SEG": {
+                # segment :D
+                "test": is_seg,
+                "action": pop_and_push_to("u", "div", tag="seg", chunked=False),
+            },
         },
     },
 }
 
 
-# get frames of document
-# this can be changed if you need to parse something other than a doc
-# now yields one chunk per run (paragraphs aren't guaranteed to be whole)
-# more in readme
-def get_frames(filename: str):
-    doc = Document(filename)
+def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
+    from pdfminer.pdfpage import PDFPage
+    from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+    from pdfminer.converter import PDFLayoutAnalyzer
+    from pdfminer.layout import LTChar
 
-    for para in doc.paragraphs:
-        p = para._p
+    line_threshold = 4.0
+    header_y = 740.0  # above this is a header
 
-        pPr = p.find(qn("w:pPr"))
-        if pPr is None:
-            continue
-        framePr = pPr.find(qn("w:framePr"))
-        if framePr is None:
-            continue
+    rm = PDFResourceManager()
 
-        for run in para.runs:
-            print(f"----- RUNNNNNNN ------: {run.text}")
-            yield make_chunk(run, para)
+    class CharCollector(PDFLayoutAnalyzer):
+        def __init__(self):
+            super().__init__(rm, laparams=None)
+            self.chars: list[LTChar] = []
+
+        def receive_layout(self, ltpage: Any):
+            def walk(obj: Any):
+                for item in obj:
+                    if isinstance(item, LTChar):
+                        self.chars.append(item)
+                    elif hasattr(item, "__iter__"):
+                        walk(item)
+
+            walk(ltpage)
+
+    device = CharCollector()
+    interpreter = PDFPageInterpreter(rm, device)
+
+    with open(filename, "rb") as f:
+        prev_run: PDFChunk | None = None
+        for page_num, page in enumerate(PDFPage.get_pages(f)):
+            device.chars = []
+            interpreter.process_page(page)
+
+            # this doc has no footnote refs, so we don't need a downward and upward treshold
+            # so we just match the same for up and down
+            lines: list[list[LTChar]] = []
+            cur: list[LTChar] = []
+            prev_y: float | None = None
+            for ch in device.chars:
+                if prev_y is not None and abs(ch.y0 - prev_y) > line_threshold:
+                    lines.append(cur)
+                    cur = []
+                cur.append(ch)
+                prev_y = ch.y0
+            if cur:
+                lines.append(cur)
+
+            for line in lines:
+                if not line or line[0].y0 > header_y:
+                    continue  # header, just skip it
+                text = "".join(c.get_text() for c in line)
+                if not text.strip():
+                    continue
+
+                runs: list[dict] = []
+                for c in line:
+                    if (
+                        runs
+                        and runs[-1]["fontname"] == c.fontname
+                        and runs[-1]["size"] == c.size
+                    ):
+                        runs[-1]["text"] += c.get_text()
+                    else:
+                        runs.append(
+                            {
+                                "text": c.get_text(),
+                                "x0": c.x0,
+                                "y0": c.y0,
+                                "fontname": c.fontname,
+                                "size": c.size,
+                            }
+                        )
+
+                # this pdf actually has spaces for some reason
+                # but if the last text didn't have one, we add it
+                if not runs[-1]["text"][-1:].isspace():
+                    runs[-1]["text"] += " "
+
+                run_chunks: list[PDFChunk] = []
+                for r in runs:
+                    prev_run = make_chunk(
+                        text=r["text"],
+                        x=r["x0"],
+                        y=r["y0"],
+                        font_name=r["fontname"],
+                        size=r["size"],
+                        previous=prev_run,
+                        page_num=page_num,
+                    )
+                    run_chunks.append(prev_run)
+
+                first = runs[0]
+                line_chunk = make_chunk(
+                    text=text,
+                    x=first["x0"],
+                    y=first["y0"],
+                    runs=run_chunks,
+                    page_num=page_num,
+                )
+                for run in run_chunks:
+                    run.line_chunk = line_chunk
+
+                engine.is_first_run = True
+                yield from run_chunks
