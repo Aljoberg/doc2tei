@@ -127,20 +127,6 @@ def parse_text(chunk: Chunk):
     center = get_center_point(chunk)
 
 
-    header = CONFIG.get("header")
-    if header is not None and header[0] < y < header[1]:
-        # header, likely
-        # this is fragile because i don't have a way of figuring what a header is
-        # in the doc i'm making it's got 3 elements so i can just seek by 3
-        # but it's not gonna be 3 in every doc
-        # also the y values are kinda bad for detection, i guess
-        # and GUESS WHAT!!! every other page has the page number FLIPPEDDD!!! how jolly and fun
-        print(f"HEADER: {chunk.text}")
-        # if len(chunk.runs) == 1 and chunk.runs[0].text.strip().isdigit():
-        #     # page num
-        #     print(f"PAGE NUM: {chunk.text}")
-        return
-
     alignments = CONFIG["alignments"]
     matched = False
     if isinstance(chunk, WordChunk):

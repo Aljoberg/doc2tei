@@ -43,12 +43,12 @@ RunImmediate = Callable[[], Any]
 OnPop = Callable[["StackEntry"], Any]
 
 
-class WordRule(TypedDict, total=False):
-    alignment: WD_PARAGRAPH_ALIGNMENT
+class WordRule(TypedDict):
+    alignment: NotRequired[WD_PARAGRAPH_ALIGNMENT]
     test: WordRunTest | Literal["_else"]
-    action: WordAction
-    append_func: WordAppendFunc
-    after_append: WordAfterPush
+    action: NotRequired[WordAction]
+    append_func: NotRequired[WordAppendFunc]
+    after_append: NotRequired[WordAfterPush]
 
 
 WordRuleGroup = dict[str, WordRule | RunImmediate]
@@ -66,11 +66,11 @@ PDFAppendFunc = Callable[["PDFChunk"], Any]
 PDFAfterPush = Callable[[], Any]
 
 
-class PDFRule(TypedDict, total=False):
+class PDFRule(TypedDict):
     test: PDFRunTest | Literal["_else"]
-    action: PDFAction
-    append_func: PDFAppendFunc
-    after_append: PDFAfterPush
+    action: NotRequired[PDFAction]
+    append_func: NotRequired[PDFAppendFunc]
+    after_append: NotRequired[PDFAfterPush]
 
 
 PDFRuleGroup = dict[str, PDFRule | RunImmediate]
@@ -80,8 +80,6 @@ class PDFConfig(TypedDict):
     mode: Literal["pdf"]
     alignments: dict[str, PDFRuleGroup]
     on_pop: NotRequired[OnPop]
-    # parse_text's running-header skip band (ymin, ymax); None opts out
-    header: NotRequired[tuple[float, float]]
 
 
 Rule = WordRule | PDFRule

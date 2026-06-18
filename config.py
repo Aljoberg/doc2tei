@@ -53,20 +53,39 @@ def generic_note_action(chunk: Chunk):
     push("hi", rend="italic")
 
 
+def header_test(chunk: PDFChunk):
+    # kill the first 3 elements on a page
+
+    for i in range(1, 4):
+        prev = nth_previous(chunk, i)
+        print(f"{prev=}, {chunk=}, {i=}", prev.line_chunk if prev else "meowo")
+        if prev and prev.page_num != chunk.page_num:
+            return True
+
+    return False
+
+
 def speaker_to_utterance(popped: StackEntry):
-    # runs for every element pop_to() closes. when a speaker <note> finishes,
-    # all its chunks are in - so we open a <u> (utterance) carrying the speaker's
-    # text as @who.
-    print(popped)
-    print("ON POP RANNN")
+    # runs for every pop
+    # The utterance's @who needs to have the whole speaker's info (all chunks, at least)
+    # and we can't go ahead in chunks, so we have to wait for <note type="speaker"> to do its recognision
+    # but only after it's popped (a seg starts, for example), we have every child of it
+    # so that's how we get the who representation
     if popped.element.tag == "note" and popped.element.attrib.get("type") == "speaker":
+        text = "".join(
+            (i.text or "") if isinstance(i, ET.Element) else i for i in popped.children
+        )  # kind of a weird way of getting text, but it's fine alright we're gonna pretend there's no nesting
+        name_surname = re.sub(
+            r"^PRE\S+\s+|\s*(?:\(|,|:).*$", "", text
+        )  # remove "PREDSEDNIK" and everything after a parenthesis or a comma
+        serialized = "".join(
+            word.capitalize() for word in name_surname.split()
+        )  # le pascal case
+
         push(
             "u",
-            who="".join(
-                (i.text or "") if isinstance(i, ET.Element) else i
-                for i in popped.children
-            ),
-        )  # need to get better logic for @who
+            who=f"#{serialized}",
+        )
 
 
 def leading_caps(text: str) -> int:
@@ -99,10 +118,15 @@ def is_seg(chunk: PDFChunk) -> bool:
 
     prev = chunk.previous
     if prev is None or abs(chunk.x - prev.x) > 240 or abs(chunk.y - prev.y) > 230:
+        # should maybe add page_num instead of these
         return 8.9 < chunk.font_size < 10.1  # column / page top -> always body
 
-    in_indent_band = 41 < chunk.x < 64 or 287 < chunk.x < 303
-    return in_indent_band and (9.0 <= chunk.font_size < 10.1 and not tag_is_on_top("note", place="foot"))
+    left = 48 if chunk.page_num <= 2 else 41
+
+    in_indent_band = left < chunk.x < 64 or 287 < chunk.x < 303
+    return in_indent_band and (
+        9.0 <= chunk.font_size < 10.1 and not tag_is_on_top("note", place="foot")
+    )
 
 
 def nth_previous(chunk: PDFChunk, n: int) -> PDFChunk | None:
@@ -155,7 +179,6 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
 CONFIG: PDFConfig = {
     "mode": "pdf",
     "on_pop": speaker_to_utterance,
-    "header": (724, 742),
     "alignments": {
         # all alignments
         # any other values are only used in .docx mode
@@ -164,6 +187,7 @@ CONFIG: PDFConfig = {
                 engine, "is_first_run", True
             ),  # we set the first run to be True so spaces don't get appended
             # i should probably rework this first run thing
+            "HEADER": {"test": header_test, "append_func": lambda chunk: None},  # :3
             # --- centered ---
             "SEJA_DECLARATION": {
                 "test": lambda chunk: (
@@ -339,6 +363,9 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                         and runs[-1]["fontname"]
                         == char["fontname"]  # and it's the same font
                         and runs[-1]["size"] == char["size"]  # and the same size
+                        and (
+                            abs(prev["x0"] - char["x0"]) < 30 if prev else True
+                        )  # we won't bridge if there's too much of a gap
                     )
                     if gap and runs:
                         runs[-1]["text"] += " "
