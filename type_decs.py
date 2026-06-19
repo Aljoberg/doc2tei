@@ -5,8 +5,8 @@ import xml.etree.ElementTree as ET
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 if TYPE_CHECKING:
-    # only needed for type hints; importing at runtime would create a cycle
-    # (engine imports type_decs for StackEntry/Action)
+    # only needed for type hints
+    # actually importing them would create a cycle (engine needs type decs, type decs needs engine)
     from engine import WordChunk, PDFChunk, Chunk, StackEntry
 
 

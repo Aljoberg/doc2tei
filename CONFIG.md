@@ -1,68 +1,40 @@
 # Writing a doc2tei config
 
-This is the reference for **config files** — the per-document Python modules that
-tell `doc2tei` how to turn a source document into TEI XML. If you just want to run
-the converter, jump to [Running it](#running-it). If you want to teach it about a
-*new* document, read the whole thing.
+Okay, so you want to parse a document. How doc2tei works is that you provide it a _configuration_ for your document, and it parses the document according to it.
 
-> **Scope.** doc2tei converts parliamentary transcripts (Yugoslav/Slovene assembly
-> sessions) into [TEI](https://tei-c.org/). There are two input backends — searchable
-> **PDF** and **Word** (`.docx`) — and PDF is the actively maintained one. Word support
-> is older and partially bit-rotted; see [Word mode](#word-mode-legacy).
+The configuration is (if I simplify) a list of conditions that emit a specific tag.
+For example, a `<head>` tag might need the source text to be bold, all caps, and centered.
 
----
+doc2tei supports two backends, a **searchable PDF** file, or a **Word** (`.docx`) file as the input.
 
-## Table of contents
+> Searchable PDF files are the main way of parsing documents, due to them usually being the original source.
+> Word files are also _technically_ supported, but not actively maintained, since they require an extra step
+> (they need to be converted from a searchable PDF file) and another OCR pass.
 
-- [The big idea](#the-big-idea)
-- [The pipeline](#the-pipeline)
-- [Anatomy of a config module](#anatomy-of-a-config-module)
-- [The chunk model](#the-chunk-model)
-- [The `CONFIG` dict](#the-config-dict)
-  - [Alignment groups](#alignment-groups)
-  - [Rules](#rules)
-  - [`run_immediate`](#run_immediate)
-  - [Rule lifecycle](#rule-lifecycle)
-- [Engine primitives](#engine-primitives)
-  - [The stack](#the-stack)
-  - [`push` / `pop` / `pop_to`](#push--pop--pop_to)
-  - [`pop_and_push_to`](#pop_and_push_to)
-  - [`tag_is_on_top` / `is_before_layout`](#tag_is_on_top--is_before_layout)
-  - [`append`](#append)
-  - [Spacing: `space_before`](#spacing)
-- [Cosmetic annotations](#cosmetic-annotations)
-- [Hooks: `on_pop` and `on_end`](#hooks-on_pop-and-on_end)
-- [Writing `get_chunks` (the PDF extractor)](#writing-get_chunks-the-pdf-extractor)
-- [Word mode (legacy)](#word-mode-legacy)
-- [Finding the magic numbers](#finding-the-magic-numbers)
-- [Worked example: the ZRIP config](#worked-example-the-zrip-config)
-- [Gotchas](#gotchas)
-- [Running it](#running-it)
+You can also bring your own format, since doc2tei uses a standardized _chunk_ system that is independent of PDFs or Word files.
+You'll have to tweak some things though, like making your own chunk dataclass if there's additional attributes you might need.
 
----
+## The idea
 
-## The big idea
+A searchable document has no machine-readable structure - it's just
+text at positions on a page (PDF) or runs inside floating frames (DOCX).
+doc2tei parses this in two parts:
 
-A scanned parliamentary transcript has no machine-readable structure — it's just
-text at positions on a page (PDF) or runs inside floating frames (DOCX). doc2tei
-rebuilds the structure with two pieces working together:
+1. **An extractor** (`get_chunks`) converts the source text to a stream of
+   _chunks_ - small pieces of text that have certain attributes, such as their position, font information, and bold/italic info.
 
-1. **An extractor** (`get_chunks`) flattens the source into a linear stream of
-   **chunks** — small pieces of text that each carry geometry (x, y), font info,
-   and bold/italic flags.
-
-2. **A rule engine** (`parse.py` + `engine.py`) feeds each chunk through *your*
-   config. Your rules look at a chunk's position, font and text and decide what
-   TEI element it belongs to — a speaker note, a paragraph segment, a footnote, a
-   heading — by pushing and popping elements on a **stack** that mirrors the TEI
+2. **A rule engine** (`parse.py` & `engine.py`) feeds each chunk through _your_
+   config. Your rules check the attributes of a chunk, such as their x & y position, font and text and decide what
+   to do with it - usually emit a TEI element by pushing and popping elements on a stack that mirrors the TEI
    tree being built.
 
-Everything document-specific lives in the config. The engine is generic; the
-config is where the "this PDF puts session headers at y≈607 and footnote markers
-in 7pt type" knowledge goes. **Every new document needs its own config**, because
-the coordinates, fonts and layout conventions differ.
+Everything that involves the document lives in the config. It's what determines something like
+"session headers in this PDF are between y 600 and 610, and footnotes' font size is 7."
 
-Output is a single `<TEI>` tree:
+Because PDF files differ **a lot** (in their coordinates, fonts and layout), rules usually need to be _very_ specific.
+This means that **almost every new document needs its own config**, though similar documents can be parsed with the same config, assuming it's written well.
+
+doc2tei's output is a `<TEI>` tree:
 
 ```
 TEI > text > body > div[type=debateSection] > ( head | time | note | u > seg | ... )
@@ -70,31 +42,29 @@ TEI > text > body > div[type=debateSection] > ( head | time | note | u > seg | .
 
 ---
 
-## The pipeline
+<details>
 
-`parse.py` is the entry point. For input file `INPUT`:
+<summary>If you're curious how the parser works</summary>
+
+`parse.py` is the entry point. It takes an _input_ and prints the output to the _output_ file, or stdin. For input file `INPUT`:
 
 ```
-python parse.py INPUT -o out.xml
+python3 parse.py INPUT -o out.xml
 ```
 
-it does, in order:
+it:
 
-1. `chunks = get_chunks(INPUT)` — calls **your config's** extractor, a generator
-   of `Chunk`s.
-2. Wires the config into the engine:
-   - `engine.COSMETIC_ANNOTATIONS = COSMETIC_ANNOTATIONS`
-   - `engine.on_pop = CONFIG.get("on_pop")`
-3. For every chunk, calls `parse_text(chunk)` (with all stdout redirected into
-   `meow.txt` — that file is the debug log).
-4. `parse_text` chooses an [alignment group](#alignment-groups), then
-   `match_rules` runs your rules against the chunk. The first matching rule fires;
-   if none match, the chunk's text is appended into whatever element is currently
+1. Gets the chunks by calling `config.get_chunks(INPUT)` so it can loop over them
+2. Sets `COSMETIC_ANNOTATIONS` & `on_pop` on the engine
+3. For every chunk, calls `parse_text(chunk)`
+4. `parse_text` matches the general position of the chunk (only for Word files), then
+   `match_rules` runs your rules against the chunk.
+   If none match, the chunk's text is appended into whatever element is currently
    open on the stack.
 5. After the last chunk, the engine pops every still-open element back down to the
    root `<div>` and commits the tree.
-6. If the config defines `on_end`, it's called.
-7. The tree is serialized and written to `-o` (or printed).
+6. Calls `on_end` if the config defines it.
+7. The tree is stringified and written to the output file (or printed).
 
 ```
 INPUT ─▶ get_chunks() ─▶ Chunk stream ─▶ parse_text ─▶ match_rules ─▶ rule fires
@@ -106,37 +76,17 @@ INPUT ─▶ get_chunks() ─▶ Chunk stream ─▶ parse_text ─▶ match_rul
                                                 └─ no match ─▶ append(chunk) into open element
 ```
 
-> **Required exports.** `parse.py` does
-> `from config import CONFIG, COSMETIC_ANNOTATIONS, get_chunks, speaker_to_utterance`.
-> So the module imported as `config` **must** define all four names — `CONFIG`,
-> `COSMETIC_ANNOTATIONS`, `get_chunks`, and a symbol literally called
-> `speaker_to_utterance` (even though `parse.py` reaches the actual hook through
-> `CONFIG.get("on_pop")`). This is a hard import; if `speaker_to_utterance` is
-> missing the program won't even start. See [Gotchas](#gotchas).
+</details>
 
----
+## The config module
 
-## Anatomy of a config module
+The config is defined in `config.py`. It exports (at least):
 
-The root `config.py` *is* the live config — currently the one for
-*7. seja zbora republik in pokrajin* (ZRIP). Examples live under `examples/`:
+- `CONFIG` - a WordConfig or a PDFConfig, containing the rule tree
+- `COSMETIC_ANNOTATIONS` - inline formatting rules
+- `get_chunks(filename) -> Generator[Chunk]` - the extractor
 
-| File | What it is |
-| --- | --- |
-| `config.py` (repo root) | The active PDF config (ZRIP). `parse.py` imports this. |
-| `examples/zbor-republik-in-pokrajin/config_pdf.py` | Symlink to the canonical ZRIP PDF config. |
-| `examples/zbor-republik-in-pokrajin/config_word.py` | The older **Word** version of the same document. |
-| `examples/prosvetno-kulturno-vece/config.py` | A second PDF config, for a different transcript. Good "minimal" reference. |
-
-A config module exports:
-
-```python
-CONFIG: PDFConfig                       # the rule tree (required)
-COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations   # inline formatting rules (required)
-def get_chunks(filename) -> Generator[Chunk]   # the extractor (required)
-def speaker_to_utterance(popped): ...   # the on_pop hook (name required by parse.py)
-# ...plus any helper functions your tests/actions use
-```
+All of these will be explained later.
 
 The type definitions for all of this are in `type_decs.py`
 (`PDFConfig`, `PDFRule`, `PDFCosmeticAnnotation`, and the Word equivalents).
@@ -145,83 +95,77 @@ The type definitions for all of this are in `type_decs.py`
 
 ## The chunk model
 
-Defined in `engine.py`. Your `test`/`action`/`append_func` callables receive a
-chunk and read its attributes to decide what to do. The three concrete types:
+Every action / function in the config receives a _chunk_. It then does something with it (performs checks, pushes, pops, whatever).
+There's three types:
 
-### `PDFChunk` — one run of same-font text on one line
+### `PDFChunk` - some text with the same font on one line
 
-| Attribute | Type | Meaning |
-| --- | --- | --- |
-| `x`, `y` | `float` | Position in **pdfplumber coordinates** (points; x from left, y **from the bottom** of the page). |
-| `text` | `str` | The run's text. |
-| `bold` | `bool` | `True` if `"bold"` appears in the font name. |
-| `italic` | `bool` | `True` if `"italic"` appears in the font name. |
-| `font_size` | `float` | Point size. Footnote markers are 7.0; body ≈ 9–10. |
-| `page_num` | `int` | 0-based page index. |
-| `space_before` | `bool` | `True` if whitespace separates this run from the previous one. Set by `get_chunks`; drives [spacing](#spacing). |
-| `previous` | `PDFChunk \| None` | The chunk emitted just before this one (a linked list across the whole document). |
-| `line_chunk` | `PDFLineChunk` | Back-reference to the line this run belongs to. |
+| Attribute      | Type               | Meaning                                                                                                            |
+| -------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `x` & `y`      | `float`            | Position of the chunk. With the default extractor, it's in **pdfplumber coordinates** (x from left, y from bottom) |
+| `text`         | `str`              | The text. Bet you didn't expect that, huh                                                                          |
+| `bold`         | `bool`             | `True` if `"bold"` appears in the font name                                                                        |
+| `italic`       | `bool`             | `True` if `"italic"` appears in the font name                                                                      |
+| `font_size`    | `float`            | Font size. Footnote markers are _usually_ 7.0; body is 9-10                                                        |
+| `page_num`     | `int`              | 0-based page index                                                                                                 |
+| `space_before` | `bool`             | `True` if whitespace separates this run from the previous one. Set by `get_chunks`, see [spacing](#spacing)        |
+| `previous`     | `PDFChunk \| None` | The chunk emitted just before this one (a linked list across the whole document)                                   |
+| `line_chunk`   | `PDFLineChunk`     | Reference to the line this run belongs to                                                                          |
 
-### `PDFLineChunk` — a whole line, holding its runs
+### `PDFLineChunk` - a line of text, containing `PDFChunk`s
 
-| Attribute | Meaning |
-| --- | --- |
-| `x`, `y` | Position of the line's first run. |
-| `text` | Concatenated text of the whole line. |
-| `bold`, `italic` | `True` only if **all** runs are bold/italic. |
-| `runs` | `list[PDFChunk]` — the child runs, in order. |
+| Attribute        | Meaning                                                            |
+| ---------------- | ------------------------------------------------------------------ |
+| `x` & `y`        | Position of the line's first run                                   |
+| `text`           | Concatenated text of the whole line                                |
+| `bold`, `italic` | `True` if **all** runs are bold/italic                             |
+| `runs`           | `list[PDFChunk]` - the child chunks (called _runs_ here), in order |
 
-You reach the line from a run via `chunk.line_chunk`. This is how you ask
-questions like "is this the first run on its line?"
-(`chunk is chunk.line_chunk.runs[0]`) or "is the whole line italic?"
-(`chunk.line_chunk.italic`).
+The line chunk is accessed by `.line_chunk` on a chunk.
+This makes things like checking if the chunk is the first on its line
+(`chunk is chunk.line_chunk.runs[0]`) or if the whole line is italic
+(`chunk.line_chunk.italic`) possible.
 
-### `WordChunk` — one docx run
+### `WordChunk` - one docx run
 
-| Attribute | Meaning |
-| --- | --- |
-| `x`, `y`, `w`, `h` | The enclosing text frame's geometry (twips, from `w:framePr`). |
-| `text`, `bold`, `italic` | Run text and formatting. |
-| `space_before` | `bool` (default `True`) — whitespace separates this run from the previous one. Word runs are already whole, so the default suits them. |
-| `run` | The underlying `python-docx` `Run` (e.g. `run.font.superscript`). |
-| `paragraph` | The `Paragraph` (e.g. `paragraph.alignment`, `paragraph.runs`). |
+| Attribute                | Meaning                                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `x`, `y`, `w`, `h`       | The enclosing text frame's geometry (twips, from `w:framePr`)                                                                         |
+| `text`, `bold`, `italic` | Run text and formatting                                                                                                               |
+| `space_before`           | `bool` (default `True`) - whitespace separates this run from the previous one. Word runs are already whole, so the default suits them |
+| `run`                    | The underlying `python-docx`'s `Run` (so you can check things like `run.font.superscript`)                                            |
+| `paragraph`              | The `Paragraph` (for things like `paragraph.alignment`, `paragraph.runs`)                                                             |
 
-### `Chunk` (protocol)
+### `Chunk` protocol
 
-The minimal interface — `x`, `y`, `text`, `bold`, `italic`, `space_before` — that
-both concrete types satisfy. Helpers that work on either backend type against this.
-
-> **Coordinate convention.** PDF `x`/`y` are pdfplumber coordinates: x grows
-> rightward from the page's left edge, **y grows upward from the bottom**. So
-> "near the top of the page" means a *large* y (≈ 700+ on these documents), and a
-> footnote at the bottom has a small y. Use the tools in
-> [Finding the magic numbers](#finding-the-magic-numbers) to measure them.
+This is a minimal interface with `x`, `y`, `text`, `bold`, `italic` & `space_before` that makes both backends work (and be typed correctly)
 
 ---
 
-## The `CONFIG` dict
+## The actual config
+
+The primary config is defined by the `CONFIG` dict in `config.py`.
+It has a few properties:
 
 ```python
 CONFIG: PDFConfig = {
-    "mode": "pdf",                  # "pdf" | "word"
-    "on_pop": speaker_to_utterance, # optional hook, runs on every pop
-    "on_end": on_end,               # optional hook, runs once at the very end
+    "mode": "pdf",                  # the mode, either "pdf" or "word". Mostly for type checking
+    "on_pop": speaker_to_utterance, # optional, runs on every pop
+    "on_end": on_end,               # optional, runs once at the very end
     "alignments": { ... },          # the rule tree (required)
 }
 ```
 
-`mode` is informational/typing; the real branch in `parse.py` is on the chunk
-type (`WordChunk` vs `PDFChunk`).
-
 ### Alignment groups
 
-`alignments` maps a **group name** to a group of rules. Which group a chunk is
-tested against depends on the backend:
+The `alignments` prop matches the general alignment of the chunk.
+It's mostly legacy, and only (maybe) useful for Word files.
+It works separate for each backend:
 
-- **PDF** — always the group named **`"any"`**. (PDF has no usable paragraph
-  alignment, so there's just one bucket.)
-- **Word** — `parse.py` computes the run frame's horizontal center and picks a
-  group by magic ranges (twips):
+- **PDF** - always the group named **`"any"`**. PDF has no usable paragraph
+  alignment, so there's just one bucket.
+- **Word** - `parse.py` computes the run frame's horizontal center and picks a
+  group by magic ranges (bad, this is what I meant by bad Word support):
   - center `4550–6560` → `"center"`
   - center `2500–3660` → `"left"`
   - center `7820–8460` → `"right"`
@@ -232,13 +176,15 @@ tested against depends on the backend:
 
 ### Rules
 
-A group is an **ordered dict** of `name -> rule`. Order matters: rules are tried
-top to bottom and **the first match wins**. A rule is a `TypedDict`:
+An alignment group is an **ordered dict** of `{"NAME": rule}`.
+Order matters, since the rules are tried top to bottom and the first match wins.
+A rule is a `TypedDict`:
 
 ```python
 "SPEAKER": {
-    "test": lambda chunk: (0 < chunk.x < 55 or 271 < chunk.x < 293)
-                          and leading_caps(chunk.text) >= 5,
+    "test": lambda chunk: (
+                0 < chunk.x < 55 or 271 < chunk.x < 293
+            ) and leading_caps(chunk.text) >= 5,
     "action": pop_and_push_to("div", tag="note", type="speaker"),
     # "append_func": ...,   # optional
     # "after_append": ...,  # optional
@@ -246,20 +192,22 @@ top to bottom and **the first match wins**. A rule is a `TypedDict`:
 }
 ```
 
-| Key | Required | Signature | Purpose |
-| --- | --- | --- | --- |
-| `test` | yes | `(chunk) -> bool`, **or** the literal `"_else"` | Decides if the rule fires. `"_else"` makes this the group's fallback (runs only when nothing else in the group matched). |
-| `action` | no | `(chunk) -> Any` | Mutates the stack: pops/pushes the TEI elements this chunk should live in. |
-| `append_func` | no | `(chunk) -> Any` | Emits the chunk's content. **If omitted, the engine calls `append(chunk)`** for you. Override it to suppress/transform the text or to control which cosmetic annotations apply. |
-| `after_append` | no | `() -> Any` | Side-effect after appending (e.g. flipping a state flag). |
-| `alignment` | no (Word) | `WD_PARAGRAPH_ALIGNMENT` | Word-only extra gate: the rule is skipped unless `chunk.paragraph.alignment` equals this. |
+> The dict's keys are insignificant, they're only used for readability.
+
+| Key            | Required  | Signature                                       | Purpose                                                                                                                                                                        |
+| -------------- | --------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `test`         | yes       | `(chunk) -> bool`, **or** the literal `"_else"` | Decides if the rule fires. `"_else"` makes this the group's fallback (runs only when nothing else in the group matched)                                                        |
+| `action`       | no        | `(chunk) -> Any`                                | Decides what to do, usually pops and appends a TEI tag                                                                                                                         |
+| `append_func`  | no        | `(chunk) -> Any`                                | Emits the chunk's content. **If omitted, the engine calls `append(chunk)`** for you. Override it to suppress/transform the text or to control which cosmetic annotations apply |
+| `after_append` | no        | `() -> Any`                                     | Side-effect after appending (e.g. flipping a state flag)                                                                                                                       |
+| `alignment`    | no (Word) | `WD_PARAGRAPH_ALIGNMENT`                        | Word-only: the rule is skipped unless `chunk.paragraph.alignment` equals this                                                                                                  |
 
 ### `run_immediate`
 
 A group may contain a key `"run_immediate"` whose value is a **plain callable**
-(not a rule dict). It runs once for every chunk that lands in the group, *before*
-any rule is tested. Use it to reset per-chunk state — for example the Word config
-clears its `visited_time` latch when a paragraph stops being centered:
+(not a rule dict). It runs once for every chunk that lands in the group, _before_
+any rule is tested. It's useful for resetting pre-chunk state - for example the Word config
+clears its `visited_time` variable when a paragraph stops being centered:
 
 ```python
 "_else": {
@@ -269,41 +217,31 @@ clears its `visited_time` latch when a paragraph stops being centered:
 }
 ```
 
-`match_rules` distinguishes rules from `run_immediate` by "is it callable?" — rule
-values are dicts, `run_immediate` is a function.
-
-> The PDF configs no longer need a `run_immediate` for spacing. Spacing is now
-> driven per-chunk by [`space_before`](#spacing), so the old
-> `setattr(engine, "is_first_run", True)` poke is gone.
-
 ### Rule lifecycle
 
-When a rule fires (`do_rule_chores` in `parse.py`):
+When a rule matches:
 
-1. `action(chunk)` runs if present — this is where stack surgery happens.
-2. `append_func(chunk)` runs if present; **otherwise** `append(chunk)` runs.
-3. `after_append()` runs if present.
+1. `action(chunk)` runs if present
+2. `append_func(chunk)` runs if present. If not, `append(chunk)` runs.
+3. `after_append()` runs if present
 
 If **no** rule matched (and there was no `"_else"`), `parse_text` falls back to
-`append(chunk)`. That's the default path: text that isn't the start of anything new
-simply flows into the element currently open on the stack. This is how continuation
-lines and trailing runs of a paragraph accrete into the `<seg>` that an earlier
-chunk opened.
+`append(chunk)`. That's what happens with plain text that isn't the start of anything new, it
+simply flows into the element currently open on the stack.
+This is how text is appended after a rule (like opening a `<seg>`) is matched.
 
-> Empty chunks (`text` is empty or `"\n"`) are skipped by `match_rules` and never
-> reach a rule.
+> Empty chunks (`text` is empty or just a newline) are skipped.
 
 ---
 
-## Engine primitives
+## Engine primitives & helpers
 
-These are the verbs your `action` and `append_func` callables use. Import them
-from `engine`:
+This is what `test`, `action` and `append_func` would probably call. They're a set of helper functions:
 
 ```python
 from engine import (
     make_chunk, pop_and_push_to, tag, tag_is_on_top,
-    pop_to, push, append,
+    pop_to, push, append
 )
 ```
 
@@ -312,15 +250,15 @@ from engine import (
 The engine holds a `stack: list[StackEntry]`. The bottom entry is the permanent
 root `<div type="debateSection">`. Each `StackEntry` wraps:
 
-- `element` — the `ET.Element` being built,
-- `children` — a *pending* list of `str | Element` not yet flushed into the
+- `element` - the `ET.Element` being built,
+- `children` - a _pending_ list of `str | Element` not yet flushed into the
   element,
-- `last_elem` — bookkeeping for where trailing text should attach,
-- `cosmetic` — whether this is an inline cosmetic wrapper (see below).
+- `last_elem` - a reference for where trailing text should attach,
+- `cosmetic` - whether this is an inline cosmetic wrapper (see below).
 
-A global `children` always points at the top entry's pending list. Text and child
-elements accumulate there and are "committed" into real `.text`/`.tail` when the
-entry is popped. **You almost never touch `StackEntry` directly** — you drive the
+A global `children` always points at the top entry's `children` prop. Text and child
+elements are appended there and are "committed" into `.text`/`.tail` when the
+entry is popped. **You almost never touch `StackEntry` directly** - you drive the
 stack through the helpers.
 
 ### `push` / `pop` / `pop_to`
@@ -336,11 +274,11 @@ push("emph", cosmetic=True)                        # open an inline cosmetic wra
 - `push(tag, *, cosmetic=False, attribs={}, **rest)` opens a new element on top of
   the stack. Attributes come from both the `attribs` dict and loose keyword args
   (`type=...`, `n=...`, `place=...`). `cosmetic=True` marks it inline (see
-  [Cosmetic annotations](#cosmetic-annotations)).
+  [Cosmetic annotations](#cosmetic-annotations))
 - `pop()` closes the top element, flushes its pending children into it, attaches
   it to its parent, and fires the `on_pop` hook. You rarely call this directly.
 - `pop_to(*tags, invert=False)` pops until the top **structural** element's tag is
-  one of `tags` (with `invert=True`, pops *while* it is). This is how you climb
+  one of `tags` (with `invert=True`, pops _while_ it is). This is how you climb
   back out to a known anchor before opening something new:
 
   ```python
@@ -351,30 +289,33 @@ push("emph", cosmetic=True)                        # open an inline cosmetic wra
 
 ### `pop_and_push_to`
 
-The most common action. It's a factory that returns an `action` closure:
+This is the action you should need most of the time. It's a factory that returns a function that pops and pushes a tag.
 
 ```python
 "action": pop_and_push_to("div", tag="head", type="session")
-# returns: def action(chunk): if not on_top("head", type="session"):
-#                                  pop_to("div"); push("head", type="session")
+# returns:
+# def action(chunk):
+#     if not on_top("head", type="session"):
+#         pop_to("div")
+#         push("head", type="session")
 ```
 
 `pop_and_push_to(*pop_args, tag, chunked=True, **attribs)`:
 
-- pops to `pop_args`, then pushes `tag` with `attribs`;
+- pops to `pop_args`, then pushes `tag` with `attribs`
 - if `chunked=True` (default) it **skips** the pop+push when `tag` (with those
-  attribs) is *already* on top — so consecutive chunks that belong to the same
+  attribs) is _already_ on top - so consecutive chunks that belong to the same
   element don't keep reopening it. This matters a lot for PDF, where one logical
   block is split across many run-chunks: you don't want ten `<note>`s, you want
   one that the later chunks append into.
-- `chunked=False` forces the pop+push every time. The `SEG` rule uses this:
+- `chunked=False` forces the pop+push every time. `SEG` uses this:
 
   ```python
   "action": pop_and_push_to("u", "div", tag="seg", chunked=False)
   ```
 
   Each indented line is its own paragraph, so a new `<seg>` should start every
-  time — pop the previous `<seg>` (climbing to `<u>`/`<div>`) and open a fresh one.
+  time - pop the previous `<seg>` (climbing to `<u>`/`<div>`) and open a fresh one.
 
 ### `tag_is_on_top` / `is_before_layout`
 
@@ -383,18 +324,18 @@ tag_is_on_top("note", type="speaker")   # is the top *structural* element <note 
 tag_is_on_top("time")                    # ...is it <time>?
 ```
 
-`tag_is_on_top(tag, **attribs)` answers "what kind of block am I currently inside?"
-It **ignores cosmetic wrappers** — it looks past `<emph>`/`<hi>` to the first
-structural element — and checks both tag and the given attributes. This is the
+`tag_is_on_top(tag, **attribs)` tells you if you're inside the `tag` element.
+It **ignores cosmetic wrappers** like `<emph>`/`<hi>` and skips to the first
+structural element, then checks both tag and the given attributes. This is the
 backbone of stateful rules: e.g. CHAIRMAN fires if we're already in `<time>` (the
 chairman line always follows the time) or already in a `<note type="chairman">`.
 
 `is_before_layout(element)` is the cosmetic counterpart: it returns `True` if a
-cosmetic wrapper matching `element` is currently open (i.e. sits above the last
-structural element). The cosmetic machinery uses it to decide whether an
+cosmetic wrapper matching `element` is currently open (sits above the last
+structural element). The cosmetic annotations system uses it to decide whether an
 `<emph>`/`<hi>` is already open. You normally won't call it directly.
 
-`tag(name, **attribs)` is a tiny helper that builds a bare `ET.Element` — used to
+`tag(name, **attribs)` is a tiny helper that builds a bare `ET.Element`, used to
 declare the identity of a cosmetic annotation (see below).
 
 ### `append`
@@ -408,14 +349,14 @@ append(chunk, should_annotate=[])              # plain text, no cosmetics
 `append(*chunks, should_annotate=True)` is what actually puts text into the open
 element. For each chunk it:
 
-1. trims the text to one edge-stripped token; whitespace-only runs are dropped;
+1. trims the text
 2. runs the [cosmetic annotations](#cosmetic-annotations) selected by
-   `should_annotate` (`True` = all of them, or a list of names; an unknown name
-   raises);
-3. inserts a single separating space *before* the token when
+   `should_annotate` (`True` = all of them, or a list of names. An unknown name
+   raises)
+3. inserts a single separating space _before_ the token when
    [`chunk.space_before`](#spacing) is true (and there's something to separate it
-   from — see below);
-4. appends the token.
+   from — see below)
+4. appends the token
 
 `should_annotate` is how you stop double-formatting: a `GENERIC_NOTE` already wraps
 its body in `<hi rend="italic">`, so it appends with `should_annotate=["REFERENCE"]`
@@ -423,42 +364,39 @@ its body in `<hi rend="italic">`, so it appends with `should_annotate=["REFERENC
 
 ### Spacing
 
-A searchable PDF has no real spaces or line breaks — the extractor reconstructs
+A searchable PDF has no real spaces or line breaks - the extractor reconstructs
 them. Rather than baking reconstructed spaces into the text (and then fighting to
 strip them back out), each chunk carries one boolean:
 
-- **`chunk.space_before`** — `True` when this run is separated from the previous one
-  by whitespace (a glyph gap, a real space glyph, or a line break). The extractor
-  sets it (see [Writing `get_chunks`](#writing-get_chunks)); the engine turns it into
+- **`chunk.space_before`** - `True` when this run is separated from the previous one
+  by whitespace (a glyph gap, a deljaj, or a line break). The extractor
+  sets it (see [Writing `get_chunks`](#writing-get_chunks)) - the engine turns it into
   at most one separating space.
 
-The engine's contract makes the whole thing predictable:
+The engine makes the whole thing predictable:
 
 - A run's own text is trimmed to a single token, so **no element ever ends in a
-  stray space**. (That's why `pop()` no longer has to rstrip or shuffle spaces.)
+  stray space**.
 - The separator is emitted **between** tokens only. At a **block start** (the
   enclosing element is still empty) it's withheld, so a fresh `<seg>`/`<note>` never
-  begins with a leading space — this is what replaced the old `is_first_run` dance,
-  and it's why a footnote body doesn't need an `lstrip` after the marker (it lands in
-  an empty `<note>`).
+  begins with a leading space.
 - When a run opens an inline element (`<emph>`, `<hi>`, `<ref>`), the separator is
   placed **outside** it, in the nearest enclosing element that already has content —
   so you get `beseda <emph>poudarjeno</emph> naprej`, never `beseda<emph> ...`.
 
-The upshot for config authors: you almost never touch spacing in the engine. If
-words run together or gain stray spaces, fix where `get_chunks` decides
-`space_before`, not the rules. The behaviour is pinned by `tests/test_spacing.py`.
+If this behavior is not what you want or is bugged, fix where `get_chunks` decides `space_before`.
+You can usually just leave it as-is though.
 
 ---
 
 ## Cosmetic annotations
 
 Cosmetic annotations are **inline formatting that can appear inside anything and
-doesn't change layout** — bold, italic, footnote references. They're handled
+doesn't change layout**, such as bold, italic and footnote references. They're handled
 separately from rules so you don't have to think about them in every rule: any
 time you `append` text, the engine opens/closes the right inline wrapper around it.
 
-`COSMETIC_ANNOTATIONS` is an ordered dict of `name -> annotation`:
+`COSMETIC_ANNOTATIONS` in `config.py` is an ordered dict of `{"NAME": annotation}`:
 
 ```python
 COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
@@ -472,7 +410,7 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
                                if isinstance(chunk, WordChunk)
                                else chunk.font_size == 7.0),
         "tag": tag("ref"),                    # identity (for matching/removal)
-        "append_func": lambda chunk: push(    # custom open: target is dynamic
+        "append_func": lambda chunk: push(    # custom open, since the tag is dynamic (we need `chunk`)
             "ref",
             target=f'#note{re.sub(r"[^a-zA-Z0-9]", "", chunk.text.strip())}',
         ),
@@ -480,33 +418,30 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
 }
 ```
 
+Note that this time, the dict's key names actually matter because they get matched in `should_annotate`.
+
 Each annotation has:
 
-| Key | Purpose |
-| --- | --- |
-| `test` | `(chunk) -> bool` — does this chunk carry the formatting? |
-| `tag` | A bare `ET.Element` (build it with `tag(...)`) used as the wrapper's **identity** — the engine matches against it to know whether the wrapper is already open and to close it. |
-| `append_func` | *Optional.* Custom "open" logic when the simple `push(tag)` isn't enough (e.g. `REFERENCE` computes a `target` attribute from the chunk text). |
+| Key           | Purpose                                                                                                                                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `test`        | `(chunk) -> bool` - whether the chunk has the formatting                                                                                                                                                            |
+| `tag`         | A bare `ET.Element` (build it with `tag(...)`) used as the wrapper's **identity** - the engine matches against it to know whether the wrapper is already open and to close it.                                      |
+| `append_func` | _Optional_ custom logic for opening the tag if the simple `push(tag)` isn't enough (e.g. `REFERENCE` computes a `target` attribute from the chunk text). I should probably rename this to "push_func" or something. |
 
 **How `append` applies them** (for `PDFChunk`): for each annotation whose name is
 in `should_annotate`,
 
-- if its wrapper is **not** already open and `test(chunk)` is true → open it
-  (`push(tag, cosmetic=True)`, or call `append_func`);
-- if its wrapper **is** open and `test(chunk)` is false → close it
+- if its wrapper is **not** already open and `test(chunk)` is true, open it
+  (`push(tag, cosmetic=True)`, or call `append_func`)
+- if its wrapper **is** open and `test(chunk)` is false, close it
   (`pop_to(tag, invert=True)`).
 
 So a run of italic chunks opens one `<emph>` on the first and the engine keeps it
 open until a non-italic chunk closes it. `cosmetic=True` is what makes
-`tag_is_on_top` and `pop_to` look *past* these wrappers to the real structural
+`tag_is_on_top` and `pop_to` look _past_ these wrappers to the real structural
 element. Spacing across a wrapper boundary just works: because the separator is
-emitted *outside* the element being opened (see [Spacing](#spacing)), `od <emph>…`
+emitted _outside_ the element being opened (see [Spacing](#spacing)), `od <emph>…`
 never fuses into `od<emph>…`, and no wrapper is left holding a trailing space.
-
-> **`REFERENCE` is the odd one out.** Its `append_func` pushes a `<ref>` with a
-> computed `target`, and the matching `REFERENCE_ENTRY` *rule* opens the
-> corresponding `<note place="foot" n="...">`. Bold/italic are the clean,
-> representative cases to model new annotations on.
 
 ---
 
@@ -514,30 +449,30 @@ never fuses into `od<emph>…`, and no wrapper is left holding a trailing space.
 
 ### `on_pop(popped: StackEntry)`
 
-Set via `CONFIG["on_pop"]`; runs **every time any element is popped**, receiving the
+You can optionally set an `"on_pop"` hook in `CONFIG`. It runs **every time any element is popped**, receiving the
 `StackEntry` that just closed. The configs use it to build utterances from speaker
-notes — a neat trick that works *because* a pop is the first moment the full text of
-a speaker note is known:
+notes, since all of a tag's children are only known when it is popped:
 
 ```python
 def speaker_to_utterance(popped):
     if popped.element.tag == "note" and popped.element.attrib.get("type") == "speaker":
         text = "".join((i.text or "") if isinstance(i, ET.Element) else i
                        for i in popped.children)
-        # strip "PREDSEDNIK" prefix and anything after "(", "," or ":"
+
         name = re.sub(r"^pre\S+\s+|\s*(?:\(|,|:).*$", "", text, flags=re.IGNORECASE)
-        serialized = "#" + "".join(w.capitalize() for w in name.split())  # #PascalCase
+        serialized = "#" + "".join(w.capitalize() for w in name.split())  # #NameSurname
         utterance_speaker_mapping.setdefault(serialized, text)
         push("u", who=serialized)   # open the <u> right after the speaker note closes
 ```
 
-The speaker note closes when the next block (e.g. a `<seg>`) opens; at that point
+The speaker note closes when the next block (e.g. a `<seg>`) opens. At that point
 the hook fires and opens `<u who="#Name">` so the body lands inside an utterance.
-`utterance_speaker_mapping` accumulates `{"#PascalName": "full speaker line"}`.
+`utterance_speaker_mapping` is a mapping of `{"#PascalName": "full speaker line"}` - used for getting the list of persons in the document and their affiliations.
+It's then used to build a `<listPerson>` tag (check the [listPerson tool](#running-it))
 
 ### `on_end()`
 
-Set via `CONFIG["on_end"]`; runs once after the whole document is parsed and the
+Set via `CONFIG["on_end"]`. Runs once after the whole document is parsed and the
 tree is committed. ZRIP uses it to dump the speaker map for the
 [listPerson tool](#running-it):
 
@@ -549,7 +484,7 @@ def on_end():
 
 ---
 
-## Writing `get_chunks` (the PDF extractor)
+## Writing `get_chunks`
 
 `get_chunks(filename)` is a generator that yields the `Chunk` stream. It's part of
 the config because reconstructing words, runs and lines from raw glyphs is
@@ -558,21 +493,21 @@ and grouping to your document.
 
 Steps (see `get_chunks` in `config.py`):
 
-1. **Collect glyphs.** A `pdfminer` `PDFLayoutAnalyzer` subclass walks each page and
-   records every `LTChar` as `{text, x0, x1, y0, fontname, size}`.
-2. **Group glyphs into lines.** Walk the page's glyphs; start a new line when the
-   y-drop between consecutive glyphs exceeds `line_treshold` (≈ 4.8), with a larger
-   guard (`× 5`) for big jumps (column breaks).
-3. **Group a line into runs.** Within a line, merge consecutive glyphs into a run
-   while the **font name and size match** and the x-gap is small. A gap *inside* a
-   run (x-gap over `threshold` ≈ 1.7) becomes a real space in the run's text; a gap
-   *between* runs sets the next run's [`space_before`](#spacing) instead. PDFs
+1. **Collect characters.** A `pdfminer` `PDFLayoutAnalyzer` subclass walks each page and
+   records every `LTChar`.
+2. **Group characters into lines.** Walk the page's characters and start a new line when the
+   y-drop between consecutive characters exceeds `line_treshold` (≈ 4.8), with a larger
+   guard (`x 5`) for big jumps (column breaks).
+3. **Group a line into runs.** Within a line, merge consecutive characters into a run
+   while the **font name and size match** and the x-gap is small. A gap _inside_ a
+   run (x-gap over `threshold` ≈ 1.7) becomes a real space in the run's text. A gap
+   _between_ runs sets the next run's [`space_before`](#spacing) instead. PDFs
    usually have no literal space glyphs, so this is how spacing is inferred from gaps.
 4. **Carry the line break.** A `pending_space` flag remembers that a line ran to its
-   end, so the **first run of the next line** gets `space_before=True` — that's what
+   end, so the **first run of the next line** gets `space_before=True` - that's what
    keeps lines word-separated without baking a trailing space onto every line.
-5. **Build chunks.** For each run, `make_chunk(text=..., x=..., y=..., font_name=...,
-   size=..., previous=prev_run, page_num=..., space_before=...)` → a `PDFChunk`,
+5. **Build chunks.** For each run, make a chunk by `make_chunk(text=..., x=..., y=..., font_name=...,
+size=..., previous=prev_run, page_num=..., space_before=...)` - a `PDFChunk`,
    linked to the previous one. Then build one `PDFLineChunk` for the line, and set
    `run.line_chunk` on each run so rules can navigate line ↔ run.
 6. **Yield.** `yield from run_chunks`.
@@ -584,10 +519,10 @@ prev_run = make_chunk(text=r["text"], x=r["x0"], y=r["y0"],
                       space_before=r["space_before"])
 ```
 
-The two configs differ in detail — `prosvetno`'s document already has space glyphs
+The two configs differ in detail - `prosvetno`'s document already has space glyphs
 (so it derives `space_before` from whitespace at run edges rather than from gaps),
-skips a header band (`y > 740`), and handles even/odd-page indentation quirks —
-which is exactly the kind of per-document tuning that belongs here.
+skips a header band (`y > 740`), and handles even/odd-page indentation quirks -
+this is why the config is _very_ document-specific.
 
 > Magic numbers (`threshold`, `line_treshold`, header bands, indentation ranges)
 > are the heart of a PDF config and almost always need re-measuring per document.
@@ -606,11 +541,10 @@ from PDF mode:
 - Tests read docx-native properties: `chunk.run.font.superscript`,
   `chunk.paragraph.alignment`, `chunk.paragraph.paragraph_format.first_line_indent`.
 
-> **Status.** Word mode is older than the current engine and not actively kept in
-> sync (e.g. the Word branch of `append`'s cosmetic handling has a stale open
-> condition, and `parse.py`'s hard import of `speaker_to_utterance` is PDF-shaped).
-> Treat `config_word.py` as a reference for the *rule style*, not as a drop-in
-> working config. **PDF is the supported backend.**
+> Word mode is older than the current engine and not actively kept in
+> sync.
+> Treat `config_word.py` as a reference for the _rule style_, not as an actual
+> working config. **PDF gud, DOCX bad**
 
 ---
 
@@ -619,51 +553,51 @@ from PDF mode:
 Configs are full of coordinates and font sizes. Two tools help you measure them so
 you're not guessing:
 
-- **`tools/pdf_coords.html`** — open it in a browser (no install; needs internet
-  once to pull PDF.js), drop your PDF in, and move/click on the page. It reads out
+- **`tools/pdf_coords.html`** - a small tool for measuring coordinates on a PDF file.
+  Open it in a browser, drop your PDF in, and move/click on the page. It reads out
   the cursor's **pdfplumber** coordinates (`x0/x1`, `y0/y1`, `top/bottom`) and the Δ
   between clicked markers. These are the exact `x`/`y` your `PDFChunk` tests see.
-  Everything stays local.
-- **`tools/dump_text_coords.py`** — `python tools/dump_text_coords.py file.pdf
-  [--page N] [--grep WORD]` dumps, per text chunk, the transformation-matrix
+  Everything stays local (obviously).
+- **`tools/dump_text_coords.py`** - `python3 tools/dump_text_coords.py file.pdf
+[--page N] [--grep WORD]` dumps, per text chunk, the transformation-matrix
   translations (`cm[4]/cm[5]`, `tm[4]/tm[5]`) and font size that pypdf reports, to
-  cross-check positions.
+  cross-check positions. Throw this to an AI agent, or something.
 
 Workflow: find an element you want to classify (a session header, a footnote
 marker), measure its x/y/size, and write a `test` that brackets those values with a
 little tolerance. Page misalignment in scans means you'll often need ranges
-(`48 < x < 64`) rather than exact values, and sometimes per-page-parity branches.
+(`48 < x < 64`) rather than exact values, and sometimes per-page configurations.
 
 ---
 
-## Worked example: the ZRIP config
+## ZRIP config
 
-Reading `config.py` (the `"any"` group) top to bottom — remember, **first match
-wins**, so order encodes precedence:
+Reading `config.py` (the `"any"` group) top to bottom:
 
-| Rule | Fires when… | Produces |
-| --- | --- | --- |
-| `HEADER` | the chunk is one of the first 3 elements on a fresh page (running header) | nothing (`append_func` returns `None` — drops it) |
-| `SEJA_DECLARATION` | bold, at the title band (`605 < y < 610`) or already inside the session head | `<head type="session">` |
-| `TIME` | italic, at the time band or following a session section | `<time>` |
-| `CHAIRMAN` | starts with `PREDSEDUJE`, or follows `<time>`/is already in chairman; not italic; indented | `<note type="chairman">` |
-| `SEJA_SECTION` | all-caps, centered, first body line of a fresh page | `<head type="sessionSection">` |
-| `REFERENCE_ENTRY` | 7pt, a digit, first run on its line (a footnote definition's marker) | `<note place="foot" n="…">` |
-| `GENERIC_NOTE` | at the note band and the **whole line** is italic | `<note><hi rend="italic">…` |
-| `SPEAKER` | not indented and ≥ 5 leading capital letters | `<note type="speaker">` (→ `on_pop` opens `<u>`) |
-| `SEG` | `is_seg(chunk)` — first run of a correctly-indented body line | a fresh `<seg>` inside the current `<u>`/`<div>` |
+| Rule               | Fires when...                                                                              | Produces                                       |
+| ------------------ | ------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| `HEADER`           | the chunk is one of the first 3 elements on a fresh page (running header)                  | nothing (`append_func` drops it)               |
+| `SEJA_DECLARATION` | bold, at the title band (`605 < y < 610`) or already inside the session head               | `<head type="session">`                        |
+| `TIME`             | italic, at the time band or following a session section                                    | `<time>`                                       |
+| `CHAIRMAN`         | starts with `PREDSEDUJE`, or follows `<time>`/is already in chairman, not italic, indented | `<note type="chairman">`                       |
+| `SEJA_SECTION`     | all caps, centered, first body line of a fresh page                                        | `<head type="sessionSection">`                 |
+| `REFERENCE_ENTRY`  | font size == 7.0, a digit, first run on its line (a footnote definition's marker)          | `<note place="foot" n="...">`                  |
+| `GENERIC_NOTE`     | at the note band and the **whole line** is italic                                          | `<note><hi rend="italic">...`                  |
+| `SPEAKER`          | not indented and >= 5 leading capital letters                                              | `<note type="speaker">` (`on_pop` opens `<u>`) |
+| `SEG`              | `is_seg(chunk)` - first run of a correctly-indented body line                              | a new `<seg>` inside the current `<u>`/`<div>` |
 
 Things worth copying from it:
 
-- **Order as precedence.** `REFERENCE_ENTRY` (7pt digit) is listed before
+- **Order as precedence.** `REFERENCE_ENTRY` (digit whose font size is 7) is listed before
   `GENERIC_NOTE`/`SEG` so a footnote marker is claimed before a body rule sees it.
 - **State via the stack, not globals.** `CHAIRMAN` and `TIME` test
   `tag_is_on_top(...)` to chain off the previous block instead of tracking a flag.
-- **`chunked` discipline.** `REFERENCE_ENTRY` guards with
+  This is by preference though, you can also use global state.
+- **`chunked`** `REFERENCE_ENTRY` guards with
   `tag_is_on_top("note", place="foot", n=serialized)` so the multi-run footnote body
-  opens exactly one `<note>`; `SEG` uses `chunked=False` to restart every paragraph.
+  opens exactly one `<note>`. `SEG` uses `chunked=False` to restart every paragraph.
 - **Geometry helpers.** `is_seg`, `is_page_top`, `nth_previous`, `leading_caps`
-  keep the `test` lambdas readable — push non-trivial logic into named functions.
+  are useful helper functions, and avoid moving the config tests to a new function (instead of a lambda).
 
 `examples/prosvetno-kulturno-vece/config.py` is a cleaner, smaller second example
 (no footnotes, simpler cosmetics) and a good template to start a new config from.
@@ -672,29 +606,30 @@ Things worth copying from it:
 
 ## Gotchas
 
-- **`parse.py` hard-imports `speaker_to_utterance`.** Any module used as the root
-  `config.py` must define that name, or the program crashes on import — even if your
-  `on_pop` is something else or absent. (Define a stub if you don't need it.)
 - **Footnote/multi-run blocks split across chunks.** One logical block becomes many
   run-chunks in PDF. Always guard pushes with `tag_is_on_top(...)` (or use
   `chunked=True`, the default) so you open one element, not one per run. Conversely,
-  use `chunked=False` when each chunk genuinely *is* a new block (paragraphs/`SEG`).
-- **Coordinates are per-document and per-page.** Scans are misaligned; expect to use
+  use `chunked=False` when each chunk genuinely _is_ a new block (paragraphs/`SEG`).
+- **Coordinates are per-document and per-page.** Scans are misaligned! expect to use
   ranges, page-number branches (`left = 48 if page_num <= 2 else 41`), and
   even/odd-page parity (`prosvetno`'s `is_seg`). Re-measure with the tools above.
+  Nobody told you this was gonna be fun, just _possible_.
 - **y grows upward.** "Top of page" = large y. Footnotes sit at small y.
 - **Don't double-format.** When a rule already opened an inline wrapper
-  (`GENERIC_NOTE` → `<hi rend="italic">`), append with `should_annotate=[...]` to
+  (`GENERIC_NOTE` -> `<hi rend="italic">`), append with `should_annotate=[...]` to
   stop the cosmetic layer re-wrapping the same text.
 - **Spacing is reconstructed.** If words run together or get extra spaces, the fix is
-  in `get_chunks` — specifically where it decides each run's
+  in `get_chunks` - specifically where it decides each run's
   [`space_before`](#spacing) — not in your rules or the engine.
-- **`out/` and `meow.txt` are gitignored.** `meow.txt` is the full debug log (all
-  prints land there); read it when a chunk goes to the wrong element.
-- **`on_end` writes a hardcoded path** (`out/speaker_utterance.json`). Create `out/`
-  (or change the path) before running.
 
 ---
+
+## Debugging
+
+When you'll be making a config, expect some tests or chunks to just not work properly.
+Debugging support is not yet added, you can, however, set `"debug": True` in the config and specify a `--debug-file` to `parse.py`.
+There will be a lot of useful logs in there, though the debug file may be _very_ large (like, a gigabyte large).
+You can also remove or comment out some log outputs if you feel the need to.
 
 ## Running it
 
@@ -707,12 +642,12 @@ python parse.py path/to/input.pdf -o out/out.xml
 python make_list_person.py out/speaker_utterance.json -o out/listPerson.xml
 ```
 
-To convert a *different* document, write a new config module exporting `CONFIG`,
-`COSMETIC_ANNOTATIONS`, `get_chunks`, and `speaker_to_utterance`
-([anatomy](#anatomy-of-a-config-module)), and point `parse.py`'s `from config
-import ...` at it (today that means making it the importable `config` — e.g. via
-the `config.py` at the repo root, mirrored into `examples/.../config_pdf.py` by
+To convert a _different_ document, write a new config module exporting `CONFIG`,
+`COSMETIC_ANNOTATIONS` and `get_chunks`
+([config module structure](#the-config-module)), and point `parse.py`'s `from config
+import ...` at it (today that means making it the importable `config` - e.g. via
+the `config.py` at the repo root, mirrored into `examples/{ZRIP}/config_pdf.py` by
 symlink).
 
 Dependencies: `pdfminer.six` (PDF extraction), `python-docx` (Word mode),
-`pypdf` (the coord-dump tool), `requests` (`make_list_person.py`).
+`pypdf` (the coord-dump tool, should be reworked into pdfminer), `requests` (`make_list_person.py`).
