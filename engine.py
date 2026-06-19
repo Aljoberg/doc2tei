@@ -1,6 +1,6 @@
 import re
 import xml.etree.ElementTree as ET
-from typing import Literal, Any, Callable, Protocol, cast, overload
+from typing import Literal, Any, Protocol, cast, overload
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 from type_decs import (
@@ -8,7 +8,6 @@ from type_decs import (
     CosmeticAnnotations,
     OnPop,
     PDFCosmeticAnnotation,
-    # StackEntry,
     WordCosmeticAnnotation,
 )
 from dataclasses import dataclass, field
@@ -42,10 +41,6 @@ visited_time = False
 # python doesn't have an 'as const' so it can't infer these
 # and i refuse to repeat code with a Literal
 AUTO_ANNOTATE = ["ITALIC", "BOLD", "REFERENCE"]
-# gets changed every parse_text, because of them line breaks
-is_first_run = True
-# strip next chunk
-lstrip_next = True
 
 COSMETIC_ANNOTATIONS: CosmeticAnnotations
 
@@ -59,6 +54,9 @@ class Chunk(Protocol):
     text: str
     bold: bool | None
     italic: bool | None
+    # whether there's a space to be added at the start
+    # it can be because of a deljaj, a gap or a line break
+    space_before: bool
 
 
 @dataclass
@@ -72,6 +70,7 @@ class WordChunk:
     italic: bool | None
     run: Run
     paragraph: Paragraph
+    space_before: bool = True
 
 
 @dataclass
@@ -82,6 +81,7 @@ class PDFLineChunk:
     bold: bool | None  # all bold
     italic: bool | None  # all italic
     runs: "list[PDFChunk]"  # child chunks
+    space_before: bool = True  # whole-line chunks are never appended directly
 
 
 @dataclass
@@ -95,6 +95,7 @@ class PDFChunk:
     italic: bool | None
     font_size: float
     page_num: int
+    space_before: bool = True
     _line_chunk: Any = field(
         default=None, init=False, repr=False
     )  # so we don't get lint errors, since we don't provide the line chunk at init
@@ -130,10 +131,20 @@ def get_para_xywh(para: Paragraph):
 
 # good dx, or something
 @overload
-def make_chunk(word_prop: Run, parent_paragraph: Paragraph, *, page_num: int) -> WordChunk: ...
+def make_chunk(
+    word_prop: Run, parent_paragraph: Paragraph, *, page_num: int
+) -> WordChunk: ...
 @overload
 def make_chunk(
-    *, text: str, x: float, y: float, font_name: str, size: float, previous: PDFChunk | None, page_num: int
+    *,
+    text: str,
+    x: float,
+    y: float,
+    font_name: str,
+    size: float,
+    previous: PDFChunk | None,
+    page_num: int,
+    space_before: bool = True,
 ) -> PDFChunk: ...
 @overload
 def make_chunk(
@@ -152,7 +163,8 @@ def make_chunk(
     size: float | None = None,
     runs: list[PDFChunk] | None = None,
     previous: PDFChunk | None = None,
-    page_num: int
+    page_num: int,
+    space_before: bool = True,
 ):
     if isinstance(word_prop, Run) and isinstance(parent_paragraph, Paragraph):
         run = word_prop
@@ -167,6 +179,7 @@ def make_chunk(
             italic=run.italic,
             run=run,
             paragraph=parent_paragraph,
+            space_before=space_before,
         )
     # i fucking hate the python type checker
     assert text is not None
@@ -180,6 +193,7 @@ def make_chunk(
             bold=all(i.bold for i in runs),
             italic=all(i.italic for i in runs),
             runs=runs,
+            space_before=space_before,
         )
     else:
         assert font_name is not None
@@ -192,7 +206,8 @@ def make_chunk(
             italic="italic" in font_name.lower(),
             font_size=size,
             previous=previous,
-            page_num=page_num
+            page_num=page_num,
+            space_before=space_before,
         )
 
 
@@ -244,7 +259,7 @@ def push(
     # push element on top of stack, set `children` to be the element's children
     # who's the father though?
     # also it's an orphan since it's not pushed to the parent's children yet lol
-    global children, is_first_run
+    global children
     children = []
 
     if isinstance(tag, ET.Element):
@@ -257,7 +272,6 @@ def push(
     stack.append(
         StackEntry(element=elem, children=children, last_elem=None, cosmetic=cosmetic)
     )
-    is_first_run = True
 
 
 def pop():
@@ -265,22 +279,8 @@ def pop():
     # and returns it to their parent <3
     global children
     elem = stack.pop()
-    # strip the trailing space off the last text node. for a block element we
-    # just drop it. but a cosmetic element is inline, so that space is the gap to
-    # whatever follows it in the parent - eating it fuses the words ("od carin " +
-    # "in" -> "carinin"). so for cosmetics we move the space OUT, to sit right
-    # after the element: it survives as a separator mid-text, and still gets
-    # cleaned by the parent's own rstrip when the cosmetic ends a block.
-    moved_space = ""
-    if children and isinstance(children[-1], str):
-        stripped = children[-1].rstrip()
-        if elem.cosmetic and stripped != children[-1]:
-            moved_space = " "
-        children[-1] = stripped
     commit_children(elem)
     stack[-1].children.append(elem.element)
-    if moved_space:
-        stack[-1].children.append(moved_space)
     children = stack[-1].children
 
     if on_pop is not None:
@@ -357,12 +357,7 @@ def tag(tag: str, **attribs: str):
 
 def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):
     # appends runs to children
-    # takes care of italic bold & references (which can appear anywhere)
-    # and spaces between runs
-    # or spaces between newlines
-    # or both
-    # we love microsoft
-    global is_first_run, lstrip_next
+    # takes care of italic / bold / references (which can appear anywhere) and of the separating space between runs
     if should_annotate is True:
         should_annotate = list(COSMETIC_ANNOTATIONS.keys())
     else:
@@ -374,12 +369,16 @@ def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):
                 )
 
     for chunk in chunks:
-        print(
-            f"RUN: {repr(chunk.text)}, {chunk.run._element.xml if isinstance(chunk, WordChunk) else 'meow'}"
-        )
-        if lstrip_next:
-            chunk.text = chunk.text.lstrip()
-            lstrip_next = False
+        # since all spaces we'll need are in either this .space_before prop or the next chunk's space_before, we can strip it
+        # and avoid any incidents where spaces appear out of thin air
+        text = chunk.text.strip()
+        if not text:
+            continue
+
+        # we need to ignore the cosmetic annotations for spaces
+        # so we cache the previous stack ids without the to be added cosmetics
+        outer = list(stack)
+        outer_ids = {id(e) for e in outer}
 
         if isinstance(chunk, PDFChunk):
             for name, annotation in COSMETIC_ANNOTATIONS.items():
@@ -419,15 +418,18 @@ def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):
                 ):
                     pop_to(annotation["tag"], invert=True)
 
-        # me when
-        if not is_first_run or chunk.text.startswith("\n"):
-            print("appened space")
-            children.append(
-                " "
-            )  # NOTE: this is *supposed to be* a newline, but in TEI it should suit more as a space, probably
-            is_first_run = False
-        chunk.text = chunk.text.strip("\n")  # TODO remove, this is magic behavior
-        children.append(chunk.text)
+        # append the space if needed
+        # if the previous container already has content, we append the space there before adding our text (so it's between the two)
+        # if not, we don't append a stray leading space
+        if chunk.space_before:
+            for entry in reversed(stack):
+                if id(entry) not in outer_ids:
+                    continue
+                if entry.children:
+                    entry.children.append(" ")
+                break
+
+        children.append(text)
 
 
 def pop_and_push_to(

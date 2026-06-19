@@ -7,7 +7,6 @@
 # either way, pdfs are the main focus now, so if it doesn't work, deal with it
 
 import re
-import engine
 from engine import (
     Chunk,
     WordChunk,
@@ -19,6 +18,7 @@ from engine import (
     append,
 )
 from type_decs import WordConfig
+from parse import log
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx import Document
 from docx.oxml.ns import qn
@@ -55,8 +55,10 @@ def ref_append(chunk: WordChunk):
     # so we don't append it as text. we also don't bulk-append the rest of the
     # paragraph here - runs aren't guaranteed to be whole, so the footnote body
     # runs are appended individually as they're parsed, landing inside the note
-    # that ref_entry_action left open on top of the stack.
-    engine.lstrip_next = True
+    # that ref_entry_action left open on top of the stack. that note is empty when
+    # the body starts, so the engine already withholds a leading space - no lstrip
+    # needed.
+    pass
 
 
 def generic_note_action(chunk: Chunk):
@@ -76,6 +78,7 @@ def speaker_action(chunks: Chunk):
 
 # config explanation is in readme
 CONFIG: WordConfig = {
+    "debug": False,
     "mode": "word",
     "alignments": {
         "center": {
@@ -188,5 +191,5 @@ def get_frames(filename: str):
         # x, y, w, h = get_para_xywh(para)
 
         for run in para.runs:
-            print(f"----- RUNNNNNNN ------: {run.text}")
+            log(f"----- RUNNNNNNN ------: {run.text}")
             yield make_chunk(run, para, page_num=0)  # page num not computable

@@ -29,7 +29,7 @@ the converter, jump to [Running it](#running-it). If you want to teach it about 
   - [`pop_and_push_to`](#pop_and_push_to)
   - [`tag_is_on_top` / `is_before_layout`](#tag_is_on_top--is_before_layout)
   - [`append`](#append)
-  - [Spacing flags: `is_first_run` and `lstrip_next`](#spacing-flags)
+  - [Spacing: `space_before`](#spacing)
 - [Cosmetic annotations](#cosmetic-annotations)
 - [Hooks: `on_pop` and `on_end`](#hooks-on_pop-and-on_end)
 - [Writing `get_chunks` (the PDF extractor)](#writing-get_chunks-the-pdf-extractor)
@@ -158,6 +158,7 @@ chunk and read its attributes to decide what to do. The three concrete types:
 | `italic` | `bool` | `True` if `"italic"` appears in the font name. |
 | `font_size` | `float` | Point size. Footnote markers are 7.0; body ≈ 9–10. |
 | `page_num` | `int` | 0-based page index. |
+| `space_before` | `bool` | `True` if whitespace separates this run from the previous one. Set by `get_chunks`; drives [spacing](#spacing). |
 | `previous` | `PDFChunk \| None` | The chunk emitted just before this one (a linked list across the whole document). |
 | `line_chunk` | `PDFLineChunk` | Back-reference to the line this run belongs to. |
 
@@ -181,13 +182,14 @@ questions like "is this the first run on its line?"
 | --- | --- |
 | `x`, `y`, `w`, `h` | The enclosing text frame's geometry (twips, from `w:framePr`). |
 | `text`, `bold`, `italic` | Run text and formatting. |
+| `space_before` | `bool` (default `True`) — whitespace separates this run from the previous one. Word runs are already whole, so the default suits them. |
 | `run` | The underlying `python-docx` `Run` (e.g. `run.font.superscript`). |
 | `paragraph` | The `Paragraph` (e.g. `paragraph.alignment`, `paragraph.runs`). |
 
 ### `Chunk` (protocol)
 
-The minimal interface — `x`, `y`, `text`, `bold`, `italic` — that both concrete
-types satisfy. Helpers that work on either backend type against this.
+The minimal interface — `x`, `y`, `text`, `bold`, `italic`, `space_before` — that
+both concrete types satisfy. Helpers that work on either backend type against this.
 
 > **Coordinate convention.** PDF `x`/`y` are pdfplumber coordinates: x grows
 > rightward from the page's left edge, **y grows upward from the bottom**. So
@@ -256,19 +258,23 @@ top to bottom and **the first match wins**. A rule is a `TypedDict`:
 
 A group may contain a key `"run_immediate"` whose value is a **plain callable**
 (not a rule dict). It runs once for every chunk that lands in the group, *before*
-any rule is tested. Use it to reset per-chunk state. Every PDF config here uses it
-to reset the spacing flag:
+any rule is tested. Use it to reset per-chunk state — for example the Word config
+clears its `visited_time` latch when a paragraph stops being centered:
 
 ```python
-"any": {
-    "run_immediate": lambda: setattr(engine, "is_first_run", True),
-    "HEADER": { ... },
+"_else": {
+    "run_immediate": lambda: globals().update({"visited_time": False}),
+    "REFERENCE_ENTRY": { ... },
     ...
 }
 ```
 
 `match_rules` distinguishes rules from `run_immediate` by "is it callable?" — rule
 values are dicts, `run_immediate` is a function.
+
+> The PDF configs no longer need a `run_immediate` for spacing. Spacing is now
+> driven per-chunk by [`space_before`](#spacing), so the old
+> `setattr(engine, "is_first_run", True)` poke is gone.
 
 ### Rule lifecycle
 
@@ -279,10 +285,10 @@ When a rule fires (`do_rule_chores` in `parse.py`):
 3. `after_append()` runs if present.
 
 If **no** rule matched (and there was no `"_else"`), `parse_text` falls back to
-`append(chunk)` with `is_first_run = True`. That's the default path: text that
-isn't the start of anything new simply flows into the element currently open on
-the stack. This is how continuation lines and trailing runs of a paragraph accrete
-into the `<seg>` that an earlier chunk opened.
+`append(chunk)`. That's the default path: text that isn't the start of anything new
+simply flows into the element currently open on the stack. This is how continuation
+lines and trailing runs of a paragraph accrete into the `<seg>` that an earlier
+chunk opened.
 
 > Empty chunks (`text` is empty or `"\n"`) are skipped by `match_rules` and never
 > reach a rule.
@@ -299,7 +305,6 @@ from engine import (
     make_chunk, pop_and_push_to, tag, tag_is_on_top,
     pop_to, push, append,
 )
-import engine  # for engine.is_first_run / engine.lstrip_next
 ```
 
 ### The stack
@@ -403,39 +408,46 @@ append(chunk, should_annotate=[])              # plain text, no cosmetics
 `append(*chunks, should_annotate=True)` is what actually puts text into the open
 element. For each chunk it:
 
-1. honours `lstrip_next` (strips the leading whitespace of this chunk once);
+1. trims the text to one edge-stripped token; whitespace-only runs are dropped;
 2. runs the [cosmetic annotations](#cosmetic-annotations) selected by
    `should_annotate` (`True` = all of them, or a list of names; an unknown name
    raises);
-3. inserts a separating space if this isn't the first run since `is_first_run` was
-   set (so runs that were grouped on a line stay word-separated);
-4. appends the text (with surrounding `\n` stripped).
+3. inserts a single separating space *before* the token when
+   [`chunk.space_before`](#spacing) is true (and there's something to separate it
+   from — see below);
+4. appends the token.
 
 `should_annotate` is how you stop double-formatting: a `GENERIC_NOTE` already wraps
 its body in `<hi rend="italic">`, so it appends with `should_annotate=["REFERENCE"]`
 (ZRIP) or `[]` (prosvetno) to keep the italic cosmetic from firing again inside it.
 
-### Spacing flags
+### Spacing
 
-Two module-level flags on `engine` control whitespace. They exist because a PDF has
-no real spaces or line breaks — the extractor reconstructs them, and these flags
-patch the seams. They're acknowledged as fiddly (`"i should probably rework this
-first run thing"`), so the practical rules:
+A searchable PDF has no real spaces or line breaks — the extractor reconstructs
+them. Rather than baking reconstructed spaces into the text (and then fighting to
+strip them back out), each chunk carries one boolean:
 
-- **`engine.is_first_run`** — when `True`, the *next* `append` won't prepend a
-  separating space; after that it flips to `False` and subsequent appends *do* get a
-  leading space. `get_chunks` sets it `True` at the start of each line, and PDF
-  configs also reset it `True` in `run_immediate`, so the first run of a line/chunk
-  doesn't start with a stray space while later runs are kept apart. `parse_text`
-  sets it `False` on entry; the no-match fallback sets it `True`.
-- **`engine.lstrip_next`** — set it `True` to force the *next* appended chunk's text
-  to be left-stripped (once). Used right after a footnote marker so the footnote
-  body doesn't begin with the space that followed the marker:
+- **`chunk.space_before`** — `True` when this run is separated from the previous one
+  by whitespace (a glyph gap, a real space glyph, or a line break). The extractor
+  sets it (see [Writing `get_chunks`](#writing-get_chunks)); the engine turns it into
+  at most one separating space.
 
-  ```python
-  def ref_append(chunk):
-      engine.lstrip_next = True   # next chunk (the note body) gets lstripped
-  ```
+The engine's contract makes the whole thing predictable:
+
+- A run's own text is trimmed to a single token, so **no element ever ends in a
+  stray space**. (That's why `pop()` no longer has to rstrip or shuffle spaces.)
+- The separator is emitted **between** tokens only. At a **block start** (the
+  enclosing element is still empty) it's withheld, so a fresh `<seg>`/`<note>` never
+  begins with a leading space — this is what replaced the old `is_first_run` dance,
+  and it's why a footnote body doesn't need an `lstrip` after the marker (it lands in
+  an empty `<note>`).
+- When a run opens an inline element (`<emph>`, `<hi>`, `<ref>`), the separator is
+  placed **outside** it, in the nearest enclosing element that already has content —
+  so you get `beseda <emph>poudarjeno</emph> naprej`, never `beseda<emph> ...`.
+
+The upshot for config authors: you almost never touch spacing in the engine. If
+words run together or gain stray spaces, fix where `get_chunks` decides
+`space_before`, not the rules. The behaviour is pinned by `tests/test_spacing.py`.
 
 ---
 
@@ -487,9 +499,9 @@ in `should_annotate`,
 So a run of italic chunks opens one `<emph>` on the first and the engine keeps it
 open until a non-italic chunk closes it. `cosmetic=True` is what makes
 `tag_is_on_top` and `pop_to` look *past* these wrappers to the real structural
-element — and it's why `pop()` is careful to move a trailing space *outside* a
-cosmetic wrapper instead of eating it (otherwise `"od carin " + "in"` would fuse
-into `"carinin"`).
+element. Spacing across a wrapper boundary just works: because the separator is
+emitted *outside* the element being opened (see [Spacing](#spacing)), `od <emph>…`
+never fuses into `od<emph>…`, and no wrapper is left holding a trailing space.
 
 > **`REFERENCE` is the odd one out.** Its `append_func` pushes a `<ref>` with a
 > computed `target`, and the matching `REFERENCE_ENTRY` *rule* opens the
@@ -552,25 +564,30 @@ Steps (see `get_chunks` in `config.py`):
    y-drop between consecutive glyphs exceeds `line_treshold` (≈ 4.8), with a larger
    guard (`× 5`) for big jumps (column breaks).
 3. **Group a line into runs.** Within a line, merge consecutive glyphs into a run
-   while the **font name and size match** and the x-gap is small. Insert a space
-   when the x-gap exceeds `threshold` (≈ 1.7) — PDFs usually have no literal space
-   glyphs, so spacing is inferred from gaps. A trailing space is appended to keep
-   lines apart.
-4. **Build chunks.** For each run, `make_chunk(text=..., x=..., y=..., font_name=...,
-   size=..., previous=prev_run, page_num=...)` → a `PDFChunk`, linked to the previous
-   one. Then build one `PDFLineChunk` for the line, and set `run.line_chunk` on each
-   run so rules can navigate line ↔ run.
-5. **Yield.** Set `engine.is_first_run = True`, then `yield from run_chunks`.
+   while the **font name and size match** and the x-gap is small. A gap *inside* a
+   run (x-gap over `threshold` ≈ 1.7) becomes a real space in the run's text; a gap
+   *between* runs sets the next run's [`space_before`](#spacing) instead. PDFs
+   usually have no literal space glyphs, so this is how spacing is inferred from gaps.
+4. **Carry the line break.** A `pending_space` flag remembers that a line ran to its
+   end, so the **first run of the next line** gets `space_before=True` — that's what
+   keeps lines word-separated without baking a trailing space onto every line.
+5. **Build chunks.** For each run, `make_chunk(text=..., x=..., y=..., font_name=...,
+   size=..., previous=prev_run, page_num=..., space_before=...)` → a `PDFChunk`,
+   linked to the previous one. Then build one `PDFLineChunk` for the line, and set
+   `run.line_chunk` on each run so rules can navigate line ↔ run.
+6. **Yield.** `yield from run_chunks`.
 
 ```python
 prev_run = make_chunk(text=r["text"], x=r["x0"], y=r["y0"],
                       font_name=r["fontname"], size=r["size"],
-                      previous=prev_run, page_num=page_num)
+                      previous=prev_run, page_num=page_num,
+                      space_before=r["space_before"])
 ```
 
 The two configs differ in detail — `prosvetno`'s document already has space glyphs
-and a header band it skips (`y > 740`), and it handles even/odd-page indentation
-quirks — which is exactly the kind of per-document tuning that belongs here.
+(so it derives `space_before` from whitespace at run edges rather than from gaps),
+skips a header band (`y > 740`), and handles even/odd-page indentation quirks —
+which is exactly the kind of per-document tuning that belongs here.
 
 > Magic numbers (`threshold`, `line_treshold`, header bands, indentation ranges)
 > are the heart of a PDF config and almost always need re-measuring per document.
@@ -670,8 +687,8 @@ Things worth copying from it:
   (`GENERIC_NOTE` → `<hi rend="italic">`), append with `should_annotate=[...]` to
   stop the cosmetic layer re-wrapping the same text.
 - **Spacing is reconstructed.** If words run together or get extra spaces, the fix is
-  in `get_chunks` (the `threshold`/space logic) and the
-  [`is_first_run`/`lstrip_next`](#spacing-flags) flags — not in your rules.
+  in `get_chunks` — specifically where it decides each run's
+  [`space_before`](#spacing) — not in your rules or the engine.
 - **`out/` and `meow.txt` are gitignored.** `meow.txt` is the full debug log (all
   prints land there); read it when a chunk goes to the wrong element.
 - **`on_end` writes a hardcoded path** (`out/speaker_utterance.json`). Create `out/`

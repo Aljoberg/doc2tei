@@ -4,11 +4,11 @@
 # examples/zbor-republik-in-pokrajin/config_pdf.py and config.py in the project root are symlinks
 
 
+import functools
 import json
 import re
 import xml.etree.ElementTree as ET
 from typing import Any, Generator
-import engine
 from engine import (
     Chunk,
     PDFChunk,
@@ -23,6 +23,12 @@ from engine import (
     append,
 )
 from type_decs import PDFConfig, PDFCosmeticAnnotations
+
+
+@functools.wraps(print)
+def log(*args, **kwargs):
+    if CONFIG["debug"]:
+        print(*args, **kwargs)
 
 
 def ref_entry_action(chunk: PDFChunk):
@@ -41,10 +47,8 @@ def ref_entry_action(chunk: PDFChunk):
 
 
 def ref_append(chunk: PDFChunk):
-    # we don't append the ref's number as it's in the @n attribute
-    # but we need to strip the leading space of the next chunk so
-    # we do that
-    engine.lstrip_next = True
+    # we don't append the ref number since it's added to the @n attribute instead
+    pass
 
 
 def generic_note_action(chunk: Chunk):
@@ -59,7 +63,6 @@ def header_test(chunk: PDFChunk):
 
     for i in range(1, 4):
         prev = nth_previous(chunk, i)
-        print(f"{prev=}, {chunk=}, {i=}", prev.line_chunk if prev else "meowo")
         if prev and prev.page_num != chunk.page_num:
             return True
 
@@ -88,7 +91,9 @@ def speaker_to_utterance(popped: StackEntry):
             word.capitalize() for word in name_surname.split()
         )  # le pascal case
 
-        if serialized not in utterance_speaker_mapping: # the first occurence is probably the most descriptive
+        if (
+            serialized not in utterance_speaker_mapping
+        ):  # the first occurence is probably the most descriptive
             utterance_speaker_mapping[serialized] = text
 
         push(
@@ -187,6 +192,7 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
 
 # le config
 CONFIG: PDFConfig = {
+    "debug": False,
     "mode": "pdf",
     "on_pop": speaker_to_utterance,
     "on_end": on_end,
@@ -194,10 +200,6 @@ CONFIG: PDFConfig = {
         # all alignments
         # any other values are only used in .docx mode
         "any": {
-            "run_immediate": lambda: setattr(
-                engine, "is_first_run", True
-            ),  # we set the first run to be True so spaces don't get appended
-            # i should probably rework this first run thing
             "HEADER": {"test": header_test, "append_func": lambda chunk: None},  # :3
             # --- centered ---
             "SEJA_DECLARATION": {
@@ -246,9 +248,8 @@ CONFIG: PDFConfig = {
                     chunk.font_size == 7.0 or 6.9 < chunk.font_size < 7.0
                 )  # if we're smol
                 and chunk.text.strip().isdigit()  # and a digit
-                and (
-                    print(f"{chunk.line_chunk=}") or chunk is chunk.line_chunk.runs[0]
-                ),  # and the first thing in the line
+                and chunk
+                is chunk.line_chunk.runs[0],  # and the first thing in the line
                 "action": ref_entry_action,
                 "append_func": ref_append,
             },
@@ -296,8 +297,6 @@ CONFIG: PDFConfig = {
 # then it just yields each child chunk
 def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
     # we use pdfminer to extract things more efficiently
-    # because as a program written in python performance is our top priority
-    # naturally
     from pdfminer.pdfpage import PDFPage
     from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
     from pdfminer.converter import PDFLayoutAnalyzer
@@ -309,26 +308,17 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
     rm = PDFResourceManager()
 
     class CharCollector(PDFLayoutAnalyzer):
-        # collects every glyph on a page as a pdfplumber-style char dict
+        # pdfminer stuff
         def __init__(self):
             super().__init__(rm, laparams=None)
-            self.chars: list[dict] = []
+            self.chars: list[LTChar] = []
 
         def receive_layout(self, ltpage: Any):
             def walk(obj: Any):
                 for item in obj:
                     if isinstance(item, LTChar):
-                        self.chars.append(
-                            {
-                                "text": item.get_text(),
-                                "x0": item.x0,
-                                "x1": item.x1,
-                                "y0": item.y0,
-                                "fontname": item.fontname,
-                                "size": item.size,
-                            }
-                        )
-                    elif hasattr(item, "__iter__"):  # LTFigure etc. - recurse in
+                        self.chars.append(item)
+                    elif hasattr(item, "__iter__"):  # LTFigure etc
                         walk(item)
 
             walk(ltpage)
@@ -338,67 +328,84 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
 
     with open(filename, "rb") as f:
         prev_run: PDFChunk | None = None
+        pending_space = False  # whether to add a space to the next line's first chunk
         for page_num, page in enumerate(PDFPage.get_pages(f)):
             device.chars = []
             interpreter.process_page(page)
             page_chars = device.chars
 
             # group into lines
-            lines: list[list[dict]] = []
-            cur: list[dict] = []
+            lines: list[list[LTChar]] = []
+            cur: list[LTChar] = []
             prev_y = None
             for char in page_chars:
+                if prev_y is not None:
+                    # just some logs I found useful when debugging
+                    # I don't have time for a better debug utility so you'll have to work with this
+                    log(
+                        f"-- line check --: {char.get_text()=} {abs(char.y0 - prev_y)=}, cur={''.join(i.get_text() for i in cur)}"
+                    )
+                    log(f"{char=}")
                 if prev_y is not None and (
-                    prev_y - char["y0"] > line_treshold
-                    or abs(prev_y - char["y0"]) > line_treshold * 5
+                    prev_y - char.y0 > line_treshold
+                    or abs(prev_y - char.y0) > line_treshold * 5
                 ):
                     lines.append(cur)
                     cur = []
                 cur.append(char)
-                prev_y = char["y0"]
+                prev_y = char.y0
             if cur:
                 lines.append(cur)
 
             for line in lines:
                 # group as much of the line as we can into runs
                 runs: list[dict] = []
-                prev: dict | None = None
+                prev: LTChar | None = None
+                broke = False  # whether a literal space cut a word (deljaj)
                 for char in line:
-                    gap = bool(prev) and char["x0"] - prev["x1"] > threshold
-                    if (
-                        char["text"] == " "
-                    ):  # spaces are not a thing in pdfs, but they are if they cut off a word, apparently
+                    if prev:
+                        # again, some cool debug logs
+                        log(
+                            f"-- char --: x difference of char and prev is {char.x0 - prev.x1}, {char.get_text()=}, "
+                            f"{prev.get_text()=}, text={''.join(i.get_text() for i in line)}",
+                        )
+                    gap = bool(prev) and char.x0 - prev.x1 > threshold
+                    if char.get_text() == " ":  # deljaj
+                        broke = True
                         break  # last thing in the line anyway
                     can_be_grouped = (
                         runs  # there's at least one run
                         and runs[-1]["fontname"]
-                        == char["fontname"]  # and it's the same font
-                        and runs[-1]["size"] == char["size"]  # and the same size
+                        == char.fontname  # and it's the same font
+                        and runs[-1]["size"] == char.size  # and the same size
                         and (
-                            abs(prev["x0"] - char["x0"]) < 30 if prev else True
+                            abs(prev.x0 - char.x0) < 30 if prev else True
                         )  # we won't bridge if there's too much of a gap
                     )
-                    if gap and runs:
-                        runs[-1]["text"] += " "
                     if can_be_grouped:
-                        # if the text is the same, append it to the previous run directly
-                        runs[-1]["text"] += char["text"]
+                        if gap:
+                            runs[-1]["text"] += " "
+                        runs[-1]["text"] += char.get_text()
                     else:
-                        # if not, make a new run with the new stuff
+                        # make a new run
+                        # if there's already a run, that means we need to add a space if there's a gap
+                        # otherwise we add a space if the last line was continued by this run
                         runs.append(
                             {
-                                "text": char["text"],
-                                "x0": char["x0"],
-                                "y0": char["y0"],
-                                "fontname": char["fontname"],
-                                "size": char["size"],
+                                "text": char.get_text(),
+                                "x0": char.x0,
+                                "y0": char.y0,
+                                "fontname": char.fontname,
+                                "size": char.size,
+                                "space_before": gap if runs else pending_space,
                             }
                         )
                     prev = char
-                else:
-                    runs[-1]["text"] += " "  # trailing space keeps lines apart
 
-                # actually make the chunks we grouped
+                # a line that ran to its end (no literal-space break) is kept apart
+                # from the next line's first run by a separator
+                pending_space = not broke
+
                 run_chunks: list[PDFChunk] = []
                 for r in runs:
                     prev_run = make_chunk(
@@ -409,6 +416,7 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                         size=r["size"],
                         previous=prev_run,
                         page_num=page_num,
+                        space_before=r["space_before"],
                     )
                     run_chunks.append(prev_run)
 
@@ -423,5 +431,4 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                 for run in run_chunks:
                     run.line_chunk = line_chunk
 
-                engine.is_first_run = True
                 yield from run_chunks

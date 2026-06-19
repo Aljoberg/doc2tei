@@ -3,10 +3,9 @@ from typing import cast
 import xml.etree.ElementTree as ET
 from contextlib import redirect_stdout
 from engine import Chunk, PDFChunk, WordChunk
-
 import engine
 from engine import append, commit_children, pop, root, stack
-from config import CONFIG, COSMETIC_ANNOTATIONS, get_chunks
+from config import CONFIG, COSMETIC_ANNOTATIONS, get_chunks, log
 from type_decs import (
     PDFRule,
     PDFRunTest,
@@ -21,8 +20,7 @@ from type_decs import (
 def get_center_point(c: Chunk):
     # yes
     if isinstance(c, WordChunk):
-        print(f"{c.x=}, {c.y=}, {c.w=}, {c.h=}")
-        print(f"center of container: {c.x + c.w / 2}")
+        log(f"center of container: {c.x + c.w / 2}")
         return (
             c.x + c.w / 2
         )  # https://excalidraw.com/#json=Vz5yoLFIApDsFnrAIl9Y5,9JIGo2YGGwsgCHfrQ0AWJA
@@ -92,14 +90,14 @@ def match_rules(
             if isinstance(chunk, WordChunk):
                 test = cast(WordRunTest, test)
                 if test(chunk):
-                    print(f"{key}: {chunk.text}")
+                    log(f"{key}: {chunk.text}")
                     do_rule_chores(rule, chunk)
                     handled = True
                     break
             elif isinstance(chunk, PDFChunk):
                 test = cast(PDFRunTest, test)
                 if test(chunk):
-                    print(f"{key}: {chunk.text}")
+                    log(f"{key}: {chunk.text}")
                     do_rule_chores(rule, chunk)
                     handled = True
                     break
@@ -107,7 +105,7 @@ def match_rules(
         else:
             if run_else is not None:
                 key, rule = run_else
-                print(f"{key} (fallback): {chunk.text}")
+                log(f"{key} (fallback): {chunk.text}")
                 do_rule_chores(rule, chunk)
                 handled = True
         if handled:
@@ -115,11 +113,11 @@ def match_rules(
 
     return False
 
+debug = False
+
 
 def parse_text(chunk: Chunk):
-    engine.is_first_run = False
-
-    print("-- parsing text --")
+    log("-- parsing text --")
 
     x = chunk.x
     y = chunk.y
@@ -139,13 +137,13 @@ def parse_text(chunk: Chunk):
             if (
                 2500 < center < 3660 and "left" in alignments
             ):  # left here in case we need it
-                print("left")
+                log("Chunk is on left side")
                 matched = match_rules(alignments["left"], chunk)
             elif 7820 < center < 8460 and "right" in alignments:
-                print("right")
+                log("Chunk is on right side")
                 matched = match_rules(alignments["right"], chunk)
             elif "_else" in alignments:
-                print("not left nor right")
+                log("Chunk is not on left nor right side")
                 matched = match_rules(alignments["_else"], chunk)
     else:
         # deal with it
@@ -154,30 +152,34 @@ def parse_text(chunk: Chunk):
     if not matched:
         # default, i suppose
         # TODO add to config
-        engine.is_first_run = True
-        # chunk.text = chunk.text.replace("\n", "") # TODO remove / make customizable
         append(chunk)
 
-    print(
+    log(
         f"{chunk.text=}, {x=}, {y=}, {chunk=}, {chunk=}, {len(chunk.paragraph.runs) if isinstance(chunk, WordChunk) else ''}"
     )
-    print("\n")
+    log("\n")
 
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("input", type=str)
     p.add_argument("-o", "--out", type=str, default=None)
+    p.add_argument("--debug-file", type=str, default=None)
 
     args = p.parse_args()
 
     chunks = get_chunks(args.input)
+    debug = args.debug_file is not None
 
     engine.COSMETIC_ANNOTATIONS = COSMETIC_ANNOTATIONS  # me when i assign to a constant
     engine.on_pop = CONFIG.get("on_pop")
 
     # behold the absolute peak of debugging
-    with open("meow.txt", "w", encoding="utf-8") as f, redirect_stdout(f):
+    if args.debug_file:
+        with open(args.debug_file, "w", encoding="utf-8") as f, redirect_stdout(f):
+            for chunk in chunks:
+                parse_text(chunk)
+    else:
         for chunk in chunks:
             parse_text(chunk)
 

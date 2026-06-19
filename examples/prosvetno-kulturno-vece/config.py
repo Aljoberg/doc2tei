@@ -6,7 +6,6 @@
 
 import xml.etree.ElementTree as ET
 from typing import Any, Generator
-import engine
 import re
 from engine import (
     Chunk,
@@ -91,11 +90,11 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
 }
 
 CONFIG: PDFConfig = {
+    "debug": False,
     "mode": "pdf",
     "on_pop": speaker_to_utterance,
     "alignments": {
         "any": {
-            "run_immediate": lambda: setattr(engine, "is_first_run", True),
             # --- session front matter (opening page) ---
             "SEJA_DATE": {
                 # is in title & starts with "OD "
@@ -193,6 +192,7 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
 
     with open(filename, "rb") as f:
         prev_run: PDFChunk | None = None
+        pending_space = False
         for page_num, page in enumerate(PDFPage.get_pages(f)):
             device.chars = []
             interpreter.process_page(page)
@@ -237,10 +237,17 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                             }
                         )
 
-                # this pdf actually has spaces for some reason
-                # but if the last text didn't have one, we add it
-                if not runs[-1]["text"][-1:].isspace():
-                    runs[-1]["text"] += " "
+                # this pdf actually has real spaces, so we just make space_before True for all lines but the first
+                # it gets stripped in append() anyway so the actual space in the text won't matter
+                for i, r in enumerate(runs):
+                    if i == 0:
+                        r["space_before"] = pending_space
+                    else:
+                        prev_r = runs[i - 1]
+                        r["space_before"] = (
+                            prev_r["text"][-1:].isspace() or r["text"][:1].isspace()
+                        )
+                pending_space = True
 
                 run_chunks: list[PDFChunk] = []
                 for r in runs:
@@ -252,6 +259,7 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                         size=r["size"],
                         previous=prev_run,
                         page_num=page_num,
+                        space_before=r["space_before"],
                     )
                     run_chunks.append(prev_run)
 
@@ -266,5 +274,4 @@ def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
                 for run in run_chunks:
                     run.line_chunk = line_chunk
 
-                engine.is_first_run = True
                 yield from run_chunks
