@@ -18,15 +18,14 @@ from type_decs import (
 
 # only used for word
 def get_center_point(c: Chunk):
-    # yes
     if isinstance(c, WordChunk):
         log(f"center of container: {c.x + c.w / 2}")
         return (
             c.x + c.w / 2
         )  # https://excalidraw.com/#json=Vz5yoLFIApDsFnrAIl9Y5,9JIGo2YGGwsgCHfrQ0AWJA
     else:
-        # well shit, we can't exactly get the chunk's center since we don't know where it'll get off
-        return c.x  # TODO
+        # not used
+        return -1
 
 
 def do_rule_chores(
@@ -67,12 +66,11 @@ def match_rules(
         run_immediate()
 
     # match rules
-    # woah
     chunk_rules = {k: v for k, v in group.items() if not callable(v) and "test" in v}
     if chunk_rules:
         handled = False
         if not chunk.text or chunk.text == "\n":
-            # stop it, get some help
+            # ???
             return False
 
         run_else: tuple[str, Rule] | None = None
@@ -113,6 +111,7 @@ def match_rules(
 
     return False
 
+
 debug = False
 
 
@@ -124,14 +123,13 @@ def parse_text(chunk: Chunk):
 
     center = get_center_point(chunk)
 
-
     alignments = CONFIG["alignments"]
     matched = False
     if isinstance(chunk, WordChunk):
         if (
             4550 < center < 6560 and "center" in alignments
-        ):  # TODO unmagic the magic numbers
-            # centered
+        ):  # these magic numbers are annoying, but I honestly can't be asked to change them
+            # they're only for word mode anyway
             matched = match_rules(alignments["center"], chunk)
         else:
             if (
@@ -151,7 +149,7 @@ def parse_text(chunk: Chunk):
 
     if not matched:
         # default, i suppose
-        # TODO add to config
+        # should maybe add to config
         append(chunk)
 
     log(

@@ -60,7 +60,6 @@ def generic_note_action(chunk: Chunk):
 
 def header_test(chunk: PDFChunk):
     # kill the first 3 elements on a page
-
     for i in range(1, 4):
         prev = nth_previous(chunk, i)
         if prev and prev.page_num != chunk.page_num:
@@ -200,7 +199,7 @@ CONFIG: PDFConfig = {
         # all alignments
         # any other values are only used in .docx mode
         "any": {
-            "HEADER": {"test": header_test, "append_func": lambda chunk: None},  # :3
+            "HEADER": {"test": header_test, "append_func": lambda chunk: None},
             # --- centered ---
             "SEJA_DECLARATION": {
                 "test": lambda chunk: (

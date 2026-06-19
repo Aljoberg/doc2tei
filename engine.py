@@ -20,7 +20,7 @@ debate = ET.SubElement(body, "div", type="debateSection")
 debate.text, debate.tail = "", ""
 children: list[str | ET.Element[str]] = (
     []
-)  # reference to the innermost stack tag's children (we won't have portals..... hopefully..........)
+)  # reference to the innermost stack tag's children
 
 
 @dataclass
@@ -34,17 +34,10 @@ class StackEntry:
 stack: list[StackEntry] = [
     StackEntry(element=debate, children=children, last_elem=None, cosmetic=False)
 ]  # le stack of open tags
-# if we visited time, it's the chairman's turn
-visited_time = False
-# list of annotations that the program automatically adds if it detects them
-# each can be toggled / disabled with append(), this is just a list of all of them
-# python doesn't have an 'as const' so it can't infer these
-# and i refuse to repeat code with a Literal
-AUTO_ANNOTATE = ["ITALIC", "BOLD", "REFERENCE"]
 
+# will be assigned in parse.py
 COSMETIC_ANNOTATIONS: CosmeticAnnotations
 
-# on pop hook
 on_pop: OnPop | None = None
 
 
@@ -181,7 +174,7 @@ def make_chunk(
             paragraph=parent_paragraph,
             space_before=space_before,
         )
-    # i fucking hate the python type checker
+    # i hate the python type checker
     assert text is not None
     assert x is not None
     assert y is not None
@@ -216,7 +209,6 @@ def commit_children(stack_instance: StackEntry):
     # we have a children list ["abc", <emph>hi</emph>, "def"]
     # but that's not commited to the element yet (ET.Element)
     # so we gotta actually append it
-    # he boutta become a single mom with 30 kids
     last_elem = stack_instance.last_elem
     elem = stack_instance.element
     for child in stack_instance.children:
@@ -229,7 +221,7 @@ def commit_children(stack_instance: StackEntry):
             # last_elem is used for its tail
             # if we have text after it (which we do usually) we gotta append it to its tail
             last_elem = child
-            # because .text and .tail can be None for some weird reason, maybe so it can get closed via a shorthand />, we gotta set it to "" so we can +=
+            # because .text and .tail can be None, we need to set it to "" so we can +=
             last_elem.tail = ""
         elif isinstance(child, ET.Element) and last_elem is not None:
             elem.append(child)
@@ -257,8 +249,6 @@ def push(
     **rest: str,
 ):
     # push element on top of stack, set `children` to be the element's children
-    # who's the father though?
-    # also it's an orphan since it's not pushed to the parent's children yet lol
     global children
     children = []
 
@@ -275,8 +265,8 @@ def push(
 
 
 def pop():
-    # brutally rips the child off of the stack, stuffs it with their children
-    # and returns it to their parent <3
+    # remove the innermost stack entry, commit children to it, append it as a child of the parent (the now innermost stack entry)
+    # and change the children reference
     global children
     elem = stack.pop()
     commit_children(elem)
@@ -297,8 +287,6 @@ def pop_to(*parent_tags: ET.Element[str], invert: bool = False): ...
 
 def pop_to(*parent_tags: str | ET.Element[str], invert: bool = False):
     # pops until the stack top is one of parent_tags
-    # or not, if inverted is True
-    # rocket science i know
     str_parent_tags: list[str] = [
         i.tag if isinstance(i, ET.Element) else i for i in parent_tags
     ]
@@ -312,22 +300,21 @@ def pop_to(*parent_tags: str | ET.Element[str], invert: bool = False):
 
 
 @overload
-def tag_is_on_top(tag: str, **attribs: str): ...
+def tag_is_on_top(tag: str, ignore_cosmetic: bool = True, **attribs: str): ...
 @overload
-def tag_is_on_top(tag: ET.Element[str]): ...
+def tag_is_on_top(tag: ET.Element[str], ignore_cosmetic: bool = True): ...
 
 
-def tag_is_on_top(tag: str | ET.Element[str], **attribs: str):
+def tag_is_on_top(tag: str | ET.Element[str], ignore_cosmetic: bool = True, **attribs: str):
     # is the tag on top of the stack?
-    # or are we buried within emphs and his?
-    # you'll never know heheheh
+    # ignores cosmetic entries if needed (mostly the case)
     if isinstance(tag, ET.Element):
         attribs = tag.attrib
         tag = tag.tag  # me when
 
     # ignore any cosmetic elements and match the first structural element
     for entry in reversed(stack):
-        if entry.cosmetic:
+        if ignore_cosmetic and entry.cosmetic:
             continue
         return entry.element.tag == tag and all(
             val == entry.element.attrib.get(key) for key, val in attribs.items()
@@ -439,7 +426,7 @@ def pop_and_push_to(
     # pops to pop_args and pushes the tag
     def action(chunk: Chunk):
         # we love closures
-        if not chunked or not tag_is_on_top(tag, **attribs):
+        if not chunked or not tag_is_on_top(tag, True, **attribs):
             pop_to(*pop_args)
             push(tag, attribs=attribs)
 
