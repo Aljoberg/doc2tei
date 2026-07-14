@@ -1,199 +1,57 @@
+from __future__ import annotations
+
 import argparse
-from typing import cast
-import xml.etree.ElementTree as ET
-from contextlib import redirect_stdout
-from engine import Chunk, PDFChunk, WordChunk
-import engine
-from engine import append, commit_children, pop, root, stack
-from config import CONFIG, COSMETIC_ANNOTATIONS, get_chunks, log
-from type_decs import (
-    PDFRule,
-    PDFRunTest,
-    WordRule,
-    Rule,
-    RuleGroup,
-    WordRunTest,
-)
+from contextlib import nullcontext, redirect_stdout
+import sys
+
+from doc2tei.parser import parse_document
 
 
-# only used for word
-def get_center_point(c: Chunk):
-    if isinstance(c, WordChunk):
-        log(f"center of container: {c.x + c.w / 2}")
-        return (
-            c.x + c.w / 2
-        )  # https://excalidraw.com/#json=Vz5yoLFIApDsFnrAIl9Y5,9JIGo2YGGwsgCHfrQ0AWJA
-    else:
-        # not used
-        return -1
-
-
-def do_rule_chores(
-    rule: Rule,
-    chunk: Chunk,
-):
-    if isinstance(chunk, WordChunk):
-        rule = cast(WordRule, rule)
-        if "action" in rule:
-            rule["action"](
-                cast(WordChunk, chunk),
-            )
-        if "append_func" in rule:
-            rule["append_func"](
-                cast(WordChunk, chunk),
-            )
-        else:
-            append(chunk)
-    elif isinstance(chunk, PDFChunk):
-        rule = cast(PDFRule, rule)
-        if "action" in rule:
-            rule["action"](cast(PDFChunk, chunk))
-        if "append_func" in rule:
-            rule["append_func"](cast(PDFChunk, chunk))
-        else:
-            append(chunk)
-
-    if "after_append" in rule:
-        rule["after_append"]()
-
-
-def match_rules(
-    group: RuleGroup,
-    chunk: Chunk,
-) -> bool:
-    run_immediate = group.get("run_immediate")
-    if callable(run_immediate):
-        run_immediate()
-
-    # match rules
-    chunk_rules = {k: v for k, v in group.items() if not callable(v) and "test" in v}
-    if chunk_rules:
-        handled = False
-        if not chunk.text or chunk.text == "\n":
-            # ???
-            return False
-
-        run_else: tuple[str, Rule] | None = None
-        for key, rule in chunk_rules.items():
-            if (
-                "alignment" in rule
-                and isinstance(chunk, WordChunk)
-                and chunk.paragraph.alignment != rule["alignment"]
-            ):
-                continue
-            test = rule["test"]
-            if test == "_else":
-                run_else = (key, rule)
-                continue
-            if isinstance(chunk, WordChunk):
-                test = cast(WordRunTest, test)
-                if test(chunk):
-                    log(f"{key}: {chunk.text}")
-                    do_rule_chores(rule, chunk)
-                    handled = True
-                    break
-            elif isinstance(chunk, PDFChunk):
-                test = cast(PDFRunTest, test)
-                if test(chunk):
-                    log(f"{key}: {chunk.text}")
-                    do_rule_chores(rule, chunk)
-                    handled = True
-                    break
-
-        else:
-            if run_else is not None:
-                key, rule = run_else
-                log(f"{key} (fallback): {chunk.text}")
-                do_rule_chores(rule, chunk)
-                handled = True
-        if handled:
-            return True
-
-    return False
-
-
-debug = False
-
-
-def parse_text(chunk: Chunk):
-    log("-- parsing text --")
-
-    x = chunk.x
-    y = chunk.y
-
-    center = get_center_point(chunk)
-
-    alignments = CONFIG["alignments"]
-    matched = False
-    if isinstance(chunk, WordChunk):
-        if (
-            4550 < center < 6560 and "center" in alignments
-        ):  # these magic numbers are annoying, but I honestly can't be asked to change them
-            # they're only for word mode anyway
-            matched = match_rules(alignments["center"], chunk)
-        else:
-            if (
-                2500 < center < 3660 and "left" in alignments
-            ):  # left here in case we need it
-                log("Chunk is on left side")
-                matched = match_rules(alignments["left"], chunk)
-            elif 7820 < center < 8460 and "right" in alignments:
-                log("Chunk is on right side")
-                matched = match_rules(alignments["right"], chunk)
-            elif "_else" in alignments:
-                log("Chunk is not on left nor right side")
-                matched = match_rules(alignments["_else"], chunk)
-    else:
-        # deal with it
-        matched = match_rules(alignments["any"], chunk)
-
-    if not matched:
-        # default, i suppose
-        # should maybe add to config
-        append(chunk)
-
-    log(
-        f"{chunk.text=}, {x=}, {y=}, {chunk=}, {chunk=}, {len(chunk.paragraph.runs) if isinstance(chunk, WordChunk) else ''}"
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Convert a configured document to TEI XML")
+    parser.add_argument("input", help="input PDF or DOCX")
+    parser.add_argument("-o", "--out", help="output XML (stdout when omitted)")
+    parser.add_argument(
+        "-c",
+        "--config",
+        default="config.py",
+        help="configuration file (default: ./config.py)",
     )
-    log("\n")
+    parser.add_argument("--debug-file", help="capture config debug logging")
+    parser.add_argument("--diagnostics", help="write extraction/rule diagnostics as JSON")
+    parser.add_argument("--data-output", help="write data exported by config hooks as JSON")
+    parser.add_argument(
+        "--xml-declaration", action="store_true", help="include an XML declaration"
+    )
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    debug_context = (
+        open(args.debug_file, "w", encoding="utf-8")
+        if args.debug_file
+        else nullcontext(None)
+    )
+    with debug_context as debug_stream:
+        redirect_context = (
+            redirect_stdout(debug_stream) if debug_stream is not None else nullcontext()
+        )
+        with redirect_context:
+            result = parse_document(args.input, config=args.config)
+
+    if args.out:
+        result.write_xml(args.out, xml_declaration=args.xml_declaration)
+    else:
+        sys.stdout.buffer.write(
+            result.to_bytes(xml_declaration=args.xml_declaration) + b"\n"
+        )
+    if args.diagnostics:
+        result.write_diagnostics(args.diagnostics)
+    if args.data_output:
+        result.write_data(args.data_output)
+    return 0
 
 
 if __name__ == "__main__":
-    p = argparse.ArgumentParser()
-    p.add_argument("input", type=str)
-    p.add_argument("-o", "--out", type=str, default=None)
-    p.add_argument("--debug-file", type=str, default=None)
-
-    args = p.parse_args()
-
-    chunks = get_chunks(args.input)
-    debug = args.debug_file is not None
-
-    engine.COSMETIC_ANNOTATIONS = COSMETIC_ANNOTATIONS  # me when i assign to a constant
-    engine.on_pop = CONFIG.get("on_pop")
-
-    # behold the absolute peak of debugging
-    if args.debug_file:
-        with open(args.debug_file, "w", encoding="utf-8") as f, redirect_stdout(f):
-            for chunk in chunks:
-                parse_text(chunk)
-    else:
-        for chunk in chunks:
-            parse_text(chunk)
-
-    # close every still-open element back down to the root <div>
-    while len(stack) > 1:
-        pop()
-
-    commit_children(stack[0])
-
-    if "on_end" in CONFIG:
-        CONFIG["on_end"]()
-
-    xml = ET.tostring(root, encoding="utf-8")
-
-    if not args.out:
-        print(xml)
-    else:
-        with open(args.out, "wb") as f:
-            f.write(xml)
+    raise SystemExit(main())

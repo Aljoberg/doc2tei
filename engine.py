@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 import xml.etree.ElementTree as ET
 from typing import Literal, Any, Protocol, cast, overload
@@ -41,6 +43,21 @@ COSMETIC_ANNOTATIONS: CosmeticAnnotations
 on_pop: OnPop | None = None
 
 
+def reset() -> None:
+    """Reset all mutable engine state so multiple documents can be parsed safely."""
+    global root, text_elem, body, debate, children, stack, on_pop
+    root = ET.Element("TEI", version="3.3.0", xmlns="http://www.tei-c.org/ns/1.0")
+    text_elem = ET.SubElement(root, "text")
+    body = ET.SubElement(text_elem, "body")
+    debate = ET.SubElement(body, "div", type="debateSection")
+    debate.text, debate.tail = "", ""
+    children = []
+    stack = [
+        StackEntry(element=debate, children=children, last_elem=None, cosmetic=False)
+    ]
+    on_pop = None
+
+
 class Chunk(Protocol):
     x: float
     y: float
@@ -67,6 +84,14 @@ class WordChunk:
 
 
 @dataclass
+class PDFPageContext:
+    page_num: int
+    width: float
+    height: float
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass
 class PDFLineChunk:
     x: float  # leftmost x
     y: float  # leftmost bottom y
@@ -75,6 +100,8 @@ class PDFLineChunk:
     italic: bool | None  # all italic
     runs: "list[PDFChunk]"  # child chunks
     space_before: bool = True  # whole-line chunks are never appended directly
+    page_context: PDFPageContext | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -86,6 +113,7 @@ class PDFChunk:
     text: str
     bold: bool | None
     italic: bool | None
+    font_name: str
     font_size: float
     page_num: int
     space_before: bool = True
@@ -93,6 +121,8 @@ class PDFChunk:
         default=None, init=False, repr=False
     )  # so we don't get lint errors, since we don't provide the line chunk at init
     previous: PDFChunk | None = field(default=None, repr=False)
+    page_context: PDFPageContext | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
     def line_chunk(self) -> PDFLineChunk:
@@ -101,6 +131,14 @@ class PDFChunk:
     @line_chunk.setter
     def line_chunk(self, value: PDFLineChunk):
         self._line_chunk = value
+
+    @property
+    def is_line_start(self) -> bool:
+        return bool(self.line_chunk.runs) and self is self.line_chunk.runs[0]
+
+    @property
+    def line_text(self) -> str:
+        return self.line_chunk.text
 
 
 def get_para_xywh(para: Paragraph):
@@ -138,10 +176,19 @@ def make_chunk(
     previous: PDFChunk | None,
     page_num: int,
     space_before: bool = True,
+    page_context: PDFPageContext | None = None,
+    metadata: dict[str, Any] | None = None,
 ) -> PDFChunk: ...
 @overload
 def make_chunk(
-    *, text: str, x: float, y: float, runs: list[PDFChunk], page_num: int
+    *,
+    text: str,
+    x: float,
+    y: float,
+    runs: list[PDFChunk],
+    page_num: int,
+    page_context: PDFPageContext | None = None,
+    metadata: dict[str, Any] | None = None,
 ) -> PDFLineChunk: ...
 
 
@@ -158,6 +205,8 @@ def make_chunk(
     previous: PDFChunk | None = None,
     page_num: int,
     space_before: bool = True,
+    page_context: PDFPageContext | None = None,
+    metadata: dict[str, Any] | None = None,
 ):
     if isinstance(word_prop, Run) and isinstance(parent_paragraph, Paragraph):
         run = word_prop
@@ -187,6 +236,8 @@ def make_chunk(
             italic=all(i.italic for i in runs),
             runs=runs,
             space_before=space_before,
+            page_context=page_context,
+            metadata=dict(metadata or {}),
         )
     else:
         assert font_name is not None
@@ -197,10 +248,13 @@ def make_chunk(
             text=text,
             bold="bold" in font_name.lower(),
             italic="italic" in font_name.lower(),
+            font_name=font_name,
             font_size=size,
             previous=previous,
             page_num=page_num,
             space_before=space_before,
+            page_context=page_context,
+            metadata=dict(metadata or {}),
         )
 
 

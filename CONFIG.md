@@ -63,7 +63,8 @@ it:
    open on the stack.
 5. After the last chunk, the engine pops every still-open element back down to the
    root `<div>` and commits the tree.
-6. Calls `on_end` if the config defines it.
+6. Calls `on_end(result)` if the config defines it (zero-argument legacy hooks
+   are still supported).
 7. The tree is stringified and written to the output file (or printed).
 
 ```
@@ -88,6 +89,92 @@ The config is defined in `config.py`. It exports (at least):
 
 All of these will be explained later.
 
+The config path is not global anymore. Select it explicitly with
+`--config path/to/config.py`, or pass it to `parse_document(..., config=...)`.
+Old rule dictionaries and zero-argument hooks remain supported.
+
+### Shared extractors, explicit policy
+
+Extraction still belongs to the document config, because PDFs disagree about
+spaces, line order, fonts and OCR. The shared classes remove the mechanical
+pdfminer/pdfplumber loop without choosing those policies for you:
+
+```python
+from doc2tei import CharacterPDFExtractor, PageRange, WordPDFExtractor
+
+# Character stream with real space glyphs.
+get_chunks = CharacterPDFExtractor(
+    pages=PageRange(0, None),
+    line_tolerance=4.0,
+    literal_spaces="preserve",  # or "break" / "ignore"
+    line_filter=lambda line, page: line.y <= 740,
+)
+
+# OCR where reconstructing words and lines works better.
+get_chunks = WordPDFExtractor(
+    pages=PageRange(4, 114),       # zero-based, end-exclusive
+    x_tolerance=1.7,
+    y_tolerance=3.0,
+    line_tolerance=3.2,
+    word_gap=0.6,
+    join_line_end_hyphens=True,
+    page_enricher=enrich_page,
+    line_enricher=enrich_line,
+)
+```
+
+Both accept document callbacks for filtering, stopping, and metadata
+enrichment. `PDFChunk.page_context.metadata`, `PDFChunk.metadata`, and
+`PDFLineChunk.metadata` let rules consume those decisions without adding
+one-off attributes to core chunk classes.
+
+### Rules and selectors
+
+Legacy ordered dictionaries are valid. For larger configs, named `Rule`
+objects and composable selectors are available:
+
+```python
+from doc2tei import AllOf, Attribute, Between, LineStart, Metadata, Text, rule, rule_group
+
+body_start = AllOf(
+    LineStart(),
+    Attribute("font_size", Between(8.8, 10.6, inclusive=True)),
+    Metadata("front_matter", False, source="line"),
+)
+
+CONFIG = {
+    "mode": "pdf",
+    "debug": False,
+    "alignments": {
+        "any": rule_group(
+            rule("SESSION", AllOf(LineStart(), Text(pattern=r"^\d+\. seja$", source="line")), action=open_session),
+            rule("SEG", body_start, action=open_segment),
+        )
+    },
+}
+```
+
+Rule order is still precedence. These helpers package common tests; they do
+not introduce parliamentary concepts into the parser.
+
+### Lifecycle and result hooks
+
+`on_start(result)` runs after engine reset, `on_pop(entry)` runs whenever an
+element closes, and `on_end(result)` runs after the tree is committed.
+`result` contains `root`, `diagnostics`, and a free-form `data` dictionary.
+Configs should put auxiliary output in `result.data`; the CLI writes it only
+when `--data-output` is requested.
+
+`SpeakerUtteranceHook` is an optional configurable debate helper. Installing
+it is a config decision, not parser behavior:
+
+```python
+from doc2tei import SpeakerUtteranceHook
+
+speakers = SpeakerUtteranceHook(identifier=my_speaker_id)
+CONFIG.update(on_start=speakers.reset, on_pop=speakers, on_end=speakers.export)
+```
+
 The type definitions for all of this are in `type_decs.py`
 (`PDFConfig`, `PDFRule`, `PDFCosmeticAnnotation`, and the Word equivalents).
 
@@ -100,17 +187,22 @@ There's three types:
 
 ### `PDFChunk` - some text with the same font on one line
 
-| Attribute      | Type               | Meaning                                                                                                            |
-| -------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------ |
-| `x` & `y`      | `float`            | Position of the chunk. With the default extractor, it's in **pdfplumber coordinates** (x from left, y from bottom) |
-| `text`         | `str`              | The text. Bet you didn't expect that, huh                                                                          |
-| `bold`         | `bool`             | `True` if `"bold"` appears in the font name                                                                        |
-| `italic`       | `bool`             | `True` if `"italic"` appears in the font name                                                                      |
-| `font_size`    | `float`            | Font size. Footnote markers are _usually_ 7.0; body is 9-10                                                        |
-| `page_num`     | `int`              | 0-based page index                                                                                                 |
-| `space_before` | `bool`             | `True` if whitespace separates this run from the previous one. Set by `get_chunks`, see [spacing](#spacing)        |
-| `previous`     | `PDFChunk \| None` | The chunk emitted just before this one (a linked list across the whole document)                                   |
-| `line_chunk`   | `PDFLineChunk`     | Reference to the line this run belongs to                                                                          |
+| Attribute       | Type               | Meaning                                                                                                            |
+| --------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `x` & `y`       | `float`            | Position of the chunk. With the default extractor, it's in **pdfplumber coordinates** (x from left, y from bottom) |
+| `text`          | `str`              | The text. Bet you didn't expect that, huh                                                                          |
+| `bold`          | `bool`             | `True` if `"bold"` appears in the font name                                                                        |
+| `italic`        | `bool`             | `True` if `"italic"` appears in the font name                                                                      |
+| `font_name`     | `str`              | Source font name                                                                                                   |
+| `font_size`     | `float`            | Font size. Footnote markers are _usually_ 7.0; body is 9-10                                                        |
+| `page_num`      | `int`              | 0-based page index                                                                                                 |
+| `space_before`  | `bool`             | `True` if whitespace separates this run from the previous one. Set by `get_chunks`, see [spacing](#spacing)        |
+| `previous`      | `PDFChunk \| None` | The chunk emitted just before this one (a linked list across the whole document)                                   |
+| `line_chunk`    | `PDFLineChunk`     | Reference to the line this run belongs to                                                                          |
+| `is_line_start` | `bool`             | Whether this is the first run in its line                                                                          |
+| `line_text`     | `str`              | Shortcut for the complete line text                                                                                |
+| `page_context`  | `PDFPageContext`   | Page number, dimensions, and config-provided metadata                                                              |
+| `metadata`      | `dict`             | Config-provided run metadata                                                                                       |
 
 ### `PDFLineChunk` - a line of text, containing `PDFChunk`s
 
@@ -626,28 +718,26 @@ Things worth copying from it:
 
 ## Debugging
 
-When you'll be making a config, expect some tests or chunks to just not work properly.
-Debugging support is not yet added, you can, however, set `"debug": True` in the config and specify a `--debug-file` to `parse.py`.
-There will be a lot of useful logs in there, though the debug file may be _very_ large (like, a gigabyte large).
-You can also remove or comment out some log outputs if you feel the need to.
+When making a config, expect some tests or chunks not to work immediately.
+Use `--diagnostics report.json` first: it records rule hit counts, unmatched
+samples, page counts, and font/size distributions. For the full low-level log,
+set `"debug": True` in the config and pass `--debug-file debug.txt`; that file
+can be extremely large.
 
 ## Running it
 
 ```bash
-# 1. Convert a document to TEI (root config.py is the active config)
-python parse.py path/to/input.pdf -o out/out.xml
+# 1. Convert with an explicit config and audit outputs
+python parse.py path/to/input.pdf --config path/to/config.py -o out/out.xml \
+  --diagnostics out/diagnostics.json --data-output out/data.json
 
-# 2. (ZRIP) on_end wrote out/speaker_utterance.json; turn it into a TEI <listPerson>
-#    by querying Wikidata for each speaker
-python make_list_person.py out/speaker_utterance.json -o out/listPerson.xml
+# 2. Turn an exported speaker map into a TEI <listPerson>
+python make_list_person.py out/data.json -o out/listPerson.xml
 ```
 
 To convert a _different_ document, write a new config module exporting `CONFIG`,
-`COSMETIC_ANNOTATIONS` and `get_chunks`
-([config module structure](#the-config-module)), and point `parse.py`'s `from config
-import ...` at it (today that means making it the importable `config` - e.g. via
-the `config.py` at the repo root, mirrored into `examples/{ZRIP}/config_pdf.py` by
-symlink).
+`COSMETIC_ANNOTATIONS` and `get_chunks`, then select it with `--config`.
+There is no need to copy it to the repository root or maintain a symlink.
 
 Dependencies: `pdfminer.six` (PDF extraction), `python-docx` (Word mode),
 `pypdf` (the coord-dump tool, should be reworked into pdfminer), `requests` (`make_list_person.py`).

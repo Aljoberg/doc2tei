@@ -5,13 +5,12 @@
 
 
 import xml.etree.ElementTree as ET
-from typing import Any, Generator
 import re
+from doc2tei.extractors import CharacterPDFExtractor, LineRecord
 from engine import (
     Chunk,
     PDFChunk,
     StackEntry,
-    make_chunk,
     pop_and_push_to,
     tag,
     tag_is_on_top,
@@ -161,117 +160,12 @@ CONFIG: PDFConfig = {
 }
 
 
-def get_chunks(filename: str) -> Generator[Chunk, Any, Any]:
-    from pdfminer.pdfpage import PDFPage
-    from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-    from pdfminer.converter import PDFLayoutAnalyzer
-    from pdfminer.layout import LTChar
+def below_running_header(line: LineRecord, _page) -> bool:
+    return line.y <= 740.0
 
-    line_threshold = 4.0
-    header_y = 740.0  # above this is a header
 
-    rm = PDFResourceManager()
-
-    class CharCollector(PDFLayoutAnalyzer):
-        def __init__(self):
-            super().__init__(rm, laparams=None)
-            self.chars: list[LTChar] = []
-
-        def receive_layout(self, ltpage: Any):
-            def walk(obj: Any):
-                for item in obj:
-                    if isinstance(item, LTChar):
-                        self.chars.append(item)
-                    elif hasattr(item, "__iter__"):
-                        walk(item)
-
-            walk(ltpage)
-
-    device = CharCollector()
-    interpreter = PDFPageInterpreter(rm, device)
-
-    with open(filename, "rb") as f:
-        prev_run: PDFChunk | None = None
-        pending_space = False
-        for page_num, page in enumerate(PDFPage.get_pages(f)):
-            device.chars = []
-            interpreter.process_page(page)
-
-            # this doc has no footnote refs, so we don't need a downward and upward treshold
-            # so we just match the same for up and down
-            lines: list[list[LTChar]] = []
-            cur: list[LTChar] = []
-            prev_y: float | None = None
-            for ch in device.chars:
-                if prev_y is not None and abs(ch.y0 - prev_y) > line_threshold:
-                    lines.append(cur)
-                    cur = []
-                cur.append(ch)
-                prev_y = ch.y0
-            if cur:
-                lines.append(cur)
-
-            for line in lines:
-                if not line or line[0].y0 > header_y:
-                    continue  # header, just skip it
-                text = "".join(c.get_text() for c in line)
-                if not text.strip():
-                    continue
-
-                runs: list[dict] = []
-                for c in line:
-                    if (
-                        runs
-                        and runs[-1]["fontname"] == c.fontname
-                        and runs[-1]["size"] == c.size
-                    ):
-                        runs[-1]["text"] += c.get_text()
-                    else:
-                        runs.append(
-                            {
-                                "text": c.get_text(),
-                                "x0": c.x0,
-                                "y0": c.y0,
-                                "fontname": c.fontname,
-                                "size": c.size,
-                            }
-                        )
-
-                # this pdf actually has real spaces, so we just make space_before True for all lines but the first
-                # it gets stripped in append() anyway so the actual space in the text won't matter
-                for i, r in enumerate(runs):
-                    if i == 0:
-                        r["space_before"] = pending_space
-                    else:
-                        prev_r = runs[i - 1]
-                        r["space_before"] = (
-                            prev_r["text"][-1:].isspace() or r["text"][:1].isspace()
-                        )
-                pending_space = True
-
-                run_chunks: list[PDFChunk] = []
-                for r in runs:
-                    prev_run = make_chunk(
-                        text=r["text"],
-                        x=r["x0"],
-                        y=r["y0"],
-                        font_name=r["fontname"],
-                        size=r["size"],
-                        previous=prev_run,
-                        page_num=page_num,
-                        space_before=r["space_before"],
-                    )
-                    run_chunks.append(prev_run)
-
-                first = runs[0]
-                line_chunk = make_chunk(
-                    text=text,
-                    x=first["x0"],
-                    y=first["y0"],
-                    runs=run_chunks,
-                    page_num=page_num,
-                )
-                for run in run_chunks:
-                    run.line_chunk = line_chunk
-
-                yield from run_chunks
+get_chunks = CharacterPDFExtractor(
+    line_tolerance=4.0,
+    literal_spaces="preserve",
+    line_filter=below_running_header,
+)

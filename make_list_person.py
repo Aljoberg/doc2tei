@@ -173,6 +173,8 @@ if __name__ == "__main__":
 
     with open(args.input, encoding="utf-8") as f:
         mapping = json.load(f)
+    if isinstance(mapping.get("speakers"), dict):
+        mapping = mapping["speakers"]
 
     make_list_person(mapping)
     xml = ET.tostring(list_person, encoding="utf-8")

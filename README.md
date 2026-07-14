@@ -14,15 +14,31 @@ For example, a rule for a session title might be that it's bold, centered, and a
 This rule then opens a `<head type="session">` tag.
 
 There's a lot more customization and helpers available, so if you're interested, read CONFIG.md.
-You can check out two example configs and their outputs in the [examples](examples/) directory.
+You can check out the example configs in the [examples](examples/) directory.
 
 ## Running
 
-You can run the program by running `parse.py`, giving it a path to a PDF / Word file and an outfile.
-The config will be read from `config.py` in the project root.
+Run `parse.py` with an input, an output, and (optionally) an explicit config.
+If `--config` is omitted, `config.py` in the current directory is used.
+
+```bash
+python parse.py path_to_pdf.pdf --config examples/SRIP/config.py -o out.xml
+```
+
+Useful optional outputs are `--diagnostics diagnostics.json` (rule hit counts,
+unmatched samples, pages and fonts) and `--data-output data.json` (data exported
+by config hooks, such as a speaker mapping).
+
+The same operation is available as a library API and has no mandatory output
+side effects:
 
 ```python
-python3 parse.py path_to_pdf.pdf -o out.xml
+from doc2tei import parse_document
+
+result = parse_document("input.pdf", config="examples/SRIP/config.py")
+result.write_xml("out.xml")
+result.write_diagnostics("diagnostics.json")
+result.write_data("speakers.json")
 ```
 
 If you want to assemble a `<listPerson>` file, you can also run
@@ -32,7 +48,8 @@ python3 make_list_person.py out/speaker_utterance.json -o listPerson.xml
 ```
 
 This program takes a .json file with speaker ids and their long forms.
-This file's generated through the config's `on_end` hook, so make sure to check that out.
+This file can be exported by a config's `on_end(result)` hook and the
+`--data-output` option, so make sure to check that out.
 
 Again, I've written everything in CONFIG.md, so if you're interested in running this, you should start with that file.
 
