@@ -92,69 +92,66 @@ CONFIG: PDFConfig = {
     "debug": False,
     "mode": "pdf",
     "on_pop": speaker_to_utterance,
-    "alignments": {
-        "any": {
-            # --- session front matter (opening page) ---
-            "SEJA_DATE": {
-                # is in title & starts with "OD "
-                "test": lambda chunk: is_title(chunk)
-                and line_text(chunk).startswith("OD "),
-                "action": pop_and_push_to("div", tag="time"),
-            },
-            "SEJA_NUM": {
-                "test": lambda chunk: is_title(chunk) and "SEDNICA" in line_text(chunk),
-                "action": pop_and_push_to("div", tag="head", type="sessionNumber"),
-            },
-            "SEJA_DECLARATION": {
-                # if it's not a date or a num (those get matched earlier since dict items are kept in declaration order)
-                "test": is_title,
-                "action": pop_and_push_to("div", tag="head", type="session"),
-            },
-            "CHAIRMAN": {
-                # all caps or sw PREDSEDAVA
-                "test": lambda chunk: is_line_start(chunk)
-                and 200 < chunk.x < 285
-                and (
-                    line_text(chunk).startswith("PREDSEDAVA")
-                    or line_text(chunk).isupper()
-                ),
-                "action": pop_and_push_to("div", tag="note", type="chairman"),
-            },
-            "TIME": {
-                # either "Početak" or italic
-                "test": lambda chunk: is_line_start(chunk)
-                and 200 < chunk.x < 285
-                and (line_text(chunk).startswith("Početak") or chunk.italic),
-                "action": pop_and_push_to("div", tag="time"),
-            },
-            "CONTENTS": {
-                # sadržaj
-                "test": lambda chunk: line_text(chunk).upper().startswith("SADR")
-                or tag_is_on_top("note", type="contents"),
-                "action": contents_action,
-            },
-            # --- two-column debate body ---
-            "GENERIC_NOTE": {
-                # centered & italic
-                "test": lambda chunk: is_line_start(chunk)
-                and 140 < chunk.x < 280
-                and chunk.line_chunk.italic,
-                "action": generic_note_action,
-                "append_func": lambda chunk: append(chunk, should_annotate=[]),
-            },
-            "SPEAKER": {
-                # bold & ends with a colon
-                "test": lambda chunk: is_line_start(chunk)
-                and line_text(chunk).endswith(":")
-                and len(line_text(chunk)) < 100
-                and any(r.bold for r in chunk.line_chunk.runs),
-                "action": pop_and_push_to("div", tag="note", type="speaker"),
-            },
-            "SEG": {
-                # segment :D
-                "test": is_seg,
-                "action": pop_and_push_to("u", "div", tag="seg", chunked=False),
-            },
+    "rules": {
+        # --- session front matter (opening page) ---
+        "SEJA_DATE": {
+            # is in title & starts with "OD "
+            "test": lambda chunk: is_title(chunk)
+            and line_text(chunk).startswith("OD "),
+            "action": pop_and_push_to("div", tag="time"),
+        },
+        "SEJA_NUM": {
+            "test": lambda chunk: is_title(chunk) and "SEDNICA" in line_text(chunk),
+            "action": pop_and_push_to("div", tag="head", type="sessionNumber"),
+        },
+        "SEJA_DECLARATION": {
+            # if it's not a date or a num (those get matched earlier since dict items are kept in declaration order)
+            "test": is_title,
+            "action": pop_and_push_to("div", tag="head", type="session"),
+        },
+        "CHAIRMAN": {
+            # all caps or sw PREDSEDAVA
+            "test": lambda chunk: is_line_start(chunk)
+            and 200 < chunk.x < 285
+            and (
+                line_text(chunk).startswith("PREDSEDAVA") or line_text(chunk).isupper()
+            ),
+            "action": pop_and_push_to("div", tag="note", type="chairman"),
+        },
+        "TIME": {
+            # either "Početak" or italic
+            "test": lambda chunk: is_line_start(chunk)
+            and 200 < chunk.x < 285
+            and (line_text(chunk).startswith("Početak") or chunk.italic),
+            "action": pop_and_push_to("div", tag="time"),
+        },
+        "CONTENTS": {
+            # sadržaj
+            "test": lambda chunk: line_text(chunk).upper().startswith("SADR")
+            or tag_is_on_top("note", type="contents"),
+            "action": contents_action,
+        },
+        # --- two-column debate body ---
+        "GENERIC_NOTE": {
+            # centered & italic
+            "test": lambda chunk: is_line_start(chunk)
+            and 140 < chunk.x < 280
+            and chunk.line_chunk.italic,
+            "action": generic_note_action,
+            "append_func": lambda chunk: append(chunk, should_annotate=[]),
+        },
+        "SPEAKER": {
+            # bold & ends with a colon
+            "test": lambda chunk: is_line_start(chunk)
+            and line_text(chunk).endswith(":")
+            and len(line_text(chunk)) < 100
+            and any(r.bold for r in chunk.line_chunk.runs),
+            "action": pop_and_push_to("div", tag="note", type="speaker"),
+        },
+        "SEG": {
+            # segment :D
+            "test": is_seg,
+            "action": pop_and_push_to("u", "div", tag="seg", chunked=False),
         },
     },
 }

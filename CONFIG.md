@@ -18,15 +18,19 @@ You'll have to tweak some things though, like making your own chunk dataclass if
 
 A searchable document has no machine-readable structure - it's just
 text at positions on a page (PDF) or runs inside floating frames (DOCX).
-doc2tei parses this in two parts:
+doc2tei parses this as a small pipeline:
 
-1. **An extractor** (`get_chunks`) converts the source text to a stream of
-   _chunks_ - small pieces of text that have certain attributes, such as their position, font information, and bold/italic info.
+1. **An extractor** reads raw PDF characters or words and builds temporary
+   page-level `LineRecord` and `RunRecord` objects.
+2. Config callbacks may filter those records or enrich them with document-specific metadata.
+3. The extractor converts accepted records into a stream of _chunks_ - small
+   pieces of text with position, font, style, line, page, and spacing information.
+4. **The rule engine** feeds each chunk through your ordered rules. A matching
+   rule can mutate the TEI stack and control how the text is emitted.
 
-2. **A rule engine** (`parse.py` & `engine.py`) feeds each chunk through _your_
-   config. Your rules check the attributes of a chunk, such as their x & y position, font and text and decide what
-   to do with it - usually emit a TEI element by pushing and popping elements on a stack that mirrors the TEI
-   tree being built.
+```text
+PDF -> extractor -> records -> chunks -> ordered rules -> TEI tree
+```
 
 Everything that involves the document lives in the config. It's what determines something like
 "session headers in this PDF are between y 600 and 610, and footnotes' font size is 7."
@@ -38,6 +42,43 @@ doc2tei's output is a `<TEI>` tree:
 
 ```
 TEI > text > body > div[type=debateSection] > ( head | time | note | u > seg | ... )
+```
+
+## Quick start
+
+Run the CLI with an explicit config:
+
+```bash
+python parse.py input.pdf --config path/to/config.py -o output.xml
+```
+
+Add audit and config-produced data files when tuning a config:
+
+```bash
+python parse.py input.pdf --config path/to/config.py -o output.xml \
+  --diagnostics diagnostics.json --data-output data.json
+```
+
+- `diagnostics.json` contains rule hit counts, unmatched samples, page counts,
+  fonts, and sizes. "Unmatched" means that no structural rule fired; the chunk
+  was still appended normally.
+- `data.json` contains values placed in `result.data` by config hooks, such as a
+  speaker mapping.
+
+The same operation is available as a library API:
+
+```python
+from doc2tei import parse_document
+
+result = parse_document("input.pdf", config="path/to/config.py")
+result.write_xml("output.xml")
+result.write_diagnostics("diagnostics.json")
+result.write_data("data.json")
+
+# Or inspect these directly:
+result.root
+result.diagnostics
+result.data
 ```
 
 ---
@@ -56,9 +97,9 @@ it:
 
 1. Gets the chunks by calling `config.get_chunks(INPUT)` so it can loop over them
 2. Sets `COSMETIC_ANNOTATIONS` & `on_pop` on the engine
-3. For every chunk, calls `parse_text(chunk)`
-4. `parse_text` matches the general position of the chunk (only for Word files), then
-   `match_rules` runs your rules against the chunk.
+3. For every chunk, selects the PDF rule list directly (or a legacy alignment
+   group for Word) and tests its rules in order.
+4. The first matching rule runs.
    If none match, the chunk's text is appended into whatever element is currently
    open on the stack.
 5. After the last chunk, the engine pops every still-open element back down to the
@@ -68,7 +109,7 @@ it:
 7. The tree is stringified and written to the output file (or printed).
 
 ```
-INPUT ─▶ get_chunks() ─▶ Chunk stream ─▶ parse_text ─▶ match_rules ─▶ rule fires
+INPUT ─▶ get_chunks() ─▶ Chunk stream ─▶ ordered rules ─▶ rule fires
                                                 │                         │
                                                 │                         ├─ action()        (mutate stack)
                                                 │                         ├─ append_func()    (emit text)
@@ -81,17 +122,57 @@ INPUT ─▶ get_chunks() ─▶ Chunk stream ─▶ parse_text ─▶ match_rul
 
 ## The config module
 
-The config is defined in `config.py`. It exports (at least):
+A runnable config is normally stored as `examples/<document-family>/config.py`.
+The root `config.py` is only a pointer and intentionally does not run. A config
+module exports (at least):
 
 - `CONFIG` - a WordConfig or a PDFConfig, containing the rule tree
 - `COSMETIC_ANNOTATIONS` - inline formatting rules
-- `get_chunks(filename) -> Generator[Chunk]` - the extractor
+- `get_chunks(filename) -> Iterable[Chunk]` - the extractor
 
 All of these will be explained later.
 
 The config path is not global anymore. Select it explicitly with
 `--config path/to/config.py`, or pass it to `parse_document(..., config=...)`.
 Old rule dictionaries and zero-argument hooks remain supported.
+
+A minimal complete PDF config looks like this:
+
+```python
+from doc2tei import CharacterPDFExtractor, LineStart, Text, rule, rule_group
+from engine import pop_and_push_to
+from type_decs import PDFConfig, PDFCosmeticAnnotations
+
+
+get_chunks = CharacterPDFExtractor(
+    line_tolerance=4.0,
+    literal_spaces="preserve",
+)
+
+COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {}
+
+CONFIG: PDFConfig = {
+    "mode": "pdf",
+    "debug": False,
+    "rules": rule_group(
+        rule(
+            "TITLE",
+            Text(starts_with="SESSION", source="line"),
+            action=pop_and_push_to("div", tag="head"),
+        ),
+        rule(
+            "PARAGRAPH",
+            LineStart(),
+            action=pop_and_push_to("div", tag="p", chunked=False),
+        ),
+    ),
+}
+```
+
+`get_chunks` is callable because extractor instances implement `__call__`.
+`COSMETIC_ANNOTATIONS` may be empty, but it must be exported. The parser loads
+the module, resets its engine state, obtains the chunk stream, and evaluates
+`CONFIG["rules"]` from top to bottom for every PDF chunk.
 
 ### Shared extractors, explicit policy
 
@@ -128,6 +209,116 @@ enrichment. `PDFChunk.page_context.metadata`, `PDFChunk.metadata`, and
 `PDFLineChunk.metadata` let rules consume those decisions without adding
 one-off attributes to core chunk classes.
 
+#### Choosing an extractor
+
+Use `CharacterPDFExtractor` when the PDF has a reliable character layer and
+meaningful font changes. It may emit several chunks for one printed line when
+font or size changes.
+
+Its main options are:
+
+- `pages=PageRange(start, end)` - zero-based, end-exclusive pages.
+- `line_tolerance` - vertical movement that starts a new line.
+- `line_break(previous_y, current_y)` - optional replacement for the standard
+  line tolerance test.
+- `literal_spaces="preserve"` - retain real PDF space glyphs.
+- `literal_spaces="break"` - use a literal space as the specialized break
+  behavior required by PDFs such as ZRIP.
+- `literal_spaces="ignore"` - discard literal space glyphs.
+- `gap_threshold` - horizontal distance used to infer a space.
+- `max_run_x_gap` - prevent distant same-font characters from being merged.
+- `line_filter`, `stop_before`, `page_enricher`, `line_enricher` - document callbacks.
+
+Use `WordPDFExtractor` when pdfplumber's reconstructed words are more reliable
+than the raw character stream. Despite its name, it is still a PDF extractor;
+it currently reconstructs each accepted printed line into one `PDFChunk`.
+
+Its main options are:
+
+- `x_tolerance`, `y_tolerance` - pdfplumber word-extraction tolerances.
+- `line_tolerance` - controls grouping extracted words into lines.
+- `word_gap` - horizontal gap that inserts a reconstructed space.
+- `join_line_end_hyphens` - remove a line-ending hyphen and join the next line.
+- the same page range and record callbacks described above.
+
+### Extraction records
+
+Records are temporary objects between raw PDF extraction and parser chunks.
+They let a config inspect a complete page and annotate its lines before the
+parser begins. Records never enter the rule engine.
+
+A `LineRecord` contains:
+
+| Attribute                | Meaning                                                                 |
+| ------------------------ | ----------------------------------------------------------------------- |
+| `text`                   | Reconstructed complete line text                                        |
+| `x`, `y`                 | Position of the line's first run; `y` grows upward from the page bottom |
+| `font_name`, `font_size` | Representative line font and size                                       |
+| `runs`                   | The line's `RunRecord` objects                                          |
+| `metadata`               | Document-specific line facts added by the config                        |
+
+A `RunRecord` contains `text`, `x`, `y`, `font_name`, `font_size`, and
+`space_before`. With character extraction it represents a same-font portion of
+the line. With word extraction there is currently one run record per line.
+
+Every callback also receives a `PDFPageContext` with:
+
+- `page_num` - zero-based page index.
+- `width`, `height` - PDF page dimensions.
+- `metadata` - page-level facts added by the config and later available on chunks.
+
+You normally do not instantiate records. The extractor creates them and passes
+them through callbacks in this order:
+
+1. Extract raw characters or words and build every non-empty `LineRecord` on the page.
+2. Call `page_enricher(page, records)` with the complete page.
+3. For each record, call `stop_before(record, page)`.
+4. Call `line_filter(record, page)`; a false result drops the line.
+5. Call `line_enricher(page, record, index, records)` for accepted lines.
+6. Convert accepted records into `PDFChunk`/`PDFLineChunk` objects and yield them.
+
+Filtering a running header can be as small as:
+
+```python
+from doc2tei import LineRecord
+from engine import PDFPageContext
+
+def below_running_header(line: LineRecord, page: PDFPageContext) -> bool:
+    return line.y <= 740
+
+get_chunks = CharacterPDFExtractor(
+    line_tolerance=4,
+    literal_spaces="preserve",
+    line_filter=below_running_header,
+)
+```
+
+Page and line enrichers are useful for derived geometry:
+
+```python
+def enrich_page(page: PDFPageContext, records: list[LineRecord]) -> None:
+    body_x = [line.x for line in records if 8.8 <= line.font_size <= 10.6]
+    page.metadata["page_left"] = min(body_x) if body_x else 0.0
+    page.metadata["session_page"] = any(
+        line.font_size >= 11.5 and line.text.lower().endswith("seja")
+        for line in records
+    )
+
+def enrich_line(
+    page: PDFPageContext,
+    line: LineRecord,
+    index: int,
+    records: list[LineRecord],
+) -> dict[str, object]:
+    left = page.metadata.get("page_left")
+    return {
+        "indented": isinstance(left, (int, float)) and line.x > float(left) + 14
+    }
+```
+
+Rules can consume the result with `Metadata("indented", True, source="line")`
+or `Metadata("session_page", True, source="page")`.
+
 ### Rules and selectors
 
 Legacy ordered dictionaries are valid. For larger configs, named `Rule`
@@ -145,17 +336,40 @@ body_start = AllOf(
 CONFIG = {
     "mode": "pdf",
     "debug": False,
-    "alignments": {
-        "any": rule_group(
-            rule("SESSION", AllOf(LineStart(), Text(pattern=r"^\d+\. seja$", source="line")), action=open_session),
-            rule("SEG", body_start, action=open_segment),
-        )
-    },
+    "rules": rule_group(
+        rule(
+            "SESSION",
+            AllOf(LineStart(), Text(pattern=r"^\d+\. seja$", source="line")),
+            action=open_session,
+        ),
+        rule("SEG", body_start, action=open_segment),
+    ),
 }
 ```
 
 Rule order is still precedence. These helpers package common tests; they do
 not introduce parliamentary concepts into the parser.
+
+The selector helpers are:
+
+- `LineStart()` - first chunk in a printed line.
+- `Text(...)` - exact, prefix, suffix, or regular-expression matching against
+  chunk text or `source="line"` text; `normalize_space=True` is available.
+- `Attribute("font_size", Between(8.8, 10.6))` - test a chunk attribute.
+  `Between` is exclusive unless `inclusive=True`.
+- `Metadata(key, expected, source="chunk" | "line" | "page")` - test enriched metadata.
+- `AllOf(...)`, `AnyOf(...)`, and `Not(...)` - compose selectors.
+
+Ordinary functions remain the right choice for genuinely document-specific tests:
+
+```python
+def is_paragraph_start(chunk: PDFChunk) -> bool:
+    return (
+        chunk.is_line_start
+        and 8.8 <= chunk.font_size <= 10.6
+        and chunk.x > 50
+    )
+```
 
 ### Lifecycle and result hooks
 
@@ -183,6 +397,8 @@ The type definitions for all of this are in `type_decs.py`
 ## The chunk model
 
 Every action / function in the config receives a _chunk_. It then does something with it (performs checks, pushes, pops, whatever).
+Records belong to extraction; chunks belong to parsing. Once a record has been
+converted into chunks, rules never see the record again.
 There's three types:
 
 ### `PDFChunk` - some text with the same font on one line
@@ -212,6 +428,8 @@ There's three types:
 | `text`           | Concatenated text of the whole line                                |
 | `bold`, `italic` | `True` if **all** runs are bold/italic                             |
 | `runs`           | `list[PDFChunk]` - the child chunks (called _runs_ here), in order |
+| `page_context`   | The shared `PDFPageContext` for the page                           |
+| `metadata`       | Line metadata returned by `line_enricher`                          |
 
 The line chunk is accessed by `.line_chunk` on a chunk.
 This makes things like checking if the chunk is the first on its line
@@ -236,39 +454,40 @@ This is a minimal interface with `x`, `y`, `text`, `bold`, `italic` & `space_bef
 
 ## The actual config
 
-The primary config is defined by the `CONFIG` dict in `config.py`.
+Each runnable config is defined by its `CONFIG` dictionary.
 It has a few properties:
 
 ```python
 CONFIG: PDFConfig = {
-    "mode": "pdf",                  # the mode, either "pdf" or "word". Mostly for type checking
-    "on_pop": speaker_to_utterance, # optional, runs on every pop
-    "on_end": on_end,               # optional, runs once at the very end
-    "alignments": { ... },          # the rule tree (required)
+    "mode": "pdf",
+    "debug": False,
+    "rules": { ... },               # ordered PDF rules (required)
+    "on_start": on_start,           # optional, after engine reset
+    "on_pop": on_pop,               # optional, whenever an element closes
+    "on_end": on_end,               # optional, after the tree is committed
 }
 ```
 
-### Alignment groups
+PDF configs have one top-level `rules` group. There is no alignment wrapper.
 
-The `alignments` prop matches the general alignment of the chunk.
-It's mostly legacy, and only (maybe) useful for Word files.
-It works separate for each backend:
+### Word alignment groups
 
-- **PDF** - always the group named **`"any"`**. PDF has no usable paragraph
-  alignment, so there's just one bucket.
-- **Word** - `parse.py` computes the run frame's horizontal center and picks a
-  group by magic ranges (bad, this is what I meant by bad Word support):
-  - center `4550–6560` → `"center"`
-  - center `2500–3660` → `"left"`
-  - center `7820–8460` → `"right"`
-  - otherwise → `"_else"`
+`alignments` is a legacy Word-only feature. For Word, the parser computes the
+run frame's horizontal center and picks a group by legacy coordinate ranges:
 
-  Only the groups you define are consulted, so the ZRIP Word config uses just
-  `"center"` and `"_else"`.
+- center `4550-6560` -> `"center"`
+- center `2500-3660` -> `"left"`
+- center `7820-8460` -> `"right"`
+- otherwise -> `"_else"`
+
+Only the groups you define are consulted, so the ZRIP Word config uses just
+`"center"` and `"_else"`. A custom Word config can provide
+`route_alignment(chunk) -> str` to replace the legacy coordinate routing.
 
 ### Rules
 
-An alignment group is an **ordered dict** of `{"NAME": rule}`.
+`CONFIG["rules"]` is an **ordered dict** of `{"NAME": rule}` for PDF.
+Each Word alignment group has the same shape.
 Order matters, since the rules are tried top to bottom and the first match wins.
 A rule is a `TypedDict`:
 
@@ -284,14 +503,15 @@ A rule is a `TypedDict`:
 }
 ```
 
-> The dict's keys are insignificant, they're only used for readability.
+> Rule names do not affect matching, but they appear in logs and diagnostics,
+> so give them stable descriptive names.
 
 | Key            | Required  | Signature                                       | Purpose                                                                                                                                                                        |
 | -------------- | --------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `test`         | yes       | `(chunk) -> bool`, **or** the literal `"_else"` | Decides if the rule fires. `"_else"` makes this the group's fallback (runs only when nothing else in the group matched)                                                        |
-| `action`       | no        | `(chunk) -> Any`                                | Decides what to do, usually pops and appends a TEI tag                                                                                                                         |
-| `append_func`  | no        | `(chunk) -> Any`                                | Emits the chunk's content. **If omitted, the engine calls `append(chunk)`** for you. Override it to suppress/transform the text or to control which cosmetic annotations apply |
-| `after_append` | no        | `() -> Any`                                     | Side-effect after appending (e.g. flipping a state flag)                                                                                                                       |
+| `action`       | no        | `(chunk) -> None`                               | Decides what to do, usually pops and appends a TEI tag                                                                                                                         |
+| `append_func`  | no        | `(chunk) -> None`                               | Emits the chunk's content. **If omitted, the engine calls `append(chunk)`** for you. Override it to suppress/transform the text or to control which cosmetic annotations apply |
+| `after_append` | no        | `() -> None`                                    | Side-effect after appending (e.g. flipping a state flag)                                                                                                                       |
 | `alignment`    | no (Word) | `WD_PARAGRAPH_ALIGNMENT`                        | Word-only: the rule is skipped unless `chunk.paragraph.alignment` equals this                                                                                                  |
 
 ### `run_immediate`
@@ -317,7 +537,7 @@ When a rule matches:
 2. `append_func(chunk)` runs if present. If not, `append(chunk)` runs.
 3. `after_append()` runs if present
 
-If **no** rule matched (and there was no `"_else"`), `parse_text` falls back to
+If **no** rule matched (and there was no `"_else"`), the parser falls back to
 `append(chunk)`. That's what happens with plain text that isn't the start of anything new, it
 simply flows into the element currently open on the stack.
 This is how text is appended after a rule (like opening a `<seg>`) is matched.
@@ -488,7 +708,8 @@ doesn't change layout**, such as bold, italic and footnote references. They're h
 separately from rules so you don't have to think about them in every rule: any
 time you `append` text, the engine opens/closes the right inline wrapper around it.
 
-`COSMETIC_ANNOTATIONS` in `config.py` is an ordered dict of `{"NAME": annotation}`:
+`COSMETIC_ANNOTATIONS` in the selected config is an ordered dict of
+`{"NAME": annotation}`:
 
 ```python
 COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
@@ -537,7 +758,18 @@ never fuses into `od<emph>…`, and no wrapper is left holding a trailing space.
 
 ---
 
-## Hooks: `on_pop` and `on_end`
+## Lifecycle hooks and result data
+
+The optional hooks are:
+
+- `on_start(result)` - after engine state is reset, before extraction begins.
+- `on_pop(popped)` - whenever an XML element closes.
+- `on_end(result)` - after all chunks are parsed and the TEI tree is committed.
+
+Zero-argument legacy start/end hooks are still accepted. New hooks should use
+the result object. It contains `root`, `diagnostics`, and a free-form `data`
+dictionary. Put auxiliary output in `result.data`; the parser itself does not
+write config-specific files.
 
 ### `on_pop(popped: StackEntry)`
 
@@ -562,62 +794,66 @@ the hook fires and opens `<u who="#Name">` so the body lands inside an utterance
 `utterance_speaker_mapping` is a mapping of `{"#PascalName": "full speaker line"}` - used for getting the list of persons in the document and their affiliations.
 It's then used to build a `<listPerson>` tag (check the [listPerson tool](#running-it))
 
-### `on_end()`
+### `on_end(result)`
 
 Set via `CONFIG["on_end"]`. Runs once after the whole document is parsed and the
-tree is committed. ZRIP uses it to dump the speaker map for the
-[listPerson tool](#running-it):
+tree is committed:
 
 ```python
-def on_end():
-    with open("out/speaker_utterance.json", "w", encoding="utf-8") as f:
-        json.dump(utterance_speaker_mapping, f, ensure_ascii=False)
+def on_end(result: ParseResult) -> None:
+    result.data["speakers"] = dict(utterance_speaker_mapping)
+```
+
+The CLI writes that dictionary only when `--data-output` is supplied.
+
+### Optional speaker helper
+
+Debate semantics are not built into the parser. A config may opt into the
+configurable `SpeakerUtteranceHook`:
+
+```python
+from doc2tei import SpeakerUtteranceHook
+
+def make_speaker_id(text: str) -> str:
+    return "#" + "".join(word.capitalize() for word in text.split())
+
+speakers = SpeakerUtteranceHook(identifier=make_speaker_id)
+
+CONFIG = {
+    "mode": "pdf",
+    "debug": False,
+    "rules": { ... },
+    "on_start": speakers.reset,
+    "on_pop": speakers,
+    "on_end": speakers.export,
+}
 ```
 
 ---
 
 ## Writing `get_chunks`
 
-`get_chunks(filename)` is a generator that yields the `Chunk` stream. It's part of
-the config because reconstructing words, runs and lines from raw glyphs is
-document-specific. The shape is the same in both PDF configs; tune the thresholds
-and grouping to your document.
-
-Steps (see `get_chunks` in `config.py`):
-
-1. **Collect characters.** A `pdfminer` `PDFLayoutAnalyzer` subclass walks each page and
-   records every `LTChar`.
-2. **Group characters into lines.** Walk the page's characters and start a new line when the
-   y-drop between consecutive characters exceeds `line_treshold` (≈ 4.8), with a larger
-   guard (`x 5`) for big jumps (column breaks).
-3. **Group a line into runs.** Within a line, merge consecutive characters into a run
-   while the **font name and size match** and the x-gap is small. A gap _inside_ a
-   run (x-gap over `threshold` ≈ 1.7) becomes a real space in the run's text. A gap
-   _between_ runs sets the next run's [`space_before`](#spacing) instead. PDFs
-   usually have no literal space glyphs, so this is how spacing is inferred from gaps.
-4. **Carry the line break.** A `pending_space` flag remembers that a line ran to its
-   end, so the **first run of the next line** gets `space_before=True` - that's what
-   keeps lines word-separated without baking a trailing space onto every line.
-5. **Build chunks.** For each run, make a chunk by `make_chunk(text=..., x=..., y=..., font_name=...,
-size=..., previous=prev_run, page_num=..., space_before=...)` - a `PDFChunk`,
-   linked to the previous one. Then build one `PDFLineChunk` for the line, and set
-   `run.line_chunk` on each run so rules can navigate line ↔ run.
-6. **Yield.** `yield from run_chunks`.
+`get_chunks` only needs to be callable as `get_chunks(filename)` and yield
+objects satisfying the `Chunk` protocol. For the supported PDF paths, assign a
+configured extractor instance directly:
 
 ```python
-prev_run = make_chunk(text=r["text"], x=r["x0"], y=r["y0"],
-                      font_name=r["fontname"], size=r["size"],
-                      previous=prev_run, page_num=page_num,
-                      space_before=r["space_before"])
+get_chunks = CharacterPDFExtractor(...)
+# or
+get_chunks = WordPDFExtractor(...)
 ```
 
-The two configs differ in detail - `prosvetno`'s document already has space glyphs
-(so it derives `space_before` from whitespace at run edges rather than from gaps),
-skips a header band (`y > 740`), and handles even/odd-page indentation quirks -
-this is why the config is _very_ document-specific.
+The shared extractors handle page iteration, raw extraction, record creation,
+spacing, line chunks, page context, and the `previous` linked list. Keep the
+document decisions explicit through their thresholds and callbacks.
 
-> Magic numbers (`threshold`, `line_treshold`, header bands, indentation ranges)
-> are the heart of a PDF config and almost always need re-measuring per document.
+If you bring a completely different source format, implement your own callable
+that yields `Chunk` objects. A chunk minimally has `x`, `y`, `text`, `bold`,
+`italic`, and `space_before`. PDF rules usually also depend on the richer
+`PDFChunk` line, page, font, and metadata fields.
+
+Magic numbers such as line tolerances, header bands, and indentation ranges are
+still document-specific and normally need to be measured for every new family.
 
 ---
 
@@ -664,7 +900,8 @@ little tolerance. Page misalignment in scans means you'll often need ranges
 
 ## ZRIP config
 
-Reading `config.py` (the `"any"` group) top to bottom:
+Reading `examples/zbor-republik-in-pokrajin/config.py`
+(`CONFIG["rules"]`) top to bottom:
 
 | Rule               | Fires when...                                                                              | Produces                                       |
 | ------------------ | ------------------------------------------------------------------------------------------ | ---------------------------------------------- |
@@ -693,6 +930,9 @@ Things worth copying from it:
 
 `examples/prosvetno-kulturno-vece/config.py` is a cleaner, smaller second example
 (no footnotes, simpler cosmetics) and a good template to start a new config from.
+`examples/seje-1957/config.py` demonstrates word reconstruction, page and line
+metadata enrichment, an explicit appendix cutoff, and result-data export.
+Each example directory also includes an `out.xml` reference output.
 
 ---
 

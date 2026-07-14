@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 import xml.etree.ElementTree as ET
-from typing import Literal, Any, Protocol, cast, overload
+from typing import Literal, Protocol, cast, overload
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 from type_decs import (
@@ -88,7 +88,7 @@ class PDFPageContext:
     page_num: int
     width: float
     height: float
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, object] = field(default_factory=dict)
 
 
 @dataclass
@@ -101,7 +101,7 @@ class PDFLineChunk:
     runs: "list[PDFChunk]"  # child chunks
     space_before: bool = True  # whole-line chunks are never appended directly
     page_context: PDFPageContext | None = None
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, object] = field(default_factory=dict)
 
 
 @dataclass
@@ -117,15 +117,17 @@ class PDFChunk:
     font_size: float
     page_num: int
     space_before: bool = True
-    _line_chunk: Any = field(
+    _line_chunk: PDFLineChunk | None = field(
         default=None, init=False, repr=False
     )  # so we don't get lint errors, since we don't provide the line chunk at init
     previous: PDFChunk | None = field(default=None, repr=False)
     page_context: PDFPageContext | None = None
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, object] = field(default_factory=dict)
 
     @property
     def line_chunk(self) -> PDFLineChunk:
+        if self._line_chunk is None:
+            raise RuntimeError("PDF chunk has not been attached to a line")
         return self._line_chunk
 
     @line_chunk.setter
@@ -177,7 +179,7 @@ def make_chunk(
     page_num: int,
     space_before: bool = True,
     page_context: PDFPageContext | None = None,
-    metadata: dict[str, Any] | None = None,
+    metadata: dict[str, object] | None = None,
 ) -> PDFChunk: ...
 @overload
 def make_chunk(
@@ -188,7 +190,7 @@ def make_chunk(
     runs: list[PDFChunk],
     page_num: int,
     page_context: PDFPageContext | None = None,
-    metadata: dict[str, Any] | None = None,
+    metadata: dict[str, object] | None = None,
 ) -> PDFLineChunk: ...
 
 
@@ -206,7 +208,7 @@ def make_chunk(
     page_num: int,
     space_before: bool = True,
     page_context: PDFPageContext | None = None,
-    metadata: dict[str, Any] | None = None,
+    metadata: dict[str, object] | None = None,
 ):
     if isinstance(word_prop, Run) and isinstance(parent_paragraph, Paragraph):
         run = word_prop
@@ -359,7 +361,9 @@ def tag_is_on_top(tag: str, ignore_cosmetic: bool = True, **attribs: str): ...
 def tag_is_on_top(tag: ET.Element[str], ignore_cosmetic: bool = True): ...
 
 
-def tag_is_on_top(tag: str | ET.Element[str], ignore_cosmetic: bool = True, **attribs: str):
+def tag_is_on_top(
+    tag: str | ET.Element[str], ignore_cosmetic: bool = True, **attribs: str
+):
     # is the tag on top of the stack?
     # ignores cosmetic entries if needed (mostly the case)
     if isinstance(tag, ET.Element):

@@ -9,7 +9,13 @@ from .extractors import (
     WordPDFExtractor,
 )
 from .helpers import SpeakerUtteranceHook
-from .parser import LoadedConfig, ParseDiagnostics, ParseResult, load_config, parse_document
+from .parser import (
+    LoadedConfig,
+    ParseDiagnostics,
+    ParseResult,
+    load_config,
+    parse_document,
+)
 from .selectors import AllOf, AnyOf, Attribute, Between, LineStart, Metadata, Not, Text
 
 __all__ = [

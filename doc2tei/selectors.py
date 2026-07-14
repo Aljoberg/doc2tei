@@ -2,14 +2,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import re
-from typing import Any, Callable, Pattern
+from typing import Callable, cast, Pattern
+
+from engine import Chunk, PDFLineChunk, PDFPageContext
+
+Test = Callable[[Chunk], bool]
 
 
-Test = Callable[[Any], bool]
-
-
-def _matches(test: Any, value: Any) -> bool:
-    return bool(test(value)) if callable(test) else value == test
+def _matches(test: object, value: object) -> bool:
+    if callable(test):
+        predicate = cast(Callable[[object], object], test)
+        return bool(predicate(value))
+    return value == test
 
 
 @dataclass(frozen=True)
@@ -19,11 +23,15 @@ class Between:
     inclusive: bool = False
 
     def __call__(self, value: float) -> bool:
-        lower = True if self.minimum is None else (
-            value >= self.minimum if self.inclusive else value > self.minimum
+        lower = (
+            True
+            if self.minimum is None
+            else (value >= self.minimum if self.inclusive else value > self.minimum)
         )
-        upper = True if self.maximum is None else (
-            value <= self.maximum if self.inclusive else value < self.maximum
+        upper = (
+            True
+            if self.maximum is None
+            else (value <= self.maximum if self.inclusive else value < self.maximum)
         )
         return lower and upper
 
@@ -31,9 +39,9 @@ class Between:
 @dataclass(frozen=True)
 class Attribute:
     name: str
-    test: Any
+    test: object
 
-    def __call__(self, chunk: Any) -> bool:
+    def __call__(self, chunk: Chunk) -> bool:
         return _matches(self.test, getattr(chunk, self.name))
 
 
@@ -47,8 +55,12 @@ class Text:
     flags: int = 0
     normalize_space: bool = False
 
-    def __call__(self, chunk: Any) -> bool:
-        text = chunk.text if self.source == "chunk" else chunk.line_chunk.text
+    def __call__(self, chunk: Chunk) -> bool:
+        if self.source == "chunk":
+            text = chunk.text
+        else:
+            line = cast(PDFLineChunk, getattr(chunk, "line_chunk"))
+            text = line.text
         if self.normalize_space:
             text = re.sub(r"\s+", " ", text).strip()
         if self.equals is not None and text != self.equals:
@@ -57,33 +69,36 @@ class Text:
             return False
         if self.ends_with is not None and not text.endswith(self.ends_with):
             return False
-        if self.pattern is not None and re.search(self.pattern, text, self.flags) is None:
+        if (
+            self.pattern is not None
+            and re.search(self.pattern, text, self.flags) is None
+        ):
             return False
         return True
 
 
 class LineStart:
-    def __call__(self, chunk: Any) -> bool:
-        if hasattr(chunk, "is_line_start"):
-            return bool(chunk.is_line_start)
-        return chunk is chunk.line_chunk.runs[0]
+    def __call__(self, chunk: Chunk) -> bool:
+        line = cast(PDFLineChunk, getattr(chunk, "line_chunk"))
+        return bool(line.runs) and chunk is line.runs[0]
 
 
 @dataclass(frozen=True)
 class Metadata:
     key: str
-    test: Any = True
+    test: object = True
     source: str = "chunk"
-    default: Any = None
+    default: object = None
 
-    def __call__(self, chunk: Any) -> bool:
+    def __call__(self, chunk: Chunk) -> bool:
         if self.source == "page":
-            context = getattr(chunk, "page_context", None)
+            context = cast(PDFPageContext | None, getattr(chunk, "page_context", None))
             metadata = context.metadata if context is not None else {}
         elif self.source == "line":
-            metadata = getattr(chunk.line_chunk, "metadata", {})
+            line = cast(PDFLineChunk, getattr(chunk, "line_chunk"))
+            metadata = line.metadata
         else:
-            metadata = getattr(chunk, "metadata", {})
+            metadata = cast(dict[str, object], getattr(chunk, "metadata", {}))
         return _matches(self.test, metadata.get(self.key, self.default))
 
 
@@ -94,7 +109,7 @@ class AllOf:
     def __init__(self, *tests: Test):
         object.__setattr__(self, "tests", tests)
 
-    def __call__(self, chunk: Any) -> bool:
+    def __call__(self, chunk: Chunk) -> bool:
         return all(test(chunk) for test in self.tests)
 
 
@@ -105,7 +120,7 @@ class AnyOf:
     def __init__(self, *tests: Test):
         object.__setattr__(self, "tests", tests)
 
-    def __call__(self, chunk: Any) -> bool:
+    def __call__(self, chunk: Chunk) -> bool:
         return any(test(chunk) for test in self.tests)
 
 
@@ -113,5 +128,5 @@ class AnyOf:
 class Not:
     test: Test
 
-    def __call__(self, chunk: Any) -> bool:
+    def __call__(self, chunk: Chunk) -> bool:
         return not self.test(chunk)

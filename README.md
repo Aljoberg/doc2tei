@@ -18,11 +18,11 @@ You can check out the example configs in the [examples](examples/) directory.
 
 ## Running
 
-Run `parse.py` with an input, an output, and (optionally) an explicit config.
-If `--config` is omitted, `config.py` in the current directory is used.
+Run `parse.py` with an input, an output, and an explicit config selected from
+the `examples/` directory. The root `config.py` is intentionally not runnable.
 
 ```bash
-python parse.py path_to_pdf.pdf --config examples/SRIP/config.py -o out.xml
+python parse.py path_to_pdf.pdf --config examples/zbor-republik-in-pokrajin/config.py -o out.xml
 ```
 
 Useful optional outputs are `--diagnostics diagnostics.json` (rule hit counts,
@@ -35,7 +35,10 @@ side effects:
 ```python
 from doc2tei import parse_document
 
-result = parse_document("input.pdf", config="examples/SRIP/config.py")
+result = parse_document(
+    "input.pdf",
+    config="examples/zbor-republik-in-pokrajin/config.py",
+)
 result.write_xml("out.xml")
 result.write_diagnostics("diagnostics.json")
 result.write_data("speakers.json")

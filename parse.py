@@ -8,18 +8,24 @@ from doc2tei.parser import parse_document
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Convert a configured document to TEI XML")
+    parser = argparse.ArgumentParser(
+        description="Convert a configured document to TEI XML"
+    )
     parser.add_argument("input", help="input PDF or DOCX")
     parser.add_argument("-o", "--out", help="output XML (stdout when omitted)")
     parser.add_argument(
         "-c",
         "--config",
-        default="config.py",
-        help="configuration file (default: ./config.py)",
+        required=True,
+        help="configuration file (choose one from examples/)",
     )
     parser.add_argument("--debug-file", help="capture config debug logging")
-    parser.add_argument("--diagnostics", help="write extraction/rule diagnostics as JSON")
-    parser.add_argument("--data-output", help="write data exported by config hooks as JSON")
+    parser.add_argument(
+        "--diagnostics", help="write extraction/rule diagnostics as JSON"
+    )
+    parser.add_argument(
+        "--data-output", help="write data exported by config hooks as JSON"
+    )
     parser.add_argument(
         "--xml-declaration", action="store_true", help="include an XML declaration"
     )

@@ -2,22 +2,28 @@ from __future__ import annotations
 
 from collections import OrderedDict
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Callable, Generic, Literal, TypeVar
+
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+
+from engine import Chunk
+
+ChunkT = TypeVar("ChunkT", bound=Chunk)
 
 
 @dataclass(frozen=True)
-class Rule:
+class Rule(Generic[ChunkT]):
     """Named rule specification accepted alongside the legacy rule dictionaries."""
 
     name: str
-    test: Callable[[Any], bool] | str
-    action: Callable[[Any], Any] | None = None
-    append_func: Callable[[Any], Any] | None = None
-    after_append: Callable[[], Any] | None = None
-    alignment: Any | None = None
+    test: Callable[[ChunkT], bool] | Literal["_else"]
+    action: Callable[[ChunkT], None] | None = None
+    append_func: Callable[[ChunkT], None] | None = None
+    after_append: Callable[[], None] | None = None
+    alignment: WD_PARAGRAPH_ALIGNMENT | None = None
 
-    def as_mapping(self) -> dict[str, Any]:
-        result: dict[str, Any] = {"test": self.test}
+    def as_mapping(self) -> dict[str, object]:
+        result: dict[str, object] = {"test": self.test}
         for key in ("action", "append_func", "after_append", "alignment"):
             value = getattr(self, key)
             if value is not None:
@@ -27,13 +33,13 @@ class Rule:
 
 def rule(
     name: str,
-    test: Callable[[Any], bool] | str,
+    test: Callable[[ChunkT], bool] | Literal["_else"],
     *,
-    action: Callable[[Any], Any] | None = None,
-    append: Callable[[Any], Any] | None = None,
-    after: Callable[[], Any] | None = None,
-    alignment: Any | None = None,
-) -> Rule:
+    action: Callable[[ChunkT], None] | None = None,
+    append: Callable[[ChunkT], None] | None = None,
+    after: Callable[[], None] | None = None,
+    alignment: WD_PARAGRAPH_ALIGNMENT | None = None,
+) -> Rule[ChunkT]:
     return Rule(
         name=name,
         test=test,
@@ -44,9 +50,11 @@ def rule(
     )
 
 
-def rule_group(*items: Rule, run_immediate: Callable[[], Any] | None = None):
+def rule_group(
+    *items: Rule[ChunkT], run_immediate: Callable[[], None] | None = None
+) -> OrderedDict[str, object]:
     """Build an ordered rule group while retaining readable rule names."""
-    group: OrderedDict[str, Any] = OrderedDict()
+    group: OrderedDict[str, object] = OrderedDict()
     if run_immediate is not None:
         group["run_immediate"] = run_immediate
     for item in items:

@@ -64,9 +64,7 @@ def header_test(chunk: PDFChunk):
 
 
 def speaker_identifier(text: str) -> str:
-    name_surname = re.sub(
-        r"^pre\S+\s+|\s*(?:\(|,|:).*$", "", text, flags=re.IGNORECASE
-    )
+    name_surname = re.sub(r"^pre\S+\s+|\s*(?:\(|,|:).*$", "", text, flags=re.IGNORECASE)
     return "#" + "".join(word.capitalize() for word in name_surname.split())
 
 
@@ -133,79 +131,66 @@ CONFIG: PDFConfig = {
     "on_start": speaker_hook.reset,
     "on_pop": speaker_hook,
     "on_end": speaker_hook.export,
-    "alignments": {
-        "any": {
-            "HEADER": {"test": header_test, "append_func": lambda chunk: None},
-            "SEJA_DECLARATION": {
-                "test": lambda chunk: (
-                    605 < chunk.y < 610 or tag_is_on_top("head", type="session")
-                )
-                and chunk.bold,
-                "action": pop_and_push_to("div", tag="head", type="session"),
-            },
-            "TIME": {
-                "test": lambda chunk: chunk.italic
-                and (
-                    590 < chunk.y < 600
-                    or tag_is_on_top("head", type="sessionSection")
-                ),
-                "action": pop_and_push_to("div", tag="time"),
-            },
-            "CHAIRMAN": {
-                "test": lambda chunk: (
-                    chunk.text.strip().startswith("PREDSEDUJE")
-                    or tag_is_on_top("time")
-                    or tag_is_on_top("note", type="chairman")
-                )
-                and not chunk.italic
-                and chunk.x > 174,
-                "action": pop_and_push_to("div", tag="note", type="chairman"),
-            },
-            "SEJA_SECTION": {
-                "test": lambda chunk: (
-                    chunk.text.isupper()
-                    and 194 < chunk.x < 360
-                    and is_page_top(chunk)
-                ),
-                "action": pop_and_push_to(
-                    "div", tag="head", type="sessionSection"
-                ),
-            },
-            "REFERENCE_ENTRY": {
-                "test": lambda chunk: (
-                    chunk.font_size == 7.0 or 6.9 < chunk.font_size < 7.0
-                )
-                and chunk.text.strip().isdigit()
-                and chunk.is_line_start,
-                "action": ref_entry_action,
-                "append_func": lambda chunk: None,
-            },
-            "GENERIC_NOTE": {
-                "test": lambda chunk: 323 < chunk.x < 457
-                and chunk.line_chunk.italic
-                and bool(chunk.text.strip()),
-                "action": generic_note_action,
-                "append_func": lambda chunk: append(
-                    chunk, should_annotate=["REFERENCE"]
-                ),
-            },
-            "SPEAKER": {
-                "test": lambda chunk: (0 < chunk.x < 55 or 271 < chunk.x < 293)
-                and leading_caps(chunk.text) >= 5,
-                "action": pop_and_push_to("div", tag="note", type="speaker"),
-            },
-            "SEG": {
-                "test": is_seg,
-                "action": pop_and_push_to(
-                    "u", "div", tag="seg", chunked=False
-                ),
-            },
-        }
+    "rules": {
+        "HEADER": {"test": header_test, "append_func": lambda chunk: None},
+        "SEJA_DECLARATION": {
+            "test": lambda chunk: (
+                605 < chunk.y < 610 or tag_is_on_top("head", type="session")
+            )
+            and chunk.bold,
+            "action": pop_and_push_to("div", tag="head", type="session"),
+        },
+        "TIME": {
+            "test": lambda chunk: chunk.italic
+            and (590 < chunk.y < 600 or tag_is_on_top("head", type="sessionSection")),
+            "action": pop_and_push_to("div", tag="time"),
+        },
+        "CHAIRMAN": {
+            "test": lambda chunk: (
+                chunk.text.strip().startswith("PREDSEDUJE")
+                or tag_is_on_top("time")
+                or tag_is_on_top("note", type="chairman")
+            )
+            and not chunk.italic
+            and chunk.x > 174,
+            "action": pop_and_push_to("div", tag="note", type="chairman"),
+        },
+        "SEJA_SECTION": {
+            "test": lambda chunk: (
+                chunk.text.isupper() and 194 < chunk.x < 360 and is_page_top(chunk)
+            ),
+            "action": pop_and_push_to("div", tag="head", type="sessionSection"),
+        },
+        "REFERENCE_ENTRY": {
+            "test": lambda chunk: (
+                chunk.font_size == 7.0 or 6.9 < chunk.font_size < 7.0
+            )
+            and chunk.text.strip().isdigit()
+            and chunk.is_line_start,
+            "action": ref_entry_action,
+            "append_func": lambda chunk: None,
+        },
+        "GENERIC_NOTE": {
+            "test": lambda chunk: 323 < chunk.x < 457
+            and chunk.line_chunk.italic
+            and bool(chunk.text.strip()),
+            "action": generic_note_action,
+            "append_func": lambda chunk: append(chunk, should_annotate=["REFERENCE"]),
+        },
+        "SPEAKER": {
+            "test": lambda chunk: (0 < chunk.x < 55 or 271 < chunk.x < 293)
+            and leading_caps(chunk.text) >= 5,
+            "action": pop_and_push_to("div", tag="note", type="speaker"),
+        },
+        "SEG": {
+            "test": is_seg,
+            "action": pop_and_push_to("u", "div", tag="seg", chunked=False),
+        },
     },
 }
 
 
-def srip_line_break(previous_y: float, current_y: float) -> bool:
+def zrip_line_break(previous_y: float, current_y: float) -> bool:
     tolerance = 4.871
     return (
         previous_y - current_y > tolerance
@@ -214,7 +199,7 @@ def srip_line_break(previous_y: float, current_y: float) -> bool:
 
 
 get_chunks = CharacterPDFExtractor(
-    line_break=srip_line_break,
+    line_break=zrip_line_break,
     literal_spaces="break",
     gap_threshold=1.7,
     max_run_x_gap=30,

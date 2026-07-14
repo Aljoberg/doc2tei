@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Callable, Protocol
 
 from engine import StackEntry, push
 
-
 SpeakerIdentifier = Callable[[str], str]
+
+
+class ResultWithData(Protocol):
+    data: dict[str, object]
 
 
 @dataclass
@@ -25,7 +28,7 @@ class SpeakerUtteranceHook:
     data_key: str = "speakers"
     mapping: dict[str, str] = field(default_factory=dict)
 
-    def reset(self, _result: Any = None) -> None:
+    def reset(self, _result: ResultWithData | None = None) -> None:
         self.mapping.clear()
 
     def __call__(self, popped: StackEntry) -> None:
@@ -39,5 +42,5 @@ class SpeakerUtteranceHook:
         self.mapping.setdefault(identifier, text)
         push(self.utterance_tag, **{self.who_attribute: identifier})
 
-    def export(self, result: Any) -> None:
+    def export(self, result: ResultWithData) -> None:
         result.data[self.data_key] = dict(self.mapping)

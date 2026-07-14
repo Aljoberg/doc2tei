@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, NotRequired, TypedDict, Literal, Any, TYPE_CHECKING
+from typing import Callable, NotRequired, TypedDict, Literal, TYPE_CHECKING
 import xml.etree.ElementTree as ET
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
@@ -11,12 +11,12 @@ if TYPE_CHECKING:
 
 
 WordRunTest = Callable[["WordChunk"], bool | None]
-WordAction = Callable[["WordChunk"], Any]
-WordAppendFunc = Callable[["WordChunk"], Any]
-WordAfterPush = Callable[[], Any]
-RunImmediate = Callable[[], Any]
-OnPop = Callable[["StackEntry"], Any]
-OnEnd = Callable[..., Any]
+WordAction = Callable[["WordChunk"], None]
+WordAppendFunc = Callable[["WordChunk"], None]
+WordAfterPush = Callable[[], None]
+RunImmediate = Callable[[], None]
+OnPop = Callable[["StackEntry"], None]
+OnEnd = Callable[..., None]
 
 
 class WordRule(TypedDict):
@@ -41,9 +41,9 @@ class WordConfig(TypedDict):
 
 
 PDFRunTest = Callable[["PDFChunk"], bool | None]
-PDFAction = Callable[["PDFChunk"], Any]
-PDFAppendFunc = Callable[["PDFChunk"], Any]
-PDFAfterPush = Callable[[], Any]
+PDFAction = Callable[["PDFChunk"], None]
+PDFAppendFunc = Callable[["PDFChunk"], None]
+PDFAfterPush = Callable[[], None]
 
 
 class PDFRule(TypedDict):
@@ -58,12 +58,11 @@ PDFRuleGroup = dict[str, PDFRule | RunImmediate]
 
 class PDFConfig(TypedDict):
     mode: Literal["pdf"]
-    alignments: dict[str, PDFRuleGroup]
+    rules: PDFRuleGroup
     on_pop: NotRequired[OnPop]
     on_start: NotRequired[OnEnd]
     on_end: NotRequired[OnEnd]
     debug: bool
-    route_alignment: NotRequired[Callable[["Chunk"], str]]
 
 
 Rule = WordRule | PDFRule

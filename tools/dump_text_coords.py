@@ -19,13 +19,17 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("pdf")
     ap.add_argument("--page", type=int, help="1-based page; default = all pages")
-    ap.add_argument("--grep", help="only rows whose text contains this (case-insensitive)")
+    ap.add_argument(
+        "--grep", help="only rows whose text contains this (case-insensitive)"
+    )
     args = ap.parse_args()
 
     reader = PdfReader(args.pdf)
     needle = args.grep.lower() if args.grep else None
 
-    print(f"{'pg':>3} {'cm[4]':>9} {'cm[5]':>9} {'tm[4]':>9} {'tm[5]':>9} {'sz':>6}  text")
+    print(
+        f"{'pg':>3} {'cm[4]':>9} {'cm[5]':>9} {'tm[4]':>9} {'tm[5]':>9} {'sz':>6}  text"
+    )
     print("-" * 72)
 
     for i, page in enumerate(reader.pages, start=1):
@@ -48,7 +52,9 @@ def main() -> None:
             if len(shown) > 40:
                 shown = shown[:39] + "…"
             sz = sz if sz is not None else 0
-            print(f"{pg:>3} {cx:>9.2f} {cy:>9.2f} {tx:>9.2f} {ty:>9.2f} {sz:>6.1f}  {shown}")
+            print(
+                f"{pg:>3} {cx:>9.2f} {cy:>9.2f} {tx:>9.2f} {ty:>9.2f} {sz:>6.1f}  {shown}"
+            )
 
 
 if __name__ == "__main__":

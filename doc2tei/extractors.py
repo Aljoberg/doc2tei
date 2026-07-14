@@ -1,10 +1,24 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from collections import Counter
 from dataclasses import dataclass, field
-from typing import Any, Callable, Generator, Literal
+from typing import Callable, cast, Iterator, Literal, TYPE_CHECKING, TypedDict
 
 from engine import Chunk, PDFChunk, PDFPageContext, make_chunk
+
+if TYPE_CHECKING:
+    from pdfminer.layout import LTChar, LTPage
+
+
+class ExtractedWord(TypedDict):
+    text: str
+    x0: float
+    x1: float
+    top: float
+    bottom: float
+    fontname: str
+    size: float
 
 
 @dataclass(frozen=True)
@@ -36,20 +50,32 @@ class LineRecord:
     font_name: str
     font_size: float
     runs: list[RunRecord]
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, object] = field(default_factory=dict)
+
+
+@dataclass
+class _CharacterRun:
+    text: str
+    x0: float
+    y0: float
+    fontname: str
+    size: float
+    gap: bool
 
 
 LineFilter = Callable[[LineRecord, PDFPageContext], bool]
 StopTest = Callable[[LineRecord, PDFPageContext], bool]
 PageEnricher = Callable[[PDFPageContext, list[LineRecord]], None]
 LineEnricher = Callable[
-    [PDFPageContext, LineRecord, int, list[LineRecord]], dict[str, Any] | None
+    [PDFPageContext, LineRecord, int, list[LineRecord]], dict[str, object] | None
 ]
 LineBreakTest = Callable[[float, float], bool]
 
 
-def _weighted_mode(words: list[dict[str, Any]], key: str) -> Any:
-    counts: Counter[Any] = Counter()
+def _weighted_mode(
+    words: list[ExtractedWord], key: Literal["size", "fontname"]
+) -> float | str:
+    counts: Counter[float | str] = Counter()
     for word in words:
         counts[word[key]] += max(1, len(str(word["text"])))
     return counts.most_common(1)[0][0]
@@ -88,7 +114,7 @@ class CharacterPDFExtractor:
         self.page_enricher = page_enricher
         self.line_enricher = line_enricher
 
-    def __call__(self, filename: str) -> Generator[Chunk, Any, Any]:
+    def __call__(self, filename: str) -> Iterator[Chunk]:
         from pdfminer.converter import PDFLayoutAnalyzer
         from pdfminer.layout import LTChar
         from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
@@ -103,18 +129,18 @@ class CharacterPDFExtractor:
                 self.width = 0.0
                 self.height = 0.0
 
-            def receive_layout(self, page: Any):
+            def receive_layout(self, page: LTPage):
                 self.width = float(page.width)
                 self.height = float(page.height)
 
-                def walk(obj: Any):
+                def walk(obj: Iterable[object]):
                     for item in obj:
                         if isinstance(item, LTChar):
                             self.chars.append(item)
-                        elif hasattr(item, "__iter__"):
-                            walk(item)
+                        elif isinstance(item, Iterable):
+                            walk(cast(Iterable[object], item))
 
-                walk(page)
+                walk(cast(Iterable[object], page))
 
         device = CharCollector()
         interpreter = PDFPageInterpreter(resource_manager, device)
@@ -186,9 +212,9 @@ class CharacterPDFExtractor:
             return self.line_break(previous_y, current_y)
         return abs(previous_y - current_y) > self.line_tolerance
 
-    def _group_lines(self, chars: list[Any]) -> list[list[Any]]:
-        lines: list[list[Any]] = []
-        current: list[Any] = []
+    def _group_lines(self, chars: list[LTChar]) -> list[list[LTChar]]:
+        lines: list[list[LTChar]] = []
+        current: list[LTChar] = []
         previous_y: float | None = None
         for char in chars:
             if previous_y is not None and self._is_line_break(previous_y, char.y0):
@@ -202,14 +228,14 @@ class CharacterPDFExtractor:
         return lines
 
     def _make_records(
-        self, lines: list[list[Any]], initial_pending_space: bool
+        self, lines: list[list[LTChar]], initial_pending_space: bool
     ) -> tuple[list[LineRecord], list[bool]]:
         records: list[LineRecord] = []
         pending_space = initial_pending_space
         pending_values: list[bool] = []
         for line in lines:
-            runs: list[dict[str, Any]] = []
-            previous = None
+            runs: list[_CharacterRun] = []
+            previous: LTChar | None = None
             broke = False
             for char in line:
                 char_text = char.get_text()
@@ -227,28 +253,28 @@ class CharacterPDFExtractor:
                 )
                 grouped = (
                     bool(runs)
-                    and runs[-1]["fontname"] == char.fontname
-                    and runs[-1]["size"] == char.size
+                    and runs[-1].fontname == char.fontname
+                    and runs[-1].size == char.size
                     and within_max_gap
                 )
                 if grouped:
                     if gap and self.literal_spaces != "preserve":
-                        runs[-1]["text"] += " "
-                    runs[-1]["text"] += char_text
+                        runs[-1].text += " "
+                    runs[-1].text += char_text
                 else:
                     runs.append(
-                        {
-                            "text": char_text,
-                            "x0": char.x0,
-                            "y0": char.y0,
-                            "fontname": char.fontname,
-                            "size": char.size,
-                            "gap": bool(gap),
-                        }
+                        _CharacterRun(
+                            text=char_text,
+                            x0=float(char.x0),
+                            y0=float(char.y0),
+                            fontname=str(char.fontname),
+                            size=float(char.size),
+                            gap=bool(gap),
+                        )
                     )
                 previous = char
 
-            if not runs or not "".join(str(run["text"]) for run in runs).strip():
+            if not runs or not "".join(run.text for run in runs).strip():
                 pending_space = not broke
                 pending_values.append(pending_space)
                 continue
@@ -258,18 +284,18 @@ class CharacterPDFExtractor:
                 if index == 0:
                     space_before = pending_space
                 elif self.literal_spaces == "preserve":
-                    prior = str(runs[index - 1]["text"])
-                    current = str(run["text"])
+                    prior = runs[index - 1].text
+                    current = run.text
                     space_before = prior[-1:].isspace() or current[:1].isspace()
                 else:
-                    space_before = bool(run["gap"])
+                    space_before = run.gap
                 run_records.append(
                     RunRecord(
-                        text=str(run["text"]),
-                        x=float(run["x0"]),
-                        y=float(run["y0"]),
-                        font_name=str(run["fontname"]),
-                        font_size=float(run["size"]),
+                        text=run.text,
+                        x=run.x0,
+                        y=run.y0,
+                        font_name=run.fontname,
+                        font_size=run.size,
                         space_before=space_before,
                     )
                 )
@@ -318,7 +344,7 @@ class WordPDFExtractor:
         self.page_enricher = page_enricher
         self.line_enricher = line_enricher
 
-    def __call__(self, filename: str) -> Generator[Chunk, Any, Any]:
+    def __call__(self, filename: str) -> Iterator[Chunk]:
         import pdfplumber
 
         previous_run: PDFChunk | None = None
@@ -334,12 +360,15 @@ class WordPDFExtractor:
                     width=float(page.width),
                     height=float(page.height),
                 )
-                words = page.extract_words(
-                    x_tolerance=self.x_tolerance,
-                    y_tolerance=self.y_tolerance,
-                    keep_blank_chars=False,
-                    use_text_flow=True,
-                    extra_attrs=["fontname", "size"],
+                words = cast(
+                    list[ExtractedWord],
+                    page.extract_words(
+                        x_tolerance=self.x_tolerance,
+                        y_tolerance=self.y_tolerance,
+                        keep_blank_chars=False,
+                        use_text_flow=True,
+                        extra_attrs=["fontname", "size"],
+                    ),
                 )
                 records = [
                     self._record(context.height, words_on_line)
@@ -393,9 +422,9 @@ class WordPDFExtractor:
                     yield previous_run
                     pending_space = not hyphenated
 
-    def _group_words(self, words: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
-        lines: list[list[dict[str, Any]]] = []
-        current: list[dict[str, Any]] = []
+    def _group_words(self, words: list[ExtractedWord]) -> list[list[ExtractedWord]]:
+        lines: list[list[ExtractedWord]] = []
+        current: list[ExtractedWord] = []
         anchor_top: float | None = None
         for word in words:
             top = float(word["top"])
@@ -414,7 +443,7 @@ class WordPDFExtractor:
             lines.append(sorted(current, key=lambda item: float(item["x0"])))
         return lines
 
-    def _record(self, page_height: float, words: list[dict[str, Any]]) -> LineRecord:
+    def _record(self, page_height: float, words: list[ExtractedWord]) -> LineRecord:
         parts: list[str] = []
         previous = None
         for word in words:
