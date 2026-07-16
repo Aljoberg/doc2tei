@@ -41,8 +41,13 @@ This means that **almost every new document needs its own config**, though simil
 doc2tei's output is a `<TEI>` tree:
 
 ```
-TEI > text > body > div[type=debateSection] > ( head | time | note | u > seg | ... )
+TEI > teiHeader? + text > body > div[type=debateSection] > ( head | time | note | u > seg | ... )
 ```
+
+The `teiHeader` is optional and comes from `CONFIG["tei_header"]`; the
+`text > body > div` skeleton is only the default and can be replaced with
+`CONFIG["document"]` (see [The TEI header and document
+skeleton](#the-tei-header-and-document-skeleton)).
 
 ## Quick start
 
@@ -394,6 +399,83 @@ The type definitions for all of this are in `type_decs.py`
 
 ---
 
+## The TEI header and document skeleton
+
+### `CONFIG["tei_header"]`
+
+ParlaMint documents carry a `<teiHeader>` with file, encoding, profile and
+revision metadata ([sample](https://github.com/clarin-eric/ParlaMint/blob/main/Samples/ParlaMint-SI/2022/ParlaMint-SI_2022-04-06-SDZ8-Izredna-99.xml)).
+`doc2tei.tei_header.TEIHeader` builds that structure; every field defaults to
+empty, so you only fill what you know and get a complete, blank skeleton for
+the rest:
+
+```python
+from doc2tei.tei_header import Meeting, Setting, SourceBibl, TEIHeader
+
+TEI_HEADER = TEIHeader(
+    language="sl",                       # xml:lang on the <TEI> root
+    tei_id="ZRIP-7",                     # xml:id on the <TEI> root
+    main_titles={"sl": "...", "en": "..."},  # {xml:lang: text}
+    meetings=[Meeting(text="7. seja", n="7")],
+    source=SourceBibl(titles={"sl": "..."}),
+    setting=Setting(city="Beograd", country_key="YU", country_name="Jugoslavija"),
+)
+
+CONFIG = {..., "tei_header": TEI_HEADER}
+```
+
+The parser inserts the built header as the first child of `<TEI>` and applies
+`tei_id`/`language`/`ana` as root attributes. Multilingual fields are
+`{xml:lang: text}` mappings. The repeatable pieces have their own small
+dataclasses: `Meeting`, `RespStmt` + `Person`, `Funder`, `Measure`,
+`SourceBibl`, `Setting`, `Change` (all importable from `doc2tei`).
+
+Two header parts are **computed from the parsed document** because they can't
+be known up front: `<tagsDecl>` (per-tag usage counts) and `<extent>`
+(speech/word counts). After the tree is committed the parser fills each one
+that was left empty - provide your own `measures=[...]` (or a non-empty
+`tagsDecl`) and they are left alone.
+
+`CONFIG["tei_header"]` also accepts a **raw `ET.Element`** (any `<teiHeader>`
+you built yourself) or a **callable returning either**, so nothing forces you
+through the dataclass:
+
+```python
+"tei_header": my_header_element,          # full manual control
+"tei_header": lambda: build_header(...),  # built fresh per parse
+```
+
+For surgical edits beyond that, remember that `on_start(result)` and
+`on_end(result)` receive the whole tree as `result.root` - the header (and
+anything else) can be mutated there; `on_end` runs after the computed counts
+are filled, so it can override them.
+
+### `CONFIG["document"]`
+
+The default output skeleton is `TEI > text > body > div[type=debateSection]`,
+with parsed content appended into the `<div>`. To replace it, export a
+factory returning `(root, content)` - the root element and the descendant
+that parsing should append into:
+
+```python
+import xml.etree.ElementTree as ET
+
+def make_document():
+    tei = ET.Element("TEI", xmlns="http://www.tei-c.org/ns/1.0")
+    text = ET.SubElement(tei, "text")
+    front = ET.SubElement(text, "front")
+    return tei, front
+
+CONFIG = {..., "document": make_document}
+```
+
+`engine.default_document()` builds the standard skeleton, so a factory can
+also start from it and just decorate (extra attributes, siblings, a
+different content `<div>`). `tei_header` composes with `document`: the header
+is inserted as the first child of whatever root the factory returns.
+
+---
+
 ## The chunk model
 
 Every action / function in the config receives a _chunk_. It then does something with it (performs checks, pushes, pops, whatever).
@@ -466,6 +548,8 @@ CONFIG: PDFConfig = {
     "on_pop": on_pop,               # optional, whenever an element closes
     "on_end": on_end,               # optional, after the tree is committed
     "auto_xml_ids": True,           # optional, generate xml:id on structural elements
+    "tei_header": TEI_HEADER,       # optional, a <teiHeader> for the output
+    "document": make_document,      # optional, replaces the default TEI skeleton
 }
 ```
 

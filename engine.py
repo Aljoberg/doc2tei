@@ -16,10 +16,20 @@ from dataclasses import dataclass, field
 from docx.oxml.ns import qn
 from collections import defaultdict
 
-root = ET.Element("TEI", version="3.3.0", xmlns="http://www.tei-c.org/ns/1.0")
-text_elem = ET.SubElement(root, "text")
-body = ET.SubElement(text_elem, "body")
-debate = ET.SubElement(body, "div", type="debateSection")
+def default_document() -> tuple[ET.Element[str], ET.Element[str]]:
+    """Build the standard TEI > text > body > div[debateSection] skeleton.
+
+    Returns the ``<TEI>`` root and the element parsed content lands in. A
+    config can supply its own skeleton via ``CONFIG["document"]``.
+    """
+    tei = ET.Element("TEI", version="3.3.0", xmlns="http://www.tei-c.org/ns/1.0")
+    text = ET.SubElement(tei, "text")
+    body = ET.SubElement(text, "body")
+    content = ET.SubElement(body, "div", type="debateSection")
+    return tei, content
+
+
+root, debate = default_document()
 debate.text, debate.tail = "", ""
 children: list[str | ET.Element[str]] = (
     []
@@ -64,13 +74,15 @@ def gen_id(tag: str | ET.Element[str]):
     return f"{filename_cleaned}.{name}{idx}"
 
 
-def reset() -> None:
-    """Reset all mutable engine state so multiple documents can be parsed safely."""
-    global root, text_elem, body, debate, children, stack, on_pop
-    root = ET.Element("TEI", version="3.3.0", xmlns="http://www.tei-c.org/ns/1.0")
-    text_elem = ET.SubElement(root, "text")
-    body = ET.SubElement(text_elem, "body")
-    debate = ET.SubElement(body, "div", type="debateSection")
+def reset(document: tuple[ET.Element[str], ET.Element[str]] | None = None) -> None:
+    """Reset all mutable engine state so multiple documents can be parsed safely.
+
+    ``document`` optionally replaces the default TEI skeleton: a ``(root,
+    content)`` tuple where ``content`` is the descendant element parsed
+    content is appended into.
+    """
+    global root, debate, children, stack, on_pop
+    root, debate = document if document is not None else default_document()
     debate.text, debate.tail = "", ""
     children = []
     stack = [

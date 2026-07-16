@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable, NotRequired, TypedDict, Literal, TYPE_CHECKING
+from typing import Callable, NotRequired, TypedDict, Literal, TYPE_CHECKING, TypeAlias
 import xml.etree.ElementTree as ET
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     # only needed for type hints
     # actually importing them would create a cycle (engine needs type decs, type decs needs engine)
     from engine import WordChunk, PDFChunk, Chunk, StackEntry
+    from doc2tei.tei_header import TEIHeader
 
 
 WordRunTest = Callable[["WordChunk"], bool | None]
@@ -29,6 +30,15 @@ class WordRule(TypedDict):
 
 WordRuleGroup = dict[str, WordRule | RunImmediate]
 
+# the <TEI> root and the (descendant) element parsed content is appended into
+DocumentFactory: TypeAlias = (
+    "Callable[[], tuple[ET.Element[str], ET.Element[str]]]"
+)
+# a built <teiHeader>, a TEIHeader spec, or a callable producing either
+TEIHeaderSpec: TypeAlias = (
+    "TEIHeader | ET.Element[str] | Callable[[], TEIHeader | ET.Element[str]]"
+)
+
 
 class WordConfig(TypedDict):
     mode: Literal["word"]
@@ -39,6 +49,8 @@ class WordConfig(TypedDict):
     debug: bool
     route_alignment: NotRequired[Callable[["Chunk"], str]]
     auto_xml_ids: NotRequired[bool]
+    tei_header: NotRequired[TEIHeaderSpec]
+    document: NotRequired[DocumentFactory]
 
 
 PDFRunTest = Callable[["PDFChunk"], bool | None]
@@ -65,6 +77,8 @@ class PDFConfig(TypedDict):
     on_end: NotRequired[OnEnd]
     debug: bool
     auto_xml_ids: NotRequired[bool]
+    tei_header: NotRequired[TEIHeaderSpec]
+    document: NotRequired[DocumentFactory]
 
 
 Rule = WordRule | PDFRule

@@ -18,6 +18,7 @@ from engine import Chunk, PDFChunk, WordChunk
 from type_decs import CosmeticAnnotations, OnPop
 
 from .config import Rule as ConfigRule
+from .tei_header import TEIHeader, fill_counts
 
 
 class ChunkExtractor(Protocol):
@@ -332,6 +333,45 @@ def _alignment_group(
     return None
 
 
+def _make_document(
+    factory: object,
+) -> tuple[ET.Element[str], ET.Element[str]] | None:
+    if factory is None:
+        return None
+    if not callable(factory):
+        raise TypeError("CONFIG['document'] must be callable")
+    document = cast(
+        "Callable[[], tuple[ET.Element[str], ET.Element[str]]]", factory
+    )()
+    root, content = document
+    if content is not root and content not in root.iter():
+        raise ValueError(
+            "CONFIG['document'] content element must be a descendant of the root"
+        )
+    return document
+
+
+def _install_header(spec: object) -> ET.Element[str] | None:
+    """Resolve CONFIG['tei_header'] and insert it as the root's first child."""
+    if spec is None:
+        return None
+    if callable(spec):
+        spec = cast(Callable[[], object], spec)()
+    if isinstance(spec, TEIHeader):
+        for key, value in spec.tei_attributes().items():
+            engine.root.set(key, value)
+        header = spec.build()
+    elif isinstance(spec, ET.Element):
+        header = spec
+    else:
+        raise TypeError(
+            "CONFIG['tei_header'] must be a TEIHeader, an Element, "
+            "or a callable returning one"
+        )
+    engine.root.insert(0, header)
+    return header
+
+
 def _call_hook(callback: object, result: ParseResult) -> None:
     if not callable(callback):
         return
@@ -362,12 +402,13 @@ def parse_document(
     if not source.is_file():
         raise FileNotFoundError(f"input file does not exist: {source}")
     
-    engine.reset()
+    engine.reset(document=_make_document(loaded.config.get("document")))
     engine.COSMETIC_ANNOTATIONS = loaded.cosmetic_annotations
     on_pop = loaded.config.get("on_pop")
     engine.on_pop = cast(OnPop, on_pop) if callable(on_pop) else None
     engine.filename = basename(input_path)
     engine.auto_xml_ids = bool(loaded.config.get("auto_xml_ids", False))
+    header = _install_header(loaded.config.get("tei_header"))
 
     diagnostics = ParseDiagnostics(input=str(source), config=str(loaded.path))
     result = ParseResult(root=engine.root, diagnostics=diagnostics)
@@ -401,6 +442,11 @@ def parse_document(
     while len(engine.stack) > 1:
         engine.pop()
     engine.commit_children(engine.stack[0])
+
+    if header is not None:
+        # tag usage / extent counts only exist now; runs before on_end so a
+        # config can still inspect or override them there
+        fill_counts(engine.root)
 
     _call_hook(loaded.config.get("on_end"), result)
     return result

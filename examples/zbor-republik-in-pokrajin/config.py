@@ -7,6 +7,7 @@ import re
 
 from doc2tei.extractors import CharacterPDFExtractor
 from doc2tei.helpers import SpeakerUtteranceHook
+from doc2tei.tei_header import Meeting, Setting, SourceBibl, TEIHeader
 from engine import (
     Chunk,
     PDFChunk,
@@ -71,6 +72,22 @@ def speaker_identifier(text: str) -> str:
 speaker_hook = SpeakerUtteranceHook(speaker_identifier)
 
 
+# Every TEIHeader field defaults to empty, so only what is known needs
+# filling; the parser computes <tagsDecl> and <extent> counts after parsing.
+TEI_HEADER = TEIHeader(
+    language="sl",
+    main_titles={
+        "sl": "Zbor republik in pokrajin, 7. seja",
+        "en": "Chamber of Republics and Provinces, Session 7",
+    },
+    meetings=[Meeting(text="7. seja", n="7")],
+    source=SourceBibl(
+        titles={"sl": "Zapisi sej Zbora republik in pokrajin Skupščine SFRJ"}
+    ),
+    setting=Setting(city="Beograd", country_key="YU", country_name="Jugoslavija"),
+)
+
+
 def leading_caps(text: str) -> int:
     count = 0
     for character in text:
@@ -133,6 +150,7 @@ CONFIG: PDFConfig = {
     "on_pop": speaker_hook,
     "on_end": speaker_hook.export,
     "auto_xml_ids": True,
+    "tei_header": TEI_HEADER,
     "rules": {
         "HEADER": {"test": header_test, "append_func": lambda chunk: None},
         "SEJA_DECLARATION": {
