@@ -465,8 +465,15 @@ CONFIG: PDFConfig = {
     "on_start": on_start,           # optional, after engine reset
     "on_pop": on_pop,               # optional, whenever an element closes
     "on_end": on_end,               # optional, after the tree is committed
+    "auto_xml_ids": True,           # optional, generate xml:id on structural elements
 }
 ```
+
+With `"auto_xml_ids": True`, every structural element opened by `push()` gets
+a ParlaMint-style generated id (`<input-basename>.<tag><N>`, e.g.
+`slo-53-899.seg12`, counted per tag) unless the push already provides an
+explicit `xml:id`. Cosmetic wrappers (`<emph>`, `<hi>`, `<ref>`) are never
+auto-id'd. The default is `False`.
 
 PDF configs have one top-level `rules` group. There is no alignment wrapper.
 

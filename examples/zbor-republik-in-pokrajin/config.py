@@ -43,7 +43,7 @@ def ref_entry_action(chunk: PDFChunk):
 def generic_note_action(_chunk: Chunk):
     pop_to("div")
     push("note")
-    push("hi", rend="italic")
+    push("hi", cosmetic=True, rend="italic")
 
 
 def nth_previous(chunk: PDFChunk, n: int) -> PDFChunk | None:
@@ -119,6 +119,7 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
         "tag": tag("ref"),
         "append_func": lambda chunk: push(
             "ref",
+            cosmetic=True,
             target=f'#note{re.sub(r"[^a-zA-Z0-9]", "", chunk.text.strip())}',
         ),
     },
@@ -131,6 +132,7 @@ CONFIG: PDFConfig = {
     "on_start": speaker_hook.reset,
     "on_pop": speaker_hook,
     "on_end": speaker_hook.export,
+    "auto_xml_ids": True,
     "rules": {
         "HEADER": {"test": header_test, "append_func": lambda chunk: None},
         "SEJA_DECLARATION": {

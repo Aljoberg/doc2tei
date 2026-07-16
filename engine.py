@@ -14,6 +14,7 @@ from type_decs import (
 )
 from dataclasses import dataclass, field
 from docx.oxml.ns import qn
+from collections import defaultdict
 
 root = ET.Element("TEI", version="3.3.0", xmlns="http://www.tei-c.org/ns/1.0")
 text_elem = ET.SubElement(root, "text")
@@ -41,6 +42,26 @@ stack: list[StackEntry] = [
 COSMETIC_ANNOTATIONS: CosmeticAnnotations
 
 on_pop: OnPop | None = None
+filename: str
+# set from CONFIG["auto_xml_ids"] by the parser; when true, push() stamps a
+# generated xml:id on structural (non-cosmetic) elements that don't have one
+auto_xml_ids = False
+id_counters = defaultdict(int)
+
+
+def next_id(tag: str | ET.Element[str]):
+    # 1-based, following the ParlaMint id convention (seg1, u1, ...)
+    name = tag if isinstance(tag, str) else tag.tag
+    id_counters[name] += 1
+    return id_counters[name]
+
+
+def gen_id(tag: str | ET.Element[str]):
+    idx = next_id(tag)
+    name = tag if isinstance(tag, str) else tag.tag
+    filename_cleaned = ".".join(filename.split(".")[:-1])
+
+    return f"{filename_cleaned}.{name}{idx}"
 
 
 def reset() -> None:
@@ -56,6 +77,7 @@ def reset() -> None:
         StackEntry(element=debate, children=children, last_elem=None, cosmetic=False)
     ]
     on_pop = None
+    id_counters.clear()
 
 
 class Chunk(Protocol):
@@ -315,6 +337,9 @@ def push(
     elem = ET.Element(tag, attribs, **rest)
     elem.text = ""
     elem.tail = ""
+    if auto_xml_ids and not cosmetic and "xml:id" not in elem.attrib:
+        elem.attrib["xml:id"] = gen_id(elem)
+
     stack.append(
         StackEntry(element=elem, children=children, last_elem=None, cosmetic=cosmetic)
     )

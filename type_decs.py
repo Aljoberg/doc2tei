@@ -38,6 +38,7 @@ class WordConfig(TypedDict):
     on_end: NotRequired[OnEnd]
     debug: bool
     route_alignment: NotRequired[Callable[["Chunk"], str]]
+    auto_xml_ids: NotRequired[bool]
 
 
 PDFRunTest = Callable[["PDFChunk"], bool | None]
@@ -63,6 +64,7 @@ class PDFConfig(TypedDict):
     on_start: NotRequired[OnEnd]
     on_end: NotRequired[OnEnd]
     debug: bool
+    auto_xml_ids: NotRequired[bool]
 
 
 Rule = WordRule | PDFRule

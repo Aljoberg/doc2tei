@@ -10,6 +10,7 @@ from pathlib import Path
 import sys
 from types import ModuleType
 from typing import Callable, cast, Literal, Protocol
+from os.path import basename
 import xml.etree.ElementTree as ET
 
 import engine
@@ -360,10 +361,14 @@ def parse_document(
     source = Path(input_path).expanduser().resolve()
     if not source.is_file():
         raise FileNotFoundError(f"input file does not exist: {source}")
+    
     engine.reset()
     engine.COSMETIC_ANNOTATIONS = loaded.cosmetic_annotations
     on_pop = loaded.config.get("on_pop")
     engine.on_pop = cast(OnPop, on_pop) if callable(on_pop) else None
+    engine.filename = basename(input_path)
+    engine.auto_xml_ids = bool(loaded.config.get("auto_xml_ids", False))
+
     diagnostics = ParseDiagnostics(input=str(source), config=str(loaded.path))
     result = ParseResult(root=engine.root, diagnostics=diagnostics)
     _call_hook(loaded.config.get("on_start"), result)
