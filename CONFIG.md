@@ -1025,6 +1025,28 @@ Things worth copying from it:
 metadata enrichment, an explicit appendix cutoff, and result-data export.
 Each example directory also includes an `out.xml` reference output.
 
+## The general config
+
+`examples/general/config.py` is a single config that parses **all three** test
+documents. Instead of per-document magic numbers it probes the PDF first
+(space-glyph ratio, OCR text layer, dominant font size) to pick one of three
+extraction profiles, then detects columns per page by clustering line-start x
+positions so indentation tests are column-relative. Session headings, running
+headers, speakers, dates, and table-of-contents blocks are recognized by
+unioned text heuristics rather than coordinates.
+
+```bash
+python parse.py testdocs/<any-of-the-three>.pdf \
+  --config examples/general/config.py -o out.xml
+```
+
+On the 1957 volume it matches the dedicated config almost exactly; on ZRIP it
+is within a few percent; on prosvetno it trades some precision for recall (it
+finds ~40 real speakers the dedicated config missed, but also marks appendix
+datelines as `<time>` and stage directions as `<note>`). Expect _some_ error
+on any new document - measure with `--diagnostics` and tighten the tests when
+a document family deserves its own config.
+
 ---
 
 ## Gotchas
