@@ -22,10 +22,13 @@ this trades per-document precision for generality.
 
 from __future__ import annotations
 
+import itertools
 import re
+from bisect import bisect_right
 from collections import Counter
+from dataclasses import replace
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, cast
 
 import engine
 from doc2tei.extractors import (
@@ -58,21 +61,32 @@ def log(*args, **kwargs):
 # document profile, filled by get_chunks() before parsing starts
 # ---------------------------------------------------------------------------
 
+DEFAULT_BODY_SIZE = 10.0
+LINE_BREAK_TOLERANCE = 4.871
+COLUMN_PROBE_Y_MAX = 0.94
+RUNNING_HEADER_Y = 0.915
+
 PROFILE: dict[str, Any] = {}
-_STATE: dict[str, Any] = {
+_INITIAL_STATE: dict[str, Any] = {
     "seen_session": False,
     "speaker_index": False,
     "back_matter": False,
     "consumed_line": None,
 }
+_STATE: dict[str, Any] = dict(_INITIAL_STATE)
+
+
+def reset_state():
+    _STATE.clear()
+    _STATE.update(_INITIAL_STATE)
 
 
 def body_size() -> float:
-    return PROFILE.get("body_size", 10.0)
+    return PROFILE.get("body_size", DEFAULT_BODY_SIZE)
 
 
 def is_styled():
-    return bool(PROFILE.get("styled", False))
+    return bool(PROFILE.get("styled"))
 
 
 def is_body_size(size: float) -> bool:
@@ -83,27 +97,26 @@ def _probe(filename: str, sample_pages: int = 10):
     """Cheap pdfminer pass over the first pages to pick an extraction profile."""
     from pdfminer.layout import LTChar
     from pdfminer.high_level import extract_pages
-    import itertools
 
     fonts: Counter[str] = Counter()
     sizes: Counter[float] = Counter()
     spaces = 0
     chars = 0
+
+    def walk(obj):
+        nonlocal spaces, chars
+        for item in obj:
+            if isinstance(item, LTChar):
+                chars += 1
+                if item.get_text() == " ":
+                    spaces += 1
+                else:
+                    fonts[str(item.fontname)] += 1
+                    sizes[round(float(item.size) * 2) / 2] += 1
+            elif hasattr(item, "__iter__"):
+                walk(item)
+
     for page in itertools.islice(extract_pages(filename), sample_pages):
-
-        def walk(obj):
-            nonlocal spaces, chars
-            for item in obj:
-                if isinstance(item, LTChar):
-                    chars += 1
-                    if item.get_text() == " ":
-                        spaces += 1
-                    else:
-                        fonts[str(item.fontname)] += 1
-                        sizes[round(float(item.size) * 2) / 2] += 1
-                elif hasattr(item, "__iter__"):
-                    walk(item)
-
         walk(page)
 
     space_ratio = spaces / max(chars, 1)
@@ -116,7 +129,7 @@ def _probe(filename: str, sample_pages: int = 10):
         mode = "char-preserve"
     profile = {
         "mode": mode,
-        "body_size": float(sizes.most_common(1)[0][0]) if sizes else 10.0,
+        "body_size": float(sizes.most_common(1)[0][0]) if sizes else DEFAULT_BODY_SIZE,
         "space_ratio": space_ratio,
         # Styling is useful only when the extractor can actually recognize it.
         # A character layer containing only a regular font is no better than OCR
@@ -138,7 +151,8 @@ SESSION_NUM_RE = re.compile(
     r"\d+\.\s*(?:izredna\s+|redna\s+|zajedni\S+\s+)?(?:sej[aeio]|sednic[aeio])\b",
     re.IGNORECASE,
 )
-SESSION_CAPS_RE = re.compile(r"\b(?:SEJ[AEO]\w*|SEDNIC\w*)\b")
+_SESSION_CAPS = r"SEJ[AEO]\w*|SEDNIC\w*"
+SESSION_CAPS_RE = re.compile(rf"\b(?:{_SESSION_CAPS})\b")
 
 
 def _is_session_marker(text: str):
@@ -152,7 +166,8 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
     body_x = sorted(
         record.x
         for record in records
-        if is_body_size(record.font_size) and record.y < page.height * 0.94
+        if is_body_size(record.font_size)
+        and record.y < page.height * COLUMN_PROBE_Y_MAX
     )
     xs = body_x if body_x else sorted(record.x for record in records)
 
@@ -161,7 +176,7 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
         # lines share (a lone stray line must not become the edge)
         need = max(3, len(cluster) // 20)
         for i, value in enumerate(cluster):
-            support = sum(1 for other in cluster[i:] if other - value <= 3.0)
+            support = bisect_right(cluster, value + 3.0, i) - i
             if support >= need:
                 return value
         return cluster[0]
@@ -222,12 +237,10 @@ def enrich_line(
     _index: int,
     _records: list[LineRecord],
 ):
-    columns = page.metadata.get("columns") or [record.x]
-    assert isinstance(columns, list)
-    col_left = record.x
-    for left in columns:
-        if left <= record.x + 2.0:
-            col_left = left
+    columns = cast(list, page.metadata.get("columns")) or [record.x]
+    col_left = max(
+        (left for left in columns if left <= record.x + 2.0), default=record.x
+    )
     return {"indent": record.x - col_left}
 
 
@@ -241,7 +254,7 @@ def line_filter(record: LineRecord, page: PDFPageContext):
         return False
     # running page headers: top ~8.5% of the page, and either notably smaller
     # than the body or a "N. seja/sednica" colontitle
-    if record.y > page.height * 0.915:
+    if record.y > page.height * RUNNING_HEADER_Y:
         text = record.text.strip()
         if record.font_size <= body_size() - 1.0 or len(text) <= 4:
             return False
@@ -363,7 +376,7 @@ def leading_caps(text: str):
 def speaker_parts(chunk: PDFChunk) -> tuple[str, str] | None:
     if not chunk.is_line_start or not is_body_line(chunk):
         return None
-    match = re.match(r"^([^:]{2,72}:)(?:\s*(.*))?$", line_text(chunk))
+    match = re.match(r"^([^:]{2,72}:)\s*(.*)$", line_text(chunk))
     if not match:
         return None
     prefix = match.group(1)[:-1].strip()
@@ -377,7 +390,7 @@ def speaker_parts(chunk: PDFChunk) -> tuple[str, str] | None:
             line_has_bold(chunk) or upper_prefix >= 5 or TITLE_PREFIX_RE.match(prefix)
         ):
             return None
-    return match.group(1).strip(), (match.group(2) or "").strip()
+    return match.group(1).strip(), match.group(2).strip()
 
 
 def _flush_caps_name(text: str):
@@ -415,9 +428,13 @@ def is_speaker(chunk: PDFChunk):
 def _append_text(chunk: PDFChunk, text: str):
     if not text:
         return
-    from dataclasses import replace
-
     append(replace(chunk, text=text, space_before=False), should_annotate=[])
+
+
+def _open_speech_seg():
+    pop_to("note", invert=True)  # closing the speaker note opens <u> via the hook
+    pop_to("u", "div")
+    push("seg")
 
 
 def speaker_append_split(chunk: PDFChunk):
@@ -428,11 +445,11 @@ def speaker_append_split(chunk: PDFChunk):
     pop_to("div")
     push("note", type="speaker")
     _append_text(chunk, label)
-    pop_to("note", invert=True)  # closing the note opens <u> via the hook
     if speech:
-        pop_to("u", "div")
-        push("seg")
+        _open_speech_seg()
         _append_text(chunk, speech)
+    else:
+        pop_to("note", invert=True)  # closing the note opens <u> via the hook
     # Character extraction can yield more font runs from this same physical
     # line. The reconstructed line was appended above, so suppress those runs.
     _STATE["consumed_line"] = id(chunk.line_chunk)
@@ -450,9 +467,7 @@ def speaker_action(chunk: PDFChunk):
 
 
 def is_consumed_line(chunk: PDFChunk):
-    return not chunk.is_line_start and _STATE.get("consumed_line") == id(
-        chunk.line_chunk
-    )
+    return not chunk.is_line_start and _STATE["consumed_line"] == id(chunk.line_chunk)
 
 
 def is_speech_start(chunk: PDFChunk):
@@ -463,12 +478,6 @@ def is_speech_start(chunk: PDFChunk):
         and is_body_line(chunk)
         and tag_is_on_top("note", type="speaker")
     )
-
-
-def speech_start_action(_chunk: PDFChunk):
-    pop_to("note", invert=True)  # speaker hook opens <u>
-    pop_to("u", "div")
-    push("seg")
 
 
 def _collapse_spaced_letters(text: str):
@@ -482,8 +491,8 @@ def _collapse_spaced_letters(text: str):
             core = _word_core(tokens[j])
             if (
                 run
-                and core[0].isupper()
-                and (run[0][0].islower() or "".join(run).lower() in {"dr", "inž"})
+                and core.isupper()
+                and (run[0].islower() or "".join(run).lower() in {"dr", "inž"})
             ):
                 break
             run.append(core)
@@ -578,9 +587,7 @@ STANDALONE_DATE_RE = re.compile(
     re.IGNORECASE,
 )
 SEJA_BILA_RE = re.compile(r"^Seja\s+(?:je\s+)?bila\b", re.IGNORECASE)
-HEAD_KEYWORD_RE = re.compile(
-    r"\b(?:SEJ[AEO]\w*|SEDNIC\w*|NADALJEVANJE)\b", re.IGNORECASE
-)
+HEAD_KEYWORD_RE = re.compile(rf"\b(?:{_SESSION_CAPS}|NADALJEVANJE)\b")
 AGENDA_HEAD_RE = re.compile(
     r"^\s*\d+\.\s*(?:TOČK[AE]|TAČK[AE])\s+(?:DNEVNEGA|DNEVNOG)\s+REDA\b",
     re.IGNORECASE,
@@ -687,7 +694,7 @@ def is_generic_note(chunk: PDFChunk):
     text = line_text(chunk)
     if not text:
         return False
-    if is_body_line(chunk) and 6 <= indent(chunk) and text.startswith("("):
+    if is_body_line(chunk) and indent(chunk) >= 6 and text.startswith("("):
         return True
     if SEJA_BILA_RE.match(text):
         return True
@@ -810,11 +817,6 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
             and chunk.text.strip().isdigit()
         ),
         "tag": tag("ref", type="footnote"),
-        "append_func": lambda chunk: push(
-            "ref",
-            cosmetic=True,
-            type="footnote",
-        ),
     },
 }
 
@@ -873,7 +875,7 @@ CONFIG: PDFConfig = {
         },
         "SPEECH_START": {
             "test": is_speech_start,
-            "action": speech_start_action,
+            "action": lambda _: _open_speech_seg(),
         },
         "SEG": {
             "test": is_seg,
@@ -893,22 +895,16 @@ CONFIG: PDFConfig = {
 
 
 def _asymmetric_line_break(previous_y: float, current_y: float):
-    tolerance = 4.871
     return (
-        previous_y - current_y > tolerance
-        or abs(previous_y - current_y) > tolerance * 5
+        previous_y - current_y > LINE_BREAK_TOLERANCE
+        or abs(previous_y - current_y) > LINE_BREAK_TOLERANCE * 5
     )
 
 
 def get_chunks(filename: str) -> Iterator[Chunk]:
     PROFILE.clear()
     PROFILE.update(_probe(filename))
-    _STATE.update(
-        seen_session=False,
-        speaker_index=False,
-        back_matter=False,
-        consumed_line=None,
-    )
+    reset_state()
 
     common = dict(
         line_filter=line_filter,
