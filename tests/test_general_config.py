@@ -4,6 +4,7 @@ from pathlib import Path
 
 import engine
 from doc2tei.parser import load_config, parse_document
+from doc2tei.extractors import LineRecord
 from engine import PDFPageContext, make_chunk
 
 
@@ -116,12 +117,17 @@ def test_later_heading_opens_a_new_division(tmp_path):
     assert children[0].attrib["type"] == "agendaItem"
 
 
-def test_internal_indexes_never_terminate_extraction():
+def test_speaker_index_is_skipped_without_disabling_later_sessions():
     module = load_config(CONFIG_PATH).module
     context = PDFPageContext(0, 600.0, 800.0)
-    assert not module.stop_before(
-        type("Record", (), {"text": "SEZNAM GOVORNIKOV"})(), context
+    index = LineRecord(
+        "SEZNAM GOVORNIKOV", 72.0, 700.0, "Times-Roman", 10.0, []
     )
-    assert not module.stop_before(
-        type("Record", (), {"text": "PRILOGE"})(), context
-    )
+    module.reset_state()
+    module.enrich_page(context, [index])
+    assert not module.line_filter(index, context)
+
+    later_context = PDFPageContext(1, 600.0, 800.0)
+    session = LineRecord("20. SEJA", 72.0, 700.0, "Times-Bold", 13.0, [])
+    module.enrich_page(later_context, [session])
+    assert module.line_filter(session, later_context)

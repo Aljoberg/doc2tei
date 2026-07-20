@@ -22,11 +22,10 @@ this trades per-document precision for generality.
 
 from __future__ import annotations
 
-import functools
 import re
 from collections import Counter
 from pathlib import Path
-from typing import Iterator, cast, Any
+from typing import Any, Iterator
 
 import engine
 from doc2tei.extractors import (
@@ -50,7 +49,6 @@ from engine import (
 from type_decs import PDFConfig, PDFCosmeticAnnotations
 
 
-@functools.wraps(print)
 def log(*args, **kwargs):
     if CONFIG["debug"]:
         print(*args, **kwargs)
@@ -125,9 +123,7 @@ def _probe(filename: str, sample_pages: int = 10):
         # for rules that use bold/italic as structural evidence.
         "styled": mode != "ocr"
         and any(
-            marker in font.lower()
-            for font in fonts
-            for marker in ("bold", "italic")
+            marker in font.lower() for font in fonts for marker in ("bold", "italic")
         ),
     }
     log(f"probed profile: {profile}")
@@ -208,7 +204,6 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
         _STATE["speaker_index"] = True
     if has_appendix:
         _STATE["back_matter"] = True
-    page.metadata["in_transcript"] = _STATE["seen_session"]
     page.metadata["speaker_index"] = _STATE["speaker_index"]
     page.metadata["back_matter"] = _STATE["back_matter"]
     page.metadata["structure_active"] = bool(
@@ -259,16 +254,6 @@ PRILOGE_RE = re.compile(r"^PRILOG[EIA]?\b")
 SPEAKER_INDEX_RE = re.compile(r"^SEZNAM\s+GOVORNIKOV\b", re.IGNORECASE)
 
 
-def stop_before(_record: LineRecord, _page: PDFPageContext):
-    """Never terminate a generic parse based on a document-internal heading.
-
-    A heading such as ``PRILOGE`` or ``SEZNAM GOVORNIKOV`` can be followed by
-    another sitting in a bound volume. Returning early here used to truncate
-    those documents permanently.
-    """
-    return False
-
-
 # ---------------------------------------------------------------------------
 # chunk-level helpers
 # ---------------------------------------------------------------------------
@@ -294,6 +279,12 @@ def is_body_line(chunk: PDFChunk):
 def is_structural_page(chunk: PDFChunk):
     context = chunk.page_context
     return bool(context is not None and context.metadata.get("structure_active"))
+
+
+def open_root_division(div_type: str):
+    while len(engine.stack) > 1:
+        engine.pop()
+    push("div", type=div_type)
 
 
 # ---------------------------------------------------------------------------
@@ -354,9 +345,8 @@ def _looks_like_person_prefix(prefix: str):
         return False
     # OCR often spaces a surname ("P i r n a t") or splits it ("Me lik");
     # person labels consist of capitalized / very short fragments only
-    return (
-        sum(token[:1].isupper() for token in tokens) >= 2
-        and all(token[:1].isupper() or len(token) == 1 for token in tokens[1:])
+    return sum(token[:1].isupper() for token in tokens) >= 2 and all(
+        token[:1].isupper() or len(token) == 1 for token in tokens[1:]
     )
 
 
@@ -460,7 +450,9 @@ def speaker_action(chunk: PDFChunk):
 
 
 def is_consumed_line(chunk: PDFChunk):
-    return not chunk.is_line_start and _STATE.get("consumed_line") == id(chunk.line_chunk)
+    return not chunk.is_line_start and _STATE.get("consumed_line") == id(
+        chunk.line_chunk
+    )
 
 
 def is_speech_start(chunk: PDFChunk):
@@ -540,10 +532,10 @@ def speaker_identifier(text: str):
 speaker_hook = SpeakerUtteranceHook(speaker_identifier)
 
 
-def start_document(_result=None):
+def start_document():
     """Keep the outer debate div division-only for schema-safe later heads."""
     speaker_hook.reset()
-    push("div", type="frontMatter")
+    open_root_division("frontMatter")
 
 
 def finish_document(result):
@@ -564,9 +556,7 @@ def build_tei_header():
         project_desc={
             "en": "Automatically converted from a searchable PDF by doc2tei."
         },
-        changes=[
-            Change(name="doc2tei", note="Automatic conversion from source PDF.")
-        ],
+        changes=[Change(name="doc2tei", note="Automatic conversion from source PDF.")],
     )
 
 
@@ -613,9 +603,7 @@ def is_head(chunk: PDFChunk):
         return True
     # body-sized headings (ZRIP): full caps + bold + a session keyword
     return (
-        text.isupper()
-        and line_has_bold(chunk)
-        and bool(HEAD_KEYWORD_RE.search(text))
+        text.isupper() and line_has_bold(chunk) and bool(HEAD_KEYWORD_RE.search(text))
     )
 
 
@@ -637,15 +625,12 @@ def head_action(chunk: PDFChunk):
     pop_to("div")
     current = engine.stack[-1]
     has_body = any(
-        not isinstance(child, str) and child.tag != "head"
-        for child in current.children
+        not isinstance(child, str) and child.tag != "head" for child in current.children
     )
     current_type = current.element.attrib.get("type")
     if div_type == "session":
         if current_type != "session" or has_body:
-            while len(engine.stack) > 1:
-                engine.pop()
-            push("div", type="session")
+            open_root_division("session")
     else:
         if current_type == "agendaSection" and has_body:
             engine.pop()
@@ -782,9 +767,7 @@ def is_appendix_head(chunk: PDFChunk):
 
 
 def appendix_head_action(_chunk: PDFChunk):
-    while len(engine.stack) > 1:
-        engine.pop()
-    push("div", type="backMatter")
+    open_root_division("backMatter")
     push("head", type="appendix")
 
 
@@ -803,9 +786,7 @@ def is_unstructured_start(chunk: PDFChunk):
 
 
 def unstructured_start_action(_chunk: PDFChunk):
-    while len(engine.stack) > 1:
-        engine.pop()
-    push("div", type="backMatter")
+    open_root_division("backMatter")
     push("p")
 
 
@@ -922,14 +903,15 @@ def _asymmetric_line_break(previous_y: float, current_y: float):
 def get_chunks(filename: str) -> Iterator[Chunk]:
     PROFILE.clear()
     PROFILE.update(_probe(filename))
-    _STATE["seen_session"] = False
-    _STATE["speaker_index"] = False
-    _STATE["back_matter"] = False
-    _STATE["consumed_line"] = None
+    _STATE.update(
+        seen_session=False,
+        speaker_index=False,
+        back_matter=False,
+        consumed_line=None,
+    )
 
     common = dict(
         line_filter=line_filter,
-        stop_before=stop_before,
         page_enricher=enrich_page,
         line_enricher=enrich_line,
     )
