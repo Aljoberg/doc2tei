@@ -11,8 +11,9 @@ Unlike the per-document configs, this one probes the PDF first and adapts:
   indentation tests are column-relative instead of magic x ranges;
 - **running headers** - dropped by geometry + font size + a
   "N. seja/sednica" pattern instead of per-document y bands;
-- **front/back matter** - pages before the first session heading are
-  skipped, and a big standalone "PRILOGE" heading stops the parse.
+- **front/back matter** - retained as ordinary TEI blocks unless it can be
+  identified safely; indexes of speakers are skipped page-by-page and parsing
+  resumes when a later session begins.
 
 Rules are the union of the three per-document configs, rewritten against
 the probed metadata. Expect a bit of error on any individual document -
@@ -60,7 +61,12 @@ def log(*args, **kwargs):
 # ---------------------------------------------------------------------------
 
 PROFILE: dict[str, Any] = {}
-_STATE: dict[str, bool] = {"seen_session": False}
+_STATE: dict[str, Any] = {
+    "seen_session": False,
+    "speaker_index": False,
+    "back_matter": False,
+    "consumed_line": None,
+}
 
 
 def body_size() -> float:
@@ -177,9 +183,39 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
         columns.append(flush_edge(cluster))
     page.metadata["columns"] = columns
 
-    if any(_is_session_marker(record.text) for record in records):
+    has_session_marker = any(
+        _is_session_marker(record.text)
+        and (
+            record.font_size >= body_size() + 1.0
+            or (record.text.strip().isupper() and len(record.text.strip()) < 80)
+        )
+        for record in records
+    )
+    has_speaker_index = any(
+        SPEAKER_INDEX_RE.match(record.text.strip()) for record in records
+    )
+    has_appendix = any(
+        record.font_size >= body_size() + 1.5
+        and PRILOGE_RE.match(record.text.strip())
+        and len(record.text.strip()) < 30
+        for record in records
+    )
+    if has_session_marker:
         _STATE["seen_session"] = True
+        _STATE["speaker_index"] = False
+        _STATE["back_matter"] = False
+    if has_speaker_index:
+        _STATE["speaker_index"] = True
+    if has_appendix:
+        _STATE["back_matter"] = True
     page.metadata["in_transcript"] = _STATE["seen_session"]
+    page.metadata["speaker_index"] = _STATE["speaker_index"]
+    page.metadata["back_matter"] = _STATE["back_matter"]
+    page.metadata["structure_active"] = bool(
+        _STATE["seen_session"]
+        and not _STATE["speaker_index"]
+        and not _STATE["back_matter"]
+    )
     page.metadata["toc_page"] = any(
         CONTENTS_RE.match(record.text.strip()) for record in records
     )
@@ -204,9 +240,9 @@ HEADER_PATTERN_RE = re.compile(r"\d+\.?\s*(?:sej[aeio]|sednic[aeio])", re.IGNORE
 
 
 def line_filter(record: LineRecord, page: PDFPageContext):
-    # skip whole pages until the first session heading is seen (title pages,
-    # tables of contents in front matter)
-    if not page.metadata.get("in_transcript", False):
+    # A speaker index may span several pages. Skip it without terminating the
+    # extractor so a later session in the same bound volume is still parsed.
+    if page.metadata.get("speaker_index", False):
         return False
     # running page headers: top ~8.5% of the page, and either notably smaller
     # than the body or a "N. seja/sednica" colontitle
@@ -223,16 +259,14 @@ PRILOGE_RE = re.compile(r"^PRILOG[EIA]?\b")
 SPEAKER_INDEX_RE = re.compile(r"^SEZNAM\s+GOVORNIKOV\b", re.IGNORECASE)
 
 
-def stop_before(record: LineRecord, page: PDFPageContext):
-    if SPEAKER_INDEX_RE.match(record.text.strip()):
-        return True
-    # appendix volume: a big standalone PRILOGE heading ends the transcript
-    return bool(
-        page.metadata.get("in_transcript", False)
-        and record.font_size >= body_size() + 1.5
-        and bool(PRILOGE_RE.match(record.text.strip()))
-        and len(record.text.strip()) < 30
-    )
+def stop_before(_record: LineRecord, _page: PDFPageContext):
+    """Never terminate a generic parse based on a document-internal heading.
+
+    A heading such as ``PRILOGE`` or ``SEZNAM GOVORNIKOV`` can be followed by
+    another sitting in a bound volume. Returning early here used to truncate
+    those documents permanently.
+    """
+    return False
 
 
 # ---------------------------------------------------------------------------
@@ -257,6 +291,11 @@ def is_body_line(chunk: PDFChunk):
     return is_body_size(chunk.font_size)
 
 
+def is_structural_page(chunk: PDFChunk):
+    context = chunk.page_context
+    return bool(context is not None and context.metadata.get("structure_active"))
+
+
 # ---------------------------------------------------------------------------
 # speaker detection (union of the three configs)
 # ---------------------------------------------------------------------------
@@ -264,6 +303,16 @@ def is_body_line(chunk: PDFChunk):
 TITLE_PREFIX_RE = re.compile(
     r"^(?:pred?sedni[kc]\w*|podpredsedni\w*|potpredsedni\w*|predsedujo\S+|"
     r"predsedava\w*|dr\.?|d\s+r\.?|in[žz]\.?|ing\.?|mr\.?)\b",
+    re.IGNORECASE,
+)
+
+PERSON_PROSE_CUE_RE = re.compile(
+    r"^(?:za|je|pa|se|so|bo|bi|o|na|po|od|do|kot|kao|i|in|ter|ali|da)$",
+    re.IGNORECASE,
+)
+ROLE_BOUNDARY_RE = re.compile(
+    r"\b(?:zvezni|savezni|republi\S*|pokrajin\S*|sekretar\S*|minister\S*|"
+    r"poslan\S*|delegat\S*|član\S*|predstavnik\S*)\b",
     re.IGNORECASE,
 )
 
@@ -280,11 +329,28 @@ def _looks_like_person_prefix(prefix: str):
     prefix = prefix.split(",", 1)[0].strip()
     # a bare "PREDSEDAVALI:"/"Predsedoval:" is a role announcement, not a
     # person - a title only counts when a name follows it
-    if TITLE_PREFIX_RE.match(prefix) and len(prefix.split()) >= 2:
+    # Speaker labels use the title as a displayed label (normally initial
+    # uppercase). Lowercase accusative forms such as "predsednika Drago
+    # Sotler, za člane pa:" occur inside appointment lists and are prose.
+    if (
+        TITLE_PREFIX_RE.match(prefix)
+        and prefix[:1].isupper()
+        and len(prefix.split()) >= 2
+    ):
         return True
     tokens = [_word_core(token) for token in prefix.split()]
     tokens = [token for token in tokens if token]
-    if not 2 <= len(tokens) <= 14 or not tokens[0][:1].isupper():
+    if not 2 <= len(tokens) <= 8 or not tokens[0][:1].isupper():
+        return False
+    # In appointment lists, prose often starts immediately after a plausible
+    # two-token name ("Drago Sotler za člane pa:"). A function word after the
+    # likely name is strong negative evidence for a speaker label.
+    spaced_ocr_name = sum(len(token) == 1 for token in tokens) >= 2
+    if not spaced_ocr_name and any(
+        PERSON_PROSE_CUE_RE.match(token) for token in tokens[2:]
+    ):
+        return False
+    if len(tokens) > 4 and not any(len(token) == 1 for token in tokens):
         return False
     # OCR often spaces a surname ("P i r n a t") or splits it ("Me lik");
     # person labels consist of capitalized / very short fragments only
@@ -307,7 +373,7 @@ def leading_caps(text: str):
 def speaker_parts(chunk: PDFChunk) -> tuple[str, str] | None:
     if not chunk.is_line_start or not is_body_line(chunk):
         return None
-    match = re.match(r"^([^:]{2,90}:)(?:\s*(.*))?$", line_text(chunk))
+    match = re.match(r"^([^:]{2,72}:)(?:\s*(.*))?$", line_text(chunk))
     if not match:
         return None
     prefix = match.group(1)[:-1].strip()
@@ -339,6 +405,8 @@ def _flush_caps_name(text: str):
 
 
 def is_speaker(chunk: PDFChunk):
+    if not is_structural_page(chunk):
+        return False
     if speaker_parts(chunk) is not None:
         return True
     # ZRIP-style speaker whose role wraps over several lines (no colon on the
@@ -363,7 +431,7 @@ def _append_text(chunk: PDFChunk, text: str):
 
 
 def speaker_append_split(chunk: PDFChunk):
-    """OCR lines carry the whole line in one chunk: split label from speech."""
+    """Split a speaker label from speech using the reconstructed whole line."""
     parts = speaker_parts(chunk)
     assert parts is not None
     label, speech = parts
@@ -375,20 +443,40 @@ def speaker_append_split(chunk: PDFChunk):
         pop_to("u", "div")
         push("seg")
         _append_text(chunk, speech)
+    # Character extraction can yield more font runs from this same physical
+    # line. The reconstructed line was appended above, so suppress those runs.
+    _STATE["consumed_line"] = id(chunk.line_chunk)
 
 
 def speaker_action(chunk: PDFChunk):
-    if PROFILE.get("mode") == "ocr":
+    if speaker_parts(chunk) is not None:
         speaker_append_split(chunk)
     else:
-        # character modes: the rest of the line arrives as further chunks and
-        # flows into the open note by itself
-        # Every matched line is a new label. Closing a preceding speaker note
-        # invokes the hook and opens its <u>; pop_to then closes that utterance
-        # before this new note is started.
+        # A flush all-caps name without a colon. Keep only that physical line
+        # in the label; the following body line will open the utterance.
         pop_to("div")
         push("note", type="speaker")
         append(chunk, should_annotate=[])
+
+
+def is_consumed_line(chunk: PDFChunk):
+    return not chunk.is_line_start and _STATE.get("consumed_line") == id(chunk.line_chunk)
+
+
+def is_speech_start(chunk: PDFChunk):
+    """Close a label before the first following body line, even when flush-left."""
+    return (
+        chunk.is_line_start
+        and is_structural_page(chunk)
+        and is_body_line(chunk)
+        and tag_is_on_top("note", type="speaker")
+    )
+
+
+def speech_start_action(_chunk: PDFChunk):
+    pop_to("note", invert=True)  # speaker hook opens <u>
+    pop_to("u", "div")
+    push("seg")
 
 
 def _collapse_spaced_letters(text: str):
@@ -418,9 +506,12 @@ def _collapse_spaced_letters(text: str):
 
 
 def speaker_identifier(text: str):
-    name = text.rsplit(":", 1)[0]
+    # Only the label before the first colon can identify a person. Later
+    # colons belong to the speech and previously produced enormous IDs.
+    name = text.split(":", 1)[0]
     name = _collapse_spaced_letters(name)
     name = re.sub(r"\s*\([^)]*\)\s*", " ", name)
+    name = name.split(",", 1)[0]
     while True:
         stripped = TITLE_PREFIX_RE.sub("", name.strip())
         stripped = re.sub(
@@ -429,11 +520,39 @@ def speaker_identifier(text: str):
         if stripped == name.strip():
             break
         name = stripped
+    role = ROLE_BOUNDARY_RE.search(name)
+    if role and role.start() > 0:
+        name = name[: role.start()]
+    # A normal personal name has only a few lexical tokens. This fallback is
+    # language-neutral and prevents residual agenda prose entering xml:id.
+    tokens = name.split()
+    for index, token in enumerate(tokens[2:], start=2):
+        if PERSON_PROSE_CUE_RE.match(_word_core(token)):
+            tokens = tokens[:index]
+            name = " ".join(tokens)
+            break
+    if len(tokens) > 4 and not any(len(_word_core(token)) == 1 for token in tokens):
+        name = " ".join(tokens[:3])
     serialized = "#" + "".join(ch for ch in name.title() if ch.isalnum())
     return serialized if serialized != "#" else "#UnknownSpeaker"
 
 
 speaker_hook = SpeakerUtteranceHook(speaker_identifier)
+
+
+def start_document(_result=None):
+    """Keep the outer debate div division-only for schema-safe later heads."""
+    speaker_hook.reset()
+    push("div", type="frontMatter")
+
+
+def finish_document(result):
+    speaker_hook.export(result)
+    outer = engine.debate
+    for child in list(outer):
+        if child.tag == "div" and child.attrib.get("type") == "frontMatter":
+            if not ("".join(child.itertext()).strip() or list(child)):
+                outer.remove(child)
 
 
 def build_tei_header():
@@ -469,15 +588,23 @@ STANDALONE_DATE_RE = re.compile(
     re.IGNORECASE,
 )
 SEJA_BILA_RE = re.compile(r"^Seja\s+(?:je\s+)?bila\b", re.IGNORECASE)
-HEAD_KEYWORD_RE = re.compile(r"\b(?:SEJ[AEO]\w*|SEDNIC\w*|NADALJEVANJE)\b")
+HEAD_KEYWORD_RE = re.compile(
+    r"\b(?:SEJ[AEO]\w*|SEDNIC\w*|NADALJEVANJE)\b", re.IGNORECASE
+)
+AGENDA_HEAD_RE = re.compile(
+    r"^\s*\d+\.\s*(?:TOČK[AE]|TAČK[AE])\s+(?:DNEVNEGA|DNEVNOG)\s+REDA\b",
+    re.IGNORECASE,
+)
 
 
 def is_head(chunk: PDFChunk):
-    if not chunk.is_line_start:
+    if not chunk.is_line_start or not is_structural_page(chunk):
         return False
     text = line_text(chunk)
-    if not text or len(text) > 70 or text.endswith(":"):
+    if not text or len(text) > 100 or text.endswith(":") or is_speaker(chunk):
         return False
+    if AGENDA_HEAD_RE.search(text):
+        return True
     # clearly-larger line; the caps/session gate keeps garbled footnote and
     # scan-noise body lines out (session heads may sit flush left)
     if chunk.font_size >= body_size() + 1.8 and (
@@ -489,24 +616,48 @@ def is_head(chunk: PDFChunk):
         text.isupper()
         and line_has_bold(chunk)
         and bool(HEAD_KEYWORD_RE.search(text))
-        and not is_speaker(chunk)
     )
 
 
 def head_action(chunk: PDFChunk):
     text = line_text(chunk)
-    kind = (
-        "sessionNumber"
-        if re.match(r"^\W{0,3}\d+\.", text) and SESSION_NUM_RE.search(text)
-        else "session"
+    if AGENDA_HEAD_RE.search(text):
+        kind = "agendaItem"
+        div_type = "agendaSection"
+    else:
+        kind = (
+            "sessionNumber"
+            if re.match(r"^\W{0,3}\d+\.", text) and SESSION_NUM_RE.search(text)
+            else "session"
+        )
+        div_type = "session"
+
+    # Heads are only schema-valid at the beginning of a div. Create a new
+    # structural division once the current one already contains body content.
+    pop_to("div")
+    current = engine.stack[-1]
+    has_body = any(
+        not isinstance(child, str) and child.tag != "head"
+        for child in current.children
     )
+    current_type = current.element.attrib.get("type")
+    if div_type == "session":
+        if current_type != "session" or has_body:
+            while len(engine.stack) > 1:
+                engine.pop()
+            push("div", type="session")
+    else:
+        if current_type == "agendaSection" and has_body:
+            engine.pop()
+            current_type = engine.stack[-1].element.attrib.get("type")
+        if current_type != "agendaSection":
+            push("div", type="agendaSection")
     if not tag_is_on_top("head", type=kind):
-        pop_to("div")
         push("head", type=kind)
 
 
 def is_time(chunk: PDFChunk):
-    if not chunk.is_line_start:
+    if not chunk.is_line_start or not is_structural_page(chunk):
         return False
     text = line_text(chunk)
     if START_TIME_RE.match(text):
@@ -534,7 +685,11 @@ def time_action(chunk: PDFChunk):
 
 
 def is_chairman(chunk: PDFChunk):
-    if not chunk.is_line_start or not CHAIRMAN_RE.match(line_text(chunk)):
+    if (
+        not chunk.is_line_start
+        or not is_structural_page(chunk)
+        or not CHAIRMAN_RE.match(line_text(chunk))
+    ):
         return False
     # "Predsedavajući Vlado Malašič:" introduces a speaker, not the session
     # chairman note
@@ -542,7 +697,7 @@ def is_chairman(chunk: PDFChunk):
 
 
 def is_generic_note(chunk: PDFChunk):
-    if not chunk.is_line_start:
+    if not chunk.is_line_start or not is_structural_page(chunk):
         return False
     text = line_text(chunk)
     if not text:
@@ -591,6 +746,7 @@ def contents_action(chunk: PDFChunk):
 def is_seg(chunk: PDFChunk):
     return (
         chunk.is_line_start
+        and is_structural_page(chunk)
         and is_body_line(chunk)
         and 6.0 <= indent(chunk) <= 45.0
         and has_utterance_context()
@@ -612,6 +768,45 @@ def has_utterance_context():
 def is_paragraph(chunk: PDFChunk):
     """Keep non-speech text in a TEI block instead of directly under div."""
     return chunk.is_line_start and not has_utterance_context()
+
+
+def is_appendix_head(chunk: PDFChunk):
+    context = chunk.page_context
+    return bool(
+        chunk.is_line_start
+        and context is not None
+        and context.metadata.get("back_matter")
+        and PRILOGE_RE.match(line_text(chunk))
+        and len(line_text(chunk)) < 30
+    )
+
+
+def appendix_head_action(_chunk: PDFChunk):
+    while len(engine.stack) > 1:
+        engine.pop()
+    push("div", type="backMatter")
+    push("head", type="appendix")
+
+
+def is_unstructured_start(chunk: PDFChunk):
+    """Close a debate utterance when retained back matter begins."""
+    if not chunk.is_line_start or is_structural_page(chunk):
+        return False
+    current = next(
+        (entry for entry in reversed(engine.stack) if entry.element.tag == "div"),
+        None,
+    )
+    return bool(
+        current is not None
+        and current.element.attrib.get("type") not in {"frontMatter", "backMatter"}
+    )
+
+
+def unstructured_start_action(_chunk: PDFChunk):
+    while len(engine.stack) > 1:
+        engine.pop()
+    push("div", type="backMatter")
+    push("p")
 
 
 # ---------------------------------------------------------------------------
@@ -646,12 +841,24 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
 CONFIG: PDFConfig = {
     "debug": False,
     "mode": "pdf",
-    "on_start": speaker_hook.reset,
+    "on_start": start_document,
     "on_pop": speaker_hook,
-    "on_end": speaker_hook.export,
+    "on_end": finish_document,
     "auto_xml_ids": True,
     "tei_header": build_tei_header,
     "rules": {
+        "CONSUMED_LINE": {
+            "test": is_consumed_line,
+            "append_func": lambda chunk: None,
+        },
+        "APPENDIX_HEAD": {
+            "test": is_appendix_head,
+            "action": appendix_head_action,
+        },
+        "UNSTRUCTURED_START": {
+            "test": is_unstructured_start,
+            "action": unstructured_start_action,
+        },
         "CONTENTS": {
             "test": is_contents,
             "action": contents_action,
@@ -683,6 +890,10 @@ CONFIG: PDFConfig = {
             "test": is_speaker,
             "append_func": speaker_action,
         },
+        "SPEECH_START": {
+            "test": is_speech_start,
+            "action": speech_start_action,
+        },
         "SEG": {
             "test": is_seg,
             "action": pop_and_push_to("u", "div", tag="seg", chunked=False),
@@ -712,6 +923,9 @@ def get_chunks(filename: str) -> Iterator[Chunk]:
     PROFILE.clear()
     PROFILE.update(_probe(filename))
     _STATE["seen_session"] = False
+    _STATE["speaker_index"] = False
+    _STATE["back_matter"] = False
+    _STATE["consumed_line"] = None
 
     common = dict(
         line_filter=line_filter,
