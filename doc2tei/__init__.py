@@ -8,7 +8,7 @@ from .extractors import (
     RunRecord,
     WordPDFExtractor,
 )
-from .helpers import SpeakerUtteranceHook, build_list_person
+from .helpers import FootnoteLinker, SpeakerUtteranceHook, build_list_person
 from .parser import (
     LoadedConfig,
     ParseDiagnostics,
@@ -38,6 +38,7 @@ __all__ = [
     "Change",
     "CharacterPDFExtractor",
     "Funder",
+    "FootnoteLinker",
     "LineRecord",
     "LineStart",
     "LoadedConfig",

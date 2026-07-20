@@ -394,6 +394,37 @@ speakers = SpeakerUtteranceHook(identifier=my_speaker_id)
 CONFIG.update(on_start=speakers.reset, on_pop=speakers, on_end=speakers.export)
 ```
 
+`FootnoteLinker` packages the run-level recognition, state, ID allocation, and
+stack actions needed for PDF footnotes. The config still supplies its adaptive
+document signals, so the helper does not assume a particular font size or page
+height:
+
+```python
+from doc2tei import FootnoteLinker
+
+footnotes = FootnoteLinker(
+    body_size=current_body_size,
+    mode=current_extraction_mode,
+    structural_page=is_structural_page,
+    utterance_context=has_utterance_context,
+)
+
+CONFIG["cosmetic_annotations"]["REFERENCE"] = {
+    "test": footnotes.is_inline_reference,
+    "tag": tag("ref", type="footnote"),
+    "append_func": footnotes.inline_reference_action,
+}
+
+def start_document():
+    footnotes.reset()
+    # Open any document-specific initial structure here.
+```
+
+Its rule-facing methods are `is_consumed_run` / `consumed_run_action`,
+`is_entry` / `entry_action`, `is_continuation`, and `is_after` /
+`after_action`. A config may override the relative footer band with `y_min`
+and `y_max`; the defaults are fractions of page height, not fixed coordinates.
+
 The type definitions for all of this are in `type_decs.py`
 (`PDFConfig`, `PDFRule`, `PDFCosmeticAnnotation`, and the Word equivalents).
 

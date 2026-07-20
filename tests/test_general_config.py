@@ -20,37 +20,16 @@ def pdf_line(
     size: float = 10.0,
     indent: float = 0.0,
 ):
-    context = PDFPageContext(
-        page, 600.0, 800.0, metadata={"structure_active": True}
-    )
-    run = make_chunk(
-        text=text,
-        x=x,
-        y=y,
-        font_name="Times-Roman",
-        size=size,
-        previous=None,
-        page_num=page,
-        space_before=False,
-        page_context=context,
-    )
-    line = make_chunk(
-        text=text,
-        x=x,
-        y=y,
-        runs=[run],
-        page_num=page,
-        page_context=context,
-        metadata={"indent": indent},
-    )
-    run.line_chunk = line
-    return run
+    return pdf_runs(
+        [(text, size)], page=page, x=x, y=y, indent=indent
+    )[0]
 
 
 def pdf_runs(
     parts: list[tuple[str, float]],
     *,
     page: int = 0,
+    x: float = 72.0,
     y: float = 500.0,
     indent: float = 0.0,
 ):
@@ -59,11 +38,11 @@ def pdf_runs(
     )
     runs = []
     previous = None
-    x = 72.0
+    run_x = x
     for text, size in parts:
         run = make_chunk(
             text=text,
-            x=x,
+            x=run_x,
             y=y,
             font_name="Times-Roman",
             size=size,
@@ -74,10 +53,10 @@ def pdf_runs(
         )
         runs.append(run)
         previous = run
-        x += max(8.0, len(text) * size * 0.45)
+        run_x += max(8.0, len(text) * size * 0.45)
     line = make_chunk(
         text=" ".join(text for text, _size in parts),
-        x=72.0,
+        x=x,
         y=y,
         runs=runs,
         page_num=page,
@@ -203,13 +182,18 @@ def test_footnote_reference_links_to_definition_without_hash_in_xml_id(tmp_path)
 
 def test_duplicate_footnote_numbers_get_valid_page_scoped_ids():
     module = load_config(CONFIG_PATH).module
-    module.reset_state()
+    module.footnotes.reset()
     first = pdf_runs([("Besedilo", 10.0), ("1", 7.0)], page=0)[1]
     second = pdf_runs([("Besedilo", 10.0), ("1", 7.0)], page=1)[1]
+    same_page_duplicate = pdf_runs(
+        [("Drugo besedilo", 10.0), ("1", 7.0)], page=1
+    )[1]
 
-    assert module.footnote_xml_id(first) == "note1"
-    assert module.footnote_xml_id(second) == "note1-p2"
-    assert module.footnote_target_id(second) == "note1"
+    assert module.footnotes.definition_id(first) == "note1"
+    assert module.footnotes.definition_id(second) == "note1-p2"
+    assert module.footnotes.definition_id(second) == "note1-p2"
+    assert module.footnotes.definition_id(same_page_duplicate) == "note1-p2-2"
+    assert module.footnotes.target_id(second) == "note1"
 
 
 def test_split_numeric_runs_are_one_footnote_number():
@@ -217,5 +201,5 @@ def test_split_numeric_runs_are_one_footnote_number():
     module.PROFILE.update(mode="char-preserve", body_size=10.0, styled=True)
     runs = pdf_runs([("Besedilo", 7.0), ("1", 7.0), ("5", 7.0), ("Opombe", 7.0)])
 
-    assert module.footnote_number(runs[1]) == "15"
-    assert not module.is_first_numeric_run(runs[2])
+    assert module.footnotes.number(runs[1]) == "15"
+    assert not module.footnotes.is_first_numeric_run(runs[2])

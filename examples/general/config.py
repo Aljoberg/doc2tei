@@ -31,12 +31,12 @@ from pathlib import Path
 from typing import Any, Iterator, cast
 
 import engine
+from doc2tei import FootnoteLinker, SpeakerUtteranceHook
 from doc2tei.extractors import (
     CharacterPDFExtractor,
     LineRecord,
     WordPDFExtractor,
 )
-from doc2tei.helpers import SpeakerUtteranceHook
 from doc2tei.tei_header import Change, SourceBibl, TEIHeader
 from engine import (
     Chunk,
@@ -65,26 +65,25 @@ DEFAULT_BODY_SIZE = 10.0
 LINE_BREAK_TOLERANCE = 4.871
 COLUMN_PROBE_Y_MAX = 0.94
 RUNNING_HEADER_Y = 0.915
-FOOTNOTE_Y_MIN = 0.065
-FOOTNOTE_Y_MAX = 0.20
 
 PROFILE: dict[str, Any] = {}
-_INITIAL_STATE: dict[str, Any] = {
-    "seen_session": False,
-    "speaker_index": False,
-    "back_matter": False,
-    "consumed_line": None,
-    "footnote_page": None,
-}
-_STATE: dict[str, Any] = dict(_INITIAL_STATE)
+
+
+def _new_state() -> dict[str, Any]:
+    return {
+        "seen_session": False,
+        "speaker_index": False,
+        "back_matter": False,
+        "consumed_line": None,
+    }
+
+
+_STATE = _new_state()
 
 
 def reset_state():
     _STATE.clear()
-    _STATE.update(_INITIAL_STATE)
-    _STATE["footnote_ids"] = {}
-    _STATE["used_footnote_ids"] = set()
-    _STATE["consumed_footnote_runs"] = {}
+    _STATE.update(_new_state())
 
 
 def body_size() -> float:
@@ -549,7 +548,7 @@ speaker_hook = SpeakerUtteranceHook(speaker_identifier)
 
 def start_document():
     """Keep the outer debate div division-only for schema-safe later heads."""
-    reset_state()
+    reset_document_state()
     speaker_hook.reset()
     open_root_division("frontMatter")
 
@@ -769,159 +768,17 @@ def is_paragraph(chunk: PDFChunk):
     return chunk.is_line_start and not has_utterance_context()
 
 
-def is_small_numeric_run(chunk: PDFChunk):
-    return chunk.font_size <= body_size() - 2.0 and chunk.text.strip().isdigit()
+footnotes = FootnoteLinker(
+    body_size=body_size,
+    mode=lambda: PROFILE.get("mode"),
+    structural_page=is_structural_page,
+    utterance_context=has_utterance_context,
+)
 
 
-def numeric_run_group(chunk: PDFChunk):
-    """Join adjacent small runs when OCR/font changes split ``15`` into 1 + 5."""
-    runs = chunk.line_chunk.runs
-    index = runs.index(chunk)
-    start = index
-    while start > 0 and is_small_numeric_run(runs[start - 1]):
-        start -= 1
-    end = index + 1
-    while end < len(runs) and is_small_numeric_run(runs[end]):
-        end += 1
-    return runs[start:end]
-
-
-def footnote_number(chunk: PDFChunk):
-    return "".join(run.text.strip() for run in numeric_run_group(chunk))
-
-
-def is_first_numeric_run(chunk: PDFChunk):
-    return numeric_run_group(chunk)[0] is chunk
-
-
-def consume_later_numeric_runs(chunk: PDFChunk, mode: str):
-    consumed = _STATE["consumed_footnote_runs"]
-    for run in numeric_run_group(chunk)[1:]:
-        consumed[id(run)] = mode
-
-
-def is_consumed_footnote_run(chunk: PDFChunk):
-    return id(chunk) in _STATE["consumed_footnote_runs"]
-
-
-def consumed_footnote_run_action(chunk: PDFChunk):
-    mode = _STATE["consumed_footnote_runs"].pop(id(chunk))
-    if mode == "append":
-        append(chunk, should_annotate=[])
-
-
-def footnote_xml_id(chunk: PDFChunk):
-    """Return a stable, valid ID shared by a reference and its page's note."""
-    number = footnote_number(chunk)
-    key = (chunk.page_num, number)
-    mapping = _STATE["footnote_ids"]
-    if key in mapping:
-        return mapping[key]
-
-    used = cast(set[str], _STATE["used_footnote_ids"])
-    candidate = f"note{number}"
-    if candidate in used:
-        candidate = f"{candidate}-p{chunk.page_num + 1}"
-        suffix = 2
-        while candidate in used:
-            candidate = f"note{number}-p{chunk.page_num + 1}-{suffix}"
-            suffix += 1
-    mapping[key] = candidate
-    used.add(candidate)
-    return candidate
-
-
-def is_inline_footnote_reference(chunk: PDFChunk):
-    return (
-        PROFILE.get("mode") != "ocr"
-        and not chunk.is_line_start
-        and is_small_numeric_run(chunk)
-        and is_first_numeric_run(chunk)
-    )
-
-
-def inline_footnote_reference_action(chunk: PDFChunk):
-    consume_later_numeric_runs(chunk, "append")
-    push(
-        "ref",
-        cosmetic=True,
-        type="footnote",
-        target=f"#note{footnote_number(chunk)}",
-    )
-
-
-def is_footnote_entry(chunk: PDFChunk):
-    context = chunk.page_context
-    if (
-        PROFILE.get("mode") == "ocr"
-        or not is_structural_page(chunk)
-        or context is None
-        or not is_small_numeric_run(chunk)
-        or not is_first_numeric_run(chunk)
-    ):
-        return False
-    relative_y = chunk.y / context.height
-    if relative_y > FOOTNOTE_Y_MAX or (
-        relative_y < FOOTNOTE_Y_MIN and chunk.is_line_start
-    ):
-        return False
-    runs = chunk.line_chunk.runs
-    group = numeric_run_group(chunk)
-    last_index = runs.index(group[-1])
-    has_following_text = any(
-        run.font_size <= body_size() - 1.0
-        and any(character.isalpha() for character in run.text)
-        for run in runs[last_index + 1 :]
-    )
-    return has_following_text
-
-
-def footnote_entry_action(chunk: PDFChunk):
-    number = footnote_number(chunk)
-    consume_later_numeric_runs(chunk, "skip")
-    _STATE["footnote_page"] = chunk.page_num
-    pop_to("u", "div")
-    push(
-        "note",
-        attribs={"xml:id": footnote_xml_id(chunk)},
-        place="foot",
-        n=number,
-    )
-
-
-def is_footnote_continuation(chunk: PDFChunk):
-    context = chunk.page_context
-    return (
-        chunk.is_line_start
-        and context is not None
-        and tag_is_on_top("note", place="foot")
-        and _STATE["footnote_page"] == chunk.page_num
-        and chunk.y / context.height <= FOOTNOTE_Y_MAX
-    )
-
-
-def is_after_footnote(chunk: PDFChunk):
-    context = chunk.page_context
-    return (
-        chunk.is_line_start
-        and context is not None
-        and tag_is_on_top("note", place="foot")
-        and (
-            _STATE["footnote_page"] != chunk.page_num
-            or chunk.y / context.height > FOOTNOTE_Y_MAX
-        )
-    )
-
-
-def after_footnote_action(_chunk: PDFChunk):
-    pop_to("note", invert=True)
-    _STATE["footnote_page"] = None
-    if has_utterance_context():
-        pop_to("u", "div")
-        push("seg")
-    else:
-        pop_to("div")
-        push("p")
+def reset_document_state():
+    reset_state()
+    footnotes.reset()
 
 
 def is_appendix_head(chunk: PDFChunk):
@@ -973,9 +830,9 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
         "tag": tag("hi", rend="bold"),
     },
     "REFERENCE": {
-        "test": is_inline_footnote_reference,
+        "test": footnotes.is_inline_reference,
         "tag": tag("ref", type="footnote"),
-        "append_func": inline_footnote_reference_action,
+        "append_func": footnotes.inline_reference_action,
     },
 }
 
@@ -994,8 +851,8 @@ CONFIG: PDFConfig = {
             "append_func": lambda chunk: None,
         },
         "CONSUMED_FOOTNOTE_RUN": {
-            "test": is_consumed_footnote_run,
-            "append_func": consumed_footnote_run_action,
+            "test": footnotes.is_consumed_run,
+            "append_func": footnotes.consumed_run_action,
         },
         "APPENDIX_HEAD": {
             "test": is_appendix_head,
@@ -1028,12 +885,12 @@ CONFIG: PDFConfig = {
             "action": head_action,
         },
         "FOOTNOTE_ENTRY": {
-            "test": is_footnote_entry,
-            "action": footnote_entry_action,
+            "test": footnotes.is_entry,
+            "action": footnotes.entry_action,
             "append_func": lambda chunk: None,
         },
         "FOOTNOTE_CONTINUATION": {
-            "test": is_footnote_continuation,
+            "test": footnotes.is_continuation,
             "append_func": lambda chunk: append(chunk, should_annotate=[]),
         },
         "GENERIC_NOTE": {
@@ -1050,8 +907,8 @@ CONFIG: PDFConfig = {
             "action": lambda _: _open_speech_seg(),
         },
         "AFTER_FOOTNOTE": {
-            "test": is_after_footnote,
-            "action": after_footnote_action,
+            "test": footnotes.is_after,
+            "action": footnotes.after_action,
         },
         "SEG": {
             "test": is_seg,
@@ -1080,7 +937,7 @@ def _asymmetric_line_break(previous_y: float, current_y: float):
 def get_chunks(filename: str) -> Iterator[Chunk]:
     PROFILE.clear()
     PROFILE.update(_probe(filename))
-    reset_state()
+    reset_document_state()
 
     common = dict(
         line_filter=line_filter,
