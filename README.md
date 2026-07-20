@@ -28,6 +28,8 @@ python parse.py path_to_pdf.pdf --config examples/zbor-republik-in-pokrajin/conf
 Useful optional outputs are `--diagnostics diagnostics.json` (rule hit counts,
 unmatched samples, pages and fonts) and `--data-output data.json` (data exported
 by config hooks, such as a speaker mapping).
+`--list-person-output listPerson.xml` writes a minimal TEI speaker list directly
+from that mapping in the same parse invocation, without network lookups.
 
 The same operation is available as a library API and has no mandatory output
 side effects:
@@ -42,15 +44,18 @@ result = parse_document(
 result.write_xml("out.xml")
 result.write_diagnostics("diagnostics.json")
 result.write_data("speakers.json")
+result.write_list_person("listPerson.xml")
 ```
 
-If you want to assemble a `<listPerson>` file, you can also run
+If you want Wikidata-enriched person records, you can still run
 
 ```python
 python3 make_list_person.py out/speaker_utterance.json -o listPerson.xml
 ```
 
-This program takes a .json file with speaker ids and their long forms.
+This program takes a .json file with speaker ids and their long forms and adds
+best-effort Wikidata metadata. For a deterministic minimal list, prefer the
+`--list-person-output` option above.
 This file can be exported by a config's `on_end(result)` hook and the
 `--data-output` option, so make sure to check that out.
 

@@ -8,7 +8,7 @@ from .extractors import (
     RunRecord,
     WordPDFExtractor,
 )
-from .helpers import SpeakerUtteranceHook
+from .helpers import SpeakerUtteranceHook, build_list_person
 from .parser import (
     LoadedConfig,
     ParseDiagnostics,
@@ -58,6 +58,7 @@ __all__ = [
     "TEIHeader",
     "Text",
     "WordPDFExtractor",
+    "build_list_person",
     "fill_counts",
     "load_config",
     "parse_document",

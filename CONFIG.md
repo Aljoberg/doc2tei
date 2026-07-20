@@ -668,7 +668,7 @@ stack through the helpers.
 
 ```python
 push("note", type="speaker")                       # open <note type="speaker">
-push("note", attribs={"xml:id": "#note3"}, place="foot", n="3")  # mixed attrs
+push("note", attribs={"xml:id": "note3"}, place="foot", n="3")  # mixed attrs
 push("hi", rend="italic")                          # open <hi rend="italic">
 push(some_element)                                 # push a prebuilt ET.Element
 push("emph", cosmetic=True)                        # open an inline cosmetic wrapper
@@ -1082,9 +1082,10 @@ can be extremely large.
 ```bash
 # 1. Convert with an explicit config and audit outputs
 python parse.py path/to/input.pdf --config path/to/config.py -o out/out.xml \
-  --diagnostics out/diagnostics.json --data-output out/data.json
+  --diagnostics out/diagnostics.json --data-output out/data.json \
+  --list-person-output out/listPerson.xml
 
-# 2. Turn an exported speaker map into a TEI <listPerson>
+# Optional: enrich the exported speaker map with best-effort Wikidata matches
 python make_list_person.py out/data.json -o out/listPerson.xml
 ```
 

@@ -18,6 +18,7 @@ from engine import Chunk, PDFChunk, WordChunk
 from type_decs import CosmeticAnnotations, OnPop
 
 from .config import Rule as ConfigRule
+from .helpers import build_list_person
 from .tei_header import TEIHeader, fill_counts
 
 
@@ -139,6 +140,26 @@ class ParseResult:
     def write_data(self, path: str | Path) -> None:
         Path(path).write_text(
             json.dumps(self.data, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+
+    def write_list_person(
+        self,
+        path: str | Path,
+        *,
+        data_key: str = "speakers",
+        xml_declaration: bool = False,
+    ) -> None:
+        mapping = self.data.get(data_key)
+        if not isinstance(mapping, Mapping) or not all(
+            isinstance(key, str) and isinstance(value, str)
+            for key, value in mapping.items()
+        ):
+            raise ValueError(
+                f"result.data[{data_key!r}] must be a string-to-string speaker mapping"
+            )
+        root = build_list_person(cast(Mapping[str, str], mapping))
+        Path(path).write_bytes(
+            ET.tostring(root, encoding="utf-8", xml_declaration=xml_declaration)
         )
 
 

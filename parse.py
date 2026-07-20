@@ -27,6 +27,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--data-output", help="write data exported by config hooks as JSON"
     )
     parser.add_argument(
+        "--list-person-output",
+        help="write a minimal TEI listPerson from exported speaker data",
+    )
+    parser.add_argument(
         "--xml-declaration", action="store_true", help="include an XML declaration"
     )
     return parser
@@ -56,6 +60,10 @@ def main(argv: list[str] | None = None) -> int:
         result.write_diagnostics(args.diagnostics)
     if args.data_output:
         result.write_data(args.data_output)
+    if args.list_person_output:
+        result.write_list_person(
+            args.list_person_output, xml_declaration=args.xml_declaration
+        )
     return 0
 
 

@@ -24,14 +24,17 @@ from __future__ import annotations
 import functools
 import re
 from collections import Counter
+from pathlib import Path
 from typing import Iterator, cast, Any
 
+import engine
 from doc2tei.extractors import (
     CharacterPDFExtractor,
     LineRecord,
     WordPDFExtractor,
 )
 from doc2tei.helpers import SpeakerUtteranceHook
+from doc2tei.tei_header import Change, SourceBibl, TEIHeader
 from engine import (
     Chunk,
     PDFChunk,
@@ -65,7 +68,7 @@ def body_size() -> float:
 
 
 def is_styled():
-    return PROFILE.get("mode") != "ocr"
+    return bool(PROFILE.get("styled", False))
 
 
 def is_body_size(size: float) -> bool:
@@ -111,6 +114,15 @@ def _probe(filename: str, sample_pages: int = 10):
         "mode": mode,
         "body_size": float(sizes.most_common(1)[0][0]) if sizes else 10.0,
         "space_ratio": space_ratio,
+        # Styling is useful only when the extractor can actually recognize it.
+        # A character layer containing only a regular font is no better than OCR
+        # for rules that use bold/italic as structural evidence.
+        "styled": mode != "ocr"
+        and any(
+            marker in font.lower()
+            for font in fonts
+            for marker in ("bold", "italic")
+        ),
     }
     log(f"probed profile: {profile}")
     return profile
@@ -208,9 +220,12 @@ def line_filter(record: LineRecord, page: PDFPageContext):
 
 
 PRILOGE_RE = re.compile(r"^PRILOG[EIA]?\b")
+SPEAKER_INDEX_RE = re.compile(r"^SEZNAM\s+GOVORNIKOV\b", re.IGNORECASE)
 
 
 def stop_before(record: LineRecord, page: PDFPageContext):
+    if SPEAKER_INDEX_RE.match(record.text.strip()):
+        return True
     # appendix volume: a big standalone PRILOGE heading ends the transcript
     return bool(
         page.metadata.get("in_transcript", False)
@@ -273,9 +288,9 @@ def _looks_like_person_prefix(prefix: str):
         return False
     # OCR often spaces a surname ("P i r n a t") or splits it ("Me lik");
     # person labels consist of capitalized / very short fragments only
-    return all(
-        token[:1].isupper() or len(token) == 1 or (token.islower() and len(token) <= 3)
-        for token in tokens[1:]
+    return (
+        sum(token[:1].isupper() for token in tokens) >= 2
+        and all(token[:1].isupper() or len(token) == 1 for token in tokens[1:])
     )
 
 
@@ -368,9 +383,11 @@ def speaker_action(chunk: PDFChunk):
     else:
         # character modes: the rest of the line arrives as further chunks and
         # flows into the open note by itself
-        if not tag_is_on_top("note", type="speaker"):
-            pop_to("div")
-            push("note", type="speaker")
+        # Every matched line is a new label. Closing a preceding speaker note
+        # invokes the hook and opens its <u>; pop_to then closes that utterance
+        # before this new note is started.
+        pop_to("div")
+        push("note", type="speaker")
         append(chunk, should_annotate=[])
 
 
@@ -417,6 +434,21 @@ def speaker_identifier(text: str):
 
 
 speaker_hook = SpeakerUtteranceHook(speaker_identifier)
+
+
+def build_tei_header():
+    """Build a generic header without claiming document-specific metadata."""
+    source_title = Path(engine.filename).stem
+    return TEIHeader(
+        main_titles={"": source_title},
+        source=SourceBibl(titles={"": source_title}),
+        project_desc={
+            "en": "Automatically converted from a searchable PDF by doc2tei."
+        },
+        changes=[
+            Change(name="doc2tei", note="Automatic conversion from source PDF.")
+        ],
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -497,6 +529,7 @@ def time_action(chunk: PDFChunk):
     kind = "start" if START_TIME_RE.match(line_text(chunk)) else "date"
     if not tag_is_on_top("time", type=kind):
         pop_to("div")
+        push("p")
         push("time", type=kind)
 
 
@@ -506,26 +539,6 @@ def is_chairman(chunk: PDFChunk):
     # "Predsedavajući Vlado Malašič:" introduces a speaker, not the session
     # chairman note
     return speaker_parts(chunk) is None
-
-
-def is_footnote_entry(chunk: PDFChunk):
-    return (
-        chunk.is_line_start
-        and chunk.font_size <= body_size() - 2.0
-        and chunk.text.strip().isdigit()
-    )
-
-
-def footnote_action(chunk: PDFChunk):
-    serialized = re.sub(r"[^a-zA-Z0-9]", "", chunk.text.strip())
-    if not tag_is_on_top("note", place="foot", n=serialized):
-        pop_to("u", "div")
-        push(
-            "note",
-            attribs={"xml:id": f"#note{serialized}"},
-            place="foot",
-            n=serialized,
-        )
 
 
 def is_generic_note(chunk: PDFChunk):
@@ -576,7 +589,29 @@ def contents_action(chunk: PDFChunk):
 
 
 def is_seg(chunk: PDFChunk):
-    return chunk.is_line_start and is_body_line(chunk) and 6.0 <= indent(chunk) <= 45.0
+    return (
+        chunk.is_line_start
+        and is_body_line(chunk)
+        and 6.0 <= indent(chunk) <= 45.0
+        and has_utterance_context()
+    )
+
+
+def has_utterance_context():
+    """An open utterance or speaker note that will open one when popped."""
+    return any(
+        entry.element.tag == "u"
+        or (
+            entry.element.tag == "note"
+            and entry.element.attrib.get("type") == "speaker"
+        )
+        for entry in engine.stack
+    )
+
+
+def is_paragraph(chunk: PDFChunk):
+    """Keep non-speech text in a TEI block instead of directly under div."""
+    return chunk.is_line_start and not has_utterance_context()
 
 
 # ---------------------------------------------------------------------------
@@ -594,15 +629,15 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
     },
     "REFERENCE": {
         "test": lambda chunk: (
-            is_styled()
+            PROFILE.get("mode") != "ocr"
             and chunk.font_size <= body_size() - 2.0
             and chunk.text.strip().isdigit()
         ),
-        "tag": tag("ref"),
+        "tag": tag("ref", type="footnote"),
         "append_func": lambda chunk: push(
             "ref",
             cosmetic=True,
-            target=f'#note{re.sub(r"[^a-zA-Z0-9]", "", chunk.text.strip())}',
+            type="footnote",
         ),
     },
 }
@@ -615,6 +650,7 @@ CONFIG: PDFConfig = {
     "on_pop": speaker_hook,
     "on_end": speaker_hook.export,
     "auto_xml_ids": True,
+    "tei_header": build_tei_header,
     "rules": {
         "CONTENTS": {
             "test": is_contents,
@@ -638,11 +674,6 @@ CONFIG: PDFConfig = {
             "test": is_head,
             "action": head_action,
         },
-        "FOOTNOTE_ENTRY": {
-            "test": is_footnote_entry,
-            "action": footnote_action,
-            "append_func": lambda chunk: None,
-        },
         "GENERIC_NOTE": {
             "test": is_generic_note,
             "action": generic_note_action,
@@ -655,6 +686,10 @@ CONFIG: PDFConfig = {
         "SEG": {
             "test": is_seg,
             "action": pop_and_push_to("u", "div", tag="seg", chunked=False),
+        },
+        "PARAGRAPH": {
+            "test": is_paragraph,
+            "action": pop_and_push_to("div", tag="p", chunked=False),
         },
     },
 }
