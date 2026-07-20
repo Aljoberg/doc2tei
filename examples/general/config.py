@@ -24,7 +24,7 @@ from __future__ import annotations
 import functools
 import re
 from collections import Counter
-from typing import Iterator, cast
+from typing import Iterator, cast, Any
 
 from doc2tei.extractors import (
     CharacterPDFExtractor,
@@ -56,15 +56,15 @@ def log(*args, **kwargs):
 # document profile, filled by get_chunks() before parsing starts
 # ---------------------------------------------------------------------------
 
-PROFILE: dict[str, object] = {}
+PROFILE: dict[str, Any] = {}
 _STATE: dict[str, bool] = {"seen_session": False}
 
 
 def body_size() -> float:
-    return float(cast(float, PROFILE.get("body_size", 10.0)))
+    return PROFILE.get("body_size", 10.0)
 
 
-def is_styled() -> bool:
+def is_styled():
     return PROFILE.get("mode") != "ocr"
 
 
@@ -72,7 +72,7 @@ def is_body_size(size: float) -> bool:
     return abs(size - body_size()) <= 1.6
 
 
-def _probe(filename: str, sample_pages: int = 10) -> dict[str, object]:
+def _probe(filename: str, sample_pages: int = 10):
     """Cheap pdfminer pass over the first pages to pick an extraction profile."""
     from pdfminer.layout import LTChar
     from pdfminer.high_level import extract_pages
@@ -127,14 +127,14 @@ SESSION_NUM_RE = re.compile(
 SESSION_CAPS_RE = re.compile(r"\b(?:SEJ[AEO]\w*|SEDNIC\w*)\b")
 
 
-def _is_session_marker(text: str) -> bool:
+def _is_session_marker(text: str):
     text = text.strip()
     if SESSION_NUM_RE.search(text):
         return True
     return text.isupper() and bool(SESSION_CAPS_RE.search(text))
 
 
-def enrich_page(page: PDFPageContext, records: list[LineRecord]) -> None:
+def enrich_page(page: PDFPageContext, records: list[LineRecord]):
     body_x = sorted(
         record.x
         for record in records
@@ -178,7 +178,7 @@ def enrich_line(
     record: LineRecord,
     _index: int,
     _records: list[LineRecord],
-) -> dict[str, object]:
+):
     columns = page.metadata.get("columns") or [record.x]
     assert isinstance(columns, list)
     col_left = record.x
@@ -191,7 +191,7 @@ def enrich_line(
 HEADER_PATTERN_RE = re.compile(r"\d+\.?\s*(?:sej[aeio]|sednic[aeio])", re.IGNORECASE)
 
 
-def line_filter(record: LineRecord, page: PDFPageContext) -> bool:
+def line_filter(record: LineRecord, page: PDFPageContext):
     # skip whole pages until the first session heading is seen (title pages,
     # tables of contents in front matter)
     if not page.metadata.get("in_transcript", False):
@@ -210,7 +210,7 @@ def line_filter(record: LineRecord, page: PDFPageContext) -> bool:
 PRILOGE_RE = re.compile(r"^PRILOG[EIA]?\b")
 
 
-def stop_before(record: LineRecord, page: PDFPageContext) -> bool:
+def stop_before(record: LineRecord, page: PDFPageContext):
     # appendix volume: a big standalone PRILOGE heading ends the transcript
     return bool(
         page.metadata.get("in_transcript", False)
@@ -225,20 +225,20 @@ def stop_before(record: LineRecord, page: PDFPageContext) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def line_text(chunk: PDFChunk) -> str:
+def line_text(chunk: PDFChunk):
     return re.sub(r"\s+", " ", chunk.line_chunk.text).strip()
 
 
-def indent(chunk: PDFChunk) -> float:
+def indent(chunk: PDFChunk):
     value = chunk.line_chunk.metadata.get("indent", 0.0)
     return float(value) if isinstance(value, (int, float)) else 0.0
 
 
-def line_has_bold(chunk: PDFChunk) -> bool:
+def line_has_bold(chunk: PDFChunk):
     return any(run.bold for run in chunk.line_chunk.runs)
 
 
-def is_body_line(chunk: PDFChunk) -> bool:
+def is_body_line(chunk: PDFChunk):
     return is_body_size(chunk.font_size)
 
 
@@ -253,11 +253,11 @@ TITLE_PREFIX_RE = re.compile(
 )
 
 
-def _word_core(token: str) -> str:
+def _word_core(token: str):
     return re.sub(r"[^0-9A-Za-zČŠŽĆĐčšžćđ]", "", token)
 
 
-def _looks_like_person_prefix(prefix: str) -> bool:
+def _looks_like_person_prefix(prefix: str):
     """Distinguish a speaker label from ordinary prose ending in a colon."""
     prefix = re.sub(r"\s*\([^)]*\)\s*$", "", prefix).strip()
     # "VESELIN DJURANOVIĆ, predsednik ZIS" - the role after the comma is
@@ -279,7 +279,7 @@ def _looks_like_person_prefix(prefix: str) -> bool:
     )
 
 
-def leading_caps(text: str) -> int:
+def leading_caps(text: str):
     count = 0
     for character in text:
         if character.islower():
@@ -309,7 +309,7 @@ def speaker_parts(chunk: PDFChunk) -> tuple[str, str] | None:
     return match.group(1).strip(), (match.group(2) or "").strip()
 
 
-def _flush_caps_name(text: str) -> bool:
+def _flush_caps_name(text: str):
     """An all-caps name followed by a role/party: "VESELIN DJURANOVIĆ, ..."."""
     match = re.match(r"^([^,(:]{5,40})\s*[,(:]", text)
     if not match:
@@ -323,7 +323,7 @@ def _flush_caps_name(text: str) -> bool:
     return 2 <= len(tokens) <= 4 or (len(tokens) == 1 and len(name) >= 10)
 
 
-def is_speaker(chunk: PDFChunk) -> bool:
+def is_speaker(chunk: PDFChunk):
     if speaker_parts(chunk) is not None:
         return True
     # ZRIP-style speaker whose role wraps over several lines (no colon on the
@@ -339,7 +339,7 @@ def is_speaker(chunk: PDFChunk) -> bool:
     )
 
 
-def _append_text(chunk: PDFChunk, text: str) -> None:
+def _append_text(chunk: PDFChunk, text: str):
     if not text:
         return
     from dataclasses import replace
@@ -347,7 +347,7 @@ def _append_text(chunk: PDFChunk, text: str) -> None:
     append(replace(chunk, text=text, space_before=False), should_annotate=[])
 
 
-def speaker_append_split(chunk: PDFChunk) -> None:
+def speaker_append_split(chunk: PDFChunk):
     """OCR lines carry the whole line in one chunk: split label from speech."""
     parts = speaker_parts(chunk)
     assert parts is not None
@@ -362,7 +362,7 @@ def speaker_append_split(chunk: PDFChunk) -> None:
         _append_text(chunk, speech)
 
 
-def speaker_action(chunk: PDFChunk) -> None:
+def speaker_action(chunk: PDFChunk):
     if PROFILE.get("mode") == "ocr":
         speaker_append_split(chunk)
     else:
@@ -374,7 +374,7 @@ def speaker_action(chunk: PDFChunk) -> None:
         append(chunk, should_annotate=[])
 
 
-def _collapse_spaced_letters(text: str) -> str:
+def _collapse_spaced_letters(text: str):
     tokens = text.split()
     result: list[str] = []
     i = 0
@@ -400,7 +400,7 @@ def _collapse_spaced_letters(text: str) -> str:
     return " ".join(result)
 
 
-def speaker_identifier(text: str) -> str:
+def speaker_identifier(text: str):
     name = text.rsplit(":", 1)[0]
     name = _collapse_spaced_letters(name)
     name = re.sub(r"\s*\([^)]*\)\s*", " ", name)
@@ -440,7 +440,7 @@ SEJA_BILA_RE = re.compile(r"^Seja\s+(?:je\s+)?bila\b", re.IGNORECASE)
 HEAD_KEYWORD_RE = re.compile(r"\b(?:SEJ[AEO]\w*|SEDNIC\w*|NADALJEVANJE)\b")
 
 
-def is_head(chunk: PDFChunk) -> bool:
+def is_head(chunk: PDFChunk):
     if not chunk.is_line_start:
         return False
     text = line_text(chunk)
@@ -461,7 +461,7 @@ def is_head(chunk: PDFChunk) -> bool:
     )
 
 
-def head_action(chunk: PDFChunk) -> None:
+def head_action(chunk: PDFChunk):
     text = line_text(chunk)
     kind = (
         "sessionNumber"
@@ -473,7 +473,7 @@ def head_action(chunk: PDFChunk) -> None:
         push("head", type=kind)
 
 
-def is_time(chunk: PDFChunk) -> bool:
+def is_time(chunk: PDFChunk):
     if not chunk.is_line_start:
         return False
     text = line_text(chunk)
@@ -493,14 +493,14 @@ def is_time(chunk: PDFChunk) -> bool:
     return indent(chunk) > 15 or text.startswith("(")
 
 
-def time_action(chunk: PDFChunk) -> None:
+def time_action(chunk: PDFChunk):
     kind = "start" if START_TIME_RE.match(line_text(chunk)) else "date"
     if not tag_is_on_top("time", type=kind):
         pop_to("div")
         push("time", type=kind)
 
 
-def is_chairman(chunk: PDFChunk) -> bool:
+def is_chairman(chunk: PDFChunk):
     if not chunk.is_line_start or not CHAIRMAN_RE.match(line_text(chunk)):
         return False
     # "Predsedavajući Vlado Malašič:" introduces a speaker, not the session
@@ -508,7 +508,7 @@ def is_chairman(chunk: PDFChunk) -> bool:
     return speaker_parts(chunk) is None
 
 
-def is_footnote_entry(chunk: PDFChunk) -> bool:
+def is_footnote_entry(chunk: PDFChunk):
     return (
         chunk.is_line_start
         and chunk.font_size <= body_size() - 2.0
@@ -516,7 +516,7 @@ def is_footnote_entry(chunk: PDFChunk) -> bool:
     )
 
 
-def footnote_action(chunk: PDFChunk) -> None:
+def footnote_action(chunk: PDFChunk):
     serialized = re.sub(r"[^a-zA-Z0-9]", "", chunk.text.strip())
     if not tag_is_on_top("note", place="foot", n=serialized):
         pop_to("u", "div")
@@ -528,7 +528,7 @@ def footnote_action(chunk: PDFChunk) -> None:
         )
 
 
-def is_generic_note(chunk: PDFChunk) -> bool:
+def is_generic_note(chunk: PDFChunk):
     if not chunk.is_line_start:
         return False
     text = line_text(chunk)
@@ -547,12 +547,12 @@ def is_generic_note(chunk: PDFChunk) -> bool:
     )
 
 
-def generic_note_action(chunk: PDFChunk) -> None:
+def generic_note_action(chunk: PDFChunk):
     pop_to("u", "div")
     push("note")
 
 
-def is_contents(chunk: PDFChunk) -> bool:
+def is_contents(chunk: PDFChunk):
     if not chunk.is_line_start:
         return bool(tag_is_on_top("note", type="contents"))
     if CONTENTS_RE.match(line_text(chunk)):
@@ -569,13 +569,13 @@ def is_contents(chunk: PDFChunk) -> bool:
     )
 
 
-def contents_action(chunk: PDFChunk) -> None:
+def contents_action(chunk: PDFChunk):
     if not tag_is_on_top("note", type="contents"):
         pop_to("div")
         push("note", type="contents")
 
 
-def is_seg(chunk: PDFChunk) -> bool:
+def is_seg(chunk: PDFChunk):
     return chunk.is_line_start and is_body_line(chunk) and 6.0 <= indent(chunk) <= 45.0
 
 
@@ -665,7 +665,7 @@ CONFIG: PDFConfig = {
 # ---------------------------------------------------------------------------
 
 
-def _asymmetric_line_break(previous_y: float, current_y: float) -> bool:
+def _asymmetric_line_break(previous_y: float, current_y: float):
     tolerance = 4.871
     return (
         previous_y - current_y > tolerance
