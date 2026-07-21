@@ -266,6 +266,11 @@ def _extract_pdfplumber_range(task: _PDFPlumberRangeTask) -> list[_PageRecordBat
                         error_message=str(error),
                     )
                 )
+            finally:
+                # A Page retains its complete pdfminer layout and object maps
+                # after extract_words(). Long documents otherwise keep every
+                # page's character graph alive until the worker exits.
+                page.close()
     return batches
 
 
@@ -436,8 +441,7 @@ class CharacterPDFExtractor:
         if selected_pages < self.parallel_min_pages:
             return None
         requested = (
-            # min(8, os.cpu_count() or 1)
-            os.cpu_count() or 1
+            min(8, os.cpu_count() or 1)
             if self.page_workers == 0
             else self.page_workers
         )
@@ -854,6 +858,10 @@ class WordPDFExtractor:
                     self.page_error_handler(page_num, error)
                     pending_space = True
                     continue
+                finally:
+                    # Records contain all data needed below; release the much
+                    # larger pdfminer page layout before moving to the next page.
+                    page.close()
 
                 for index, record in enumerate(records):
                     if self.stop_before is not None and self.stop_before(
@@ -943,8 +951,7 @@ class WordPDFExtractor:
         if selected_pages < self.parallel_min_pages:
             return None
         requested = (
-            # min(8, os.cpu_count() or 1)
-            os.cpu_count() or 1
+            min(8, os.cpu_count() or 1)
             if self.page_workers == 0
             else self.page_workers
         )

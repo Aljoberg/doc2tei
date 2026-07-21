@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import engine
 import doc2tei.parser as parser_module
 from doc2tei.parser import load_config, parse_document
-from doc2tei.extractors import CharacterPDFExtractor, LineRecord
+from doc2tei.extractors import CharacterPDFExtractor, LineRecord, WordPDFExtractor
 from doc2tei.helpers import build_list_person
 from engine import PDFPageContext, make_chunk
 
@@ -369,17 +369,64 @@ def test_general_config_can_disable_nearby_run_merging():
     module = load_config(CONFIG_PATH).module
 
     assert module.CONFIG["merge_nearby_runs"] is True
-    assert module.CONFIG["page_workers"] == 0
+    configured_workers = int(module.CONFIG["page_workers"])
+    assert configured_workers >= 0
     assert module._make_extractor("char-preserve").merge_nearby_runs is True
-    assert module._make_extractor("char-preserve").page_workers == 0
+    assert (
+        module._make_extractor("char-preserve").page_workers
+        == configured_workers
+    )
     assert module._make_extractor("char-break").line_break_mode == "downward"
-    assert module._make_extractor("ocr").page_workers == 0
+    assert module._make_extractor("ocr").page_workers == configured_workers
 
     module.CONFIG["merge_nearby_runs"] = False
     module.CONFIG["page_workers"] = 1
     assert module._make_extractor("char-preserve").merge_nearby_runs is False
     assert module._make_extractor("char-preserve").page_workers == 1
     assert module._make_extractor("ocr").page_workers == 1
+
+
+def test_word_extractor_releases_each_pdfplumber_page(monkeypatch):
+    import pdfplumber
+
+    class FakePage:
+        width = 600.0
+        height = 800.0
+        closed = False
+
+        def extract_words(self, **_kwargs):
+            return [
+                {
+                    "text": "Text",
+                    "x0": 72.0,
+                    "x1": 92.0,
+                    "top": 90.0,
+                    "bottom": 100.0,
+                    "fontname": "Times-Roman",
+                    "size": 10.0,
+                }
+            ]
+
+        def close(self):
+            self.closed = True
+
+    class FakePDF:
+        def __init__(self, page):
+            self.pages = [page]
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+    page = FakePage()
+    monkeypatch.setattr(pdfplumber, "open", lambda _filename: FakePDF(page))
+
+    chunks = list(WordPDFExtractor(page_workers=1)("unused.pdf"))
+
+    assert page.closed
+    assert [chunk.text for chunk in chunks] == ["Text"]
 
 
 def test_rules_are_normalized_once_per_document(tmp_path, monkeypatch):
