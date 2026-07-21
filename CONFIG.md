@@ -65,8 +65,8 @@ python parse.py input.pdf --config path/to/config.py -o output.xml \
 ```
 
 - `diagnostics.json` contains rule hit counts, unmatched samples, page counts,
-  fonts, and sizes. "Unmatched" means that no structural rule fired; the chunk
-  was still appended normally.
+  fonts, sizes, and any fail-soft recovery events. "Unmatched" means that no
+  structural rule fired; the chunk was still appended normally.
 - `data.json` contains values placed in `result.data` by config hooks, such as a
   speaker mapping.
 
@@ -204,8 +204,10 @@ get_chunks = WordPDFExtractor(
     line_tolerance=3.2,
     word_gap=0.6,
     join_line_end_hyphens=True,
+    preserve_word_runs=True,       # retain superscript/font geometry per word
     page_enricher=enrich_page,
     line_enricher=enrich_line,
+    page_error_handler=record_page_error,
 )
 ```
 
@@ -234,10 +236,12 @@ Its main options are:
 - `gap_threshold` - horizontal distance used to infer a space.
 - `max_run_x_gap` - prevent distant same-font characters from being merged.
 - `line_filter`, `stop_before`, `page_enricher`, `line_enricher` - document callbacks.
+- `page_error_handler(page_num, error)` - optionally skip and report one broken
+  page instead of aborting the remaining document.
 
 Use `WordPDFExtractor` when pdfplumber's reconstructed words are more reliable
 than the raw character stream. Despite its name, it is still a PDF extractor;
-it currently reconstructs each accepted printed line into one `PDFChunk`.
+by default it reconstructs each accepted printed line into one `PDFChunk`.
 
 Its main options are:
 
@@ -245,6 +249,8 @@ Its main options are:
 - `line_tolerance` - controls grouping extracted words into lines.
 - `word_gap` - horizontal gap that inserts a reconstructed space.
 - `join_line_end_hyphens` - remove a line-ending hyphen and join the next line.
+- `preserve_word_runs` - emit contiguous font/size runs while retaining a
+  reconstructed whole-line view. This is useful for superscripts and footnotes.
 - the same page range and record callbacks described above.
 
 ### Extraction records
@@ -429,6 +435,9 @@ CONFIG["cosmetic_annotations"]["REFERENCE"] = {
 def start_document():
     footnotes.reset()
     # Open any document-specific initial structure here.
+
+def finish_document(result):
+    footnotes.finalize()  # unresolved raised digits become superscript <hi>
 ```
 
 Its rule-facing methods are `is_consumed_run` / `consumed_run_action`,
@@ -590,6 +599,7 @@ CONFIG: PDFConfig = {
     "on_pop": on_pop,               # optional, whenever an element closes
     "on_end": on_end,               # optional, after the tree is committed
     "auto_xml_ids": True,           # optional, generate xml:id on structural elements
+    "recover_errors": True,         # optional, preserve partial output on content errors
     "tei_header": TEI_HEADER,       # optional, a <teiHeader> for the output
     "document": make_document,      # optional, replaces the default TEI skeleton
 }
@@ -599,7 +609,16 @@ With `"auto_xml_ids": True`, every structural element opened by `push()` gets
 a ParlaMint-style generated id (`<input-basename>.<tag><N>`, e.g.
 `slo-53-899.seg12`, counted per tag) unless the push already provides an
 explicit `xml:id`. Cosmetic wrappers (`<emph>`, `<hi>`, `<ref>`) are never
-auto-id'd. The default is `False`.
+auto-id'd. Invalid filename characters and digit-leading basenames are repaired
+to conservative XML names. The default is `False`.
+
+With `"recover_errors": True`, document-content failures in extraction, rule
+tests/actions, lifecycle hooks, stack closing, or header count filling are
+recorded in diagnostics and in header `note[type="conversionRecovery"]`
+elements. The parser keeps the partial tree and preserves the affected chunk in
+an unparsed block where possible. Missing inputs, invalid config modules, and
+filesystem write failures remain hard errors because there is no document or
+output target to recover from.
 
 PDF configs have one top-level `rules` group. There is no alignment wrapper.
 
@@ -1129,7 +1148,7 @@ a document family deserves its own config.
 
 When making a config, expect some tests or chunks not to work immediately.
 Use `--diagnostics report.json` first: it records rule hit counts, unmatched
-samples, page counts, and font/size distributions. For the full low-level log,
+samples, recovery counts, page counts, and font/size distributions. For the full low-level log,
 set `"debug": True` in the config and pass `--debug-file debug.txt`; that file
 can be extremely large.
 

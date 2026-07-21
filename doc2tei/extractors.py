@@ -51,6 +51,7 @@ class LineRecord:
     font_size: float
     runs: list[RunRecord]
     metadata: dict[str, object] = field(default_factory=dict)
+    x_end: float | None = None
 
 
 @dataclass
@@ -61,6 +62,7 @@ class _CharacterRun:
     fontname: str
     size: float
     gap: bool
+    x1: float
 
 
 LineFilter = Callable[[LineRecord, PDFPageContext], bool]
@@ -70,6 +72,7 @@ LineEnricher = Callable[
     [PDFPageContext, LineRecord, int, list[LineRecord]], dict[str, object] | None
 ]
 LineBreakTest = Callable[[float, float], bool]
+PageErrorHandler = Callable[[int, Exception], None]
 
 
 def _weighted_mode(
@@ -102,6 +105,7 @@ class CharacterPDFExtractor:
         stop_before: StopTest | None = None,
         page_enricher: PageEnricher | None = None,
         line_enricher: LineEnricher | None = None,
+        page_error_handler: PageErrorHandler | None = None,
     ):
         self.pages = pages
         self.line_tolerance = line_tolerance
@@ -113,6 +117,7 @@ class CharacterPDFExtractor:
         self.stop_before = stop_before
         self.page_enricher = page_enricher
         self.line_enricher = line_enricher
+        self.page_error_handler = page_error_handler
 
     def __call__(self, filename: str) -> Iterator[Chunk]:
         from pdfminer.converter import PDFLayoutAnalyzer
@@ -154,15 +159,24 @@ class CharacterPDFExtractor:
                 if self.pages.end is not None and page_num >= self.pages.end:
                     break
 
-                device.chars = []
-                interpreter.process_page(page)
-                context = PDFPageContext(page_num, device.width, device.height)
-                raw_lines = self._group_lines(device.chars)
-                records, pending_values = self._make_records(raw_lines, pending_space)
-                if records:
-                    pending_space = pending_values[-1]
-                if self.page_enricher is not None:
-                    self.page_enricher(context, records)
+                try:
+                    device.chars = []
+                    interpreter.process_page(page)
+                    context = PDFPageContext(page_num, device.width, device.height)
+                    raw_lines = self._group_lines(device.chars)
+                    records, pending_values = self._make_records(
+                        raw_lines, pending_space
+                    )
+                    if records:
+                        pending_space = pending_values[-1]
+                    if self.page_enricher is not None:
+                        self.page_enricher(context, records)
+                except Exception as error:
+                    if self.page_error_handler is None:
+                        raise
+                    self.page_error_handler(page_num, error)
+                    pending_space = True
+                    continue
 
                 for index, record in enumerate(records):
                     if self.stop_before is not None and self.stop_before(
@@ -269,6 +283,7 @@ class CharacterPDFExtractor:
                     if gap and self.literal_spaces != "preserve":
                         runs[-1].text += " "
                     runs[-1].text += char_text
+                    runs[-1].x1 = float(char.x1)
                 else:
                     runs.append(
                         _CharacterRun(
@@ -278,6 +293,7 @@ class CharacterPDFExtractor:
                             fontname=str(char.fontname),
                             size=float(char.size),
                             gap=bool(gap),
+                            x1=float(char.x1),
                         )
                     )
                 previous = char
@@ -317,6 +333,7 @@ class CharacterPDFExtractor:
                     font_name=first.font_name,
                     font_size=first.font_size,
                     runs=run_records,
+                    x_end=max(run.x1 for run in runs),
                 )
             )
             pending_space = not broke if self.literal_spaces == "break" else True
@@ -336,10 +353,12 @@ class WordPDFExtractor:
         line_tolerance: float = 3.2,
         word_gap: float = 0.6,
         join_line_end_hyphens: bool = False,
+        preserve_word_runs: bool = False,
         line_filter: LineFilter | None = None,
         stop_before: StopTest | None = None,
         page_enricher: PageEnricher | None = None,
         line_enricher: LineEnricher | None = None,
+        page_error_handler: PageErrorHandler | None = None,
     ):
         self.pages = pages
         self.x_tolerance = x_tolerance
@@ -347,10 +366,12 @@ class WordPDFExtractor:
         self.line_tolerance = line_tolerance
         self.word_gap = word_gap
         self.join_line_end_hyphens = join_line_end_hyphens
+        self.preserve_word_runs = preserve_word_runs
         self.line_filter = line_filter
         self.stop_before = stop_before
         self.page_enricher = page_enricher
         self.line_enricher = line_enricher
+        self.page_error_handler = page_error_handler
 
     def __call__(self, filename: str) -> Iterator[Chunk]:
         import pdfplumber
@@ -363,29 +384,36 @@ class WordPDFExtractor:
                     continue
                 if self.pages.end is not None and page_num >= self.pages.end:
                     break
-                context = PDFPageContext(
-                    page_num=page_num,
-                    width=float(page.width),
-                    height=float(page.height),
-                )
-                words = cast(
-                    list[ExtractedWord],
-                    page.extract_words(
-                        x_tolerance=self.x_tolerance,
-                        y_tolerance=self.y_tolerance,
-                        keep_blank_chars=False,
-                        use_text_flow=True,
-                        extra_attrs=["fontname", "size"],
-                    ),
-                )
-                records = [
-                    self._record(context.height, words_on_line)
-                    for words_on_line in self._group_words(words)
-                    if words_on_line
-                ]
-                records = [record for record in records if record.text]
-                if self.page_enricher is not None:
-                    self.page_enricher(context, records)
+                try:
+                    context = PDFPageContext(
+                        page_num=page_num,
+                        width=float(page.width),
+                        height=float(page.height),
+                    )
+                    words = cast(
+                        list[ExtractedWord],
+                        page.extract_words(
+                            x_tolerance=self.x_tolerance,
+                            y_tolerance=self.y_tolerance,
+                            keep_blank_chars=False,
+                            use_text_flow=True,
+                            extra_attrs=["fontname", "size"],
+                        ),
+                    )
+                    records = [
+                        self._record(context.height, words_on_line)
+                        for words_on_line in self._group_words(words)
+                        if words_on_line
+                    ]
+                    records = [record for record in records if record.text]
+                    if self.page_enricher is not None:
+                        self.page_enricher(context, records)
+                except Exception as error:
+                    if self.page_error_handler is None:
+                        raise
+                    self.page_error_handler(page_num, error)
+                    pending_space = True
+                    continue
 
                 for index, record in enumerate(records):
                     if self.stop_before is not None and self.stop_before(
@@ -410,28 +438,48 @@ class WordPDFExtractor:
                     )
                     if hyphenated:
                         text = text[:-1]
-                    previous_run = make_chunk(
-                        text=text,
-                        x=record.x,
-                        y=record.y,
-                        font_name=record.font_name,
-                        size=record.font_size,
-                        previous=previous_run,
-                        page_num=page_num,
-                        space_before=pending_space,
-                        page_context=context,
-                    )
+                    source_runs = record.runs if self.preserve_word_runs else [
+                        RunRecord(
+                            text=text,
+                            x=record.x,
+                            y=record.y,
+                            font_name=record.font_name,
+                            font_size=record.font_size,
+                            space_before=pending_space,
+                        )
+                    ]
+                    if self.preserve_word_runs and hyphenated and source_runs:
+                        source_runs[-1].text = source_runs[-1].text[:-1]
+                    run_chunks: list[PDFChunk] = []
+                    for run_index, run in enumerate(source_runs):
+                        previous_run = make_chunk(
+                            text=run.text,
+                            x=run.x,
+                            y=run.y,
+                            font_name=run.font_name,
+                            size=run.font_size,
+                            previous=previous_run,
+                            page_num=page_num,
+                            space_before=(
+                                pending_space if run_index == 0 else run.space_before
+                            ),
+                            page_context=context,
+                        )
+                        run_chunks.append(previous_run)
+                    if not run_chunks:
+                        continue
                     line_chunk = make_chunk(
                         text=text,
                         x=record.x,
                         y=record.y,
-                        runs=[previous_run],
+                        runs=run_chunks,
                         page_num=page_num,
                         page_context=context,
                         metadata=record.metadata,
                     )
-                    previous_run.line_chunk = line_chunk
-                    yield previous_run
+                    for run in run_chunks:
+                        run.line_chunk = line_chunk
+                    yield from run_chunks
                     pending_space = not hyphenated
                     if record.metadata.get("out_of_flow"):
                         previous_run = flow_previous_run
@@ -460,14 +508,41 @@ class WordPDFExtractor:
 
     def _record(self, page_height: float, words: list[ExtractedWord]) -> LineRecord:
         parts: list[str] = []
+        runs: list[RunRecord] = []
         previous = None
         for word in words:
-            if (
+            spaced = (
                 previous is not None
                 and float(word["x0"]) - float(previous["x1"]) > self.word_gap
-            ):
+            )
+            if spaced:
                 parts.append(" ")
-            parts.append(str(word["text"]))
+            word_text = str(word["text"])
+            parts.append(word_text)
+            word_size = float(word["size"])
+            word_font = str(word["fontname"])
+            word_y = page_height - float(word["bottom"])
+            if (
+                self.preserve_word_runs
+                and runs
+                and runs[-1].font_name == word_font
+                and abs(runs[-1].font_size - word_size) < 0.05
+                and abs(runs[-1].y - word_y) < 0.75
+            ):
+                if spaced:
+                    runs[-1].text += " "
+                runs[-1].text += word_text
+            elif self.preserve_word_runs:
+                runs.append(
+                    RunRecord(
+                        word_text,
+                        float(word["x0"]),
+                        word_y,
+                        word_font,
+                        word_size,
+                        space_before=spaced,
+                    )
+                )
             previous = word
         size = float(_weighted_mode(words, "size"))
         font = str(_weighted_mode(words, "fontname"))
@@ -478,5 +553,14 @@ class WordPDFExtractor:
         text = "".join(parts).strip()
         x = min(float(word["x0"]) for word in words)
         y = page_height - float(baseline["bottom"])
-        run = RunRecord(text, x, y, font, size)
-        return LineRecord(text, x, y, font, size, [run])
+        if not self.preserve_word_runs:
+            runs = [RunRecord(text, x, y, font, size)]
+        return LineRecord(
+            text,
+            x,
+            y,
+            font,
+            size,
+            runs,
+            x_end=max(float(word["x1"]) for word in words),
+        )

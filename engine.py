@@ -16,6 +16,63 @@ from dataclasses import dataclass, field
 from docx.oxml.ns import qn
 from collections import defaultdict
 
+
+def xml_safe_text(value: object) -> str:
+    """Return text that can always be serialized as XML 1.0.
+
+    PDF text layers occasionally contain NULs or other control characters.
+    XML cannot represent those code points, so retain their identity as a
+    visible token instead of either dropping them or failing at serialization.
+    """
+
+    text = str(value)
+    parts: list[str] = []
+    for character in text:
+        codepoint = ord(character)
+        if (
+            character in "\t\n\r"
+            or 0x20 <= codepoint <= 0xD7FF
+            or 0xE000 <= codepoint <= 0xFFFD
+            or 0x10000 <= codepoint <= 0x10FFFF
+        ):
+            parts.append(character)
+        else:
+            parts.append(f"[U+{codepoint:04X}]")
+    return "".join(parts)
+
+
+def sanitize_xml_id(value: object, *, prefix: str = "id") -> str:
+    """Coerce arbitrary source text to a conservative XML ``NCName``.
+
+    The subset used here (Unicode alphanumerics plus ``_.-``) is deliberately
+    narrower than the complete XML grammar. It is portable across validators,
+    deterministic, and leaves already-valid identifiers byte-for-byte intact.
+    """
+
+    text = xml_safe_text(value).strip()
+    if (
+        text
+        and (text[0].isalpha() or text[0] == "_")
+        and all(character.isalnum() or character in "_.-" for character in text)
+    ):
+        return text
+    cleaned = "".join(
+        character if character.isalnum() or character in "_.-" else "-"
+        for character in text
+    )
+    cleaned = re.sub(r"-+", "-", cleaned).strip("-")
+    safe_prefix = "".join(
+        character if character.isalnum() or character in "_.-" else "-"
+        for character in prefix
+    ).strip("-.")
+    if not safe_prefix or not (safe_prefix[0].isalpha() or safe_prefix[0] == "_"):
+        safe_prefix = "id"
+    if not cleaned:
+        return safe_prefix
+    if not (cleaned[0].isalpha() or cleaned[0] == "_"):
+        return f"{safe_prefix}-{cleaned}"
+    return cleaned
+
 def default_document() -> tuple[ET.Element, ET.Element]:
     """Build the standard TEI > text > body > div[debateSection] skeleton.
 
@@ -71,7 +128,7 @@ def gen_id(tag: str | ET.Element):
     name = tag if isinstance(tag, str) else tag.tag
     filename_cleaned = ".".join(filename.split(".")[:-1])
 
-    return f"{filename_cleaned}.{name}{idx}"
+    return sanitize_xml_id(f"{filename_cleaned}.{name}{idx}", prefix="doc")
 
 
 def reset(document: tuple[ET.Element, ET.Element] | None = None) -> None:
@@ -346,7 +403,15 @@ def push(
         attribs = tag.attrib
         tag = tag.tag
 
-    elem = ET.Element(tag, attribs, **rest)
+    safe_attribs = {
+        key: (
+            sanitize_xml_id(value)
+            if key == "xml:id"
+            else xml_safe_text(value)
+        )
+        for key, value in {**attribs, **rest}.items()
+    }
+    elem = ET.Element(tag, safe_attribs)
     elem.text = ""
     elem.tail = ""
     if auto_xml_ids and not cosmetic and "xml:id" not in elem.attrib:
@@ -355,6 +420,7 @@ def push(
     stack.append(
         StackEntry(element=elem, children=children, last_elem=None, cosmetic=cosmetic)
     )
+    return elem
 
 
 def pop():
@@ -438,7 +504,7 @@ def tag(tag: str, **attribs: str):
 
 
 def append_comment(text: str):
-    text = text.replace("--", "- -") # me when XSS
+    text = xml_safe_text(text).replace("--", "- -") # me when XSS
     if text.endswith("-"):
         text += " "
     children.append(ET.Comment(text))
@@ -460,7 +526,7 @@ def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):
     for chunk in chunks:
         # since all spaces we'll need are in either this .space_before prop or the next chunk's space_before, we can strip it
         # and avoid any incidents where spaces appear out of thin air
-        text = chunk.text.strip()
+        text = xml_safe_text(chunk.text).strip()
         if not text:
             continue
 

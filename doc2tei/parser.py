@@ -31,6 +31,7 @@ class Logger(Protocol):
 
 
 RuleCallback = Callable[[Chunk], None]
+RecoveryHandler = Callable[[str, BaseException, Chunk | None], None]
 
 
 @dataclass(frozen=True)
@@ -65,6 +66,8 @@ class ParseDiagnostics:
     font_counts: Counter[str] = field(default_factory=Counter)
     font_size_counts: Counter[str] = field(default_factory=Counter)
     unmatched_samples: list[dict[str, object]] = field(default_factory=list)
+    recovery_counts: Counter[str] = field(default_factory=Counter)
+    recovery_samples: list[dict[str, object]] = field(default_factory=list)
     max_samples: int = 25
 
     def observe(self, chunk: Chunk, matched_rule: str | None) -> None:
@@ -103,6 +106,23 @@ class ParseDiagnostics:
         suffix = "+".join(style) if style else "regular"
         return f"{chunk.font_name} ({suffix})"
 
+    def recover(
+        self, stage: str, error: BaseException | str, chunk: Chunk | None = None
+    ) -> None:
+        """Record a fail-soft conversion event without aborting the document."""
+        self.recovery_counts[stage] += 1
+        if len(self.recovery_samples) >= self.max_samples:
+            return
+        message = str(error)
+        if not isinstance(error, str):
+            message = f"{type(error).__name__}: {message}"
+        sample: dict[str, object] = {"stage": stage, "message": message[:500]}
+        if chunk is not None:
+            sample["text"] = chunk.text
+            if isinstance(chunk, PDFChunk):
+                sample["page"] = chunk.page_num + 1
+        self.recovery_samples.append(sample)
+
     def as_dict(self) -> dict[str, object]:
         return {
             "input": self.input,
@@ -116,6 +136,8 @@ class ParseDiagnostics:
             "font_counts": dict(sorted(self.font_counts.items())),
             "font_size_counts": dict(sorted(self.font_size_counts.items())),
             "unmatched_samples": self.unmatched_samples,
+            "recovery_counts": dict(sorted(self.recovery_counts.items())),
+            "recovery_samples": self.recovery_samples,
         }
 
 
@@ -150,14 +172,16 @@ class ParseResult:
         xml_declaration: bool = False,
     ) -> None:
         mapping = self.data.get(data_key)
-        if not isinstance(mapping, Mapping) or not all(
-            isinstance(key, str) and isinstance(value, str)
-            for key, value in mapping.items()
-        ):
-            raise ValueError(
-                f"result.data[{data_key!r}] must be a string-to-string speaker mapping"
-            )
-        root = build_list_person(cast(Mapping[str, str], mapping))
+        safe_mapping = (
+            {
+                str(key): str(value)
+                for key, value in mapping.items()
+                if isinstance(key, str) and isinstance(value, str)
+            }
+            if isinstance(mapping, Mapping)
+            else {}
+        )
+        root = build_list_person(safe_mapping)
         Path(path).write_bytes(
             ET.tostring(root, encoding="utf-8", xml_declaration=xml_declaration)
         )
@@ -280,10 +304,16 @@ def _match_group(
     group: Mapping[str, object],
     chunk: Chunk,
     log: Logger,
+    recover: RecoveryHandler | None = None,
 ) -> str | None:
     run_immediate = group.get("run_immediate")
     if callable(run_immediate):
-        cast(Callable[[], None], run_immediate)()
+        try:
+            cast(Callable[[], None], run_immediate)()
+        except Exception as error:
+            if recover is None:
+                raise
+            recover("rule.run_immediate", error, chunk)
     if not chunk.text or chunk.text == "\n":
         return None
 
@@ -302,17 +332,67 @@ def _match_group(
         if test == "_else":
             fallback = (key, rule)
             continue
-        if callable(test) and test(chunk):
+        try:
+            matches = bool(callable(test) and test(chunk))
+        except Exception as error:
+            if recover is None:
+                raise
+            recover(f"rule.{key}.test", error, chunk)
+            continue
+        if matches:
             log(f"{key}: {chunk.text}")
-            _apply_rule(rule, chunk)
+            try:
+                _apply_rule(rule, chunk)
+            except Exception as error:
+                if recover is None:
+                    raise
+                recover(f"rule.{key}.apply", error, chunk)
+                _recover_chunk(chunk, f"rule {key} failed")
+                return "RECOVERED"
             return f"{group_name}.{key}" if group_name else key
 
     if fallback is not None:
         key, rule = fallback
         log(f"{key} (fallback): {chunk.text}")
-        _apply_rule(rule, chunk)
+        try:
+            _apply_rule(rule, chunk)
+        except Exception as error:
+            if recover is None:
+                raise
+            recover(f"rule.{key}.apply", error, chunk)
+            _recover_chunk(chunk, f"fallback rule {key} failed")
+            return "RECOVERED"
         return f"{group_name}.{key}" if group_name else key
     return None
+
+
+def _recover_chunk(chunk: Chunk, reason: str) -> None:
+    """Best-effort containment for a chunk whose configured rule failed."""
+    try:
+        while len(engine.stack) > 1 and engine.stack[-1].cosmetic:
+            engine.pop()
+    except Exception:
+        # A cosmetic close callback must not prevent raw text recovery.
+        engine.on_pop = None
+
+    current = next(
+        (entry for entry in reversed(engine.stack) if not entry.cosmetic), None
+    )
+    try:
+        if current is not None and getattr(chunk, "is_line_start", False):
+            if current.element.tag == "div":
+                engine.push("p", type="unparsed")
+            elif current.element.tag == "u":
+                engine.push("seg", type="unparsed")
+        engine.append_comment(f"doc2tei recovery: {reason}; source text preserved")
+        engine.append(chunk, should_annotate=[])
+    except Exception:
+        # Last resort: append XML-safe source text directly to the live buffer.
+        text = engine.xml_safe_text(chunk.text).strip()
+        if text:
+            if chunk.space_before and engine.children:
+                engine.children.append(" ")
+            engine.children.append(text)
 
 
 def _alignment_groups(config: Mapping[str, object]) -> Mapping[str, object]:
@@ -410,6 +490,97 @@ def _call_hook(callback: object, result: ParseResult) -> None:
     hook(result) if accepts_result else hook()
 
 
+def _sanitize_tree(root: ET.Element, diagnostics: ParseDiagnostics) -> None:
+    """Make text, attributes, and IDs serializable and deterministically unique."""
+    used_ids: set[str] = set()
+    id_map: dict[str, str] = {}
+    id_keys = ("xml:id", "{http://www.w3.org/XML/1998/namespace}id")
+
+    for element in root.iter():
+        if element.text is not None:
+            element.text = engine.xml_safe_text(element.text)
+        if element.tail is not None:
+            element.tail = engine.xml_safe_text(element.tail)
+        for key, value in list(element.attrib.items()):
+            element.set(key, engine.xml_safe_text(value))
+        for key in id_keys:
+            raw_id = element.attrib.get(key)
+            if raw_id is None:
+                continue
+            base_id = engine.sanitize_xml_id(raw_id)
+            unique_id = base_id
+            suffix = 2
+            while unique_id in used_ids:
+                unique_id = f"{base_id}-{suffix}"
+                suffix += 1
+            used_ids.add(unique_id)
+            id_map.setdefault(raw_id, unique_id)
+            if unique_id != raw_id:
+                diagnostics.recover(
+                    "xml.id", f"repaired xml:id {raw_id!r} as {unique_id!r}"
+                )
+                element.set(key, unique_id)
+
+    for element in root.iter():
+        for key in ("who", "target", "corresp"):
+            value = element.attrib.get(key)
+            if not value:
+                continue
+            tokens: list[str] = []
+            changed = False
+            for token in value.split():
+                if not token.startswith("#"):
+                    tokens.append(token)
+                    continue
+                raw_id = token[1:]
+                safe_id = id_map.get(raw_id, engine.sanitize_xml_id(raw_id))
+                replacement = f"#{safe_id}"
+                tokens.append(replacement)
+                changed = changed or replacement != token
+            if changed:
+                diagnostics.recover(
+                    "xml.reference", f"repaired {key} reference {value!r}"
+                )
+                element.set(key, " ".join(tokens))
+
+
+def _append_recovery_notes(result: ParseResult) -> None:
+    """Expose fail-soft events in the TEI header as well as diagnostics JSON."""
+    messages = [
+        f"{sample['stage']}: {sample['message']}"
+        for sample in result.diagnostics.recovery_samples
+    ]
+    exported = result.data.get("recoveries")
+    if isinstance(exported, list):
+        messages.extend(str(message) for message in exported)
+    messages = list(dict.fromkeys(message for message in messages if message))
+    if not messages:
+        return
+
+    header = result.root.find("teiHeader")
+    if header is None:
+        header = TEIHeader().build()
+        result.root.insert(0, header)
+    file_desc = header.find("fileDesc")
+    if file_desc is None:
+        return
+    notes_stmt = file_desc.find("notesStmt")
+    if notes_stmt is None:
+        notes_stmt = ET.Element("notesStmt")
+        source_desc = file_desc.find("sourceDesc")
+        index = (
+            list(file_desc).index(source_desc)
+            if source_desc is not None
+            else len(file_desc)
+        )
+        file_desc.insert(index, notes_stmt)
+    for index, message in enumerate(messages, start=1):
+        note = ET.SubElement(
+            notes_stmt, "note", type="conversionRecovery", n=str(index)
+        )
+        note.text = engine.xml_safe_text(message)
+
+
 def parse_document(
     input_path: str | Path,
     *,
@@ -423,51 +594,147 @@ def parse_document(
     if not source.is_file():
         raise FileNotFoundError(f"input file does not exist: {source}")
     
-    engine.reset(document=_make_document(loaded.config.get("document")))
+    recover_errors = bool(loaded.config.get("recover_errors", False))
+    diagnostics = ParseDiagnostics(input=str(source), config=str(loaded.path))
+
+    def recover(
+        stage: str, error: BaseException, chunk: Chunk | None = None
+    ) -> None:
+        diagnostics.recover(stage, error, chunk)
+
+    try:
+        document = _make_document(loaded.config.get("document"))
+    except Exception as error:
+        if not recover_errors:
+            raise
+        recover("document", error)
+        document = None
+
+    engine.reset(document=document)
     engine.COSMETIC_ANNOTATIONS = loaded.cosmetic_annotations
     on_pop = loaded.config.get("on_pop")
     engine.on_pop = cast(OnPop, on_pop) if callable(on_pop) else None
     engine.filename = basename(input_path)
     engine.auto_xml_ids = bool(loaded.config.get("auto_xml_ids", False))
-    header = _install_header(loaded.config.get("tei_header"))
+    try:
+        header = _install_header(loaded.config.get("tei_header"))
+    except Exception as error:
+        if not recover_errors:
+            raise
+        recover("tei_header", error)
+        header = TEIHeader(main_titles={"": source.stem}).build()
+        engine.root.insert(0, header)
 
-    diagnostics = ParseDiagnostics(input=str(source), config=str(loaded.path))
     result = ParseResult(root=engine.root, diagnostics=diagnostics)
-    _call_hook(loaded.config.get("on_start"), result)
+    try:
+        _call_hook(loaded.config.get("on_start"), result)
+    except Exception as error:
+        if not recover_errors:
+            raise
+        recover("hook.on_start", error)
 
     stream = chunks if chunks is not None else loaded.get_chunks(str(source))
-    for chunk in stream:
-        loaded.log("-- parsing text --")
-        matched = None
-        if loaded.config.get("mode") == "pdf":
-            matched = _match_group(None, _pdf_rules(loaded.config), chunk, loaded.log)
-        else:
-            group_name = _alignment_group(loaded.config, chunk, loaded.log)
-            if group_name is None:
-                group_value = None
+    iterator = iter(stream)
+    while True:
+        try:
+            chunk = next(iterator)
+        except StopIteration:
+            break
+        except Exception as error:
+            if not recover_errors:
+                raise
+            recover("extractor", error)
+            break
+
+        try:
+            loaded.log("-- parsing text --")
+            matched = None
+            rule_recovery = recover if recover_errors else None
+            if loaded.config.get("mode") == "pdf":
+                matched = _match_group(
+                    None,
+                    _pdf_rules(loaded.config),
+                    chunk,
+                    loaded.log,
+                    rule_recovery,
+                )
             else:
-                group_value = _alignment_groups(loaded.config)[group_name]
-            if group_value is not None:
-                if not isinstance(group_value, Mapping):
-                    raise TypeError(f"alignment group {group_name!r} must be a mapping")
-                group = cast(Mapping[str, object], group_value)
-                matched = _match_group(group_name, group, chunk, loaded.log)
-        if matched is None:
-            engine.append(chunk)
+                group_name = _alignment_group(loaded.config, chunk, loaded.log)
+                if group_name is None:
+                    group_value = None
+                else:
+                    group_value = _alignment_groups(loaded.config)[group_name]
+                if group_value is not None:
+                    if not isinstance(group_value, Mapping):
+                        raise TypeError(
+                            f"alignment group {group_name!r} must be a mapping"
+                        )
+                    group = cast(Mapping[str, object], group_value)
+                    matched = _match_group(
+                        group_name, group, chunk, loaded.log, rule_recovery
+                    )
+            if matched is None:
+                engine.append(chunk)
+        except Exception as error:
+            if not recover_errors:
+                raise
+            recover("parser.chunk", error, chunk)
+            _recover_chunk(chunk, "parser chunk processing failed")
+            matched = "RECOVERED"
+
         diagnostics.observe(chunk, matched)
-        loaded.log(
-            f"chunk.text={chunk.text!r}, x={chunk.x}, y={chunk.y}, chunk={chunk!r}"
+        try:
+            loaded.log(
+                f"chunk.text={chunk.text!r}, x={chunk.x}, y={chunk.y}, chunk={chunk!r}"
+            )
+            loaded.log("\n")
+        except Exception as error:
+            if not recover_errors:
+                raise
+            recover("logger", error, chunk)
+
+    if diagnostics.chunk_count == 0 and recover_errors:
+        diagnostics.recover(
+            "extractor.no_text",
+            "No machine-readable text chunks were extracted; an empty TEI skeleton was retained.",
         )
-        loaded.log("\n")
 
     while len(engine.stack) > 1:
-        engine.pop()
-    engine.commit_children(engine.stack[0])
+        previous_depth = len(engine.stack)
+        try:
+            engine.pop()
+        except Exception as error:
+            if not recover_errors:
+                raise
+            recover("stack.close", error)
+            engine.on_pop = None
+            if len(engine.stack) == previous_depth:
+                # The pop failed before changing the stack; retry without hook.
+                engine.pop()
+    try:
+        engine.commit_children(engine.stack[0])
+    except Exception as error:
+        if not recover_errors:
+            raise
+        recover("stack.commit", error)
 
     if header is not None:
         # tag usage / extent counts only exist now; runs before on_end so a
         # config can still inspect or override them there
-        fill_counts(engine.root)
+        try:
+            fill_counts(engine.root)
+        except Exception as error:
+            if not recover_errors:
+                raise
+            recover("tei_header.counts", error)
 
-    _call_hook(loaded.config.get("on_end"), result)
+    try:
+        _call_hook(loaded.config.get("on_end"), result)
+    except Exception as error:
+        if not recover_errors:
+            raise
+        recover("hook.on_end", error)
+    if recover_errors:
+        _sanitize_tree(result.root, diagnostics)
+        _append_recovery_notes(result)
     return result

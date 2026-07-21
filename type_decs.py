@@ -49,6 +49,7 @@ class WordConfig(TypedDict):
     debug: bool
     route_alignment: NotRequired[Callable[["Chunk"], str]]
     auto_xml_ids: NotRequired[bool]
+    recover_errors: NotRequired[bool]
     tei_header: NotRequired[TEIHeaderSpec]
     document: NotRequired[DocumentFactory]
 
@@ -77,6 +78,7 @@ class PDFConfig(TypedDict):
     on_end: NotRequired[OnEnd]
     debug: bool
     auto_xml_ids: NotRequired[bool]
+    recover_errors: NotRequired[bool]
     tei_header: NotRequired[TEIHeaderSpec]
     document: NotRequired[DocumentFactory]
 

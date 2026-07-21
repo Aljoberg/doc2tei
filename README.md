@@ -29,7 +29,9 @@ Useful optional outputs are `--diagnostics diagnostics.json` (rule hit counts,
 unmatched samples, pages and fonts) and `--data-output data.json` (data exported
 by config hooks, such as a speaker mapping).
 `--list-person-output listPerson.xml` writes a minimal TEI speaker list directly
-from that mapping in the same parse invocation, without network lookups.
+from that mapping in the same parse invocation, without network lookups. When
+no speakers are detected, it writes an `UnknownSpeaker` placeholder instead of
+an invalid empty list or a pipeline-breaking exception.
 
 The same operation is available as a library API and has no mandatory output
 side effects:

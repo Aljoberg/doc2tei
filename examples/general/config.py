@@ -48,6 +48,7 @@ from engine import (
     pop_and_push_to,
     pop_to,
     push,
+    sanitize_xml_id,
     tag,
     tag_is_on_top,
 )
@@ -67,12 +68,14 @@ DEFAULT_BODY_SIZE = 10.0
 LINE_BREAK_TOLERANCE = 4.871
 COLUMN_PROBE_Y_MAX = 0.94
 RUNNING_HEADER_Y = 0.915
+RUNNING_FOOTER_Y = 0.085
 
 PROFILE: dict[str, Any] = {}
 
 
 def _new_state() -> dict[str, Any]:
     return {
+        "seen_meeting": False,
         "seen_session": False,
         "speaker_index": False,
         "back_matter": False,
@@ -129,7 +132,7 @@ def _probe(filename: str, sample_pages: int = 10):
 
     space_ratio = spaces / max(chars, 1)
     ocr = any("invisible" in name.lower() or "ocr" in name.lower() for name in fonts)
-    if ocr:
+    if not chars or ocr:
         mode = "ocr"
     elif space_ratio < 0.05:
         mode = "char-break"
@@ -155,19 +158,55 @@ def _probe(filename: str, sample_pages: int = 10):
 # shared enrichment: columns, session pages, running headers, back matter
 # ---------------------------------------------------------------------------
 
+_SEJA_WORD = r"SEJ(?:A|E|I|O|AH|AMI)?"
+_SEDNICA_WORD = r"S(?:JED|ED)NIC(?:A|E|I|O|U|OM|AMA)?"
+_ZASEDANJE_WORD = r"ZAS(?:JED|ED)ANJ(?:E|A|U|EM|IMA)?"
+_SESSION_WORD = rf"(?:{_SEJA_WORD}|{_SEDNICA_WORD}|{_ZASEDANJE_WORD})"
+_DEBATE_SESSION_WORD = rf"(?:{_SEJA_WORD}|{_SEDNICA_WORD})"
 SESSION_NUM_RE = re.compile(
-    r"\d+\.\s*(?:izredna\s+|redna\s+|zajedni\S+\s+)?(?:sej[aeio]|sednic[aeio])\b",
+    rf"\b\d+\.\s*(?:(?:izredn\w*|redn\w*|skupn\w*|zajedni\w*)\s+)?"
+    rf"{_SESSION_WORD}\b",
     re.IGNORECASE,
 )
-_SESSION_CAPS = r"SEJ[AEO]\w*|SEDNIC\w*"
+SESSION_STANDALONE_RE = re.compile(
+    rf"^\s*\d+\.\s*(?:(?:izredn\w*|redn\w*|skupn\w*|zajedni\w*)\s+)?"
+    rf"{_SESSION_WORD}\s*[.:-]?\s*$",
+    re.IGNORECASE,
+)
+_SESSION_CAPS = _SESSION_WORD
 SESSION_CAPS_RE = re.compile(rf"\b(?:{_SESSION_CAPS})\b")
+DEBATE_SESSION_RE = re.compile(rf"\b{_DEBATE_SESSION_WORD}\b", re.IGNORECASE)
+TRANSCRIPT_CUE_RE = re.compile(
+    r"^(?:pred?sedni[kc]\w*|podpredsedni\w*|potpredsedni\w*|"
+    r"predsedujo\S+|predsedava\w*)\s+(?:dr\.?\s+)?\S.{0,70}:\s*",
+    re.IGNORECASE,
+)
+
+
+def _session_number_match(text: str):
+    """Accept a session number at the start plus one OCR-noise character."""
+    match = SESSION_NUM_RE.search(text)
+    if match is None:
+        return None
+    prefix = text[: match.start()].strip(" \t([{<.-–—")
+    return match if len(prefix) <= 1 else None
 
 
 def _is_session_marker(text: str):
     text = text.strip()
-    if SESSION_NUM_RE.search(text):
+    if SESSION_STANDALONE_RE.fullmatch(text) or _session_number_match(text):
         return True
     return text.isupper() and bool(SESSION_CAPS_RE.search(text))
+
+
+def _is_centered_record(record: LineRecord, page: PDFPageContext) -> bool:
+    """Use measured line bounds when present, with a cautious text estimate."""
+    x_end = record.x_end
+    if x_end is None:
+        x_end = record.x + len(record.text.strip()) * record.font_size * 0.48
+    left_margin = max(0.0, record.x)
+    right_margin = max(0.0, page.width - x_end)
+    return abs(left_margin - right_margin) <= max(18.0, page.width * 0.06)
 
 
 def enrich_page(page: PDFPageContext, records: list[LineRecord]):
@@ -202,12 +241,26 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
         columns.append(flush_edge(cluster))
     page.metadata["columns"] = columns
 
-    has_session_marker = any(
+    session_markers = [
+        record
+        for record in records
+        if (
         _is_session_marker(record.text)
         and (
-            record.font_size >= body_size() + 1.0
+            bool(SESSION_STANDALONE_RE.fullmatch(record.text.strip()))
+                or record.font_size >= body_size() + 1.0
             or (record.text.strip().isupper() and len(record.text.strip()) < 80)
+            or _is_centered_record(record, page)
         )
+        )
+    ]
+    has_session_marker = bool(session_markers)
+    has_debate_session_marker = any(
+        DEBATE_SESSION_RE.search(record.text) for record in session_markers
+    )
+    has_transcript_cue = any(
+        record.text.strip()[:1].isupper()
+        and TRANSCRIPT_CUE_RE.match(record.text.strip())
         for record in records
     )
     has_speaker_index = any(
@@ -220,6 +273,10 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
         for record in records
     )
     if has_session_marker:
+        _STATE["seen_meeting"] = True
+    if has_debate_session_marker or (
+        _STATE["seen_meeting"] and has_transcript_cue
+    ):
         _STATE["seen_session"] = True
         _STATE["speaker_index"] = False
         _STATE["back_matter"] = False
@@ -233,6 +290,9 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
         _STATE["seen_session"]
         and not _STATE["speaker_index"]
         and not _STATE["back_matter"]
+    )
+    page.metadata["heading_active"] = bool(
+        page.metadata["structure_active"] or has_session_marker
     )
     page.metadata["toc_page"] = any(
         CONTENTS_RE.match(record.text.strip()) for record in records
@@ -249,7 +309,10 @@ def enrich_line(
     col_left = max(
         (left for left in columns if left <= record.x + 2.0), default=record.x
     )
-    metadata: dict[str, object] = {"indent": record.x - col_left}
+    metadata: dict[str, object] = {
+        "indent": record.x - col_left,
+        "centered": _is_centered_record(record, page),
+    }
     artifact_type = source_artifact_type(record, page)
     if artifact_type is not None:
         metadata["source_artifact"] = artifact_type
@@ -257,7 +320,11 @@ def enrich_line(
     return metadata
 
 
-HEADER_PATTERN_RE = re.compile(r"\d+\.?\s*(?:sej[aeio]|sednic[aeio])", re.IGNORECASE)
+HEADER_PATTERN_RE = re.compile(rf"\d+\.?\s*{_SESSION_WORD}", re.IGNORECASE)
+RUNNING_FOOTER_RE = re.compile(
+    r"^(?:\d+\s+)?(?:st|[šs]t)\.?\s+(?:bele[žšz]k\w*|zapis\w*)\b",
+    re.IGNORECASE,
+)
 
 
 def source_artifact_type(
@@ -274,6 +341,15 @@ def source_artifact_type(
             return "pageNumber" if text.strip(". ").isdigit() else "runningHeader"
         if HEADER_PATTERN_RE.search(text):
             return "runningHeader"
+    # Some bound volumes print a small repeated series title beside the page
+    # number at the bottom (for example "3 St. beležke SNS 1964/5"). It has
+    # footnote-like geometry but is page furniture, not a numbered note.
+    if (
+        record.y < page.height * RUNNING_FOOTER_Y
+        and record.font_size <= body_size() - 1.0
+        and RUNNING_FOOTER_RE.match(record.text.strip())
+    ):
+        return "runningFooter"
     return None
 
 
@@ -306,6 +382,16 @@ def is_body_line(chunk: PDFChunk):
 def is_structural_page(chunk: PDFChunk):
     context = chunk.page_context
     return bool(context is not None and context.metadata.get("structure_active"))
+
+
+def is_heading_page(chunk: PDFChunk):
+    context = chunk.page_context
+    return bool(
+        context is not None
+        and context.metadata.get(
+            "heading_active", context.metadata.get("structure_active")
+        )
+    )
 
 
 def open_root_division(div_type: str):
@@ -342,6 +428,16 @@ def _word_core(token: str):
 def _looks_like_person_prefix(prefix: str):
     """Distinguish a speaker label from ordinary prose ending in a colon."""
     prefix = re.sub(r"\s*\([^)]*\)\s*$", "", prefix).strip()
+    # Election/appointment prose frequently begins with a plausible name and
+    # then enumerates candidates: "Miran Cvenk, za podpredsednika ...:".
+    # Inspect that role-bearing remainder before reducing the label to its
+    # first comma-separated name.
+    if re.search(
+        r",\s*(?:in\s+)?za\s+(?:(?:pod)?predsedni\w*|[cčć]lan\w*)\b",
+        prefix,
+        re.IGNORECASE,
+    ):
+        return False
     # "VESELIN DJURANOVIĆ, predsednik ZIS" - the role after the comma is
     # ordinary lowercase prose; judge the name part only
     prefix = prefix.split(",", 1)[0].strip()
@@ -585,8 +681,8 @@ def speaker_identifier(text: str):
             break
     if len(tokens) > 4 and not any(len(_word_core(token)) == 1 for token in tokens):
         name = " ".join(tokens[:3])
-    serialized = "#" + "".join(ch for ch in name.title() if ch.isalnum())
-    return serialized if serialized != "#" else "#UnknownSpeaker"
+    serialized = "".join(ch for ch in name.title() if ch.isalnum())
+    return "#" + sanitize_xml_id(serialized, prefix="speaker")
 
 
 speaker_hook = SpeakerUtteranceHook(speaker_identifier)
@@ -600,7 +696,20 @@ def start_document():
 
 
 def finish_document(result):
+    footnotes.finalize()
     speaker_hook.export(result)
+    if footnotes.unresolved_count:
+        recoveries = result.data.setdefault("recoveries", [])
+        if isinstance(recoveries, list):
+            recoveries.append(
+                f"{footnotes.unresolved_count} raised numeric run(s) had no "
+                "matching footnote definition and were preserved as "
+                "<hi rend='superscript'> instead of dangling references."
+            )
+    profile_warnings = PROFILE.get("warnings", [])
+    if isinstance(profile_warnings, list) and profile_warnings:
+        for warning in profile_warnings:
+            result.diagnostics.recover("extractor.recovery", str(warning))
     outer = engine.debate
     for child in list(outer):
         if child.tag == "div" and child.attrib.get("type") == "frontMatter":
@@ -670,17 +779,28 @@ AGENDA_HEAD_RE = re.compile(
 
 
 def is_head(chunk: PDFChunk):
-    if not chunk.is_line_start or not is_structural_page(chunk):
+    if not chunk.is_line_start or not is_heading_page(chunk):
         return False
     text = line_text(chunk)
     if not text or len(text) > 100 or text.endswith(":") or is_speaker(chunk):
         return False
     if AGENDA_HEAD_RE.search(text):
         return True
+    if SESSION_STANDALONE_RE.fullmatch(text):
+        return True
+    if (
+        text.isupper()
+        and SESSION_CAPS_RE.search(text)
+        and (
+            bool(chunk.line_chunk.metadata.get("centered"))
+            or len(text) <= 80
+        )
+    ):
+        return True
     # clearly-larger line; the caps/session gate keeps garbled footnote and
     # scan-noise body lines out (session heads may sit flush left)
     if chunk.font_size >= body_size() + 1.8 and (
-        text.isupper() or SESSION_NUM_RE.search(text)
+        text.isupper() or _session_number_match(text)
     ):
         return True
     # body-sized headings (ZRIP): full caps + bold + a session keyword
@@ -697,7 +817,7 @@ def head_action(chunk: PDFChunk):
     else:
         kind = (
             "sessionNumber"
-            if re.match(r"^\W{0,3}\d+\.", text) and SESSION_NUM_RE.search(text)
+            if _session_number_match(text)
             else "session"
         )
         div_type = "session"
@@ -945,6 +1065,7 @@ CONFIG: PDFConfig = {
     "on_pop": speaker_hook,
     "on_end": finish_document,
     "auto_xml_ids": True,
+    "recover_errors": True,
     "tei_header": build_tei_header,
     "rules": {
         "SOURCE_ARTIFACT": {
@@ -1043,37 +1164,87 @@ def _asymmetric_line_break(previous_y: float, current_y: float):
     )
 
 
-def get_chunks(filename: str) -> Iterator[Chunk]:
-    PROFILE.clear()
-    PROFILE.update(_probe(filename))
-    reset_document_state()
+def _record_page_error(page_num: int, error: Exception) -> None:
+    warnings = PROFILE.setdefault("warnings", [])
+    if isinstance(warnings, list):
+        warnings.append(
+            f"page {page_num + 1} extraction failed; conversion continued: "
+            f"{type(error).__name__}: {error}"
+        )
 
+
+def _make_extractor(mode: str):
     common = dict(
         page_enricher=enrich_page,
         line_enricher=enrich_line,
+        page_error_handler=_record_page_error,
     )
-    mode = PROFILE["mode"]
     if mode == "ocr":
-        extractor = WordPDFExtractor(
+        return WordPDFExtractor(
             x_tolerance=1.7,
             y_tolerance=3.0,
             line_tolerance=3.2,
             word_gap=0.6,
             join_line_end_hyphens=True,
+            preserve_word_runs=True,
             **common,
         )
-    elif mode == "char-break":
-        extractor = CharacterPDFExtractor(
+    if mode == "char-break":
+        return CharacterPDFExtractor(
             line_break=_asymmetric_line_break,
             literal_spaces="break",
             gap_threshold=1.7,
             max_run_x_gap=30,
             **common,
         )
-    else:
-        extractor = CharacterPDFExtractor(
-            line_tolerance=4.0,
-            literal_spaces="preserve",
-            **common,
+    return CharacterPDFExtractor(
+        line_tolerance=4.0,
+        literal_spaces="preserve",
+        **common,
+    )
+
+
+def get_chunks(filename: str) -> Iterator[Chunk]:
+    PROFILE.clear()
+    try:
+        PROFILE.update(_probe(filename))
+    except Exception as error:
+        # Probing is an optimization, not a reason to reject a document. The
+        # word extractor is the safest first fallback for unusual PDF internals.
+        PROFILE.update(
+            mode="ocr",
+            body_size=DEFAULT_BODY_SIZE,
+            space_ratio=0.0,
+            styled=False,
+            warnings=[
+                f"profile probe failed: {type(error).__name__}: {error}"
+            ],
         )
-    yield from extractor(filename)
+    reset_document_state()
+
+    preferred_mode = str(PROFILE["mode"])
+    fallback_mode = "char-preserve" if preferred_mode == "ocr" else "ocr"
+    for attempt, mode in enumerate((preferred_mode, fallback_mode), start=1):
+        PROFILE["mode"] = mode
+        if mode == "ocr":
+            PROFILE["styled"] = False
+        emitted = 0
+        try:
+            for chunk in _make_extractor(mode)(filename):
+                emitted += 1
+                yield chunk
+        except Exception as error:
+            warnings = PROFILE.setdefault("warnings", [])
+            if isinstance(warnings, list):
+                warnings.append(
+                    f"{mode} extraction failed after {emitted} chunk(s): "
+                    f"{type(error).__name__}: {error}"
+                )
+            # Restarting with another extractor after text was emitted would
+            # duplicate the document. Keep the safe partial output instead.
+            if emitted:
+                return
+        if emitted:
+            return
+        if attempt == 1:
+            reset_document_state()

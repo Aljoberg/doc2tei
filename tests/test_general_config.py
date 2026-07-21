@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 import engine
 from doc2tei.parser import load_config, parse_document
 from doc2tei.extractors import CharacterPDFExtractor, LineRecord
+from doc2tei.helpers import build_list_person
 from engine import PDFPageContext, make_chunk
 
 
@@ -96,6 +97,12 @@ def test_appointment_list_prose_is_not_a_speaker():
 
     assert not module._looks_like_person_prefix("Drago Sotler Za člane pa")
     assert not module._looks_like_person_prefix("predsednika Drago Sotler")
+    assert not module._looks_like_person_prefix(
+        "Miran Cvenk, za podpredsednika Lado Simončič in za člane"
+    )
+    assert not module._looks_like_person_prefix(
+        "Jože Brilej, za podpredsednika Janko Cesnik, za člane pa"
+    )
     assert module._looks_like_person_prefix("Boris Prešern")
     assert module._looks_like_person_prefix("Predsednik Boris Prešern")
     assert module._looks_like_person_prefix("Janez P i r n a t")
@@ -186,6 +193,23 @@ def test_source_artifact_text_is_retained_once(tmp_path):
     assert "".join(result.root.itertext()).count("15. SEJA") == 1
 
 
+def test_repeated_bottom_series_label_is_not_a_footnote():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="char-preserve", body_size=12.0, styled=True)
+    context = PDFPageContext(0, 600.0, 800.0)
+    footer = LineRecord(
+        "3 St. beležke SNS 1964/5",
+        48.0,
+        40.0,
+        "Times-Roman",
+        9.0,
+        [],
+        x_end=170.0,
+    )
+
+    assert module.source_artifact_type(footer, context) == "runningFooter"
+
+
 def test_unmatched_line_is_preserved_and_flagged(tmp_path):
     source = tmp_path / "sample.pdf"
     source.touch()
@@ -225,12 +249,14 @@ def test_footnote_reference_links_to_definition_without_hash_in_xml_id(tmp_path)
     source.touch()
     loaded = load_config(CONFIG_PATH)
     loaded.module.PROFILE.update(mode="char-preserve", body_size=10.0, styled=True)
+    reference_runs = pdf_runs([("Besedilo", 10.0), ("1", 7.0)], indent=10.0)
+    reference_runs[1].y += 3.0
     result = parse_document(
         source,
         config=loaded,
         chunks=[
             pdf_line("Boris Prešern: Hvala.", indent=0.0),
-            *pdf_runs([("Besedilo", 10.0), ("1", 7.0)], indent=10.0),
+            *reference_runs,
             *pdf_runs([("1", 7.0), ("Besedilo opombe.", 7.0)], y=80.0),
             pdf_line("Nadaljevanje.", page=1, y=500.0, indent=10.0),
         ],
@@ -259,7 +285,7 @@ def test_duplicate_footnote_numbers_get_valid_page_scoped_ids():
     assert module.footnotes.definition_id(second) == "note1-p2"
     assert module.footnotes.definition_id(second) == "note1-p2"
     assert module.footnotes.definition_id(same_page_duplicate) == "note1-p2-2"
-    assert module.footnotes.target_id(second) == "note1"
+    assert module.footnotes.target_id(second) == "note1-p2"
 
 
 def test_split_numeric_runs_are_one_footnote_number():
@@ -297,3 +323,200 @@ def test_literal_space_break_preserves_the_remainder_as_another_record():
 
     assert [record.text for record in records] == ["AB", "CD"]
     assert [record.x for record in records] == [0.0, 50.0]
+
+
+def test_body_sized_standalone_session_and_zasedanje_activate_structure():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="ocr", body_size=10.0, styled=False)
+
+    first_page = PDFPageContext(0, 600.0, 800.0)
+    session = LineRecord(
+        "1. seja",
+        270.0,
+        700.0,
+        "Times-Roman",
+        10.0,
+        [],
+        x_end=330.0,
+    )
+    module.reset_state()
+    module.enrich_page(first_page, [session])
+    assert first_page.metadata["structure_active"] is True
+
+    second_page = PDFPageContext(1, 600.0, 800.0)
+    zasedanje = LineRecord(
+        "SKUPNO ZASEDANJE",
+        210.0,
+        700.0,
+        "Times-Roman",
+        10.0,
+        [],
+        x_end=390.0,
+    )
+    module.reset_state()
+    module.enrich_page(second_page, [zasedanje])
+    assert second_page.metadata["heading_active"] is True
+    assert second_page.metadata["structure_active"] is False
+
+    transcript_page = PDFPageContext(2, 600.0, 800.0)
+    speaker = LineRecord(
+        "Predsednik Janez Novak:",
+        72.0,
+        680.0,
+        "Times-Roman",
+        10.0,
+        [],
+        x_end=190.0,
+    )
+    module.enrich_page(transcript_page, [speaker])
+    assert transcript_page.metadata["structure_active"] is True
+
+
+def test_session_mention_in_prose_does_not_reactivate_back_matter():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="ocr", body_size=10.0, styled=False)
+    module.reset_state()
+    module._STATE.update(seen_meeting=True, seen_session=True, back_matter=True)
+    page = PDFPageContext(0, 600.0, 800.0)
+    prose = LineRecord(
+        "Naš zbor je na svoji 9. seji potrdil statut.",
+        72.0,
+        700.0,
+        "Times-Roman",
+        12.0,
+        [],
+        x_end=400.0,
+    )
+
+    module.enrich_page(page, [prose])
+
+    assert page.metadata["back_matter"] is True
+    assert page.metadata["structure_active"] is False
+    assert not module._is_session_marker("28. Sejanci")
+    assert module._is_session_marker("r 6. SEDNICA OD 15. MAJA 1964. GODINE")
+    assert not module._is_session_marker(
+        "Naš zbor je na svoji 9. seji potrdil statut."
+    )
+
+    role_prose_page = PDFPageContext(1, 600.0, 800.0)
+    role_prose = LineRecord(
+        "predsednik volilnega odbora pojasni: postopek ostaja enak.",
+        72.0,
+        680.0,
+        "Times-Roman",
+        10.0,
+        [],
+        x_end=430.0,
+    )
+    module.enrich_page(role_prose_page, [role_prose])
+    assert role_prose_page.metadata["structure_active"] is False
+
+
+def test_auto_ids_and_speaker_ids_recover_digit_prefixes(tmp_path):
+    source = tmp_path / "2.bad source.pdf"
+    source.touch()
+    result = parse_document(
+        source,
+        config=CONFIG_PATH,
+        chunks=[pdf_line("Predsednik dr. 1' e r d o K o z a k: Pozdravljeni.")],
+    )
+
+    ids = [
+        element.attrib["xml:id"]
+        for element in result.root.iter()
+        if "xml:id" in element.attrib
+    ]
+    assert ids
+    assert all(identifier[0].isalpha() or identifier[0] == "_" for identifier in ids)
+    utterance = result.root.find(".//u")
+    assert utterance is not None
+    assert utterance.attrib["who"].startswith("#speaker-")
+
+
+def test_empty_and_invalid_speaker_mappings_always_build_a_list_person():
+    empty = build_list_person({})
+    placeholder = empty.find("person")
+    assert placeholder is not None
+    assert placeholder.attrib["xml:id"] == "UnknownSpeaker"
+
+    recovered = build_list_person({"#1 broken id": "1 broken id:"})
+    person = recovered.find("person")
+    assert person is not None
+    assert person.attrib["xml:id"].startswith("speaker-")
+
+
+def test_unresolved_superscript_is_retained_as_typography_not_a_reference(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    loaded = load_config(CONFIG_PATH)
+    loaded.module.PROFILE.update(mode="char-preserve", body_size=10.0, styled=True)
+    runs = pdf_runs([("Besedilo", 10.0), ("7", 7.0)], indent=10.0)
+    runs[1].y += 3.0
+
+    result = parse_document(source, config=loaded, chunks=runs)
+
+    assert result.root.find(".//ref[@type='footnote']") is None
+    superscript = result.root.find(".//hi[@rend='superscript']")
+    assert superscript is not None
+    assert "7" in "".join(superscript.itertext())
+    recovery_note = result.root.find(".//note[@type='conversionRecovery']")
+    assert recovery_note is not None
+    assert "no matching footnote definition" in (recovery_note.text or "")
+
+
+def test_rule_and_extractor_failures_are_recorded_without_losing_prior_text(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    loaded = load_config(CONFIG_PATH)
+    original_rules = loaded.config["rules"]
+
+    def broken_test(_chunk):
+        raise RuntimeError("bad source-specific assumption")
+
+    loaded.config["rules"] = {
+        "BROKEN": {"test": broken_test},
+        **original_rules,
+    }
+
+    def broken_stream():
+        yield pdf_line("Ohranjeno besedilo.")
+        raise RuntimeError("damaged later page")
+
+    result = parse_document(source, config=loaded, chunks=broken_stream())
+
+    assert "Ohranjeno besedilo." in "".join(result.root.itertext())
+    assert result.diagnostics.recovery_counts["rule.BROKEN.test"] == 1
+    assert result.diagnostics.recovery_counts["extractor"] == 1
+    recovery_note = result.root.find(
+        ".//note[@type='conversionRecovery']"
+    )
+    assert recovery_note is not None
+
+
+def test_forbidden_xml_control_characters_are_visible_not_dropped(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    result = parse_document(
+        source,
+        config=CONFIG_PATH,
+        chunks=[pdf_line("Pred\x00pona")],
+    )
+
+    assert "Pred[U+0000]pona" in "".join(result.root.itertext())
+    ET.fromstring(result.to_bytes())
+
+
+def test_malformed_pdf_still_returns_serializable_outputs(tmp_path):
+    source = tmp_path / "broken.pdf"
+    source.write_bytes(b"this is not a PDF")
+
+    result = parse_document(source, config=CONFIG_PATH)
+    list_person_path = tmp_path / "listPerson.xml"
+    result.write_list_person(list_person_path, xml_declaration=True)
+
+    ET.fromstring(result.to_bytes(xml_declaration=True))
+    list_person = ET.parse(list_person_path).getroot()
+    assert list_person.find("{http://www.tei-c.org/ns/1.0}person") is not None
+    assert result.diagnostics.recovery_counts["extractor.recovery"] >= 1
+    assert result.diagnostics.recovery_counts["extractor.no_text"] == 1
+    assert result.root.find(".//note[@type='conversionRecovery']") is not None
