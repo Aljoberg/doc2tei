@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from docx.oxml.ns import qn
 from collections import defaultdict
 
-def default_document() -> tuple[ET.Element[str], ET.Element[str]]:
+def default_document() -> tuple[ET.Element, ET.Element]:
     """Build the standard TEI > text > body > div[debateSection] skeleton.
 
     Returns the ``<TEI>`` root and the element parsed content lands in. A
@@ -31,16 +31,16 @@ def default_document() -> tuple[ET.Element[str], ET.Element[str]]:
 
 root, debate = default_document()
 debate.text, debate.tail = "", ""
-children: list[str | ET.Element[str]] = (
+children: list[str | ET.Element] = (
     []
 )  # reference to the innermost stack tag's children
 
 
 @dataclass
 class StackEntry:
-    element: ET.Element[str]
-    children: list[str | ET.Element[str]]
-    last_elem: ET.Element[str] | None
+    element: ET.Element
+    children: list[str | ET.Element]
+    last_elem: ET.Element | None
     cosmetic: bool
 
 
@@ -59,14 +59,14 @@ auto_xml_ids = False
 id_counters = defaultdict(int)
 
 
-def next_id(tag: str | ET.Element[str]):
+def next_id(tag: str | ET.Element):
     # 1-based, following the ParlaMint id convention (seg1, u1, ...)
     name = tag if isinstance(tag, str) else tag.tag
     id_counters[name] += 1
     return id_counters[name]
 
 
-def gen_id(tag: str | ET.Element[str]):
+def gen_id(tag: str | ET.Element):
     idx = next_id(tag)
     name = tag if isinstance(tag, str) else tag.tag
     filename_cleaned = ".".join(filename.split(".")[:-1])
@@ -74,7 +74,7 @@ def gen_id(tag: str | ET.Element[str]):
     return f"{filename_cleaned}.{name}{idx}"
 
 
-def reset(document: tuple[ET.Element[str], ET.Element[str]] | None = None) -> None:
+def reset(document: tuple[ET.Element, ET.Element] | None = None) -> None:
     """Reset all mutable engine state so multiple documents can be parsed safely.
 
     ``document`` optionally replaces the default TEI skeleton: a ``(root,
@@ -328,11 +328,11 @@ def push(
     tag: str, *, cosmetic: bool = False, attribs: dict[str, str] = {}, **rest: str
 ): ...
 @overload
-def push(tag: ET.Element[str], *, cosmetic: bool = False): ...
+def push(tag: ET.Element, *, cosmetic: bool = False): ...
 
 
 def push(
-    tag: str | ET.Element[str],
+    tag: str | ET.Element,
     *,
     cosmetic: bool = False,
     attribs: dict[str, str] = {},
@@ -375,10 +375,10 @@ def pop():
 @overload
 def pop_to(*parent_tags: str, invert: bool = False): ...
 @overload
-def pop_to(*parent_tags: ET.Element[str], invert: bool = False): ...
+def pop_to(*parent_tags: ET.Element, invert: bool = False): ...
 
 
-def pop_to(*parent_tags: str | ET.Element[str], invert: bool = False):
+def pop_to(*parent_tags: str | ET.Element, invert: bool = False):
     # pops until the stack top is one of parent_tags
     str_parent_tags: list[str] = [
         i.tag if isinstance(i, ET.Element) else i for i in parent_tags
@@ -395,11 +395,11 @@ def pop_to(*parent_tags: str | ET.Element[str], invert: bool = False):
 @overload
 def tag_is_on_top(tag: str, ignore_cosmetic: bool = True, **attribs: str): ...
 @overload
-def tag_is_on_top(tag: ET.Element[str], ignore_cosmetic: bool = True): ...
+def tag_is_on_top(tag: ET.Element, ignore_cosmetic: bool = True): ...
 
 
 def tag_is_on_top(
-    tag: str | ET.Element[str], ignore_cosmetic: bool = True, **attribs: str
+    tag: str | ET.Element, ignore_cosmetic: bool = True, **attribs: str
 ):
     # is the tag on top of the stack?
     # ignores cosmetic entries if needed (mostly the case)
@@ -418,7 +418,7 @@ def tag_is_on_top(
     return False
 
 
-def is_before_layout(tag: ET.Element[str]):
+def is_before_layout(tag: ET.Element):
     # is the (cosmetic) tag before any layout / structural elements (i still haven't decided how to call these lmao)
     for entry in reversed(stack):
         if not entry.cosmetic:
@@ -435,6 +435,13 @@ def tag(tag: str, **attribs: str):
     # helper for tag
     # may remove if it's too confusing
     return ET.Element(tag, attribs)
+
+
+def append_comment(text: str):
+    text = text.replace("--", "- -") # me when XSS
+    if text.endswith("-"):
+        text += " "
+    children.append(ET.Comment(text))
 
 
 def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):

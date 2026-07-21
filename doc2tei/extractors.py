@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from collections import Counter
+from collections import Counter, deque
 from dataclasses import dataclass, field
 from typing import Callable, cast, Iterator, Literal, TYPE_CHECKING, TypedDict
 
@@ -178,6 +178,7 @@ class CharacterPDFExtractor:
                             self.line_enricher(context, record, index, records) or {}
                         )
 
+                    flow_previous_run = previous_run
                     run_chunks: list[PDFChunk] = []
                     for run in record.runs:
                         previous_run = make_chunk(
@@ -206,6 +207,8 @@ class CharacterPDFExtractor:
                     for run in run_chunks:
                         run.line_chunk = line_chunk
                     yield from run_chunks
+                    if record.metadata.get("out_of_flow"):
+                        previous_run = flow_previous_run
 
     def _is_line_break(self, previous_y: float, current_y: float) -> bool:
         if self.line_break is not None:
@@ -233,14 +236,19 @@ class CharacterPDFExtractor:
         records: list[LineRecord] = []
         pending_space = initial_pending_space
         pending_values: list[bool] = []
-        for line in lines:
+        pending_lines = deque(lines)
+        while pending_lines:
+            line = pending_lines.popleft()
             runs: list[_CharacterRun] = []
             previous: LTChar | None = None
             broke = False
-            for char in line:
+            for index, char in enumerate(line):
                 char_text = char.get_text()
                 if char_text == " " and self.literal_spaces == "break":
                     broke = True
+                    remainder = line[index + 1 :]
+                    if remainder:
+                        pending_lines.appendleft(remainder)
                     break
                 if char_text == " " and self.literal_spaces == "ignore":
                     previous = char
@@ -392,9 +400,13 @@ class WordPDFExtractor:
                         record.metadata.update(
                             self.line_enricher(context, record, index, records) or {}
                         )
+                    flow_previous_run = previous_run
+                    flow_pending_space = pending_space
                     text = record.text
-                    hyphenated = self.join_line_end_hyphens and text.endswith(
-                        ("-", "‐", "‑")
+                    hyphenated = (
+                        not record.metadata.get("out_of_flow")
+                        and self.join_line_end_hyphens
+                        and text.endswith(("-", "‐", "‑"))
                     )
                     if hyphenated:
                         text = text[:-1]
@@ -421,6 +433,9 @@ class WordPDFExtractor:
                     previous_run.line_chunk = line_chunk
                     yield previous_run
                     pending_space = not hyphenated
+                    if record.metadata.get("out_of_flow"):
+                        previous_run = flow_previous_run
+                        pending_space = flow_pending_space
 
     def _group_words(self, words: list[ExtractedWord]) -> list[list[ExtractedWord]]:
         lines: list[list[ExtractedWord]] = []

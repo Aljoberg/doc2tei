@@ -121,7 +121,7 @@ class ParseDiagnostics:
 
 @dataclass
 class ParseResult:
-    root: ET.Element[str]
+    root: ET.Element
     diagnostics: ParseDiagnostics
     data: dict[str, object] = field(default_factory=dict)
 
@@ -356,13 +356,13 @@ def _alignment_group(
 
 def _make_document(
     factory: object,
-) -> tuple[ET.Element[str], ET.Element[str]] | None:
+) -> tuple[ET.Element, ET.Element] | None:
     if factory is None:
         return None
     if not callable(factory):
         raise TypeError("CONFIG['document'] must be callable")
     document = cast(
-        "Callable[[], tuple[ET.Element[str], ET.Element[str]]]", factory
+        "Callable[[], tuple[ET.Element, ET.Element]]", factory
     )()
     root, content = document
     if content is not root and content not in root.iter():
@@ -372,7 +372,7 @@ def _make_document(
     return document
 
 
-def _install_header(spec: object) -> ET.Element[str] | None:
+def _install_header(spec: object) -> ET.Element | None:
     """Resolve CONFIG['tei_header'] and insert it as the root's first child."""
     if spec is None:
         return None

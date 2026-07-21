@@ -227,8 +227,9 @@ Its main options are:
 - `line_break(previous_y, current_y)` - optional replacement for the standard
   line tolerance test.
 - `literal_spaces="preserve"` - retain real PDF space glyphs.
-- `literal_spaces="break"` - use a literal space as the specialized break
-  behavior required by PDFs such as ZRIP.
+- `literal_spaces="break"` - split at a literal space into independently
+  positioned records, as required by PDFs such as ZRIP. Text after the space
+  is retained as the next record.
 - `literal_spaces="ignore"` - discard literal space glyphs.
 - `gap_threshold` - horizontal distance used to infer a space.
 - `max_run_x_gap` - prevent distant same-font characters from being merged.
@@ -278,7 +279,7 @@ them through callbacks in this order:
 1. Extract raw characters or words and build every non-empty `LineRecord` on the page.
 2. Call `page_enricher(page, records)` with the complete page.
 3. For each record, call `stop_before(record, page)`.
-4. Call `line_filter(record, page)`; a false result drops the line.
+4. Call `line_filter(record, page)`; a false result permanently drops the line.
 5. Call `line_enricher(page, record, index, records)` for accepted lines.
 6. Convert accepted records into `PDFChunk`/`PDFLineChunk` objects and yield them.
 
@@ -297,6 +298,10 @@ get_chunks = CharacterPDFExtractor(
     line_filter=below_running_header,
 )
 ```
+
+Use `line_filter` only when dropping source text is intentional. A lossless
+config should instead mark the record in `line_enricher` and route it to a TEI
+element; the general config uses `<note type="sourceArtifact">` for this.
 
 Page and line enrichers are useful for derived geometry:
 
@@ -320,6 +325,12 @@ def enrich_line(
         "indented": isinstance(left, (int, float)) and line.x > float(left) + 14
     }
 ```
+
+The shared extractors recognize `record.metadata["out_of_flow"] = True` for
+page furniture that should be yielded but must not become the predecessor of
+the next body chunk. In `WordPDFExtractor` it also preserves the pending-space
+and dehyphenation state across that record. The general config uses this when
+retaining running headers and page numbers.
 
 Rules can consume the result with `Metadata("indented", True, source="line")`
 or `Metadata("session_page", True, source="page")`.
@@ -675,7 +686,7 @@ This is what `test`, `action` and `append_func` would probably call. They're a s
 ```python
 from engine import (
     make_chunk, pop_and_push_to, tag, tag_is_on_top,
-    pop_to, push, append
+    pop_to, push, append, append_comment
 )
 ```
 
@@ -795,6 +806,10 @@ element. For each chunk it:
 `should_annotate` is how you stop double-formatting: a `GENERIC_NOTE` already wraps
 its body in `<hi rend="italic">`, so it appends with `should_annotate=["REFERENCE"]`
 (ZRIP) or `[]` (prosvetno) to keep the italic cosmetic from firing again inside it.
+
+`append_comment(text)` adds a safely escaped XML comment at the current stack
+position. It is useful for review markers; comments are ignored by generated
+`tagsDecl` and word counts.
 
 ### Spacing
 
@@ -1058,7 +1073,7 @@ Each example directory also includes an `out.xml` reference output.
 
 ## The general config
 
-`examples/general/config.py` is a single config that parses **all three** test
+`examples/general/config.py` is a single config that parses all bundled test
 documents. Instead of per-document magic numbers it probes the PDF first
 (space-glyph ratio, OCR text layer, dominant font size) to pick one of three
 extraction profiles, then detects columns per page by clustering line-start x
@@ -1066,8 +1081,18 @@ positions so indentation tests are column-relative. Session headings, running
 headers, speakers, dates, and table-of-contents blocks are recognized by
 unioned text heuristics rather than coordinates.
 
+The general config is deliberately loss-aware: probable page furniture and
+speaker-index lines are retained under `<teiHeader>/<fileDesc>/<notesStmt>` as
+`<note type="sourceArtifact" subtype="..." n="source-page">` instead of being
+filtered out. Keeping them outside `<text>` prevents a page header from
+interrupting a word dehyphenated across pages. A physical line that reaches no
+structural rule is appended normally when a text container is already open. If
+it would otherwise land directly under `<u>` or `<div>`, the config creates a
+low-confidence `<seg type="unparsed">` or `<p type="unparsed">` and adds a `doc2tei: unmatched
+source line` XML comment for manual review.
+
 ```bash
-python parse.py testdocs/<any-of-the-three>.pdf \
+python parse.py testdocs/<document>.pdf \
   --config examples/general/config.py -o out.xml
 ```
 

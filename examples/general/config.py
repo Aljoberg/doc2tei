@@ -9,11 +9,11 @@ Unlike the per-document configs, this one probes the PDF first and adapts:
 - **body font band** - the dominant character size, measured per document;
 - **columns** - detected per page by clustering line-start x positions, so
   indentation tests are column-relative instead of magic x ranges;
-- **running headers** - dropped by geometry + font size + a
+- **running headers** - detected by geometry + font size + a
   "N. seja/sednica" pattern instead of per-document y bands;
 - **front/back matter** - retained as ordinary TEI blocks unless it can be
-  identified safely; indexes of speakers are skipped page-by-page and parsing
-  resumes when a later session begins.
+  identified safely; source furniture and speaker indexes are retained in
+  reviewable header ``note[type=sourceArtifact]`` elements instead of discarded.
 
 Rules are the union of the three per-document configs, rewritten against
 the probed metadata. Expect a bit of error on any individual document -
@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import itertools
 import re
+import xml.etree.ElementTree as ET
 from bisect import bisect_right
 from collections import Counter
 from dataclasses import replace
@@ -43,6 +44,7 @@ from engine import (
     PDFChunk,
     PDFPageContext,
     append,
+    append_comment,
     pop_and_push_to,
     pop_to,
     push,
@@ -75,6 +77,7 @@ def _new_state() -> dict[str, Any]:
         "speaker_index": False,
         "back_matter": False,
         "consumed_line": None,
+        "source_artifacts": [],
     }
 
 
@@ -246,26 +249,32 @@ def enrich_line(
     col_left = max(
         (left for left in columns if left <= record.x + 2.0), default=record.x
     )
-    return {"indent": record.x - col_left}
+    metadata: dict[str, object] = {"indent": record.x - col_left}
+    artifact_type = source_artifact_type(record, page)
+    if artifact_type is not None:
+        metadata["source_artifact"] = artifact_type
+        metadata["out_of_flow"] = True
+    return metadata
 
 
 HEADER_PATTERN_RE = re.compile(r"\d+\.?\s*(?:sej[aeio]|sednic[aeio])", re.IGNORECASE)
 
 
-def line_filter(record: LineRecord, page: PDFPageContext):
-    # A speaker index may span several pages. Skip it without terminating the
-    # extractor so a later session in the same bound volume is still parsed.
+def source_artifact_type(
+    record: LineRecord, page: PDFPageContext
+) -> str | None:
+    """Classify text formerly filtered out before it reached the parser."""
     if page.metadata.get("speaker_index", False):
-        return False
+        return "speakerIndex"
     # running page headers: top ~8.5% of the page, and either notably smaller
     # than the body or a "N. seja/sednica" colontitle
     if record.y > page.height * RUNNING_HEADER_Y:
         text = record.text.strip()
         if record.font_size <= body_size() - 1.0 or len(text) <= 4:
-            return False
+            return "pageNumber" if text.strip(". ").isdigit() else "runningHeader"
         if HEADER_PATTERN_RE.search(text):
-            return False
-    return True
+            return "runningHeader"
+    return None
 
 
 PRILOGE_RE = re.compile(r"^PRILOG[EIA]?\b")
@@ -436,6 +445,40 @@ def _append_text(chunk: PDFChunk, text: str):
     append(replace(chunk, text=text, space_before=False), should_annotate=[])
 
 
+def _consume_physical_line(chunk: PDFChunk):
+    """Mark later font runs after the reconstructed whole line was appended."""
+    _STATE["consumed_line"] = chunk.line_chunk
+
+
+def is_source_artifact(chunk: PDFChunk):
+    return bool(
+        chunk.is_line_start
+        and chunk.line_chunk.metadata.get("source_artifact")
+    )
+
+
+def source_artifact_append(chunk: PDFChunk):
+    """Retain excluded source furniture for the header's review notes."""
+    artifact_type = str(chunk.line_chunk.metadata["source_artifact"])
+    parts: list[str] = []
+    for run in chunk.line_chunk.runs:
+        text = run.text.strip()
+        if not text:
+            continue
+        if parts and run.space_before:
+            parts.append(" ")
+        parts.append(text)
+    artifacts = cast(list[dict[str, str]], _STATE["source_artifacts"])
+    artifacts.append(
+        {
+            "type": artifact_type,
+            "page": str(chunk.page_num + 1),
+            "text": "".join(parts),
+        }
+    )
+    _consume_physical_line(chunk)
+
+
 def _open_speech_seg():
     pop_to("note", invert=True)  # closing the speaker note opens <u> via the hook
     pop_to("u", "div")
@@ -457,7 +500,7 @@ def speaker_append_split(chunk: PDFChunk):
         pop_to("note", invert=True)  # closing the note opens <u> via the hook
     # Character extraction can yield more font runs from this same physical
     # line. The reconstructed line was appended above, so suppress those runs.
-    _STATE["consumed_line"] = id(chunk.line_chunk)
+    _consume_physical_line(chunk)
 
 
 def speaker_action(chunk: PDFChunk):
@@ -472,7 +515,10 @@ def speaker_action(chunk: PDFChunk):
 
 
 def is_consumed_line(chunk: PDFChunk):
-    return not chunk.is_line_start and _STATE["consumed_line"] == id(chunk.line_chunk)
+    return (
+        not chunk.is_line_start
+        and _STATE["consumed_line"] is chunk.line_chunk
+    )
 
 
 def is_speech_start(chunk: PDFChunk):
@@ -560,6 +606,29 @@ def finish_document(result):
         if child.tag == "div" and child.attrib.get("type") == "frontMatter":
             if not ("".join(child.itertext()).strip() or list(child)):
                 outer.remove(child)
+    artifacts = cast(list[dict[str, str]], _STATE["source_artifacts"])
+    if artifacts:
+        file_desc = result.root.find("teiHeader/fileDesc")
+        if file_desc is not None:
+            notes_stmt = file_desc.find("notesStmt")
+            if notes_stmt is None:
+                notes_stmt = ET.Element("notesStmt")
+                source_desc = file_desc.find("sourceDesc")
+                index = (
+                    list(file_desc).index(source_desc)
+                    if source_desc is not None
+                    else len(file_desc)
+                )
+                file_desc.insert(index, notes_stmt)
+            for artifact in artifacts:
+                note = ET.SubElement(
+                    notes_stmt,
+                    "note",
+                    type="sourceArtifact",
+                    subtype=artifact["type"],
+                    n=artifact["page"],
+                )
+                note.text = artifact["text"]
 
 
 def build_tei_header():
@@ -768,6 +837,38 @@ def is_paragraph(chunk: PDFChunk):
     return chunk.is_line_start and not has_utterance_context()
 
 
+def unmatched_line_needs_review(chunk: PDFChunk):
+    if not chunk.is_line_start:
+        return False
+    current = next(
+        (entry for entry in reversed(engine.stack) if not entry.cosmetic),
+        None,
+    )
+    return bool(
+        current is not None and current.element.tag in {"div", "u"}
+    )
+
+
+def unmatched_line_append(chunk: PDFChunk):
+    """Flag and safely contain a line that would otherwise be direct text."""
+    while len(engine.stack) > 1 and engine.stack[-1].cosmetic:
+        engine.pop()
+    append_comment(
+        "doc2tei: unmatched source line; text preserved for manual review"
+    )
+    current_tag = next(
+        entry.element.tag
+        for entry in reversed(engine.stack)
+        if not entry.cosmetic
+    )
+    push(
+        "seg" if current_tag == "u" else "p",
+        type="unparsed",
+        n=str(chunk.page_num + 1),
+    )
+    append(chunk)
+
+
 footnotes = FootnoteLinker(
     body_size=body_size,
     mode=lambda: PROFILE.get("mode"),
@@ -846,6 +947,10 @@ CONFIG: PDFConfig = {
     "auto_xml_ids": True,
     "tei_header": build_tei_header,
     "rules": {
+        "SOURCE_ARTIFACT": {
+            "test": is_source_artifact,
+            "append_func": source_artifact_append,
+        },
         "CONSUMED_LINE": {
             "test": is_consumed_line,
             "append_func": lambda chunk: None,
@@ -918,6 +1023,10 @@ CONFIG: PDFConfig = {
             "test": is_paragraph,
             "action": pop_and_push_to("div", tag="p", chunked=False),
         },
+        "UNMATCHED_LINE": {
+            "test": unmatched_line_needs_review,
+            "append_func": unmatched_line_append,
+        },
     },
 }
 
@@ -940,7 +1049,6 @@ def get_chunks(filename: str) -> Iterator[Chunk]:
     reset_document_state()
 
     common = dict(
-        line_filter=line_filter,
         page_enricher=enrich_page,
         line_enricher=enrich_line,
     )

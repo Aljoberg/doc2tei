@@ -32,11 +32,11 @@ WordRuleGroup = dict[str, WordRule | RunImmediate]
 
 # the <TEI> root and the (descendant) element parsed content is appended into
 DocumentFactory: TypeAlias = (
-    "Callable[[], tuple[ET.Element[str], ET.Element[str]]]"
+    "Callable[[], tuple[ET.Element, ET.Element]]"
 )
 # a built <teiHeader>, a TEIHeader spec, or a callable producing either
 TEIHeaderSpec: TypeAlias = (
-    "TEIHeader | ET.Element[str] | Callable[[], TEIHeader | ET.Element[str]]"
+    "TEIHeader | ET.Element | Callable[[], TEIHeader | ET.Element]"
 )
 
 
@@ -88,7 +88,7 @@ Action = Callable[["Chunk"], None]
 
 class WordCosmeticAnnotation(TypedDict):
     test: WordRunTest
-    tag: ET.Element[str]
+    tag: ET.Element
     append_func: NotRequired[WordAppendFunc]
 
 
@@ -97,7 +97,7 @@ WordCosmeticAnnotations = dict[str, WordCosmeticAnnotation]
 
 class PDFCosmeticAnnotation(TypedDict):
     test: PDFRunTest
-    tag: ET.Element[str]
+    tag: ET.Element
     append_func: NotRequired[PDFAppendFunc]
 
 

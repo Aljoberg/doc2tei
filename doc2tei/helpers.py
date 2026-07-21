@@ -217,7 +217,7 @@ class FootnoteLinker:
             push("p")
 
 
-def build_list_person(mapping: Mapping[str, str]) -> ET.Element[str]:
+def build_list_person(mapping: Mapping[str, str]) -> ET.Element:
     """Build a deterministic TEI ``listPerson`` from exported speaker labels.
 
     This intentionally performs no network identity matching. The older

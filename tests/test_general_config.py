@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from pathlib import Path
+import xml.etree.ElementTree as ET
 
 import engine
 from doc2tei.parser import load_config, parse_document
-from doc2tei.extractors import LineRecord
+from doc2tei.extractors import CharacterPDFExtractor, LineRecord
 from engine import PDFPageContext, make_chunk
 
 
@@ -19,9 +20,15 @@ def pdf_line(
     y: float = 500.0,
     size: float = 10.0,
     indent: float = 0.0,
+    metadata: dict[str, object] | None = None,
 ):
     return pdf_runs(
-        [(text, size)], page=page, x=x, y=y, indent=indent
+        [(text, size)],
+        page=page,
+        x=x,
+        y=y,
+        indent=indent,
+        metadata=metadata,
     )[0]
 
 
@@ -32,6 +39,7 @@ def pdf_runs(
     x: float = 72.0,
     y: float = 500.0,
     indent: float = 0.0,
+    metadata: dict[str, object] | None = None,
 ):
     context = PDFPageContext(
         page, 600.0, 800.0, metadata={"structure_active": True}
@@ -61,7 +69,7 @@ def pdf_runs(
         runs=runs,
         page_num=page,
         page_context=context,
-        metadata={"indent": indent},
+        metadata={"indent": indent, **(metadata or {})},
     )
     for run in runs:
         run.line_chunk = line
@@ -138,7 +146,7 @@ def test_later_heading_opens_a_new_division(tmp_path):
     assert children[0].attrib["type"] == "agendaItem"
 
 
-def test_speaker_index_is_skipped_without_disabling_later_sessions():
+def test_speaker_index_is_preserved_without_disabling_later_sessions():
     module = load_config(CONFIG_PATH).module
     context = PDFPageContext(0, 600.0, 800.0)
     index = LineRecord(
@@ -146,12 +154,70 @@ def test_speaker_index_is_skipped_without_disabling_later_sessions():
     )
     module.reset_state()
     module.enrich_page(context, [index])
-    assert not module.line_filter(index, context)
+    index_metadata = module.enrich_line(context, index, 0, [index])
+    assert index_metadata["source_artifact"] == "speakerIndex"
 
     later_context = PDFPageContext(1, 600.0, 800.0)
     session = LineRecord("20. SEJA", 72.0, 700.0, "Times-Bold", 13.0, [])
     module.enrich_page(later_context, [session])
-    assert module.line_filter(session, later_context)
+    session_metadata = module.enrich_line(later_context, session, 0, [session])
+    assert "source_artifact" not in session_metadata
+
+
+def test_source_artifact_text_is_retained_once(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    result = parse_document(
+        source,
+        config=CONFIG_PATH,
+        chunks=pdf_runs(
+            [("15.", 8.0), ("SEJA", 8.0)],
+            y=780.0,
+            metadata={"source_artifact": "runningHeader"},
+        ),
+    )
+
+    note = result.root.find(
+        ".//note[@type='sourceArtifact'][@subtype='runningHeader']"
+    )
+    assert note is not None
+    assert note.attrib["n"] == "1"
+    assert "".join(note.itertext()) == "15. SEJA"
+    assert "".join(result.root.itertext()).count("15. SEJA") == 1
+
+
+def test_unmatched_line_is_preserved_and_flagged(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    loaded = load_config(CONFIG_PATH)
+    loaded.module.PROFILE.update(
+        mode="char-preserve", body_size=10.0, styled=False
+    )
+    result = parse_document(
+        source,
+        config=loaded,
+        chunks=[
+            pdf_line("Boris PreĹˇern:", indent=0.0),
+            pdf_line("Neujemajoca vrstica.", y=480.0, size=16.0),
+        ],
+    )
+
+    assert "Neujemajoca vrstica." in "".join(result.root.itertext())
+    comments = [
+        element.text or ""
+        for element in result.root.iter()
+        if element.tag is ET.Comment
+    ]
+    assert any("unmatched source line" in comment for comment in comments)
+    assert result.diagnostics.rule_counts["UNMATCHED_LINE"] == 1
+    unparsed = result.root.find(".//seg[@type='unparsed']")
+    assert unparsed is not None
+    assert unparsed.attrib["n"] == "1"
+    word_measure = result.root.find(
+        "teiHeader/fileDesc/extent/measure[@unit='words']"
+    )
+    assert word_measure is not None
+    assert word_measure.attrib["quantity"] == "4"
 
 
 def test_footnote_reference_links_to_definition_without_hash_in_xml_id(tmp_path):
@@ -203,3 +269,31 @@ def test_split_numeric_runs_are_one_footnote_number():
 
     assert module.footnotes.number(runs[1]) == "15"
     assert not module.footnotes.is_first_numeric_run(runs[2])
+
+
+def test_literal_space_break_preserves_the_remainder_as_another_record():
+    class FakeChar:
+        def __init__(self, text: str, x: float):
+            self.text = text
+            self.x0 = x
+            self.x1 = x + 5.0
+            self.y0 = 500.0
+            self.fontname = "Times-Roman"
+            self.size = 10.0
+
+        def get_text(self):
+            return self.text
+
+    chars = [
+        FakeChar("A", 0.0),
+        FakeChar("B", 5.0),
+        FakeChar(" ", 10.0),
+        FakeChar("C", 50.0),
+        FakeChar("D", 55.0),
+    ]
+    extractor = CharacterPDFExtractor(literal_spaces="break")
+
+    records, _pending = extractor._make_records([chars], False)
+
+    assert [record.text for record in records] == ["AB", "CD"]
+    assert [record.x for record in records] == [0.0, 50.0]

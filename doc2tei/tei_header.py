@@ -32,7 +32,7 @@ LocalizedText = Mapping[str, str]
 
 
 def _localized(
-    parent: ET.Element[str], tag: str, texts: LocalizedText, **attrs: str
+    parent: ET.Element, tag: str, texts: LocalizedText, **attrs: str
 ) -> None:
     if not texts:
         ET.SubElement(parent, tag, attrs).text = ""
@@ -44,7 +44,7 @@ def _localized(
         elem.text = text
 
 
-def _set_if(elem: ET.Element[str], **attrs: str) -> None:
+def _set_if(elem: ET.Element, **attrs: str) -> None:
     for key, value in attrs.items():
         if value:
             elem.set(key, value)
@@ -154,7 +154,7 @@ class TEIHeader:
             attrs["ana"] = self.ana
         return attrs
 
-    def build(self) -> ET.Element[str]:
+    def build(self) -> ET.Element:
         header = ET.Element("teiHeader")
 
         file_desc = ET.SubElement(header, "fileDesc")
@@ -252,7 +252,7 @@ class TEIHeader:
 TEI_NAMESPACE = "http://www.tei-c.org/ns/1.0"
 
 
-def fill_counts(root: ET.Element[str]) -> None:
+def fill_counts(root: ET.Element) -> None:
     """Fill count-based header elements that are only known after parsing.
 
     Populates ``<tagsDecl>`` with per-tag usage and ``<extent>`` with speech
@@ -265,7 +265,9 @@ def fill_counts(root: ET.Element[str]) -> None:
 
     tags_decl = root.find("teiHeader/encodingDesc/tagsDecl")
     if tags_decl is not None and len(tags_decl) == 0:
-        counts = Counter(elem.tag for elem in text.iter())
+        counts = Counter(
+            elem.tag for elem in text.iter() if isinstance(elem.tag, str)
+        )
         namespace = ET.SubElement(tags_decl, "namespace", name=TEI_NAMESPACE)
         for tag_name, count in sorted(counts.items()):
             ET.SubElement(namespace, "tagUsage", gi=tag_name, occurs=str(count))
@@ -273,7 +275,17 @@ def fill_counts(root: ET.Element[str]) -> None:
     extent = root.find("teiHeader/fileDesc/extent")
     if extent is not None and len(extent) == 0:
         speeches = len(text.findall(".//u"))
-        words = len(re.findall(r"\S+", " ".join(text.itertext())))
+
+        def content_text(element: ET.Element):
+            if element.text:
+                yield element.text
+            for child in element:
+                if isinstance(child.tag, str):
+                    yield from content_text(child)
+                if child.tail:
+                    yield child.tail
+
+        words = len(re.findall(r"\S+", " ".join(content_text(text))))
         for unit, quantity in (("speeches", speeches), ("words", words)):
             measure = ET.SubElement(
                 extent, "measure", unit=unit, quantity=str(quantity)
