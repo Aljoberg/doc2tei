@@ -13,12 +13,12 @@ from typing import (
 )
 import xml.etree.ElementTree as ET
 
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-
 if TYPE_CHECKING:
     # Runtime imports here would create cycles: these modules all consume the
     # declarations below. Forward references let type checkers resolve the
     # concrete models without coupling the type layer to their implementations.
+    # python-docx additionally stays out of PDF-only process startup.
+    from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
     from doc2tei.extractors import LineRecord
     from doc2tei.tei_header import TEIHeader
     from engine import PDFChunk, PDFPageContext, StackEntry, WordChunk

@@ -2,9 +2,11 @@ from __future__ import annotations
 
 from collections import OrderedDict
 from dataclasses import dataclass
-from typing import Callable, Generic, Literal
+from typing import Callable, Generic, Literal, TYPE_CHECKING
 
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+if TYPE_CHECKING:
+    # annotation-only: keeps python-docx out of PDF-only process startup
+    from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 from type_decs import ChunkT
 
@@ -18,7 +20,7 @@ class Rule(Generic[ChunkT]):
     action: Callable[[ChunkT], None] | None = None
     append_func: Callable[[ChunkT], None] | None = None
     after_append: Callable[[], None] | None = None
-    alignment: WD_PARAGRAPH_ALIGNMENT | None = None
+    alignment: "WD_PARAGRAPH_ALIGNMENT | None" = None
 
     def as_mapping(self) -> dict[str, object]:
         result: dict[str, object] = {"test": self.test}
@@ -36,7 +38,7 @@ def rule(
     action: Callable[[ChunkT], None] | None = None,
     append: Callable[[ChunkT], None] | None = None,
     after: Callable[[], None] | None = None,
-    alignment: WD_PARAGRAPH_ALIGNMENT | None = None,
+    alignment: "WD_PARAGRAPH_ALIGNMENT | None" = None,
 ) -> Rule[ChunkT]:
     return Rule(
         name=name,

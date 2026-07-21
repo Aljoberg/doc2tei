@@ -96,6 +96,11 @@ class FootnoteLinker:
         default_factory=dict, init=False
     )
     unresolved_count: int = field(default=0, init=False)
+    # one-entry memo: the sub-tests of a single rule evaluation ask for the
+    # same chunk's group several times, and each rebuild scans the whole line
+    _last_group: "tuple[PDFChunk, list[PDFChunk]] | None" = field(
+        default=None, init=False, repr=False
+    )
 
     def reset(self) -> None:
         self.footnote_page = None
@@ -105,6 +110,7 @@ class FootnoteLinker:
         self.definitions.clear()
         self.references.clear()
         self.unresolved_count = 0
+        self._last_group = None
 
     def is_small_numeric_run(self, chunk: PDFChunk) -> bool:
         return (
@@ -113,6 +119,14 @@ class FootnoteLinker:
 
     def numeric_run_group(self, chunk: PDFChunk) -> list[PDFChunk]:
         """Join adjacent small runs when extraction splits ``15`` into 1 + 5."""
+        cached = self._last_group
+        if cached is not None and cached[0] is chunk:
+            return cached[1]
+        group = self._numeric_run_group(chunk)
+        self._last_group = (chunk, group)
+        return group
+
+    def _numeric_run_group(self, chunk: PDFChunk) -> list[PDFChunk]:
         runs = chunk.line_chunk.runs
         index = next((index for index, run in enumerate(runs) if run is chunk), None)
         if index is None:

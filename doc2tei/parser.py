@@ -445,10 +445,11 @@ def _pdf_rules(config: Mapping[str, object]) -> Mapping[str, object]:
 
 
 def _alignment_group(
-    config: Mapping[str, object], chunk: Chunk, log: Logger | None
+    alignments: Mapping[str, object],
+    router: object,
+    chunk: Chunk,
+    log: Logger | None,
 ) -> str | None:
-    alignments = _alignment_groups(config)
-    router = config.get("route_alignment")
     if callable(router):
         selected = cast(Callable[[Chunk], str], router)(chunk)
         if selected not in alignments:
@@ -679,8 +680,11 @@ def parse_document(
             compiled_groups[key] = plan
         return plan
 
+    is_pdf = loaded.config.get("mode") == "pdf"
     pdf_group: CompiledRuleGroup | None = None
-    if loaded.config.get("mode") == "pdf":
+    alignment_groups: Mapping[str, object] = {}
+    alignment_router: object = None
+    if is_pdf:
         try:
             pdf_group = compiled(_pdf_rules(loaded.config))
         except Exception as error:
@@ -690,6 +694,14 @@ def parse_document(
             # An invalid rule container must not abort a lossless conversion;
             # unmatched chunks will fall through to the raw append path.
             pdf_group = CompiledRuleGroup(None, ())
+    else:
+        alignment_router = loaded.config.get("route_alignment")
+        try:
+            alignment_groups = _alignment_groups(loaded.config)
+        except Exception as error:
+            if not recover_errors:
+                raise
+            recover("alignments.compile", error)
     stream = chunks if chunks is not None else loaded.get_chunks(str(source))
     iterator = iter(stream)
     while True:
@@ -707,7 +719,7 @@ def parse_document(
             if debug_log is not None:
                 debug_log("-- parsing text --")
             matched = None
-            if loaded.config.get("mode") == "pdf":
+            if is_pdf:
                 assert pdf_group is not None
                 matched = _match_group(
                     None,
@@ -717,11 +729,13 @@ def parse_document(
                     rule_recovery,
                 )
             else:
-                group_name = _alignment_group(loaded.config, chunk, debug_log)
+                group_name = _alignment_group(
+                    alignment_groups, alignment_router, chunk, debug_log
+                )
                 if group_name is None:
                     group_value = None
                 else:
-                    group_value = _alignment_groups(loaded.config)[group_name]
+                    group_value = alignment_groups[group_name]
                 if group_value is not None:
                     if not isinstance(group_value, Mapping):
                         raise TypeError(

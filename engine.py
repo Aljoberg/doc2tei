@@ -2,9 +2,13 @@ from __future__ import annotations
 
 import re
 import xml.etree.ElementTree as ET
-from typing import Literal, cast, overload
-from docx.text.paragraph import Paragraph
-from docx.text.run import Run
+from typing import Literal, TYPE_CHECKING, cast, overload
+
+if TYPE_CHECKING:
+    # python-docx is only needed for Word documents; importing it lazily keeps
+    # PDF-only invocations from paying its startup cost.
+    from docx.text.paragraph import Paragraph
+    from docx.text.run import Run
 from type_decs import (
     Action,
     Chunk,
@@ -14,8 +18,16 @@ from type_decs import (
     WordCosmeticAnnotation,
 )
 from dataclasses import dataclass, field
-from docx.oxml.ns import qn
 from collections import defaultdict
+
+
+# any character XML 1.0 cannot represent (the complement of the ranges
+# accepted below); clean text short-circuits without a per-character loop
+_XML_UNSAFE_RE = re.compile(
+    "[^\t\n\r\x20-\uD7FF\uE000-\uFFFD\U00010000-\U0010FFFF]"
+)
+# conservative ASCII NCName; non-ASCII identifiers fall back to the full check
+_ASCII_NCNAME_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_.\-]*\Z")
 
 
 def xml_safe_text(value: object) -> str:
@@ -27,6 +39,8 @@ def xml_safe_text(value: object) -> str:
     """
 
     text = str(value)
+    if _XML_UNSAFE_RE.search(text) is None:
+        return text
     parts: list[str] = []
     for character in text:
         codepoint = ord(character)
@@ -51,6 +65,8 @@ def sanitize_xml_id(value: object, *, prefix: str = "id") -> str:
     """
 
     text = xml_safe_text(value).strip()
+    if _ASCII_NCNAME_RE.fullmatch(text):
+        return text
     if (
         text
         and (text[0].isalpha() or text[0] == "_")
@@ -123,12 +139,20 @@ def next_id(tag: str | ET.Element):
     return id_counters[name]
 
 
+# (filename, extensionless form) pair so the split is not redone per element
+_id_prefix_cache: tuple[str, str] | None = None
+
+
 def gen_id(tag: str | ET.Element):
+    global _id_prefix_cache
     idx = next_id(tag)
     name = tag if isinstance(tag, str) else tag.tag
-    filename_cleaned = ".".join(filename.split(".")[:-1])
+    cache = _id_prefix_cache
+    if cache is None or cache[0] != filename:
+        cache = (filename, ".".join(filename.split(".")[:-1]))
+        _id_prefix_cache = cache
 
-    return sanitize_xml_id(f"{filename_cleaned}.{name}{idx}", prefix="doc")
+    return sanitize_xml_id(f"{cache[1]}.{name}{idx}", prefix="doc")
 
 
 def reset(document: tuple[ET.Element, ET.Element] | None = None) -> None:
@@ -224,6 +248,8 @@ class PDFChunk:
 
 
 def get_para_xywh(para: Paragraph):
+    from docx.oxml.ns import qn
+
     p = para._p
 
     pPr = p.find(qn("w:pPr"))
@@ -290,7 +316,7 @@ def make_chunk(
     page_context: PDFPageContext | None = None,
     metadata: dict[str, object] | None = None,
 ):
-    if isinstance(word_prop, Run) and isinstance(parent_paragraph, Paragraph):
+    if word_prop is not None and parent_paragraph is not None:
         run = word_prop
         x, y, w, h = get_para_xywh(parent_paragraph)
         return WordChunk(

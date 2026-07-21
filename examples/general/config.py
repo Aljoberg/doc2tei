@@ -104,9 +104,16 @@ def is_body_size(size: float) -> bool:
 
 
 def _probe(filename: str, sample_pages: int = 10):
-    """Cheap pdfminer pass over the first pages to pick an extraction profile."""
+    """Cheap pdfminer pass over the first pages to pick an extraction profile.
+
+    Uses a raw character collector (``laparams=None``) instead of
+    ``extract_pages``: the probe only counts glyphs, so pdfminer's full layout
+    analysis would be pure overhead on pages that get extracted again anyway.
+    """
+    from pdfminer.converter import PDFLayoutAnalyzer
     from pdfminer.layout import LTChar
-    from pdfminer.high_level import extract_pages
+    from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
+    from pdfminer.pdfpage import PDFPage
 
     fonts: Counter[str] = Counter()
     sizes: Counter[float] = Counter()
@@ -126,8 +133,19 @@ def _probe(filename: str, sample_pages: int = 10):
             elif hasattr(item, "__iter__"):
                 walk(item)
 
-    for page in itertools.islice(extract_pages(filename), sample_pages):
-        walk(page)
+    resource_manager = PDFResourceManager()
+
+    class ProbeCollector(PDFLayoutAnalyzer):
+        def __init__(self):
+            super().__init__(resource_manager, laparams=None)
+
+        def receive_layout(self, page):
+            walk(page)
+
+    interpreter = PDFPageInterpreter(resource_manager, ProbeCollector())
+    with open(filename, "rb") as source:
+        for page in itertools.islice(PDFPage.get_pages(source), sample_pages):
+            interpreter.process_page(page)
 
     space_ratio = spaces / max(chars, 1)
     ocr = any("invisible" in name.lower() or "ocr" in name.lower() for name in fonts)
@@ -357,8 +375,18 @@ SPEAKER_INDEX_RE = re.compile(r"^SEZNAM\s+GOVORNIKOV\b", re.IGNORECASE)
 # ---------------------------------------------------------------------------
 
 
+_WHITESPACE_RE = re.compile(r"\s+")
+
+
 def line_text(chunk: PDFChunk):
-    return re.sub(r"\s+", " ", chunk.line_chunk.text).strip()
+    # normalized once per physical line: the rule cascade asks for it many
+    # times per chunk, and line text never changes after extraction
+    line = chunk.line_chunk
+    cached = line.metadata.get("_line_text")
+    if cached is None:
+        cached = _WHITESPACE_RE.sub(" ", line.text).strip()
+        line.metadata["_line_text"] = cached
+    return cast(str, cached)
 
 
 def indent(chunk: PDFChunk):

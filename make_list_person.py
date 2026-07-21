@@ -6,6 +6,7 @@ import json
 import re
 import requests
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor
 
 # whatever this is
 QUERY = """
@@ -31,8 +32,35 @@ SELECT ?p ?pLabel ?givenLabel ?familyLabel ?birth ?death ?bplaceLabel ?dplaceLab
 """
 
 
+def _fetch_bindings(session: requests.Session, name: str, surname: str):
+    req = session.get(
+        "https://query.wikidata.org/sparql",
+        params={"query": QUERY % f"{name} {surname}"},
+        headers={
+            "User-Agent": "doc2tei",
+            "Accept": "application/sparql-results+json",
+        },
+    )
+    return req.json()["results"]["bindings"] if req.ok else []
+
+
 def make_list_person(mapping: dict[str, str]):
-    for id, whole in mapping.items():
+    # requests are network-bound and independent, so fetch them concurrently
+    # (order-preserving) while the XML is still built sequentially below
+    names = {
+        id: tuple(
+            "".join(" " + char if char.isupper() else char for char in id[1:])
+            .strip()
+            .split()
+        )
+        for id in mapping
+    }
+    with requests.Session() as session, ThreadPoolExecutor(max_workers=4) as pool:
+        all_bindings = list(
+            pool.map(lambda pair: _fetch_bindings(session, *pair), names.values())
+        )
+
+    for (id, whole), bindings in zip(mapping.items(), all_bindings):
         person = ET.Element("person", {"xml:id": id[1:]})  # strip the hash
         text = whole.strip()
 
@@ -42,11 +70,7 @@ def make_list_person(mapping: dict[str, str]):
         role_match = re.search(r",\s*(.+?)\s*:?\s*$", text)
         minister = role_match.group(1).strip() if role_match else None
 
-        name, surname = (
-            "".join(" " + char if char.isupper() else char for char in id[1:])
-            .strip()
-            .split()
-        )
+        name, surname = names[id]
 
         pers_name = ET.Element("persName")
         surname_elem = ET.Element("surname")
@@ -58,19 +82,8 @@ def make_list_person(mapping: dict[str, str]):
 
         person.append(pers_name)
 
-        req = requests.get(
-            "https://query.wikidata.org/sparql",
-            params={"query": QUERY % f"{name} {surname}"},
-            headers={
-                "User-Agent": "doc2tei",
-                "Accept": "application/sparql-results+json",
-            },
-        )
-
         birth_elem = ET.Element("birth")
         death_elem = ET.Element("death")
-
-        bindings = req.json()["results"]["bindings"] if req.ok else []
         if bindings:
             result = bindings[0]  # we're trusting the first one lmao
             for k, v in result.items():
