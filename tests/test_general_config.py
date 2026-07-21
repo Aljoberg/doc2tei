@@ -369,10 +369,17 @@ def test_general_config_can_disable_nearby_run_merging():
     module = load_config(CONFIG_PATH).module
 
     assert module.CONFIG["merge_nearby_runs"] is True
+    assert module.CONFIG["page_workers"] == 0
     assert module._make_extractor("char-preserve").merge_nearby_runs is True
+    assert module._make_extractor("char-preserve").page_workers == 0
+    assert module._make_extractor("char-break").line_break_mode == "downward"
+    assert module._make_extractor("ocr").page_workers == 0
 
     module.CONFIG["merge_nearby_runs"] = False
+    module.CONFIG["page_workers"] = 1
     assert module._make_extractor("char-preserve").merge_nearby_runs is False
+    assert module._make_extractor("char-preserve").page_workers == 1
+    assert module._make_extractor("ocr").page_workers == 1
 
 
 def test_rules_are_normalized_once_per_document(tmp_path, monkeypatch):

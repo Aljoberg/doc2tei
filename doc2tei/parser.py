@@ -297,9 +297,7 @@ def _compile_group(
 
     immediate_value = group.get("run_immediate")
     run_immediate = (
-        cast(Callable[[], None], immediate_value)
-        if callable(immediate_value)
-        else None
+        cast(Callable[[], None], immediate_value) if callable(immediate_value) else None
     )
     rules: list[tuple[str, NormalizedRule]] = []
     for key, rule_spec in group.items():

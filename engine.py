@@ -20,12 +20,9 @@ from type_decs import (
 from dataclasses import dataclass, field
 from collections import defaultdict
 
-
 # any character XML 1.0 cannot represent (the complement of the ranges
 # accepted below); clean text short-circuits without a per-character loop
-_XML_UNSAFE_RE = re.compile(
-    "[^\t\n\r\x20-\uD7FF\uE000-\uFFFD\U00010000-\U0010FFFF]"
-)
+_XML_UNSAFE_RE = re.compile("[^\t\n\r\x20-\ud7ff\ue000-\ufffd\U00010000-\U0010ffff]")
 # conservative ASCII NCName; non-ASCII identifiers fall back to the full check
 _ASCII_NCNAME_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_.\-]*\Z")
 

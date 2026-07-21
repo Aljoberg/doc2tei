@@ -614,6 +614,7 @@ CONFIG: PDFConfig = {
     "auto_xml_ids": True,           # optional, generate xml:id on structural elements
     "recover_errors": True,         # optional, preserve partial output on content errors
     "merge_nearby_runs": True,      # general config: tolerate harmless PDF size jitter
+    "page_workers": 0,              # general config: auto-parallel page extraction
     "tei_header": TEI_HEADER,       # optional, a <teiHeader> for the output
     "document": make_document,      # optional, replaces the default TEI skeleton
 }
@@ -638,6 +639,22 @@ The shipped general config reads `"merge_nearby_runs"` and passes it to its
 character extractors; it defaults to `True`. A custom config that constructs
 `CharacterPDFExtractor` directly should set the identically named constructor
 argument instead.
+
+The general config also reads `"page_workers"` for both character and word/OCR
+PDF extraction. `0` automatically uses up to eight local worker processes, `1`
+forces sequential extraction, and values above one set an explicit maximum.
+Workers only perform pdfminer/pdfplumber page interpretation and stateless
+line/run construction. Page and line enrichment, cross-page spacing and
+dehyphenation, chunk links, and rule matching remain sequential and ordered, so
+configuration callbacks do not need to be process-safe. Small documents and
+interactive Windows sessions automatically use the sequential path. A custom
+character `line_break` callback also uses the sequential path; use the built-in
+`line_break_mode="downward"` when that policy is suitable and parallel extraction
+is desired.
+
+For batch pipelines, avoid nesting two full levels of process parallelism. Run
+one document at a time with `"page_workers": 0`, or parallelize whole documents
+and set `"page_workers": 1` in each document process.
 
 PDF configs have one top-level `rules` group. There is no alignment wrapper.
 

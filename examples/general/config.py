@@ -1073,6 +1073,9 @@ CONFIG: PDFConfig = {
     "auto_xml_ids": True,
     "recover_errors": True,
     "merge_nearby_runs": True,
+    # 0 selects up to eight local processes; 1 forces the exact sequential
+    # path. Stateful page/line enrichment still runs in document order here.
+    "page_workers": 0,
     "tei_header": build_tei_header,
     "rules": {
         "SOURCE_ARTIFACT": {
@@ -1164,13 +1167,6 @@ CONFIG: PDFConfig = {
 # ---------------------------------------------------------------------------
 
 
-def _asymmetric_line_break(previous_y: float, current_y: float):
-    return (
-        previous_y - current_y > LINE_BREAK_TOLERANCE
-        or abs(previous_y - current_y) > LINE_BREAK_TOLERANCE * 5
-    )
-
-
 def _record_page_error(page_num: int, error: Exception) -> None:
     warnings = PROFILE.setdefault("warnings", [])
     if isinstance(warnings, list):
@@ -1186,6 +1182,11 @@ def _make_extractor(mode: str):
         line_enricher=enrich_line,
         page_error_handler=_record_page_error,
     )
+    character_common = dict(
+        page_workers=int(CONFIG.get("page_workers", 0)),
+        merge_nearby_runs=bool(CONFIG.get("merge_nearby_runs", True)),
+        **common,
+    )
     if mode == "ocr":
         return WordPDFExtractor(
             x_tolerance=1.7,
@@ -1194,22 +1195,22 @@ def _make_extractor(mode: str):
             word_gap=0.6,
             join_line_end_hyphens=True,
             preserve_word_runs=True,
+            page_workers=int(CONFIG.get("page_workers", 0)),
             **common,
         )
     if mode == "char-break":
         return CharacterPDFExtractor(
-            line_break=_asymmetric_line_break,
+            line_tolerance=LINE_BREAK_TOLERANCE,
+            line_break_mode="downward",
             literal_spaces="break",
             gap_threshold=1.7,
             max_run_x_gap=30,
-            merge_nearby_runs=bool(CONFIG.get("merge_nearby_runs", True)),
-            **common,
+            **character_common,
         )
     return CharacterPDFExtractor(
         line_tolerance=4.0,
         literal_spaces="preserve",
-        merge_nearby_runs=bool(CONFIG.get("merge_nearby_runs", True)),
-        **common,
+        **character_common,
     )
 
 
