@@ -193,6 +193,7 @@ get_chunks = CharacterPDFExtractor(
     pages=PageRange(0, None),
     line_tolerance=4.0,
     literal_spaces="preserve",  # or "break" / "ignore"
+    merge_nearby_runs=True,      # default: merge harmless PDF size jitter
     line_filter=lambda line, page: line.y <= 740,
 )
 
@@ -234,6 +235,12 @@ Its main options are:
   is retained as the next record.
 - `literal_spaces="ignore"` - discard literal space glyphs.
 - `gap_threshold` - horizontal distance used to infer a space.
+- `merge_nearby_runs=True` - merge adjacent same-font runs split only by
+  insignificant PDF font-size/baseline jitter. Line starts, font/style
+  transitions, superscript-like baseline changes, significant size changes,
+  and rendered whitespace are preserved. Set it to `False` to restore exact
+  font-size grouping. The optional `font_size_tolerance` (default `0.1`) and
+  `baseline_tolerance` (default `0.25`) tune the conservative comparison.
 - `max_run_x_gap` - prevent distant same-font characters from being merged.
 - `line_filter`, `stop_before`, `page_enricher`, `line_enricher` - document callbacks.
 - `page_error_handler(page_num, error)` - optionally skip and report one broken
@@ -370,7 +377,9 @@ CONFIG = {
 ```
 
 Rule order is still precedence. These helpers package common tests; they do
-not introduce parliamentary concepts into the parser.
+not introduce parliamentary concepts into the parser. Rule mappings are
+validated and compiled once per document after `on_start`; treat their
+definitions as immutable while chunks are being processed.
 
 The selector helpers are:
 
@@ -604,6 +613,7 @@ CONFIG: PDFConfig = {
     "on_end": on_end,               # optional, after the tree is committed
     "auto_xml_ids": True,           # optional, generate xml:id on structural elements
     "recover_errors": True,         # optional, preserve partial output on content errors
+    "merge_nearby_runs": True,      # general config: tolerate harmless PDF size jitter
     "tei_header": TEI_HEADER,       # optional, a <teiHeader> for the output
     "document": make_document,      # optional, replaces the default TEI skeleton
 }
@@ -623,6 +633,11 @@ elements. The parser keeps the partial tree and preserves the affected chunk in
 an unparsed block where possible. Missing inputs, invalid config modules, and
 filesystem write failures remain hard errors because there is no document or
 output target to recover from.
+
+The shipped general config reads `"merge_nearby_runs"` and passes it to its
+character extractors; it defaults to `True`. A custom config that constructs
+`CharacterPDFExtractor` directly should set the identically named constructor
+argument instead.
 
 PDF configs have one top-level `rules` group. There is no alignment wrapper.
 

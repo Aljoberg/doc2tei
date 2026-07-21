@@ -63,6 +63,7 @@ class _CharacterRun:
     size: float
     gap: bool
     x1: float
+    merge_previous: bool = False
 
 
 def _weighted_mode(
@@ -91,6 +92,9 @@ class CharacterPDFExtractor:
         literal_spaces: Literal["preserve", "break", "ignore"] = "preserve",
         gap_threshold: float = 1.7,
         max_run_x_gap: float | None = None,
+        merge_nearby_runs: bool = True,
+        font_size_tolerance: float = 0.1,
+        baseline_tolerance: float = 0.25,
         line_filter: LineFilter | None = None,
         stop_before: StopTest | None = None,
         page_enricher: PageEnricher | None = None,
@@ -103,6 +107,9 @@ class CharacterPDFExtractor:
         self.literal_spaces = literal_spaces
         self.gap_threshold = gap_threshold
         self.max_run_x_gap = max_run_x_gap
+        self.merge_nearby_runs = merge_nearby_runs
+        self.font_size_tolerance = max(0.0, font_size_tolerance)
+        self.baseline_tolerance = max(0.0, baseline_tolerance)
         self.line_filter = line_filter
         self.stop_before = stop_before
         self.page_enricher = page_enricher
@@ -275,6 +282,18 @@ class CharacterPDFExtractor:
                     runs[-1].text += char_text
                     runs[-1].x1 = float(char.x1)
                 else:
+                    merge_previous = bool(
+                        self.merge_nearby_runs
+                        # The line-start run can trigger different structural
+                        # actions than later runs, so never absorb run 2 into it.
+                        and len(runs) > 1
+                        and runs[-1].fontname == char.fontname
+                        and abs(runs[-1].size - float(char.size))
+                        <= self.font_size_tolerance
+                        and abs(runs[-1].y0 - float(char.y0))
+                        <= self.baseline_tolerance
+                        and within_max_gap
+                    )
                     runs.append(
                         _CharacterRun(
                             text=char_text,
@@ -284,6 +303,7 @@ class CharacterPDFExtractor:
                             size=float(char.size),
                             gap=bool(gap),
                             x1=float(char.x1),
+                            merge_previous=merge_previous,
                         )
                     )
                 previous = char
@@ -314,6 +334,8 @@ class CharacterPDFExtractor:
                     )
                 )
             text = "".join(run.text for run in run_records)
+            if self.merge_nearby_runs:
+                run_records = self._merge_run_records(run_records, runs)
             first = run_records[0]
             records.append(
                 LineRecord(
@@ -329,6 +351,78 @@ class CharacterPDFExtractor:
             pending_space = not broke if self.literal_spaces == "break" else True
             pending_values.append(pending_space)
         return records, pending_values
+
+    def _merge_run_records(
+        self,
+        records: list[RunRecord],
+        source_runs: list[_CharacterRun],
+    ) -> list[RunRecord]:
+        """Coalesce size-jitter runs while preserving old rendered spacing.
+
+        ``engine.append`` strips each original run and inserts at most one
+        leading space from ``space_before``. Rebuilding merged text with those
+        same rules prevents literal-space glyphs from introducing new or lost
+        whitespace. The first physical run is deliberately kept separate
+        because line-start rules may treat it specially.
+        """
+
+        if len(records) < 3 or not any(
+            run.merge_previous for run in source_runs[1:]
+        ):
+            return records
+
+        groups: list[list[RunRecord]] = [[records[0]]]
+        protected = [False]
+        for index, (record, source) in enumerate(
+            zip(records[1:], source_runs[1:]), start=1
+        ):
+            group = groups[-1]
+            anchor = group[0]
+            if (
+                source.merge_previous
+                and len(groups) > 1
+                and not protected[-1]
+                and anchor.font_name == record.font_name
+                and abs(anchor.font_size - record.font_size)
+                <= self.font_size_tolerance
+                and abs(anchor.y - record.y) <= self.baseline_tolerance
+            ):
+                group.append(record)
+            else:
+                groups.append([record])
+                # The first run after a font/style transition must remain a
+                # separate append operation. The cosmetic stack closes the old
+                # style on that run and opens the new style on the next one.
+                protected.append(
+                    source.fontname != source_runs[index - 1].fontname
+                )
+
+        merged: list[RunRecord] = []
+        for group in groups:
+            if len(group) == 1:
+                merged.append(group[0])
+                continue
+            visible = [(run, run.text.strip()) for run in group if run.text.strip()]
+            if not visible:
+                merged.append(group[0])
+                continue
+            parts: list[str] = []
+            for run, text in visible:
+                if parts and run.space_before:
+                    parts.append(" ")
+                parts.append(text)
+            first, _text = visible[0]
+            merged.append(
+                RunRecord(
+                    text="".join(parts),
+                    x=first.x,
+                    y=first.y,
+                    font_name=first.font_name,
+                    font_size=first.font_size,
+                    space_before=first.space_before,
+                )
+            )
+        return merged
 
 
 class WordPDFExtractor:

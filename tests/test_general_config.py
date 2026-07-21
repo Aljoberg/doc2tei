@@ -4,6 +4,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 import engine
+import doc2tei.parser as parser_module
 from doc2tei.parser import load_config, parse_document
 from doc2tei.extractors import CharacterPDFExtractor, LineRecord
 from doc2tei.helpers import build_list_person
@@ -310,6 +311,113 @@ def test_literal_space_break_preserves_the_remainder_as_another_record():
 
     assert [record.text for record in records] == ["AB", "CD"]
     assert [record.x for record in records] == [0.0, 50.0]
+
+
+def test_character_extractor_merges_only_insignificant_run_differences():
+    class FakeChar:
+        def __init__(
+            self,
+            text: str,
+            x: float,
+            *,
+            size: float = 10.0,
+            y: float = 500.0,
+            font: str = "Times-Roman",
+        ):
+            self.text = text
+            self.x0 = x
+            self.x1 = x + 5.0
+            self.y0 = y
+            self.fontname = font
+            self.size = size
+
+        def get_text(self):
+            return self.text
+
+    insignificant = [
+        FakeChar("X", -5.0, size=12.0),
+        FakeChar("A", 0.0, size=10.0),
+        FakeChar("B", 5.0, size=10.04, y=500.03),
+    ]
+    significant_size = insignificant + [FakeChar("C", 10.0, size=9.7)]
+    raised = insignificant + [FakeChar("1", 10.0, size=10.05, y=502.0)]
+    style_transition = [
+        FakeChar("P", 0.0, size=11.0, font="Times-Bold"),
+        FakeChar(" ", 5.0, size=11.04, font="Times-Bold"),
+        FakeChar("u", 10.0, size=11.0, font="Times-Italic"),
+        FakeChar(" ", 15.0, size=11.04, font="Times-Italic"),
+        FakeChar("9", 20.0, size=11.02, font="Times-Italic"),
+    ]
+
+    extractor = CharacterPDFExtractor()
+    exact_extractor = CharacterPDFExtractor(merge_nearby_runs=False)
+
+    merged, _ = extractor._make_records([insignificant], False)
+    exact, _ = exact_extractor._make_records([insignificant], False)
+    sized, _ = extractor._make_records([significant_size], False)
+    baseline, _ = extractor._make_records([raised], False)
+    styled, _ = extractor._make_records([style_transition], False)
+
+    assert [run.text for run in merged[0].runs] == ["X", "AB"]
+    assert [run.text for run in exact[0].runs] == ["X", "A", "B"]
+    assert [run.text for run in sized[0].runs] == ["X", "AB", "C"]
+    assert [run.text for run in baseline[0].runs] == ["X", "AB", "1"]
+    assert [run.text for run in styled[0].runs] == ["P", " ", "u", "9"]
+
+
+def test_general_config_can_disable_nearby_run_merging():
+    module = load_config(CONFIG_PATH).module
+
+    assert module.CONFIG["merge_nearby_runs"] is True
+    assert module._make_extractor("char-preserve").merge_nearby_runs is True
+
+    module.CONFIG["merge_nearby_runs"] = False
+    assert module._make_extractor("char-preserve").merge_nearby_runs is False
+
+
+def test_rules_are_normalized_once_per_document(tmp_path, monkeypatch):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    loaded = load_config(CONFIG_PATH)
+    calls = 0
+    original = parser_module._normalize_rule
+
+    def counted(rule):
+        nonlocal calls
+        calls += 1
+        return original(rule)
+
+    monkeypatch.setattr(parser_module, "_normalize_rule", counted)
+    parse_document(
+        source,
+        config=loaded,
+        chunks=[
+            pdf_line("Prva vrstica."),
+            pdf_line("Druga vrstica.", y=480.0),
+            pdf_line("Tretja vrstica.", y=460.0),
+        ],
+    )
+
+    assert calls == len(loaded.config["rules"])
+
+
+def test_disabled_debug_does_not_construct_chunk_repr(tmp_path, monkeypatch):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    loaded = load_config(CONFIG_PATH)
+    loaded.config["debug"] = False
+
+    def fail_repr(_chunk):
+        raise AssertionError("disabled debug attempted to render a chunk")
+
+    monkeypatch.setattr(engine.PDFChunk, "__repr__", fail_repr)
+    result = parse_document(
+        source,
+        config=loaded,
+        chunks=[pdf_line("Ohranjeno besedilo.")],
+    )
+
+    assert "Ohranjeno besedilo." in "".join(result.root.itertext())
 
 
 def test_body_sized_standalone_session_and_zasedanje_activate_structure():

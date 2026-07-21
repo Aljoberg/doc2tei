@@ -40,6 +40,19 @@ class NormalizedRule:
 
 
 @dataclass(frozen=True)
+class CompiledRuleGroup:
+    """Immutable execution plan for a rule group.
+
+    Config mappings are declarative and remain unchanged while a document is
+    parsed, so validating and normalizing their callbacks once avoids doing the
+    same work for every chunk.
+    """
+
+    run_immediate: Callable[[], None] | None
+    rules: tuple[tuple[str, NormalizedRule], ...]
+
+
+@dataclass(frozen=True)
 class LoadedConfig:
     module: ModuleType
     path: Path
@@ -276,10 +289,38 @@ def _normalize_rule(rule: object) -> NormalizedRule:
     )
 
 
-def _get_center_point(chunk: Chunk, log: Logger) -> float:
+def _compile_group(
+    group: Mapping[str, object],
+    recover: RecoveryHandler | None = None,
+) -> CompiledRuleGroup:
+    """Validate a config rule group once and retain its declared order."""
+
+    immediate_value = group.get("run_immediate")
+    run_immediate = (
+        cast(Callable[[], None], immediate_value)
+        if callable(immediate_value)
+        else None
+    )
+    rules: list[tuple[str, NormalizedRule]] = []
+    for key, rule_spec in group.items():
+        # Callable entries are the legacy spelling for immediate hooks. Keep
+        # accepting and skipping them exactly as the former hot loop did.
+        if key == "run_immediate" or callable(rule_spec):
+            continue
+        try:
+            rules.append((key, _normalize_rule(rule_spec)))
+        except Exception as error:
+            if recover is None:
+                raise
+            recover(f"rule.{key}.compile", error, None)
+    return CompiledRuleGroup(run_immediate, tuple(rules))
+
+
+def _get_center_point(chunk: Chunk, log: Logger | None) -> float:
     if isinstance(chunk, WordChunk):
         center = chunk.x + chunk.w / 2
-        log(f"center of container: {center}")
+        if log is not None:
+            log(f"center of container: {center}")
         return center
     return -1
 
@@ -297,15 +338,14 @@ def _apply_rule(rule: NormalizedRule, chunk: Chunk) -> None:
 
 def _match_group(
     group_name: str | None,
-    group: Mapping[str, object],
+    group: CompiledRuleGroup,
     chunk: Chunk,
-    log: Logger,
+    log: Logger | None,
     recover: RecoveryHandler | None = None,
 ) -> str | None:
-    run_immediate = group.get("run_immediate")
-    if callable(run_immediate):
+    if group.run_immediate is not None:
         try:
-            cast(Callable[[], None], run_immediate)()
+            group.run_immediate()
         except Exception as error:
             if recover is None:
                 raise
@@ -314,10 +354,7 @@ def _match_group(
         return None
 
     fallback: tuple[str, NormalizedRule] | None = None
-    for key, rule_spec in group.items():
-        if key == "run_immediate" or callable(rule_spec):
-            continue
-        rule = _normalize_rule(rule_spec)
+    for key, rule in group.rules:
         if (
             rule.alignment is not None
             and isinstance(chunk, WordChunk)
@@ -336,7 +373,8 @@ def _match_group(
             recover(f"rule.{key}.test", error, chunk)
             continue
         if matches:
-            log(f"{key}: {chunk.text}")
+            if log is not None:
+                log(f"{key}: {chunk.text}")
             try:
                 _apply_rule(rule, chunk)
             except Exception as error:
@@ -349,7 +387,8 @@ def _match_group(
 
     if fallback is not None:
         key, rule = fallback
-        log(f"{key} (fallback): {chunk.text}")
+        if log is not None:
+            log(f"{key} (fallback): {chunk.text}")
         try:
             _apply_rule(rule, chunk)
         except Exception as error:
@@ -406,7 +445,7 @@ def _pdf_rules(config: Mapping[str, object]) -> Mapping[str, object]:
 
 
 def _alignment_group(
-    config: Mapping[str, object], chunk: Chunk, log: Logger
+    config: Mapping[str, object], chunk: Chunk, log: Logger | None
 ) -> str | None:
     alignments = _alignment_groups(config)
     router = config.get("route_alignment")
@@ -419,13 +458,16 @@ def _alignment_group(
     if 4550 < center < 6560 and "center" in alignments:
         return "center"
     if 2500 < center < 3660 and "left" in alignments:
-        log("Chunk is on left side")
+        if log is not None:
+            log("Chunk is on left side")
         return "left"
     if 7820 < center < 8460 and "right" in alignments:
-        log("Chunk is on right side")
+        if log is not None:
+            log("Chunk is on right side")
         return "right"
     if "_else" in alignments:
-        log("Chunk is not on left nor right side")
+        if log is not None:
+            log("Chunk is not on left nor right side")
         return "_else"
     return None
 
@@ -625,6 +667,29 @@ def parse_document(
             raise
         recover("hook.on_start", error)
 
+    debug_log = loaded.log if bool(loaded.config.get("debug", False)) else None
+    rule_recovery = recover if recover_errors else None
+    compiled_groups: dict[int, CompiledRuleGroup] = {}
+
+    def compiled(group: Mapping[str, object]) -> CompiledRuleGroup:
+        key = id(group)
+        plan = compiled_groups.get(key)
+        if plan is None:
+            plan = _compile_group(group, rule_recovery)
+            compiled_groups[key] = plan
+        return plan
+
+    pdf_group: CompiledRuleGroup | None = None
+    if loaded.config.get("mode") == "pdf":
+        try:
+            pdf_group = compiled(_pdf_rules(loaded.config))
+        except Exception as error:
+            if not recover_errors:
+                raise
+            recover("rules.compile", error)
+            # An invalid rule container must not abort a lossless conversion;
+            # unmatched chunks will fall through to the raw append path.
+            pdf_group = CompiledRuleGroup(None, ())
     stream = chunks if chunks is not None else loaded.get_chunks(str(source))
     iterator = iter(stream)
     while True:
@@ -639,19 +704,20 @@ def parse_document(
             break
 
         try:
-            loaded.log("-- parsing text --")
+            if debug_log is not None:
+                debug_log("-- parsing text --")
             matched = None
-            rule_recovery = recover if recover_errors else None
             if loaded.config.get("mode") == "pdf":
+                assert pdf_group is not None
                 matched = _match_group(
                     None,
-                    _pdf_rules(loaded.config),
+                    pdf_group,
                     chunk,
-                    loaded.log,
+                    debug_log,
                     rule_recovery,
                 )
             else:
-                group_name = _alignment_group(loaded.config, chunk, loaded.log)
+                group_name = _alignment_group(loaded.config, chunk, debug_log)
                 if group_name is None:
                     group_value = None
                 else:
@@ -663,7 +729,11 @@ def parse_document(
                         )
                     group = cast(Mapping[str, object], group_value)
                     matched = _match_group(
-                        group_name, group, chunk, loaded.log, rule_recovery
+                        group_name,
+                        compiled(group),
+                        chunk,
+                        debug_log,
+                        rule_recovery,
                     )
             if matched is None:
                 engine.append(chunk)
@@ -675,15 +745,17 @@ def parse_document(
             matched = "RECOVERED"
 
         diagnostics.observe(chunk, matched)
-        try:
-            loaded.log(
-                f"chunk.text={chunk.text!r}, x={chunk.x}, y={chunk.y}, chunk={chunk!r}"
-            )
-            loaded.log("\n")
-        except Exception as error:
-            if not recover_errors:
-                raise
-            recover("logger", error, chunk)
+        if debug_log is not None:
+            try:
+                debug_log(
+                    f"chunk.text={chunk.text!r}, x={chunk.x}, "
+                    f"y={chunk.y}, chunk={chunk!r}"
+                )
+                debug_log("\n")
+            except Exception as error:
+                if not recover_errors:
+                    raise
+                recover("logger", error, chunk)
 
     if diagnostics.chunk_count == 0 and recover_errors:
         diagnostics.recover(

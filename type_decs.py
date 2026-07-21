@@ -145,6 +145,7 @@ class PDFConfig(TypedDict):
     debug: bool
     auto_xml_ids: NotRequired[bool]
     recover_errors: NotRequired[bool]
+    merge_nearby_runs: NotRequired[bool]
     tei_header: NotRequired[TEIHeaderSpec]
     document: NotRequired[DocumentFactory]
 

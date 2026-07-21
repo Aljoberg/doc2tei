@@ -1044,6 +1044,7 @@ CONFIG: PDFConfig = {
     "on_end": finish_document,
     "auto_xml_ids": True,
     "recover_errors": True,
+    "merge_nearby_runs": True,
     "tei_header": build_tei_header,
     "rules": {
         "SOURCE_ARTIFACT": {
@@ -1173,11 +1174,13 @@ def _make_extractor(mode: str):
             literal_spaces="break",
             gap_threshold=1.7,
             max_run_x_gap=30,
+            merge_nearby_runs=bool(CONFIG.get("merge_nearby_runs", True)),
             **common,
         )
     return CharacterPDFExtractor(
         line_tolerance=4.0,
         literal_spaces="preserve",
+        merge_nearby_runs=bool(CONFIG.get("merge_nearby_runs", True)),
         **common,
     )
 
