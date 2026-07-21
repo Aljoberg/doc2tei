@@ -8,7 +8,6 @@
 
 import re
 from engine import (
-    Chunk,
     WordChunk,
     make_chunk,
     pop_and_push_to,
@@ -17,14 +16,18 @@ from engine import (
     push,
     append,
 )
-from type_decs import WordConfig
-from parse import log
+from type_decs import Chunk, WordConfig
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx import Document
 from docx.oxml.ns import qn
 
 # if we visited time, it's the chairman's turn
 visited_time = False
+
+
+def log(*args, **kwargs):
+    if CONFIG["debug"]:
+        print(*args, **kwargs)
 
 
 def ref_entry_action(chunk: WordChunk):

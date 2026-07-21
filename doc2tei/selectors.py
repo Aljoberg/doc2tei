@@ -4,9 +4,8 @@ from dataclasses import dataclass
 import re
 from typing import Callable, cast, Pattern
 
-from engine import Chunk, PDFLineChunk, PDFPageContext
-
-Test = Callable[[Chunk], bool]
+from engine import PDFLineChunk, PDFPageContext
+from type_decs import Chunk, SelectorTest as Test
 
 
 def _matches(test: object, value: object) -> bool:

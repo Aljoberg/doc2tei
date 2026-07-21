@@ -9,7 +9,6 @@ from doc2tei.extractors import CharacterPDFExtractor, LineRecord
 from doc2tei.helpers import build_list_person
 from engine import PDFPageContext, make_chunk
 
-
 CONFIG_PATH = Path(__file__).parents[1] / "examples" / "general" / "config.py"
 
 
@@ -42,9 +41,7 @@ def pdf_runs(
     indent: float = 0.0,
     metadata: dict[str, object] | None = None,
 ):
-    context = PDFPageContext(
-        page, 600.0, 800.0, metadata={"structure_active": True}
-    )
+    context = PDFPageContext(page, 600.0, 800.0, metadata={"structure_active": True})
     runs = []
     previous = None
     run_x = x
@@ -156,9 +153,7 @@ def test_later_heading_opens_a_new_division(tmp_path):
 def test_speaker_index_is_preserved_without_disabling_later_sessions():
     module = load_config(CONFIG_PATH).module
     context = PDFPageContext(0, 600.0, 800.0)
-    index = LineRecord(
-        "SEZNAM GOVORNIKOV", 72.0, 700.0, "Times-Roman", 10.0, []
-    )
+    index = LineRecord("SEZNAM GOVORNIKOV", 72.0, 700.0, "Times-Roman", 10.0, [])
     module.reset_state()
     module.enrich_page(context, [index])
     index_metadata = module.enrich_line(context, index, 0, [index])
@@ -184,9 +179,7 @@ def test_source_artifact_text_is_retained_once(tmp_path):
         ),
     )
 
-    note = result.root.find(
-        ".//note[@type='sourceArtifact'][@subtype='runningHeader']"
-    )
+    note = result.root.find(".//note[@type='sourceArtifact'][@subtype='runningHeader']")
     assert note is not None
     assert note.attrib["n"] == "1"
     assert "".join(note.itertext()) == "15. SEJA"
@@ -214,9 +207,7 @@ def test_unmatched_line_is_preserved_and_flagged(tmp_path):
     source = tmp_path / "sample.pdf"
     source.touch()
     loaded = load_config(CONFIG_PATH)
-    loaded.module.PROFILE.update(
-        mode="char-preserve", body_size=10.0, styled=False
-    )
+    loaded.module.PROFILE.update(mode="char-preserve", body_size=10.0, styled=False)
     result = parse_document(
         source,
         config=loaded,
@@ -237,9 +228,7 @@ def test_unmatched_line_is_preserved_and_flagged(tmp_path):
     unparsed = result.root.find(".//seg[@type='unparsed']")
     assert unparsed is not None
     assert unparsed.attrib["n"] == "1"
-    word_measure = result.root.find(
-        "teiHeader/fileDesc/extent/measure[@unit='words']"
-    )
+    word_measure = result.root.find("teiHeader/fileDesc/extent/measure[@unit='words']")
     assert word_measure is not None
     assert word_measure.attrib["quantity"] == "4"
 
@@ -277,9 +266,7 @@ def test_duplicate_footnote_numbers_get_valid_page_scoped_ids():
     module.footnotes.reset()
     first = pdf_runs([("Besedilo", 10.0), ("1", 7.0)], page=0)[1]
     second = pdf_runs([("Besedilo", 10.0), ("1", 7.0)], page=1)[1]
-    same_page_duplicate = pdf_runs(
-        [("Drugo besedilo", 10.0), ("1", 7.0)], page=1
-    )[1]
+    same_page_duplicate = pdf_runs([("Drugo besedilo", 10.0), ("1", 7.0)], page=1)[1]
 
     assert module.footnotes.definition_id(first) == "note1"
     assert module.footnotes.definition_id(second) == "note1-p2"
@@ -394,9 +381,7 @@ def test_session_mention_in_prose_does_not_reactivate_back_matter():
     assert page.metadata["structure_active"] is False
     assert not module._is_session_marker("28. Sejanci")
     assert module._is_session_marker("r 6. SEDNICA OD 15. MAJA 1964. GODINE")
-    assert not module._is_session_marker(
-        "Naš zbor je na svoji 9. seji potrdil statut."
-    )
+    assert not module._is_session_marker("Naš zbor je na svoji 9. seji potrdil statut.")
 
     role_prose_page = PDFPageContext(1, 600.0, 800.0)
     role_prose = LineRecord(
@@ -487,9 +472,7 @@ def test_rule_and_extractor_failures_are_recorded_without_losing_prior_text(tmp_
     assert "Ohranjeno besedilo." in "".join(result.root.itertext())
     assert result.diagnostics.recovery_counts["rule.BROKEN.test"] == 1
     assert result.diagnostics.recovery_counts["extractor"] == 1
-    recovery_note = result.root.find(
-        ".//note[@type='conversionRecovery']"
-    )
+    recovery_note = result.root.find(".//note[@type='conversionRecovery']")
     assert recovery_note is not None
 
 

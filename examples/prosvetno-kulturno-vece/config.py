@@ -8,7 +8,6 @@ import xml.etree.ElementTree as ET
 import re
 from doc2tei.extractors import CharacterPDFExtractor, LineRecord
 from engine import (
-    Chunk,
     PDFChunk,
     StackEntry,
     pop_and_push_to,
@@ -18,7 +17,7 @@ from engine import (
     push,
     append,
 )
-from type_decs import PDFConfig, PDFCosmeticAnnotations
+from type_decs import Chunk, PDFConfig, PDFCosmeticAnnotations
 
 
 def line_text(chunk: PDFChunk):

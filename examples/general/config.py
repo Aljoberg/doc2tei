@@ -40,7 +40,6 @@ from doc2tei.extractors import (
 )
 from doc2tei.tei_header import Change, SourceBibl, TEIHeader
 from engine import (
-    Chunk,
     PDFChunk,
     PDFPageContext,
     append,
@@ -52,7 +51,7 @@ from engine import (
     tag,
     tag_is_on_top,
 )
-from type_decs import PDFConfig, PDFCosmeticAnnotations
+from type_decs import Chunk, PDFConfig, PDFCosmeticAnnotations
 
 
 def log(*args, **kwargs):
@@ -245,13 +244,13 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
         record
         for record in records
         if (
-        _is_session_marker(record.text)
-        and (
-            bool(SESSION_STANDALONE_RE.fullmatch(record.text.strip()))
+            _is_session_marker(record.text)
+            and (
+                bool(SESSION_STANDALONE_RE.fullmatch(record.text.strip()))
                 or record.font_size >= body_size() + 1.0
-            or (record.text.strip().isupper() and len(record.text.strip()) < 80)
-            or _is_centered_record(record, page)
-        )
+                or (record.text.strip().isupper() and len(record.text.strip()) < 80)
+                or _is_centered_record(record, page)
+            )
         )
     ]
     has_session_marker = bool(session_markers)
@@ -274,9 +273,7 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
     )
     if has_session_marker:
         _STATE["seen_meeting"] = True
-    if has_debate_session_marker or (
-        _STATE["seen_meeting"] and has_transcript_cue
-    ):
+    if has_debate_session_marker or (_STATE["seen_meeting"] and has_transcript_cue):
         _STATE["seen_session"] = True
         _STATE["speaker_index"] = False
         _STATE["back_matter"] = False
@@ -327,9 +324,7 @@ RUNNING_FOOTER_RE = re.compile(
 )
 
 
-def source_artifact_type(
-    record: LineRecord, page: PDFPageContext
-) -> str | None:
+def source_artifact_type(record: LineRecord, page: PDFPageContext) -> str | None:
     """Classify text formerly filtered out before it reached the parser."""
     if page.metadata.get("speaker_index", False):
         return "speakerIndex"
@@ -548,8 +543,7 @@ def _consume_physical_line(chunk: PDFChunk):
 
 def is_source_artifact(chunk: PDFChunk):
     return bool(
-        chunk.is_line_start
-        and chunk.line_chunk.metadata.get("source_artifact")
+        chunk.is_line_start and chunk.line_chunk.metadata.get("source_artifact")
     )
 
 
@@ -611,10 +605,7 @@ def speaker_action(chunk: PDFChunk):
 
 
 def is_consumed_line(chunk: PDFChunk):
-    return (
-        not chunk.is_line_start
-        and _STATE["consumed_line"] is chunk.line_chunk
-    )
+    return not chunk.is_line_start and _STATE["consumed_line"] is chunk.line_chunk
 
 
 def is_speech_start(chunk: PDFChunk):
@@ -791,10 +782,7 @@ def is_head(chunk: PDFChunk):
     if (
         text.isupper()
         and SESSION_CAPS_RE.search(text)
-        and (
-            bool(chunk.line_chunk.metadata.get("centered"))
-            or len(text) <= 80
-        )
+        and (bool(chunk.line_chunk.metadata.get("centered")) or len(text) <= 80)
     ):
         return True
     # clearly-larger line; the caps/session gate keeps garbled footnote and
@@ -815,11 +803,7 @@ def head_action(chunk: PDFChunk):
         kind = "agendaItem"
         div_type = "agendaSection"
     else:
-        kind = (
-            "sessionNumber"
-            if _session_number_match(text)
-            else "session"
-        )
+        kind = "sessionNumber" if _session_number_match(text) else "session"
         div_type = "session"
 
     # Heads are only schema-valid at the beginning of a div. Create a new
@@ -964,22 +948,16 @@ def unmatched_line_needs_review(chunk: PDFChunk):
         (entry for entry in reversed(engine.stack) if not entry.cosmetic),
         None,
     )
-    return bool(
-        current is not None and current.element.tag in {"div", "u"}
-    )
+    return bool(current is not None and current.element.tag in {"div", "u"})
 
 
 def unmatched_line_append(chunk: PDFChunk):
     """Flag and safely contain a line that would otherwise be direct text."""
     while len(engine.stack) > 1 and engine.stack[-1].cosmetic:
         engine.pop()
-    append_comment(
-        "doc2tei: unmatched source line; text preserved for manual review"
-    )
+    append_comment("doc2tei: unmatched source line; text preserved for manual review")
     current_tag = next(
-        entry.element.tag
-        for entry in reversed(engine.stack)
-        if not entry.cosmetic
+        entry.element.tag for entry in reversed(engine.stack) if not entry.cosmetic
     )
     push(
         "seg" if current_tag == "u" else "p",
@@ -1216,9 +1194,7 @@ def get_chunks(filename: str) -> Iterator[Chunk]:
             body_size=DEFAULT_BODY_SIZE,
             space_ratio=0.0,
             styled=False,
-            warnings=[
-                f"profile probe failed: {type(error).__name__}: {error}"
-            ],
+            warnings=[f"profile probe failed: {type(error).__name__}: {error}"],
         )
     reset_document_state()
 

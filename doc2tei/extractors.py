@@ -3,22 +3,22 @@ from __future__ import annotations
 from collections.abc import Iterable
 from collections import Counter, deque
 from dataclasses import dataclass, field
-from typing import Callable, cast, Iterator, Literal, TYPE_CHECKING, TypedDict
+from typing import cast, Iterator, Literal, TYPE_CHECKING
 
-from engine import Chunk, PDFChunk, PDFPageContext, make_chunk
+from engine import PDFChunk, PDFPageContext, make_chunk
+from type_decs import (
+    Chunk,
+    ExtractedWord,
+    LineBreakTest,
+    LineEnricher,
+    LineFilter,
+    PageEnricher,
+    PageErrorHandler,
+    StopTest,
+)
 
 if TYPE_CHECKING:
     from pdfminer.layout import LTChar, LTPage
-
-
-class ExtractedWord(TypedDict):
-    text: str
-    x0: float
-    x1: float
-    top: float
-    bottom: float
-    fontname: str
-    size: float
 
 
 @dataclass(frozen=True)
@@ -63,16 +63,6 @@ class _CharacterRun:
     size: float
     gap: bool
     x1: float
-
-
-LineFilter = Callable[[LineRecord, PDFPageContext], bool]
-StopTest = Callable[[LineRecord, PDFPageContext], bool]
-PageEnricher = Callable[[PDFPageContext, list[LineRecord]], None]
-LineEnricher = Callable[
-    [PDFPageContext, LineRecord, int, list[LineRecord]], dict[str, object] | None
-]
-LineBreakTest = Callable[[float, float], bool]
-PageErrorHandler = Callable[[int, Exception], None]
 
 
 def _weighted_mode(
@@ -438,16 +428,20 @@ class WordPDFExtractor:
                     )
                     if hyphenated:
                         text = text[:-1]
-                    source_runs = record.runs if self.preserve_word_runs else [
-                        RunRecord(
-                            text=text,
-                            x=record.x,
-                            y=record.y,
-                            font_name=record.font_name,
-                            font_size=record.font_size,
-                            space_before=pending_space,
-                        )
-                    ]
+                    source_runs = (
+                        record.runs
+                        if self.preserve_word_runs
+                        else [
+                            RunRecord(
+                                text=text,
+                                x=record.x,
+                                y=record.y,
+                                font_name=record.font_name,
+                                font_size=record.font_size,
+                                space_before=pending_space,
+                            )
+                        ]
+                    )
                     if self.preserve_word_runs and hyphenated and source_runs:
                         source_runs[-1].text = source_runs[-1].text[:-1]
                     run_chunks: list[PDFChunk] = []

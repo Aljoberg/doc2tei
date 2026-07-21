@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass, field
-from typing import Callable, Literal, Protocol
+from typing import Callable, Literal
 import xml.etree.ElementTree as ET
 
 from engine import (
@@ -15,13 +15,9 @@ from engine import (
     tag_is_on_top,
     xml_safe_text,
 )
+from type_decs import ResultWithData, SpeakerIdentifier
 
-SpeakerIdentifier = Callable[[str], str]
 TEI_NAMESPACE = "http://www.tei-c.org/ns/1.0"
-
-
-class ResultWithData(Protocol):
-    data: dict[str, object]
 
 
 @dataclass
@@ -118,9 +114,7 @@ class FootnoteLinker:
     def numeric_run_group(self, chunk: PDFChunk) -> list[PDFChunk]:
         """Join adjacent small runs when extraction splits ``15`` into 1 + 5."""
         runs = chunk.line_chunk.runs
-        index = next(
-            (index for index, run in enumerate(runs) if run is chunk), None
-        )
+        index = next((index for index, run in enumerate(runs) if run is chunk), None)
         if index is None:
             return [chunk]
         start = index

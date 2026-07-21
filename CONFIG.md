@@ -445,8 +445,12 @@ Its rule-facing methods are `is_consumed_run` / `consumed_run_action`,
 `after_action`. A config may override the relative footer band with `y_min`
 and `y_max`; the defaults are fractions of page height, not fixed coordinates.
 
-The type definitions for all of this are in `type_decs.py`
-(`PDFConfig`, `PDFRule`, `PDFCosmeticAnnotation`, and the Word equivalents).
+Shared type-only declarations live in `type_decs.py`: config `TypedDict`s,
+chunk/parser protocols, callback and selector aliases, extractor hook types,
+and the Word/PDF rule types. Runtime dataclasses such as `PDFChunk`,
+`ParseResult`, and `TEIHeader` stay beside the code that constructs and uses
+them; `type_decs.py` refers to those models only through cycle-safe forward
+references.
 
 ---
 

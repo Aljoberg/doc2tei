@@ -22,13 +22,11 @@ parser fills them via :func:`fill_counts` when they are left empty.
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Mapping
 from dataclasses import dataclass, field
 import re
 import xml.etree.ElementTree as ET
 
-# xml:lang -> text; an empty mapping emits one bare element with empty text
-LocalizedText = Mapping[str, str]
+from type_decs import LocalizedText
 
 
 def _localized(
@@ -265,9 +263,7 @@ def fill_counts(root: ET.Element) -> None:
 
     tags_decl = root.find("teiHeader/encodingDesc/tagsDecl")
     if tags_decl is not None and len(tags_decl) == 0:
-        counts = Counter(
-            elem.tag for elem in text.iter() if isinstance(elem.tag, str)
-        )
+        counts = Counter(elem.tag for elem in text.iter() if isinstance(elem.tag, str))
         namespace = ET.SubElement(tags_decl, "namespace", name=TEI_NAMESPACE)
         for tag_name, count in sorted(counts.items()):
             ET.SubElement(namespace, "tagUsage", gi=tag_name, occurs=str(count))

@@ -9,29 +9,25 @@ import json
 from pathlib import Path
 import sys
 from types import ModuleType
-from typing import Callable, cast, Literal, Protocol
+from typing import Callable, cast, Literal
 from os.path import basename
 import xml.etree.ElementTree as ET
 
 import engine
-from engine import Chunk, PDFChunk, WordChunk
-from type_decs import CosmeticAnnotations, OnPop
+from engine import PDFChunk, WordChunk
+from type_decs import (
+    Chunk,
+    ChunkExtractor,
+    CosmeticAnnotations,
+    Logger,
+    OnPop,
+    RecoveryHandler,
+    RuleCallback,
+)
 
 from .config import Rule as ConfigRule
 from .helpers import build_list_person
 from .tei_header import TEIHeader, fill_counts
-
-
-class ChunkExtractor(Protocol):
-    def __call__(self, filename: str) -> Iterable[Chunk]: ...
-
-
-class Logger(Protocol):
-    def __call__(self, *args: object, **kwargs: object) -> None: ...
-
-
-RuleCallback = Callable[[Chunk], None]
-RecoveryHandler = Callable[[str, BaseException, Chunk | None], None]
 
 
 @dataclass(frozen=True)
@@ -441,9 +437,7 @@ def _make_document(
         return None
     if not callable(factory):
         raise TypeError("CONFIG['document'] must be callable")
-    document = cast(
-        "Callable[[], tuple[ET.Element, ET.Element]]", factory
-    )()
+    document = cast("Callable[[], tuple[ET.Element, ET.Element]]", factory)()
     root, content = document
     if content is not root and content not in root.iter():
         raise ValueError(
@@ -593,13 +587,11 @@ def parse_document(
     source = Path(input_path).expanduser().resolve()
     if not source.is_file():
         raise FileNotFoundError(f"input file does not exist: {source}")
-    
+
     recover_errors = bool(loaded.config.get("recover_errors", False))
     diagnostics = ParseDiagnostics(input=str(source), config=str(loaded.path))
 
-    def recover(
-        stage: str, error: BaseException, chunk: Chunk | None = None
-    ) -> None:
+    def recover(stage: str, error: BaseException, chunk: Chunk | None = None) -> None:
         diagnostics.recover(stage, error, chunk)
 
     try:

@@ -2,13 +2,11 @@ from __future__ import annotations
 
 from collections import OrderedDict
 from dataclasses import dataclass
-from typing import Callable, Generic, Literal, TypeVar
+from typing import Callable, Generic, Literal
 
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
-from engine import Chunk
-
-ChunkT = TypeVar("ChunkT", bound=Chunk)
+from type_decs import ChunkT
 
 
 @dataclass(frozen=True)

@@ -9,7 +9,6 @@ from doc2tei.extractors import CharacterPDFExtractor
 from doc2tei.helpers import SpeakerUtteranceHook
 from doc2tei.tei_header import Meeting, Setting, SourceBibl, TEIHeader
 from engine import (
-    Chunk,
     PDFChunk,
     WordChunk,
     append,
@@ -19,7 +18,7 @@ from engine import (
     tag,
     tag_is_on_top,
 )
-from type_decs import PDFConfig, PDFCosmeticAnnotations
+from type_decs import Chunk, PDFConfig, PDFCosmeticAnnotations
 
 
 @functools.wraps(print)

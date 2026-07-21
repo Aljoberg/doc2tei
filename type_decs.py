@@ -1,23 +1,91 @@
 from __future__ import annotations
 
-from typing import Callable, NotRequired, TypedDict, Literal, TYPE_CHECKING, TypeAlias
+from collections.abc import Iterable, Mapping
+from typing import (
+    Callable,
+    Literal,
+    NotRequired,
+    Protocol,
+    TYPE_CHECKING,
+    TypeAlias,
+    TypedDict,
+    TypeVar,
+)
 import xml.etree.ElementTree as ET
+
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 if TYPE_CHECKING:
-    # only needed for type hints
-    # actually importing them would create a cycle (engine needs type decs, type decs needs engine)
-    from engine import WordChunk, PDFChunk, Chunk, StackEntry
+    # Runtime imports here would create cycles: these modules all consume the
+    # declarations below. Forward references let type checkers resolve the
+    # concrete models without coupling the type layer to their implementations.
+    from doc2tei.extractors import LineRecord
     from doc2tei.tei_header import TEIHeader
+    from engine import PDFChunk, PDFPageContext, StackEntry, WordChunk
 
 
-WordRunTest = Callable[["WordChunk"], bool | None]
-WordAction = Callable[["WordChunk"], None]
-WordAppendFunc = Callable[["WordChunk"], None]
-WordAfterPush = Callable[[], None]
-RunImmediate = Callable[[], None]
-OnPop = Callable[["StackEntry"], None]
-OnEnd = Callable[..., None]
+class Chunk(Protocol):
+    """Minimum text-chunk interface shared by Word and PDF parsing."""
+
+    x: float
+    y: float
+    text: str
+    bold: bool | None
+    italic: bool | None
+    # A hyphen, gap, or line break may require a leading output space.
+    space_before: bool
+
+
+ChunkT = TypeVar("ChunkT", bound=Chunk)
+
+
+class ChunkExtractor(Protocol):
+    def __call__(self, filename: str) -> Iterable[Chunk]: ...
+
+
+class Logger(Protocol):
+    def __call__(self, *args: object, **kwargs: object) -> None: ...
+
+
+class ResultWithData(Protocol):
+    data: dict[str, object]
+
+
+RuleCallback: TypeAlias = Callable[[Chunk], None]
+RecoveryHandler: TypeAlias = Callable[[str, BaseException, Chunk | None], None]
+SelectorTest: TypeAlias = Callable[[Chunk], bool]
+SpeakerIdentifier: TypeAlias = Callable[[str], str]
+LocalizedText: TypeAlias = Mapping[str, str]
+
+
+class ExtractedWord(TypedDict):
+    text: str
+    x0: float
+    x1: float
+    top: float
+    bottom: float
+    fontname: str
+    size: float
+
+
+LineFilter: TypeAlias = Callable[["LineRecord", "PDFPageContext"], bool]
+StopTest: TypeAlias = LineFilter
+PageEnricher: TypeAlias = Callable[["PDFPageContext", list["LineRecord"]], None]
+LineEnricher: TypeAlias = Callable[
+    ["PDFPageContext", "LineRecord", int, list["LineRecord"]],
+    dict[str, object] | None,
+]
+LineBreakTest: TypeAlias = Callable[[float, float], bool]
+PageErrorHandler: TypeAlias = Callable[[int, Exception], None]
+
+
+WordRunTest: TypeAlias = Callable[["WordChunk"], bool | None]
+WordAction: TypeAlias = Callable[["WordChunk"], None]
+WordAppendFunc: TypeAlias = Callable[["WordChunk"], None]
+WordAfterPush: TypeAlias = Callable[[], None]
+RunImmediate: TypeAlias = Callable[[], None]
+OnPop: TypeAlias = Callable[["StackEntry"], None]
+OnEnd: TypeAlias = Callable[..., None]
 
 
 class WordRule(TypedDict):
@@ -28,12 +96,10 @@ class WordRule(TypedDict):
     after_append: NotRequired[WordAfterPush]
 
 
-WordRuleGroup = dict[str, WordRule | RunImmediate]
+WordRuleGroup: TypeAlias = dict[str, WordRule | RunImmediate]
 
 # the <TEI> root and the (descendant) element parsed content is appended into
-DocumentFactory: TypeAlias = (
-    "Callable[[], tuple[ET.Element, ET.Element]]"
-)
+DocumentFactory: TypeAlias = "Callable[[], tuple[ET.Element, ET.Element]]"
 # a built <teiHeader>, a TEIHeader spec, or a callable producing either
 TEIHeaderSpec: TypeAlias = (
     "TEIHeader | ET.Element | Callable[[], TEIHeader | ET.Element]"
@@ -54,10 +120,10 @@ class WordConfig(TypedDict):
     document: NotRequired[DocumentFactory]
 
 
-PDFRunTest = Callable[["PDFChunk"], bool | None]
-PDFAction = Callable[["PDFChunk"], None]
-PDFAppendFunc = Callable[["PDFChunk"], None]
-PDFAfterPush = Callable[[], None]
+PDFRunTest: TypeAlias = Callable[["PDFChunk"], bool | None]
+PDFAction: TypeAlias = Callable[["PDFChunk"], None]
+PDFAppendFunc: TypeAlias = Callable[["PDFChunk"], None]
+PDFAfterPush: TypeAlias = Callable[[], None]
 
 
 class PDFRule(TypedDict):
@@ -67,7 +133,7 @@ class PDFRule(TypedDict):
     after_append: NotRequired[PDFAfterPush]
 
 
-PDFRuleGroup = dict[str, PDFRule | RunImmediate]
+PDFRuleGroup: TypeAlias = dict[str, PDFRule | RunImmediate]
 
 
 class PDFConfig(TypedDict):
@@ -83,9 +149,9 @@ class PDFConfig(TypedDict):
     document: NotRequired[DocumentFactory]
 
 
-Rule = WordRule | PDFRule
-RuleGroup = WordRuleGroup | PDFRuleGroup
-Action = Callable[["Chunk"], None]
+Rule: TypeAlias = WordRule | PDFRule
+RuleGroup: TypeAlias = WordRuleGroup | PDFRuleGroup
+Action: TypeAlias = Callable[[Chunk], None]
 
 
 class WordCosmeticAnnotation(TypedDict):
@@ -94,7 +160,7 @@ class WordCosmeticAnnotation(TypedDict):
     append_func: NotRequired[WordAppendFunc]
 
 
-WordCosmeticAnnotations = dict[str, WordCosmeticAnnotation]
+WordCosmeticAnnotations: TypeAlias = dict[str, WordCosmeticAnnotation]
 
 
 class PDFCosmeticAnnotation(TypedDict):
@@ -103,6 +169,6 @@ class PDFCosmeticAnnotation(TypedDict):
     append_func: NotRequired[PDFAppendFunc]
 
 
-PDFCosmeticAnnotations = dict[str, PDFCosmeticAnnotation]
+PDFCosmeticAnnotations: TypeAlias = dict[str, PDFCosmeticAnnotation]
 
-CosmeticAnnotations = WordCosmeticAnnotations | PDFCosmeticAnnotations
+CosmeticAnnotations: TypeAlias = WordCosmeticAnnotations | PDFCosmeticAnnotations

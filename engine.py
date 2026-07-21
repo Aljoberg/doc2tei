@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import re
 import xml.etree.ElementTree as ET
-from typing import Literal, Protocol, cast, overload
+from typing import Literal, cast, overload
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 from type_decs import (
     Action,
+    Chunk,
     CosmeticAnnotations,
     OnPop,
     PDFCosmeticAnnotation,
@@ -73,6 +74,7 @@ def sanitize_xml_id(value: object, *, prefix: str = "id") -> str:
         return f"{safe_prefix}-{cleaned}"
     return cleaned
 
+
 def default_document() -> tuple[ET.Element, ET.Element]:
     """Build the standard TEI > text > body > div[debateSection] skeleton.
 
@@ -88,9 +90,7 @@ def default_document() -> tuple[ET.Element, ET.Element]:
 
 root, debate = default_document()
 debate.text, debate.tail = "", ""
-children: list[str | ET.Element] = (
-    []
-)  # reference to the innermost stack tag's children
+children: list[str | ET.Element] = []  # reference to the innermost stack tag's children
 
 
 @dataclass
@@ -147,17 +147,6 @@ def reset(document: tuple[ET.Element, ET.Element] | None = None) -> None:
     ]
     on_pop = None
     id_counters.clear()
-
-
-class Chunk(Protocol):
-    x: float
-    y: float
-    text: str
-    bold: bool | None
-    italic: bool | None
-    # whether there's a space to be added at the start
-    # it can be because of a deljaj, a gap or a line break
-    space_before: bool
 
 
 @dataclass
@@ -404,11 +393,7 @@ def push(
         tag = tag.tag
 
     safe_attribs = {
-        key: (
-            sanitize_xml_id(value)
-            if key == "xml:id"
-            else xml_safe_text(value)
-        )
+        key: (sanitize_xml_id(value) if key == "xml:id" else xml_safe_text(value))
         for key, value in {**attribs, **rest}.items()
     }
     elem = ET.Element(tag, safe_attribs)
@@ -464,9 +449,7 @@ def tag_is_on_top(tag: str, ignore_cosmetic: bool = True, **attribs: str): ...
 def tag_is_on_top(tag: ET.Element, ignore_cosmetic: bool = True): ...
 
 
-def tag_is_on_top(
-    tag: str | ET.Element, ignore_cosmetic: bool = True, **attribs: str
-):
+def tag_is_on_top(tag: str | ET.Element, ignore_cosmetic: bool = True, **attribs: str):
     # is the tag on top of the stack?
     # ignores cosmetic entries if needed (mostly the case)
     if isinstance(tag, ET.Element):
@@ -504,7 +487,7 @@ def tag(tag: str, **attribs: str):
 
 
 def append_comment(text: str):
-    text = xml_safe_text(text).replace("--", "- -") # me when XSS
+    text = xml_safe_text(text).replace("--", "- -")  # me when XSS
     if text.endswith("-"):
         text += " "
     children.append(ET.Comment(text))
