@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import os
 from pathlib import Path
+import re
 import sys
 
 from doc2tei.batch import (
     BATCH_MANIFEST_NAME,
     BatchItemResult,
+    BatchJob,
     BatchOptions,
     automatic_document_workers,
     batch_counts,
@@ -16,6 +20,13 @@ from doc2tei.batch import (
     run_batch,
     utc_now,
     write_batch_manifest,
+)
+from doc2tei.sistory import (
+    DEFAULT_SISTORY_DL_DIRECTORY,
+    SIstoryDownloadResult,
+    download_sistory_menu,
+    normalize_sistory_menu_path,
+    sistory_filesystem_path,
 )
 
 
@@ -43,7 +54,11 @@ def build_parser() -> argparse.ArgumentParser:
             "continuing after per-document failures"
         )
     )
-    parser.add_argument("inputs", nargs="+", help="input files or directories")
+    parser.add_argument(
+        "inputs",
+        nargs="*",
+        help="input files or directories (optional with --sistory-menu)",
+    )
     parser.add_argument(
         "-o",
         "--output-dir",
@@ -55,6 +70,27 @@ def build_parser() -> argparse.ArgumentParser:
         "--config",
         default=str(DEFAULT_CONFIG),
         help="configuration file (defaults to examples/general-config/config.py)",
+    )
+    parser.add_argument(
+        "--sistory-menu",
+        action="append",
+        metavar="PATH",
+        help=(
+            "download a SIstory menu path before parsing; repeat for multiple "
+            "menus (example: 1/7/397/407)"
+        ),
+    )
+    parser.add_argument(
+        "--sistory-download-dir",
+        help=(
+            "persistent SIstory download cache (default: "
+            "OUTPUT_DIR/_sistory-downloads)"
+        ),
+    )
+    parser.add_argument(
+        "--sistory-dl-path",
+        default=str(DEFAULT_SISTORY_DL_DIRECTORY),
+        help="path to the sistory-dl checkout/submodule",
     )
     parser.add_argument(
         "-j",
@@ -132,9 +168,78 @@ def _progress(result: BatchItemResult, current: int, total: int) -> None:
     )
 
 
+def _sistory_cache_directory(base: Path, menu_path: str) -> Path:
+    normalized = normalize_sistory_menu_path(menu_path)
+    readable = re.sub(r"[^\w.-]+", "-", normalized.replace("/", "-")).strip("-.")
+    readable = readable[:80].rstrip("-.") or "menu"
+    digest = hashlib.sha1(normalized.encode("utf-8")).hexdigest()[:8]
+    return base / f"{readable}-{digest}"
+
+
+def _download_sistory_inputs(
+    menu_paths: list[str],
+    download_base: Path,
+    downloader_directory: Path,
+) -> tuple[list[Path], list[SIstoryDownloadResult]]:
+    roots: list[Path] = []
+    results: list[SIstoryDownloadResult] = []
+    seen_menus: set[str] = set()
+    for menu_path in menu_paths:
+        try:
+            normalized = normalize_sistory_menu_path(menu_path)
+            if normalized in seen_menus:
+                continue
+            seen_menus.add(normalized)
+            cache = _sistory_cache_directory(download_base, normalized)
+        except ValueError as error:
+            result = SIstoryDownloadResult(
+                menu_path=menu_path,
+                output=str(download_base),
+                status="failed",
+                stats={},
+                message=str(error),
+            )
+        else:
+            try:
+                result = download_sistory_menu(
+                    normalized,
+                    cache,
+                    downloader_directory=downloader_directory,
+                )
+            except Exception as error:
+                result = SIstoryDownloadResult(
+                    menu_path=normalized,
+                    output=str(cache),
+                    status="failed",
+                    stats={},
+                    message=f"{type(error).__name__}: {error}"[:500],
+                )
+            # A failed refresh can still leave a useful prior cache. Discovery
+            # below will parse any complete files already present there.
+            if cache.is_dir():
+                roots.append(sistory_filesystem_path(cache))
+        results.append(result)
+        if result.status != "ok":
+            print(
+                f"warning: SIstory {result.menu_path}: {result.message}",
+                file=sys.stderr,
+            )
+    return roots, results
+
+
+def _deduplicate_jobs(jobs: list[BatchJob]) -> list[BatchJob]:
+    unique: dict[str, BatchJob] = {}
+    for job in jobs:
+        key = os.path.normcase(str(Path(job.source).resolve()))
+        unique.setdefault(key, job)
+    return list(unique.values())
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    if not args.inputs and not args.sistory_menu:
+        parser.error("provide an input file/directory or --sistory-menu")
     if args.include_wikidata and args.no_list_person:
         parser.error("--include-wikidata cannot be used with --no-list-person")
 
@@ -142,16 +247,79 @@ def main(argv: list[str] | None = None) -> int:
     if not config.is_file():
         parser.error(f"config file does not exist: {config}")
     output_root = Path(args.output_dir).expanduser().resolve()
-    jobs, warnings = discover_batch_jobs(
-        args.inputs,
-        output_root,
-        recursive=args.recursive,
-        extensions=args.extension,
-    )
+    output_root.mkdir(parents=True, exist_ok=True)
+    manifest_path = output_root / BATCH_MANIFEST_NAME
+    started_at = utc_now()
+    manifest: dict[str, object] = {
+        "status": "acquiring",
+        "started_at": started_at,
+        "config": str(config),
+        "output": str(output_root),
+        "items": [],
+    }
+    write_batch_manifest(manifest_path, manifest)
+
+    sistory_results: list[SIstoryDownloadResult] = []
+    sistory_roots: list[Path] = []
+    if args.sistory_menu:
+        download_base = (
+            Path(args.sistory_download_dir).expanduser().resolve()
+            if args.sistory_download_dir
+            else output_root / "_sistory-downloads"
+        )
+        downloader_directory = Path(args.sistory_dl_path).expanduser().resolve()
+        try:
+            sistory_roots, sistory_results = _download_sistory_inputs(
+                args.sistory_menu,
+                download_base,
+                downloader_directory,
+            )
+        except KeyboardInterrupt:
+            manifest["status"] = "interrupted"
+            manifest["completed_at"] = utc_now()
+            write_batch_manifest(manifest_path, manifest)
+            return 130
+        manifest["sistory_downloads"] = [
+            result.as_dict() for result in sistory_results
+        ]
+        write_batch_manifest(manifest_path, manifest)
+
+    jobs: list[BatchJob] = []
+    warnings: list[str] = []
+    if args.inputs:
+        local_output = output_root / "local" if sistory_roots else output_root
+        local_jobs, local_warnings = discover_batch_jobs(
+            args.inputs,
+            local_output,
+            recursive=args.recursive,
+            extensions=args.extension,
+        )
+        jobs.extend(local_jobs)
+        warnings.extend(local_warnings)
+    if sistory_roots:
+        sistory_output = output_root / "sistory" if args.inputs else output_root
+        downloaded_jobs, downloaded_warnings = discover_batch_jobs(
+            sistory_roots,
+            sistory_output,
+            recursive=True,
+            extensions=args.extension,
+        )
+        jobs.extend(downloaded_jobs)
+        warnings.extend(downloaded_warnings)
+    jobs = _deduplicate_jobs(jobs)
     for warning in warnings:
         print(f"warning: {warning}", file=sys.stderr)
     if not jobs:
-        parser.error("no supported documents were found")
+        manifest.update(
+            status="failed",
+            completed_at=utc_now(),
+            document_count=0,
+            discovery_warnings=warnings,
+            message="no supported documents were found",
+        )
+        write_batch_manifest(manifest_path, manifest)
+        print("error: no supported documents were found", file=sys.stderr)
+        return 1
 
     requested_workers = args.workers or automatic_document_workers(len(jobs))
     document_workers = max(1, min(requested_workers, len(jobs)))
@@ -175,20 +343,13 @@ def main(argv: list[str] | None = None) -> int:
         page_workers=page_workers,
         overwrite=args.overwrite,
     )
-    output_root.mkdir(parents=True, exist_ok=True)
-    manifest_path = output_root / BATCH_MANIFEST_NAME
-    started_at = utc_now()
-    manifest: dict[str, object] = {
-        "status": "running",
-        "started_at": started_at,
-        "config": str(config),
-        "output": str(output_root),
-        "document_workers": document_workers,
-        "page_workers": "config" if page_workers is None else page_workers,
-        "document_count": len(jobs),
-        "discovery_warnings": warnings,
-        "items": [],
-    }
+    manifest.update(
+        status="running",
+        document_workers=document_workers,
+        page_workers="config" if page_workers is None else page_workers,
+        document_count=len(jobs),
+        discovery_warnings=warnings,
+    )
     write_batch_manifest(manifest_path, manifest)
 
     observed: list[BatchItemResult] = []
@@ -218,8 +379,14 @@ def main(argv: list[str] | None = None) -> int:
         return 130
 
     counts = batch_counts(results)
+    acquisition_failed = any(result.status != "ok" for result in sistory_results)
+    final_status = (
+        "failed"
+        if counts["failed"]
+        else "incomplete" if acquisition_failed else "complete"
+    )
     manifest.update(
-        status="failed" if counts["failed"] else "complete",
+        status=final_status,
         completed_at=utc_now(),
         counts=counts,
         # Restore deterministic discovery order in the final manifest.
@@ -233,7 +400,7 @@ def main(argv: list[str] | None = None) -> int:
             flush=True,
         )
         print(f"Manifest: {manifest_path}", flush=True)
-    return 1 if counts["failed"] else 0
+    return 1 if counts["failed"] or acquisition_failed else 0
 
 
 if __name__ == "__main__":

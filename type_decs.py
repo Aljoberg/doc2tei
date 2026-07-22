@@ -57,6 +57,7 @@ SelectorTest: TypeAlias = Callable[[Chunk], bool]
 SpeakerIdentifier: TypeAlias = Callable[[str], str]
 LocalizedText: TypeAlias = Mapping[str, str]
 BatchStatus: TypeAlias = Literal["ok", "recovered", "failed", "skipped"]
+SIstoryDownloadStatus: TypeAlias = Literal["ok", "partial", "failed"]
 
 
 WikidataValue = TypedDict(

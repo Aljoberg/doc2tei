@@ -105,6 +105,40 @@ reviewable TEI document, diagnostics, and an `UnknownSpeaker` listPerson, marks
 the bundle `recovered`, and moves on. Only an output failure that prevents even
 that fallback is marked `failed` and makes the command return a nonzero status.
 
+### Downloading directly from SIstory
+
+The bundled `sistory-dl` submodule can feed a SIstory menu directly into the
+same batch pipeline:
+
+```powershell
+python .\batch_parse.py `
+  --sistory-menu 1/7/397/407 `
+  --output-dir "D:\tei-output" `
+  --pretty `
+  --xml-declaration
+```
+
+A complete URL such as
+`https://sistory.si/slv/menu/1/7/397/407` also works, and
+`--sistory-menu` can be repeated. Sources are retained under
+`OUTPUT_DIR/_sistory-downloads` in a stable per-menu cache. On later runs,
+`sistory-dl` skips existing PDFs and doc2tei skips unchanged conversions, so the
+whole download-and-parse command is resumable. Change the source cache with
+`--sistory-download-dir`.
+
+Download statistics and failures are stored in `batch-manifest.json`. A partial
+menu download does not prevent successfully downloaded or previously cached
+documents from being parsed, but the final command status remains nonzero so an
+incomplete acquisition is not silently reported as complete. When local inputs
+and SIstory menus are supplied together, their parsed bundles are separated
+under `local/` and `sistory/`.
+
+Initialize the downloader after cloning with:
+
+```bash
+git submodule update --init sistory-dl
+```
+
 Again, I've written everything in CONFIG.md, so if you're interested in running this, you should start with that file.
 
 ### Good luck!

@@ -25,6 +25,11 @@ from .batch import (
     discover_batch_jobs,
     run_batch,
 )
+from .sistory import (
+    SIstoryDownloadResult,
+    download_sistory_menu,
+    normalize_sistory_menu_path,
+)
 from .selectors import AllOf, AnyOf, Attribute, Between, LineStart, Metadata, Not, Text
 from .tei_header import (
     Change,
@@ -68,6 +73,7 @@ __all__ = [
     "Setting",
     "SourceBibl",
     "SpeakerUtteranceHook",
+    "SIstoryDownloadResult",
     "TEIHeader",
     "Text",
     "WordPDFExtractor",
@@ -75,9 +81,11 @@ __all__ = [
     "automatic_document_workers",
     "batch_counts",
     "discover_batch_jobs",
+    "download_sistory_menu",
     "fill_counts",
     "load_config",
     "parse_document",
+    "normalize_sistory_menu_path",
     "rule",
     "rule_group",
     "run_batch",

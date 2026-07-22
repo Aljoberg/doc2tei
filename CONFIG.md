@@ -1248,3 +1248,22 @@ reported as `recovered`; they do not stop other documents or make the batch
 command fail. A `failed` status is reserved for cases where output files cannot
 be written. See `python batch_parse.py --help` for filtering, Wikidata, XML,
 and concurrency options.
+
+The batch runner can also acquire its inputs from the bundled `sistory-dl`
+submodule before conversion:
+
+```bash
+python batch_parse.py --sistory-menu 1/7/397/407 --output-dir out/sistory
+```
+
+Bare menu paths and full SIstory menu URLs are accepted. Repeat
+`--sistory-menu` to crawl multiple roots. Each root receives a stable cache
+below `OUTPUT_DIR/_sistory-downloads`; the downloader's existing-file skip and
+the parser's output fingerprints make the complete operation resumable.
+`--sistory-download-dir` moves that cache elsewhere.
+
+SIstory acquisition results are embedded in `batch-manifest.json`. Files
+already downloaded remain eligible for parsing even when a later menu refresh
+partially fails. Such a run finishes as `incomplete` and returns a nonzero exit
+status, while all available documents continue through the batch. Run
+`git submodule update --init sistory-dl` if the checkout is missing.

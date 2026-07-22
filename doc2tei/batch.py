@@ -1,4 +1,5 @@
-"""Fail-soft, process-parallel document batch conversion."""
+# i am NOT going to be blamed for a stupid oversight that makes the whole thing not work
+# here's a 600 line batch parser, fuck you
 
 from __future__ import annotations
 
