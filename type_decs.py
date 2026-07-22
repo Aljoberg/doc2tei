@@ -58,6 +58,22 @@ SpeakerIdentifier: TypeAlias = Callable[[str], str]
 LocalizedText: TypeAlias = Mapping[str, str]
 
 
+WikidataValue = TypedDict(
+    "WikidataValue",
+    {
+        "type": str,
+        "value": str,
+        "datatype": str,
+        "xml:lang": str,
+    },
+    total=False,
+)
+
+
+WikidataBinding: TypeAlias = dict[str, WikidataValue]
+WikidataFetcher: TypeAlias = Callable[[str], list[WikidataBinding]]
+
+
 class ExtractedWord(TypedDict):
     text: str
     x0: float

@@ -1128,7 +1128,7 @@ Each example directory also includes an `out.xml` reference output.
 
 ## The general config
 
-`examples/general/config.py` is a single config that parses all bundled test
+`examples/general-config/config.py` is a single config that parses all bundled test
 documents. Instead of per-document magic numbers it probes the PDF first
 (space-glyph ratio, OCR text layer, dominant font size) to pick one of three
 extraction profiles, then detects columns per page by clustering line-start x
@@ -1148,7 +1148,7 @@ source line` XML comment for manual review.
 
 ```bash
 python parse.py testdocs/<document>.pdf \
-  --config examples/general/config.py -o out.xml
+  --config examples/general-config/config.py -o out.xml
 ```
 
 On the 1957 volume it matches the dedicated config almost exactly; on ZRIP it
@@ -1196,13 +1196,22 @@ python parse.py path/to/input.pdf --config path/to/config.py -o out/out.xml \
   --diagnostics out/diagnostics.json --data-output out/data.json \
   --list-person-output out/listPerson.xml
 
-# Optional: enrich the exported speaker map with best-effort Wikidata matches
-python make_list_person.py out/data.json -o out/listPerson.xml
+# Optional: enrich listPerson with fail-soft Wikidata matches in the same run
+python parse.py path/to/input.pdf --config path/to/config.py -o out/out.xml \
+  --list-person-output out/listPerson.xml --include-wikidata
 ```
+
+`--list-person-output` always recovers organization and role affiliations from
+speaker labels. Wikidata access is disabled by default so ordinary runs are
+offline and deterministic. With `--include-wikidata`, timeouts, throttling,
+unavailable records, and low-confidence matches all fall back to the local
+record rather than failing the parse. `make_list_person.py` remains available
+as a compatibility wrapper for an already-exported JSON speaker map.
 
 To convert a _different_ document, write a new config module exporting `CONFIG`,
 `COSMETIC_ANNOTATIONS` and `get_chunks`, then select it with `--config`.
 There is no need to copy it to the repository root or maintain a symlink.
 
 Dependencies: `pdfminer.six` (PDF extraction), `python-docx` (Word mode),
-`pypdf` (the coord-dump tool, should be reworked into pdfminer), `requests` (`make_list_person.py`).
+`pypdf` (the coord-dump tool, should be reworked into pdfminer), `requests`
+(optional Wikidata enrichment).

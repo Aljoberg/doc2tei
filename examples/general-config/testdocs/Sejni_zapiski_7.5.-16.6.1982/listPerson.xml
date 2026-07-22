@@ -8,6 +8,9 @@
   </person>
   <person xml:id="MartinMlinar">
     <persName>Predsednik Martin Mlinar</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="OlgaKojek">
     <persName>Olga K o j e k</persName>
@@ -128,6 +131,9 @@
   </person>
   <person xml:id="MitjaHorvat">
     <persName>Predsednik Mitja Horvat</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="JanezPakiž">
     <persName>Janez Pakiž</persName>
@@ -284,6 +290,9 @@
   </person>
   <person xml:id="CirilRibičič">
     <persName>Predsednik dr. Ciril Ribičič</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="JožeŠušmelj">
     <persName>Jože Šušmelj</persName>

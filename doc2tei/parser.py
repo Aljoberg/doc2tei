@@ -176,9 +176,7 @@ class ParseResult:
             xml_declaration=xml_declaration,
         )
 
-    def to_bytes(
-        self, *, xml_declaration: bool = False, pretty: bool = False
-    ) -> bytes:
+    def to_bytes(self, *, xml_declaration: bool = False, pretty: bool = False) -> bytes:
         return self._xml_bytes(
             self.root,
             xml_declaration=xml_declaration,
@@ -216,6 +214,7 @@ class ParseResult:
         data_key: str = "speakers",
         xml_declaration: bool = False,
         pretty: bool = False,
+        include_wikidata: bool = False,
     ) -> None:
         mapping = self.data.get(data_key)
         safe_mapping = (
@@ -227,7 +226,10 @@ class ParseResult:
             if isinstance(mapping, Mapping)
             else {}
         )
-        root = build_list_person(safe_mapping)
+        root = build_list_person(
+            safe_mapping,
+            include_wikidata=include_wikidata,
+        )
         content = self._xml_bytes(
             root,
             xml_declaration=xml_declaration,

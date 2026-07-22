@@ -4,6 +4,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 import engine
+import parse as parse_cli
 import doc2tei.parser as parser_module
 from doc2tei.parser import (
     ParseDiagnostics,
@@ -15,7 +16,7 @@ from doc2tei.extractors import CharacterPDFExtractor, LineRecord, WordPDFExtract
 from doc2tei.helpers import build_list_person
 from engine import PDFPageContext, make_chunk
 
-CONFIG_PATH = Path(__file__).parents[1] / "examples" / "general" / "config.py"
+CONFIG_PATH = Path(__file__).parents[1] / "examples" / "general-config" / "config.py"
 
 
 def pdf_line(
@@ -377,10 +378,7 @@ def test_general_config_can_disable_nearby_run_merging():
     configured_workers = int(module.CONFIG["page_workers"])
     assert configured_workers >= 0
     assert module._make_extractor("char-preserve").merge_nearby_runs is True
-    assert (
-        module._make_extractor("char-preserve").page_workers
-        == configured_workers
-    )
+    assert module._make_extractor("char-preserve").page_workers == configured_workers
     assert module._make_extractor("char-break").line_break_mode == "downward"
     assert module._make_extractor("ocr").page_workers == configured_workers
 
@@ -595,6 +593,141 @@ def test_empty_and_invalid_speaker_mappings_always_build_a_list_person():
     person = recovered.find("person")
     assert person is not None
     assert person.attrib["xml:id"].startswith("speaker-")
+
+
+def test_list_person_recovers_roles_and_affiliations_from_labels():
+    root = build_list_person(
+        {
+            "#ZoranPolic": "PREDSEDNIK ZORAN POLIČ (SR Slovenija):",
+            "#VeselinDjuranovic": "VESELIN DJURANOVIČ, predsednik ZIS:",
+            "#FerdoKozak": (
+                "Predsednik dr, Ferdp Kozak prične ob S.20 sejo z "
+                "naslednjimi besedami:"
+            ),
+            "#ImerPulja": "IMER PULJA, zvezni sekretar za trg:",
+            "#NotAPerson": "SR Slovenije, da se na lastno željo razrešijo:",
+        }
+    )
+    people = root.findall("person")
+
+    first_affiliation = people[0].find("affiliation")
+    assert first_affiliation is not None
+    assert first_affiliation.attrib["role"] == "predsednik"
+    assert first_affiliation.findtext("roleName") == "PREDSEDNIK"
+    assert first_affiliation.findtext("orgName") == "SR Slovenija"
+
+    second_affiliation = people[1].find("affiliation")
+    assert second_affiliation is not None
+    assert second_affiliation.attrib["role"] == "predsednik"
+    assert second_affiliation.findtext("roleName") == "predsednik ZIS"
+
+    # A comma inside OCR text must not override a known leading role, while a
+    # generic prose clause must not be invented as an affiliation role.
+    assert people[2].findtext("affiliation/roleName") == "Predsednik"
+    assert people[3].find("affiliation").attrib["role"] == "sekretar"
+    assert people[4].find("affiliation") is None
+
+
+def test_wikidata_list_person_is_enriched_and_remains_fail_soft():
+    calls: list[str] = []
+
+    def fetch(search_name: str):
+        calls.append(search_name)
+        if search_name == "Broken Lookup":
+            raise RuntimeError("network unavailable")
+        if search_name == "Malformed Result":
+            return [{"p": "not a SPARQL value object"}]
+        return [
+            {
+                "p": {"value": "http://www.wikidata.org/entity/Q123"},
+                "pLabel": {"value": "Janez Novak"},
+                "givenLabel": {"value": "Janez"},
+                "familyLabel": {"value": "Novak"},
+                "birth": {"value": "1920-01-02T00:00:00Z"},
+                "bplaceLabel": {"value": "Ljubljana"},
+                "sexLabel": {"value": "moški"},
+                "occLabel": {"value": "politik"},
+                "citizenLabel": {"value": "Slovenija"},
+                "party": {"value": "http://www.wikidata.org/entity/Q456"},
+                "partyLabel": {"value": "Preskusna stranka"},
+                "viaf": {"value": "12345"},
+                "gnd": {"value": "67890"},
+                "isni": {"value": "0000000000000000"},
+            }
+        ]
+
+    root = build_list_person(
+        {
+            "#JanezNovak": "Janez Novak, minister (Vlada):",
+            "#BrokenLookup": "Broken Lookup (Skupščina):",
+            "#MalformedResult": "Malformed Result:",
+        },
+        include_wikidata=True,
+        wikidata_fetcher=fetch,
+        wikidata_workers=2,
+    )
+
+    assert sorted(calls) == ["Broken Lookup", "Janez Novak", "Malformed Result"]
+    assert [head.text for head in root.findall("head")] == [
+        "Seznam govornikov",
+        "List of speakers",
+    ]
+    enriched, fallback, malformed = root.findall("person")
+    assert enriched.findtext("persName/surname") == "Novak"
+    assert enriched.findtext("persName/forename") == "Janez"
+    assert enriched.find("idno[@subtype='wikidata']") is not None
+    assert enriched.find("birth").attrib["when"] == "1920-01-02"
+    assert enriched.findtext("birth/placeName") == "Ljubljana"
+    assert enriched.find("sex").attrib["value"] == "M"
+    assert enriched.findtext("occupation") == "politik"
+    assert enriched.findtext("nationality") == "Slovenija"
+    affiliations = enriched.findall("affiliation")
+    assert any(item.findtext("orgName") == "Preskusna stranka" for item in affiliations)
+    assert any(item.findtext("orgName") == "Vlada" for item in affiliations)
+    assert fallback.findtext("persName/forename") == "Broken"
+    assert fallback.findtext("persName/surname") == "Lookup"
+    assert fallback.findtext("affiliation/orgName") == "Skupščina"
+    assert malformed.findtext("persName/forename") == "Malformed"
+    assert malformed.find("idno") is None
+
+
+def test_cli_forwards_wikidata_toggle_only_to_list_person(monkeypatch):
+    calls: dict[str, dict[str, object]] = {}
+
+    class FakeResult:
+        def write_xml(self, _path, **kwargs):
+            calls["xml"] = kwargs
+
+        def write_list_person(self, _path, **kwargs):
+            calls["list_person"] = kwargs
+
+    monkeypatch.setattr(
+        parse_cli,
+        "parse_document",
+        lambda _input, *, config: FakeResult(),
+    )
+
+    assert (
+        parse_cli.main(
+            [
+                "input.pdf",
+                "--config",
+                "config.py",
+                "--out",
+                "document.xml",
+                "--list-person-output",
+                "listPerson.xml",
+                "--include-wikidata",
+            ]
+        )
+        == 0
+    )
+    assert calls["xml"] == {"xml_declaration": False, "pretty": False}
+    assert calls["list_person"] == {
+        "xml_declaration": False,
+        "pretty": False,
+        "include_wikidata": True,
+    }
 
 
 def test_unresolved_superscript_is_retained_as_typography_not_a_reference(tmp_path):

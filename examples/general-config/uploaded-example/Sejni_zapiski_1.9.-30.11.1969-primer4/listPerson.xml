@@ -2,6 +2,9 @@
 <listPerson xmlns="http://www.tei-c.org/ns/1.0">
   <person xml:id="MiranGoslar">
     <persName>Predsednik Miran Goslar</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="ToneBole">
     <persName>Predsedujoči Tone Bole</persName>
@@ -53,6 +56,9 @@
   </person>
   <person xml:id="MiranGos1Ar">
     <persName>Predsednik Miran G o s 1 a r</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="LojzeBlenkuš">
     <persName>Lojze Blenkuš</persName>
@@ -98,6 +104,9 @@
   </person>
   <person xml:id="LojzkaStropnik">
     <persName>Predsednik Lojzka Stropnik</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="JankoKuster">
     <persName>Janko Kuster</persName>
@@ -158,6 +167,9 @@
   </person>
   <person xml:id="Mirangoslar">
     <persName>Predsednik MiranGoslar</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="JožeNovinšek">
     <persName>Jože Novinšek</persName>
@@ -194,6 +206,9 @@
   </person>
   <person xml:id="LojzkaStropnIk">
     <persName>Podpredsednik Lojzka Stropn'ik</persName>
+    <affiliation role="podpredsednik">
+      <roleName xml:lang="sl">Podpredsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="IvanRenko">
     <persName>Ivan Renko</persName>
@@ -212,6 +227,9 @@
   </person>
   <person xml:id="MiranGosiAr">
     <persName>Predsednik Miran Gosi ar</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="JanezVerbič">
     <persName>Janez Verbič</persName>
@@ -236,6 +254,9 @@
   </person>
   <person xml:id="MiranGOsiAr">
     <persName>Predsednik Miran G osi ar</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="MartinKošir">
     <persName>Martin Košir</persName>
@@ -248,6 +269,9 @@
   </person>
   <person xml:id="LojkaStropnik">
     <persName>Podpredsednik Lojka Stropnik</persName>
+    <affiliation role="podpredsednik">
+      <roleName xml:lang="sl">Podpredsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="E1AUlrih">
     <persName>E1 a Ulrih</persName>
@@ -293,6 +317,9 @@
   </person>
   <person xml:id="KarelLutar">
     <persName>Karel Lutar (iz klopi)</persName>
+    <affiliation role="member">
+      <orgName>iz klopi</orgName>
+    </affiliation>
   </person>
   <person xml:id="ŽarkoZigon">
     <persName>Žarko Zigon</persName>
@@ -314,6 +341,9 @@
   </person>
   <person xml:id="EgonPrinčič">
     <persName>Egon Prinčič (iz klopi)</persName>
+    <affiliation role="member">
+      <orgName>iz klopi</orgName>
+    </affiliation>
   </person>
   <person xml:id="FrancBricelj">
     <persName>Franc Bricelj</persName>
@@ -377,9 +407,15 @@
   </person>
   <person xml:id="MilošPoljanšek">
     <persName>Predsednik Miloš Poljanšek</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="MilošPoljAnšek">
     <persName>Predsednik Miloš Polj anšek</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="BorisFeldin">
     <persName>Boris Feldin</persName>
@@ -395,6 +431,9 @@
   </person>
   <person xml:id="MilošPoljanŠeK">
     <persName>Predsednik Miloš Poljan še k</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="EmilRoje">
     <persName>Emil Roje</persName>
@@ -434,6 +473,9 @@
   </person>
   <person xml:id="MilošPoljaNšek">
     <persName>Predsednik Miloš Polja nšek</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="DušanSinigoj">
     <persName>Dušan Sinigoj</persName>
@@ -494,9 +536,15 @@
   </person>
   <person xml:id="MilošPOljanšek">
     <persName>Predsednik Miloš P.oljanšek</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="SrečkoKoren">
     <persName>Predsednik dr. Srečko Koren</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="DušanKompare">
     <persName>Dušan Kompare</persName>
@@ -560,6 +608,9 @@
   </person>
   <person xml:id="SergejKraigher">
     <persName>Predsednik Sergej Kraigher</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="JožkoŠtrukelj">
     <persName>Jožko Štrukelj</persName>

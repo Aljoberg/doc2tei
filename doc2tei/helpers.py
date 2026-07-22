@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
+from difflib import SequenceMatcher
+import re
 from typing import Callable, Literal
+import unicodedata
 import xml.etree.ElementTree as ET
 
 from engine import (
@@ -15,9 +19,60 @@ from engine import (
     tag_is_on_top,
     xml_safe_text,
 )
-from type_decs import ResultWithData, SpeakerIdentifier
+from type_decs import (
+    ResultWithData,
+    SpeakerIdentifier,
+    WikidataBinding,
+    WikidataFetcher,
+)
 
 TEI_NAMESPACE = "http://www.tei-c.org/ns/1.0"
+WIKIDATA_ENDPOINT = "https://query.wikidata.org/sparql"
+WIKIDATA_USER_AGENT = "doc2tei/1.0 (https://github.com/Aljoberg/doc2tei)"
+
+WIKIDATA_PERSON_QUERY = """
+SELECT DISTINCT ?p ?pLabel ?givenLabel ?familyLabel ?birth ?death
+       ?bplaceLabel ?dplaceLabel ?sexLabel ?occLabel ?party ?partyLabel
+       ?citizenLabel ?viaf ?gnd ?isni WHERE {
+  SERVICE wikibase:mwapi {
+    bd:serviceParam wikibase:api "EntitySearch" .
+    bd:serviceParam wikibase:endpoint "www.wikidata.org" .
+    bd:serviceParam wikibase:limit "5" .
+    bd:serviceParam mwapi:search "%s" .
+    bd:serviceParam mwapi:language "sl" .
+    ?p wikibase:apiOutputItem mwapi:item .
+  }
+  ?p wdt:P31 wd:Q5 .
+  OPTIONAL { ?p wdt:P569 ?birth. }   OPTIONAL { ?p wdt:P570 ?death. }
+  OPTIONAL { ?p wdt:P19 ?bplace. }   OPTIONAL { ?p wdt:P20 ?dplace. }
+  OPTIONAL { ?p wdt:P735 ?given. }   OPTIONAL { ?p wdt:P734 ?family. }
+  OPTIONAL { ?p wdt:P21 ?sex. }      OPTIONAL { ?p wdt:P106 ?occ. }
+  OPTIONAL { ?p wdt:P102 ?party. }   OPTIONAL { ?p wdt:P27 ?citizen. }
+  OPTIONAL { ?p wdt:P214 ?viaf. }    OPTIONAL { ?p wdt:P227 ?gnd. }
+  OPTIONAL { ?p wdt:P213 ?isni. }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "sl,en". }
+}
+LIMIT 100
+"""
+
+AFFILIATION_RE = re.compile(r"\((?P<organization>[^()]*)\)\s*$")
+ROLE_RE = re.compile(r",\s*(?P<role>.+?)\s*$")
+ROLE_PREFIX_RE = re.compile(
+    r"^(?P<role>(?:pod)?predsednik(?:\s+vlade)?|predsedujo[čcć])\s+",
+    re.IGNORECASE,
+)
+ROLE_KEYWORD_RE = re.compile(
+    r"\b(?:"
+    r"(?:pod)?predsedni\w*|predsedujo\w*|član\w*|clan\w*|"
+    r"sekretar\w*|minist\w*|poročeval\w*|poroceval\w*|"
+    r"delegat\w*|poslan\w*|predstavni\w*|guverner\w*|direktor\w*"
+    r")\b",
+    re.IGNORECASE,
+)
+TITLE_PREFIX_RE = re.compile(
+    r"^(?:(?:dr|mag|prof|inž|inz|ing)\.?\s+)+",
+    re.IGNORECASE,
+)
 
 
 @dataclass
@@ -327,15 +382,288 @@ class FootnoteLinker:
                     reference.set("target", f"#{definition}")
 
 
-def build_list_person(mapping: Mapping[str, str]) -> ET.Element:
-    """Build a deterministic TEI ``listPerson`` from exported speaker labels.
+@dataclass(frozen=True)
+class _SpeakerDetails:
+    forename: str
+    surname: str
+    role: str | None
+    organization: str | None
 
-    This intentionally performs no network identity matching. The older
-    ``make_list_person.py`` command remains available when Wikidata enrichment
-    is wanted; this builder is suitable for producing a minimal list in the
-    same parse invocation.
+    @property
+    def lookup_name(self) -> str:
+        return " ".join(part for part in (self.forename, self.surname) if part)
+
+
+def _sparql_escape(value: str) -> str:
+    return (
+        value.replace("\\", "\\\\")
+        .replace('"', '\\"')
+        .replace("\r", " ")
+        .replace("\n", " ")
+    )
+
+
+def _fetch_wikidata_bindings(
+    search_name: str, *, timeout: float = 20.0
+) -> list[WikidataBinding]:
+    """Best-effort Wikidata lookup which can never abort document output."""
+
+    try:
+        import requests
+
+        response = requests.get(
+            WIKIDATA_ENDPOINT,
+            params={"query": WIKIDATA_PERSON_QUERY % _sparql_escape(search_name)},
+            headers={
+                "User-Agent": WIKIDATA_USER_AGENT,
+                "Accept": "application/sparql-results+json",
+            },
+            timeout=(5.0, timeout),
+        )
+        response.raise_for_status()
+        payload = response.json()
+        bindings = payload.get("results", {}).get("bindings", [])
+        if not isinstance(bindings, list):
+            return []
+        return [binding for binding in bindings if isinstance(binding, dict)]
+    except Exception:
+        # Enrichment is optional. Network failures, throttling, malformed JSON,
+        # and unexpected service responses must leave a valid local listPerson.
+        return []
+
+
+def _identifier_words(reference: str) -> list[str]:
+    identifier = reference.removeprefix("#").strip()
+    spaced = "".join(
+        f" {character}" if index and character.isupper() else character
+        for index, character in enumerate(identifier)
+    )
+    return [word for word in spaced.split() if word]
+
+
+def _speaker_details(reference: str, label: str) -> _SpeakerDetails:
+    text = xml_safe_text(label).strip().rstrip(":").strip()
+    organization = None
+    affiliation_match = AFFILIATION_RE.search(text)
+    if affiliation_match is not None:
+        organization = affiliation_match.group("organization").strip() or None
+        text = text[: affiliation_match.start()].rstrip()
+
+    role = None
+    prefix_match = ROLE_PREFIX_RE.match(text)
+    if prefix_match is not None:
+        role = prefix_match.group("role").strip()
+        text = text[prefix_match.end() :].lstrip()
+    else:
+        role_match = ROLE_RE.search(text)
+        if role_match is not None:
+            candidate_role = role_match.group("role").strip()
+            if ROLE_KEYWORD_RE.search(candidate_role):
+                role = candidate_role
+                text = text[: role_match.start()].rstrip()
+    text = TITLE_PREFIX_RE.sub("", text).strip()
+
+    local_words = text.split()
+    words = local_words if 2 <= len(local_words) <= 4 else _identifier_words(reference)
+    if not words:
+        words = [sanitize_xml_id(reference.removeprefix("#"), prefix="speaker")]
+    normalized_words = [word.title() if word.isupper() else word for word in words]
+    forename = normalized_words[0]
+    surname = " ".join(normalized_words[1:])
+    return _SpeakerDetails(
+        forename=forename,
+        surname=surname,
+        role=role,
+        organization=organization,
+    )
+
+
+def _normalized_name(value: str) -> str:
+    decomposed = unicodedata.normalize("NFKD", value.casefold())
+    return "".join(
+        character
+        for character in decomposed
+        if not unicodedata.combining(character) and character.isalnum()
+    )
+
+
+def _binding_value(binding: WikidataBinding, key: str) -> str | None:
+    item = binding.get(key)
+    if not isinstance(item, Mapping):
+        return None
+    value = item.get("value")
+    return value if isinstance(value, str) and value else None
+
+
+def _candidate_bindings(
+    bindings: list[WikidataBinding], search_name: str
+) -> list[WikidataBinding]:
+    """Choose one searched person, then retain all rows for that entity."""
+
+    grouped: dict[str, list[WikidataBinding]] = {}
+    for binding in bindings:
+        uri = _binding_value(binding, "p")
+        if uri is not None:
+            grouped.setdefault(uri, []).append(binding)
+    if not grouped:
+        return []
+
+    normalized_search = _normalized_name(search_name)
+
+    def score(rows: list[WikidataBinding]) -> float:
+        label = next(
+            (
+                value
+                for row in rows
+                if (value := _binding_value(row, "pLabel")) is not None
+            ),
+            "",
+        )
+        if not label:
+            return 0.0
+        return SequenceMatcher(None, normalized_search, _normalized_name(label)).ratio()
+
+    candidate = max(grouped.values(), key=score)
+    return candidate if score(candidate) >= 0.65 else []
+
+
+def _unique_values(bindings: list[WikidataBinding], key: str) -> list[str]:
+    values: list[str] = []
+    for binding in bindings:
+        value = _binding_value(binding, key)
+        if value is not None and value not in values:
+            values.append(value)
+    return values
+
+
+def _role_value(role: str | None) -> str:
+    if not role:
+        return "member"
+    role_keyword = ROLE_KEYWORD_RE.search(role)
+    semantic_word = (
+        role_keyword.group(0) if role_keyword is not None else role.split()[0]
+    ).casefold()
+    return (
+        "".join(
+            character
+            for character in semantic_word
+            if character.isalnum() or character in ".-"
+        )
+        or "member"
+    )
+
+
+def _append_affiliation(
+    person: ET.Element,
+    *,
+    role: str | None = None,
+    organization: str | None = None,
+    organization_ref: str | None = None,
+) -> None:
+    if not role and not organization:
+        return
+    affiliation = ET.SubElement(person, "affiliation", role=_role_value(role))
+    if role:
+        ET.SubElement(affiliation, "roleName", {"xml:lang": "sl"}).text = xml_safe_text(
+            role
+        )
+    if organization:
+        attributes = {"ref": organization_ref} if organization_ref else {}
+        ET.SubElement(affiliation, "orgName", attributes).text = xml_safe_text(
+            organization
+        )
+
+
+def _append_wikidata(
+    person: ET.Element,
+    pers_name: ET.Element,
+    details: _SpeakerDetails,
+    bindings: list[WikidataBinding],
+) -> None:
+    candidate = _candidate_bindings(bindings, details.lookup_name)
+    if not candidate:
+        return
+
+    given_names = _unique_values(candidate, "givenLabel")
+    family_names = _unique_values(candidate, "familyLabel")
+    surname = ET.SubElement(pers_name, "surname")
+    surname.text = xml_safe_text(family_names[0] if family_names else details.surname)
+    forename = ET.SubElement(pers_name, "forename")
+    forename.text = xml_safe_text(given_names[0] if given_names else details.forename)
+
+    uri = _binding_value(candidate[0], "p")
+    if uri:
+        ET.SubElement(person, "idno", type="URI", subtype="wikidata").text = uri
+    for key, identifier_type in (("viaf", "VIAF"), ("gnd", "GND"), ("isni", "ISNI")):
+        for value in _unique_values(candidate, key):
+            ET.SubElement(
+                person, "idno", type=identifier_type, subtype="wikidata"
+            ).text = value
+
+    for element_name, date_key, place_key in (
+        ("birth", "birth", "bplaceLabel"),
+        ("death", "death", "dplaceLabel"),
+    ):
+        dates = _unique_values(candidate, date_key)
+        places = _unique_values(candidate, place_key)
+        if dates or places:
+            attributes = {"when": dates[0].partition("T")[0]} if dates else {}
+            event = ET.SubElement(person, element_name, attributes)
+            if places:
+                ET.SubElement(event, "placeName").text = xml_safe_text(places[0])
+
+    sexes = _unique_values(candidate, "sexLabel")
+    if sexes:
+        normalized_sex = _normalized_name(sexes[0])
+        sex_value = (
+            "M"
+            if normalized_sex in {"moski", "male"}
+            else "F" if normalized_sex in {"zenski", "female"} else "U"
+        )
+        ET.SubElement(person, "sex", value=sex_value).text = xml_safe_text(sexes[0])
+    for occupation in _unique_values(candidate, "occLabel"):
+        ET.SubElement(person, "occupation").text = xml_safe_text(occupation)
+    for nationality in _unique_values(candidate, "citizenLabel"):
+        ET.SubElement(person, "nationality").text = xml_safe_text(nationality)
+
+    seen_parties: set[tuple[str, str | None]] = set()
+    for binding in candidate:
+        party = _binding_value(binding, "partyLabel")
+        party_ref = _binding_value(binding, "party")
+        if party is not None and (party, party_ref) not in seen_parties:
+            seen_parties.add((party, party_ref))
+            _append_affiliation(
+                person,
+                organization=party,
+                organization_ref=party_ref,
+            )
+
+
+def build_list_person(
+    mapping: Mapping[str, str],
+    *,
+    include_wikidata: bool = False,
+    wikidata_fetcher: WikidataFetcher | None = None,
+    wikidata_workers: int = 4,
+    wikidata_timeout: float = 20.0,
+) -> ET.Element:
+    """Build a fail-soft TEI ``listPerson`` from exported speaker labels.
+
+    Local names and regex-derived affiliations are deterministic. Wikidata
+    enrichment is optional because it performs network requests and may be
+    unavailable or throttled; any failed lookup falls back to the local record.
     """
-    list_person = ET.Element("listPerson", xmlns=TEI_NAMESPACE)
+
+    attributes = {"xmlns": TEI_NAMESPACE}
+    if include_wikidata:
+        attributes["xml:lang"] = "sl"
+    list_person = ET.Element("listPerson", attributes)
+    if include_wikidata:
+        ET.SubElement(list_person, "head", {"xml:lang": "sl"}).text = (
+            "Seznam govornikov"
+        )
+        ET.SubElement(list_person, "head", {"xml:lang": "en"}).text = "List of speakers"
+
     if not mapping:
         person = ET.SubElement(
             list_person,
@@ -348,8 +676,30 @@ def build_list_person(mapping: Mapping[str, str]) -> ET.Element:
         )
         return list_person
 
+    entries = [
+        (reference, label, _speaker_details(reference, label))
+        for reference, label in mapping.items()
+    ]
+    lookup_results: dict[str, list[WikidataBinding]] = {}
+    if include_wikidata:
+        terms = list(
+            dict.fromkeys(
+                details.lookup_name for _reference, _label, details in entries
+            )
+        )
+        fetcher = wikidata_fetcher
+        if fetcher is None:
+            fetcher = lambda term: _fetch_wikidata_bindings(
+                term, timeout=wikidata_timeout
+            )
+
+        if terms:
+            worker_count = min(max(1, wikidata_workers), len(terms))
+            with ThreadPoolExecutor(max_workers=worker_count) as pool:
+                lookup_results = dict(zip(terms, pool.map(fetcher, terms)))
+
     used_ids: set[str] = set()
-    for reference, label in mapping.items():
+    for reference, label, details in entries:
         base_id = sanitize_xml_id(reference.removeprefix("#"), prefix="speaker")
         xml_id = base_id
         suffix = 2
@@ -359,5 +709,18 @@ def build_list_person(mapping: Mapping[str, str]) -> ET.Element:
         used_ids.add(xml_id)
         person = ET.SubElement(list_person, "person", {"xml:id": xml_id})
         pers_name = ET.SubElement(person, "persName")
-        pers_name.text = xml_safe_text(label.split(":", 1)[0].strip() or xml_id)
+        if include_wikidata:
+            bindings = lookup_results.get(details.lookup_name, [])
+            _append_wikidata(person, pers_name, details, bindings)
+            if not list(pers_name):
+                if details.surname:
+                    ET.SubElement(pers_name, "surname").text = details.surname
+                ET.SubElement(pers_name, "forename").text = details.forename
+        else:
+            pers_name.text = xml_safe_text(label.split(":", 1)[0].strip() or xml_id)
+        _append_affiliation(
+            person,
+            role=details.role,
+            organization=details.organization,
+        )
     return list_person

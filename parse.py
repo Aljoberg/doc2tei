@@ -28,7 +28,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--list-person-output",
-        help="write a minimal TEI listPerson from exported speaker data",
+        help="write a TEI listPerson from exported speaker data",
+    )
+    parser.add_argument(
+        "--include-wikidata",
+        action="store_true",
+        help="enrich --list-person-output with best-effort Wikidata metadata",
     )
     parser.add_argument(
         "--xml-declaration", action="store_true", help="include an XML declaration"
@@ -42,7 +47,10 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    argument_parser = build_parser()
+    args = argument_parser.parse_args(argv)
+    if args.include_wikidata and not args.list_person_output:
+        argument_parser.error("--include-wikidata requires --list-person-output")
     debug_context = (
         open(args.debug_file, "w", encoding="utf-8")
         if args.debug_file
@@ -78,6 +86,7 @@ def main(argv: list[str] | None = None) -> int:
             args.list_person_output,
             xml_declaration=args.xml_declaration,
             pretty=args.pretty,
+            include_wikidata=args.include_wikidata,
         )
     return 0
 

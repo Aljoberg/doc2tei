@@ -1995,7 +1995,7 @@
     <profileDesc>
       <settingDesc>
         <setting>
-          <name type="city" />
+          <name type="city" /><!-- mising -->
           <name type="country" />
           <date />
         </setting>

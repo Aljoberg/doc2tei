@@ -11,6 +11,9 @@
   </person>
   <person xml:id="ŠtefanNemec">
     <persName>Predsednik Štefan Nemec</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="JožeTurnšek">
     <persName>Jože Turnšek</persName>
@@ -326,6 +329,9 @@
   </person>
   <person xml:id="LojzeLakner">
     <persName>Lojze Lakner (iz klopi)</persName>
+    <affiliation role="member">
+      <orgName>iz klopi</orgName>
+    </affiliation>
   </person>
   <person xml:id="EvaNaglič">
     <persName>Eva Naglič</persName>
@@ -398,6 +404,9 @@
   </person>
   <person xml:id="LivioJakomin">
     <persName>Podpredsednik Livio Jakomin</persName>
+    <affiliation role="podpredsednik">
+      <roleName xml:lang="sl">Podpredsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="IvoMiklavčič">
     <persName>Ivo Miklavčič</persName>
@@ -446,12 +455,18 @@
   </person>
   <person xml:id="StaneMarkič">
     <persName>Predsednik Stane Markič</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="JožeBožič">
     <persName>Jože Božič</persName>
   </person>
   <person xml:id="StaneMarKič">
     <persName>Predsednik Stane Mar kič</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="ZoranPolič">
     <persName>Zoran Polič</persName>
@@ -473,12 +488,18 @@
   </person>
   <person xml:id="StaneMarkiČ">
     <persName>Predsednik Stane Marki č</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="DanicaJurkovič">
     <persName>Danica Jurkovič</persName>
   </person>
   <person xml:id="StaneMarkic">
     <persName>Predsednik Stane Markic</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="MilanMegušar">
     <persName>Milan Megušar</persName>
@@ -503,6 +524,9 @@
   </person>
   <person xml:id="StaneMArKič">
     <persName>Predsednik Stane M ar kič</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="LudvikGolob">
     <persName>Ludvik Golob</persName>
@@ -539,6 +563,9 @@
   </person>
   <person xml:id="StaneMarkIč">
     <persName>Predsednik Stane Mark i č</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="CirilCvetko">
     <persName>Ciril Cvetko</persName>

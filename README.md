@@ -29,9 +29,13 @@ Useful optional outputs are `--diagnostics diagnostics.json` (rule hit counts,
 unmatched samples, pages and fonts) and `--data-output data.json` (data exported
 by config hooks, such as a speaker mapping).
 `--list-person-output listPerson.xml` writes a minimal TEI speaker list directly
-from that mapping in the same parse invocation, without network lookups. When
-no speakers are detected, it writes an `UnknownSpeaker` placeholder instead of
-an invalid empty list or a pipeline-breaking exception.
+from that mapping in the same parse invocation. It also recovers roles and
+organization affiliations from speaker labels. Add `--include-wikidata` to
+enrich people with best-effort Wikidata names, identifiers, dates, places,
+occupations, nationalities, sex, and political-party affiliations. Network or
+matching failures fall back to the local person record instead of aborting the
+document. When no speakers are detected, it writes an `UnknownSpeaker`
+placeholder instead of an invalid empty list or a pipeline-breaking exception.
 `--pretty` adds readable structural indentation to the main XML and
 `listPerson` output while preserving text inside mixed-content elements.
 
@@ -49,19 +53,20 @@ result.write_xml("out.xml")
 result.write_diagnostics("diagnostics.json")
 result.write_data("speakers.json")
 result.write_list_person("listPerson.xml")
+# Optional, best-effort network enrichment:
+result.write_list_person("listPerson-enriched.xml", include_wikidata=True)
 ```
 
-If you want Wikidata-enriched person records, you can still run
+For Wikidata-enriched person records, generate the list during parsing:
 
-```python
-python3 make_list_person.py out/speaker_utterance.json -o listPerson.xml
+```bash
+python parse.py input.pdf --config examples/general-config/config.py \
+  -o out.xml --list-person-output listPerson.xml --include-wikidata
 ```
 
-This program takes a .json file with speaker ids and their long forms and adds
-best-effort Wikidata metadata. For a deterministic minimal list, prefer the
-`--list-person-output` option above.
-This file can be exported by a config's `on_end(result)` hook and the
-`--data-output` option, so make sure to check that out.
+The old `make_list_person.py data.json -o listPerson.xml` command remains as a
+compatibility wrapper around the same implementation. Omit `--include-wikidata`
+for deterministic, offline output.
 
 Again, I've written everything in CONFIG.md, so if you're interested in running this, you should start with that file.
 

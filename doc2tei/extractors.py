@@ -441,9 +441,7 @@ class CharacterPDFExtractor:
         if selected_pages < self.parallel_min_pages:
             return None
         requested = (
-            min(8, os.cpu_count() or 1)
-            if self.page_workers == 0
-            else self.page_workers
+            min(8, os.cpu_count() or 1) if self.page_workers == 0 else self.page_workers
         )
         worker_count = min(max(1, requested), selected_pages)
         if worker_count < 2:
@@ -951,9 +949,7 @@ class WordPDFExtractor:
         if selected_pages < self.parallel_min_pages:
             return None
         requested = (
-            min(8, os.cpu_count() or 1)
-            if self.page_workers == 0
-            else self.page_workers
+            min(8, os.cpu_count() or 1) if self.page_workers == 0 else self.page_workers
         )
         worker_count = min(max(1, requested), selected_pages)
         if worker_count < 2:

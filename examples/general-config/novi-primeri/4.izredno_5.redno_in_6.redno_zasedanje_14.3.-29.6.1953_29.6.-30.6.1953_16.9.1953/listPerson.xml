@@ -5,6 +5,9 @@
   </person>
   <person xml:id="FerdoKozak">
     <persName>Predsednik dr. Ferdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="AngelaBoštjančič">
     <persName>Angela Boštjančič</persName>
@@ -17,6 +20,9 @@
   </person>
   <person xml:id="IERdoKozak">
     <persName>Predsednik dr. I''e r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="FranceHočevar">
     <persName>Dr. France Hočevar</persName>
@@ -26,21 +32,33 @@
   </person>
   <person xml:id="FerdoKoak">
     <persName>Predsednik dr. Ferdo K. o/. a k</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="JosipVidmar">
     <persName>Josip Vidmar</persName>
   </person>
   <person xml:id="KerdoKozak">
     <persName>Predsednik dr. K e r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="IerdoKozak">
     <persName>Predsednik dr. I' e r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="AntonIngolič">
     <persName>Anton Ingolič</persName>
   </person>
   <person xml:id="speaker">
     <persName>Predsednik dr, Ferdp Kozak prične ob S.20 sejo z naslednjimi besedami</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="IvanBralko">
     <persName>Ivan Bralko</persName>
@@ -56,6 +74,9 @@
   </person>
   <person xml:id="LerdoKozak">
     <persName>Predsednik dr. L e r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="IvanŠtNcin">
     <persName>Ivan Št n c i n</persName>
@@ -74,18 +95,27 @@
   </person>
   <person xml:id="FErdoKozak">
     <persName>Predsednik dr. F.erdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="AlojzDiacci">
     <persName>Alojz Diacci</persName>
   </person>
   <person xml:id="Kcrdokozak">
     <persName>Predsednik dr. K c r d o K. o z. a k</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="TeodorTomineek">
     <persName>Dr. Teodor Tomineek'</persName>
   </person>
   <person xml:id="IErdoKozak">
     <persName>Predsednik dr. I'erdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="MarijanRreeelj">
     <persName>Dr. Marijan Rreeelj</persName>
@@ -95,6 +125,9 @@
   </person>
   <person xml:id="LerdoKozaK">
     <persName>Predsednik d r. L e r d o Koza k</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="FrancHočevar">
     <persName>Dr. Franc Hočevar</persName>
@@ -104,6 +137,9 @@
   </person>
   <person xml:id="PerdoKozak">
     <persName>Predsednik dr. Perdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="MiLiAPotočnik">
     <persName>Dr. M i li a Potočnik</persName>
@@ -116,8 +152,14 @@
   </person>
   <person xml:id="speaker-1ErdokoAk">
     <persName>Predsednik dr. 1' e r d o K. o / a k</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="TCRdoKozak">
     <persName>Predsednik dr. T'c r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
 </listPerson>

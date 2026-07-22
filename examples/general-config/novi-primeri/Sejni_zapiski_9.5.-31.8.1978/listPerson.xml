@@ -14,6 +14,9 @@
   </person>
   <person xml:id="EmilTomažič">
     <persName>Predsednik Emil Tomažič</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="IvanZelenšek">
     <persName>Ivan Zelenšek</persName>
@@ -35,6 +38,9 @@
   </person>
   <person xml:id="EmilTomažiČ">
     <persName>Predsednik Emil Tomaži č</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="FranckaHerga">
     <persName>Francka Herga</persName>
@@ -332,6 +338,9 @@
   </person>
   <person xml:id="JankoKovačič">
     <persName>Janko Kovačič (iz klopi)</persName>
+    <affiliation role="member">
+      <orgName>iz klopi</orgName>
+    </affiliation>
   </person>
   <person xml:id="ValentinGerkman">
     <persName>Valentin Gerkman</persName>

@@ -2,12 +2,21 @@
 <listPerson xmlns="http://www.tei-c.org/ns/1.0">
   <person xml:id="PavleZaucer">
     <persName>Predsednik inž. Pavle Zaucer</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="LojzeOcepek">
     <persName>Predsednik Lojze Ocepek</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="VidaTomšič">
     <persName>Predsednik Vida Tomšič</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
   </person>
   <person xml:id="MihaMarinko">
     <persName>Miha Marinko</persName>
