@@ -32,6 +32,8 @@ by config hooks, such as a speaker mapping).
 from that mapping in the same parse invocation, without network lookups. When
 no speakers are detected, it writes an `UnknownSpeaker` placeholder instead of
 an invalid empty list or a pipeline-breaking exception.
+`--pretty` adds readable structural indentation to the main XML and
+`listPerson` output while preserving text inside mixed-content elements.
 
 The same operation is available as a library API and has no mandatory output
 side effects:

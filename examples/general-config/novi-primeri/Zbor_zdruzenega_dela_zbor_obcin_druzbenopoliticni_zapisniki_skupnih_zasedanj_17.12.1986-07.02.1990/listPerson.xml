@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listPerson xmlns="http://www.tei-c.org/ns/1.0">
+  <person xml:id="UnknownSpeaker" role="undetected">
+    <persName>Unknown speaker</persName>
+    <note type="conversionNote">No speaker labels were detected in the source document.</note>
+  </person>
+</listPerson>

@@ -1,0 +1,19 @@
+{
+  "speakers": {
+    "#ZoranPolič": "PREDSEDNIK ZORAN POLIČ(SR Slovenija):",
+    "#VeselinDjuranovič": "VESELIN DJURANOVIČ, predsednik ZIS:",
+    "#SvetozarPepovski": "SVETOZAR PEPOVSKI, član ZIS in predsednik zvez",
+    "#StojanMatkalijev": "STOJAN MATKALIJEV, član ZIS in predsednik zvez",
+    "#BerislavŠefer": "BERISLAV ŠEFER (SR Hrvatska):",
+    "#ImerPulja": "IMER PULJA, zvezni sekretar za trg in splošne gospo",
+    "#LjubisavMarkovič": "LJUBISAV MARKOVIČ, predsednik odbora zbora",
+    "#StojanČosev": "STOJAN ČOSEV, predsednik odbora zbora republik in",
+    "#VladimirJovanovič": "VLADIMIR JOVANOVIČ(SR Črna gora):",
+    "#MilijaKovačevič": "MILIJA KOVAČEVIČ, predsednik odbora republik in",
+    "#MustafaSefo": "MUSTAFA SEFO, član odbora zbora republik in",
+    "#AsanKerim": "ASAN KERIM, poročevalec odbora· zbora republik in"
+  },
+  "recoveries": [
+    "7 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+  ]
+}

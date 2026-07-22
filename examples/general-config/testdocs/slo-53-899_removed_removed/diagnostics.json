@@ -1,0 +1,287 @@
+{
+  "input": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\testdocs\\slo-53-899_removed_removed.pdf",
+  "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general\\config.py",
+  "chunk_count": 3993,
+  "unmatched_count": 3176,
+  "rule_counts": {
+    "AFTER_FOOTNOTE": 11,
+    "CHAIRMAN": 3,
+    "CONSUMED_FOOTNOTE_RUN": 2,
+    "CONSUMED_LINE": 94,
+    "FOOTNOTE_CONTINUATION": 17,
+    "FOOTNOTE_ENTRY": 23,
+    "GENERIC_NOTE": 8,
+    "HEAD": 4,
+    "PARAGRAPH": 6,
+    "SEG": 571,
+    "SOURCE_ARTIFACT": 34,
+    "SPEAKER": 31,
+    "SPEECH_START": 12,
+    "TIME": 1
+  },
+  "page_counts": {
+    "1": 86,
+    "2": 128,
+    "3": 132,
+    "5": 96,
+    "6": 123,
+    "7": 145,
+    "8": 150,
+    "9": 127,
+    "10": 257,
+    "11": 154,
+    "12": 216,
+    "13": 150,
+    "14": 124,
+    "15": 112,
+    "17": 80,
+    "18": 145,
+    "19": 155,
+    "20": 122,
+    "21": 159,
+    "22": 151,
+    "23": 136,
+    "24": 115,
+    "25": 130,
+    "26": 155,
+    "27": 120,
+    "28": 120,
+    "29": 129,
+    "30": 78,
+    "31": 97,
+    "32": 101
+  },
+  "font_counts": {
+    "Arial-BoldMT (bold)": 12,
+    "Arial-ItalicMT (italic)": 22,
+    "ArialMT (regular)": 50,
+    "CourierNewPSMT (regular)": 3,
+    "TimesNewRomanPS-BoldMT (bold)": 118,
+    "TimesNewRomanPS-ItalicMT (italic)": 56,
+    "TimesNewRomanPSMT (regular)": 3732
+  },
+  "font_size_counts": {
+    "1.00": 3,
+    "10.00": 2652,
+    "11.00": 372,
+    "12.00": 11,
+    "13.00": 5,
+    "14.00": 2,
+    "15.00": 2,
+    "16.00": 2,
+    "17.00": 1,
+    "18.00": 2,
+    "2.00": 2,
+    "30.00": 1,
+    "4.00": 1,
+    "5.00": 4,
+    "6.00": 23,
+    "7.00": 48,
+    "8.00": 126,
+    "9.00": 736
+  },
+  "unmatched_samples": [
+    {
+      "text": "zbora republik in pokrajin skupščine SFRJ.",
+      "x": 44.4,
+      "y": 454.72,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "zbora republik in pokrajin skupščine SFRJ."
+    },
+    {
+      "text": "veljavno odloča.",
+      "x": 44.52,
+      "y": 430.84,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "veljavno odloča."
+    },
+    {
+      "text": "Hakija Pozderac, Lozinka Papič, Djuro Vekič, Edina",
+      "x": 44.88,
+      "y": 407.08,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "Hakija Pozderac, Lozinka Papič, Djuro Vekič, Edina"
+    },
+    {
+      "text": "Rešidovič in Milovan Djokanovič so sporočili, da so",
+      "x": 45.36,
+      "y": 394.84,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "Rešidovič in Milovan Djokanovič so sporočili, da so"
+    },
+    {
+      "text": "zadržani.",
+      "x": 44.88,
+      "y": 381.82,
+      "page": 1,
+      "font_size": 11.0,
+      "line_text": "zadržani.•"
+    },
+    {
+      "text": "•",
+      "x": 123.12,
+      "y": 381.82,
+      "page": 1,
+      "font_size": 11.0,
+      "line_text": "zadržani.•"
+    },
+    {
+      "text": "je bila 6. decembra 1978.",
+      "x": 44.04,
+      "y": 358.72,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "je bila 6. decembra 1978."
+    },
+    {
+      "text": "red.",
+      "x": 44.64,
+      "y": 298.36,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "red."
+    },
+    {
+      "text": "tev? (Ne.)",
+      "x": 45.12,
+      "y": 274.6,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "tev? (Ne.)"
+    },
+    {
+      "text": "ugotavljam, da je zbor sprejel dnevni red, kot je",
+      "x": 45.36,
+      "y": 250.72,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "ugotavljam, da je zbor sprejel dnevni red, kot je"
+    },
+    {
+      "text": "predlagan v aktu o sklicu te seje.",
+      "x": 45.24,
+      "y": 238.6,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "predlagan v aktu o sklicu te seje."
+    },
+    {
+      "text": "no. Pričakujemo, da bodo stališča usklajena med delom",
+      "x": 44.76,
+      "y": 215.2,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "no. Pričakujemo, da bodo stališča usklajena med delom"
+    },
+    {
+      "text": "zbora.",
+      "x": 45.24,
+      "y": 203.56,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "zbora."
+    },
+    {
+      "text": "dnevnem redu, bi vas rad obvestil o naslednjem.",
+      "x": 44.88,
+      "y": 179.32,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "dnevnem redu, bi vas rad obvestil o naslednjem."
+    },
+    {
+      "text": "ne SFRJ predlagam, da skupaj z delegati tega zbora",
+      "x": 44.88,
+      "y": 155.32,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "ne SFRJ predlagam, da skupaj z delegati tega zbora"
+    },
+    {
+      "text": "poslušamo ekspoze predsednika zveznega izvršnega sveta",
+      "x": 45.24,
+      "y": 143.44,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "poslušamo ekspoze predsednika zveznega izvršnega sveta"
+    },
+    {
+      "text": "tovariša Veselina Djuranoviča o predlogu resolucije o",
+      "x": 45.48,
+      "y": 131.32,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "tovariša Veselina Djuranoviča o predlogu resolucije o"
+    },
+    {
+      "text": "politiki uresničevanja družbenega plana Jugoslavije od",
+      "x": 45.36,
+      "y": 119.2,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "politiki uresničevanja družbenega plana Jugoslavije od"
+    },
+    {
+      "text": "leta 1976 do leta 1980 v letu 1979.",
+      "x": 45.24,
+      "y": 106.96,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "leta 1976 do leta 1980 v letu 1979."
+    },
+    {
+      "text": "vprašanja in nova vprašanja po ekspozeju zveznega",
+      "x": 44.76,
+      "y": 70.72,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "vprašanja in nova vprašanja po ekspozeju zveznega"
+    },
+    {
+      "text": "izvšnega sveta.",
+      "x": 44.88,
+      "y": 58.72,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "izvšnega sveta."
+    },
+    {
+      "text": "(Ne.)",
+      "x": 141.6,
+      "y": 46.7,
+      "page": 1,
+      "font_size": 9.0,
+      "line_text": "Je kdo proti temu?(Ne.)"
+    },
+    {
+      "text": "obravnavo sprememb proračuna federacije za to leto,",
+      "x": 284.76,
+      "y": 479.92,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "obravnavo sprememb proračuna federacije za to leto,"
+    },
+    {
+      "text": "predlagamo, da pred ekspozejem opravimo razpravo o",
+      "x": 284.64,
+      "y": 467.68,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "predlagamo, da pred ekspozejem opravimo razpravo o"
+    },
+    {
+      "text": "aktih, naštetih v 1. do 6. točki dnevnega reda.",
+      "x": 284.52,
+      "y": 455.44,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "aktih, naštetih v 1. do 6. točki dnevnega reda."
+    }
+  ],
+  "recovery_counts": {},
+  "recovery_samples": []
+}

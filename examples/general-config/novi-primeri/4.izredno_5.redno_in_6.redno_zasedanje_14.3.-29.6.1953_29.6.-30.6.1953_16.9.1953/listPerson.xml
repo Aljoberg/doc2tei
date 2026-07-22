@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listPerson xmlns="http://www.tei-c.org/ns/1.0">
+  <person xml:id="Marijanbreeeij">
+    <persName>D r. M a r i j a n B r e e e i j</persName>
+  </person>
+  <person xml:id="FerdoKozak">
+    <persName>Predsednik dr. Ferdo Kozak</persName>
+  </person>
+  <person xml:id="AngelaBoštjančič">
+    <persName>Angela Boštjančič</persName>
+  </person>
+  <person xml:id="PraneHočevar">
+    <persName>Dr. Prane Hočevar</persName>
+  </person>
+  <person xml:id="AntonMedved">
+    <persName>Anton Medved</persName>
+  </person>
+  <person xml:id="IERdoKozak">
+    <persName>Predsednik dr. I''e r d o Kozak</persName>
+  </person>
+  <person xml:id="FranceHočevar">
+    <persName>Dr. France Hočevar</persName>
+  </person>
+  <person xml:id="MarijanBreeelj">
+    <persName>Dr. Marijan Breeelj</persName>
+  </person>
+  <person xml:id="FerdoKoak">
+    <persName>Predsednik dr. Ferdo K. o/. a k</persName>
+  </person>
+  <person xml:id="JosipVidmar">
+    <persName>Josip Vidmar</persName>
+  </person>
+  <person xml:id="KerdoKozak">
+    <persName>Predsednik dr. K e r d o Kozak</persName>
+  </person>
+  <person xml:id="IerdoKozak">
+    <persName>Predsednik dr. I' e r d o Kozak</persName>
+  </person>
+  <person xml:id="AntonIngolič">
+    <persName>Anton Ingolič</persName>
+  </person>
+  <person xml:id="speaker">
+    <persName>Predsednik dr, Ferdp Kozak prične ob S.20 sejo z naslednjimi besedami</persName>
+  </person>
+  <person xml:id="IvanBralko">
+    <persName>Ivan Bralko</persName>
+  </person>
+  <person xml:id="AngelaSerdinšek">
+    <persName>Angela Serdinšek</persName>
+  </person>
+  <person xml:id="MirkoRemec">
+    <persName>Mirko Remec</persName>
+  </person>
+  <person xml:id="MarijanBrecelj">
+    <persName>Dr. Marijan Brecelj</persName>
+  </person>
+  <person xml:id="LerdoKozak">
+    <persName>Predsednik dr. L e r d o Kozak</persName>
+  </person>
+  <person xml:id="IvanŠtNcin">
+    <persName>Ivan Št n c i n</persName>
+  </person>
+  <person xml:id="MatovEiace">
+    <persName>Matov/. Eiace</persName>
+  </person>
+  <person xml:id="JakaAvšič">
+    <persName>Jaka Avšič</persName>
+  </person>
+  <person xml:id="IvanŠiftar">
+    <persName>Ivan Šiftar</persName>
+  </person>
+  <person xml:id="MurijuuBrecelj">
+    <persName>Dr. M u r i j u u Brecelj</persName>
+  </person>
+  <person xml:id="FErdoKozak">
+    <persName>Predsednik dr. F.erdo Kozak</persName>
+  </person>
+  <person xml:id="AlojzDiacci">
+    <persName>Alojz Diacci</persName>
+  </person>
+  <person xml:id="Kcrdokozak">
+    <persName>Predsednik dr. K c r d o K. o z. a k</persName>
+  </person>
+  <person xml:id="TeodorTomineek">
+    <persName>Dr. Teodor Tomineek'</persName>
+  </person>
+  <person xml:id="IErdoKozak">
+    <persName>Predsednik dr. I'erdo Kozak</persName>
+  </person>
+  <person xml:id="MarijanRreeelj">
+    <persName>Dr. Marijan Rreeelj</persName>
+  </person>
+  <person xml:id="MatijaMaležič">
+    <persName>Matija Maležič</persName>
+  </person>
+  <person xml:id="LerdoKozaK">
+    <persName>Predsednik d r. L e r d o Koza k</persName>
+  </person>
+  <person xml:id="FrancHočevar">
+    <persName>Dr. Franc Hočevar</persName>
+  </person>
+  <person xml:id="FraneHočevar">
+    <persName>Dr. Frane Hočevar</persName>
+  </person>
+  <person xml:id="PerdoKozak">
+    <persName>Predsednik dr. Perdo Kozak</persName>
+  </person>
+  <person xml:id="MiLiAPotočnik">
+    <persName>Dr. M i li a Potočnik</persName>
+  </person>
+  <person xml:id="LeoKovačič">
+    <persName>Leo Kovačič</persName>
+  </person>
+  <person xml:id="MarijanHrecelj">
+    <persName>Dr. Marijan Hrecelj</persName>
+  </person>
+  <person xml:id="speaker-1ErdokoAk">
+    <persName>Predsednik dr. 1' e r d o K. o / a k</persName>
+  </person>
+  <person xml:id="TCRdoKozak">
+    <persName>Predsednik dr. T'c r d o Kozak</persName>
+  </person>
+</listPerson>

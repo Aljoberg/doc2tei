@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listPerson xmlns="http://www.tei-c.org/ns/1.0">
+  <person xml:id="NikolaSekulič">
+    <persName>Predsednik Nikola Sekulič</persName>
+  </person>
+  <person xml:id="JanezVipotnik">
+    <persName>Janez Vipotnik</persName>
+  </person>
+  <person xml:id="JožeSmole">
+    <persName>Jože Smole</persName>
+  </person>
+  <person xml:id="RistoTošović">
+    <persName>Risto Tošović (Izborna jedinica Goražde)</persName>
+  </person>
+  <person xml:id="NikolaSekulić">
+    <persName>Predsednik Nikola Sekulić</persName>
+  </person>
+  <person xml:id="MitarPapić">
+    <persName>Mitar Papić</persName>
+  </person>
+  <person xml:id="MilivojeAleksič">
+    <persName>Milivoje Aleksič (Izborna jedinica Leskovac)</persName>
+  </person>
+  <person xml:id="BrankoBožić">
+    <persName>Branko Božić (Izborna jedinica Osijek)</persName>
+  </person>
+  <person xml:id="SergejVošnjak">
+    <persName>Sergej Vošnjak</persName>
+  </person>
+  <person xml:id="ViđaCuk">
+    <persName>Viđa Cuk (Izborna jedinica Zrenjanin)</persName>
+  </person>
+  <person xml:id="AcoSopov">
+    <persName>Aco Sopov (Izborna jedinica Stip I)</persName>
+  </person>
+  <person xml:id="RodoijubColaković">
+    <persName>RodoIjub Colaković (Izborna jedinica Tuzla)</persName>
+  </person>
+  <person xml:id="MitjaMejak">
+    <persName>Mitja Mejak (Izborna jedinica Novo Mesto)</persName>
+  </person>
+  <person xml:id="AslanFazlija">
+    <persName>Aslan Fazlija (Izborna jedinica Prizren)</persName>
+  </person>
+  <person xml:id="IvanBratko">
+    <persName>Ivan Bratko</persName>
+  </person>
+  <person xml:id="MirjanaGros">
+    <persName>Mirjana Gros (Izborna jedinica Zagreb II)</persName>
+  </person>
+  <person xml:id="VilkoVinterhalter">
+    <persName>Vilko Vinterhalter</persName>
+  </person>
+  <person xml:id="DušanVukotić">
+    <persName>Dušan Vukotić (Izborna jedinica Zagreb I)</persName>
+  </person>
+  <person xml:id="DragutinFranković">
+    <persName>Dr Dragutin Franković</persName>
+  </person>
+  <person xml:id="MimaSaPodručjaProizvodnje">
+    <persName>MIMA SA PODRUČJA PROIZVODNJE, PLASMANA</persName>
+  </person>
+  <person xml:id="MijalkoTodorovič">
+    <persName>Predsednik Mijalko Todorovič</persName>
+  </person>
+  <person xml:id="MarinCetinić">
+    <persName>Marin Cetinić</persName>
+  </person>
+  <person xml:id="KiroGligorov">
+    <persName>Kiro Gligorov</persName>
+  </person>
+  <person xml:id="SavoBrković">
+    <persName>Savo Brković (Izborna jedinica Titograd)</persName>
+  </person>
+  <person xml:id="ZvonkoBrkić">
+    <persName>Zvonko Brkić</persName>
+  </person>
+  <person xml:id="TrajčeGrujoski">
+    <persName>Trajče Grujoski</persName>
+  </person>
+  <person xml:id="ĐorđijePeruničić">
+    <persName>Đorđije Peruničić</persName>
+  </person>
+  <person xml:id="DžemalAlikalfić">
+    <persName>Džemal Alikalfić</persName>
+  </person>
+  <person xml:id="RistoDžunov">
+    <persName>Risto Džunov</persName>
+  </person>
+  <person xml:id="ValentinaTomlje">
+    <persName>Valentina Tomlje (Izborna jedinica Kranj)</persName>
+  </person>
+  <person xml:id="JosipLovrenović">
+    <persName>Josip Lovrenović (SR Bosna i Hercegovina)</persName>
+  </person>
+  <person xml:id="NjaSaveznogVeća">
+    <persName>NJA SAVEZNOG VEĆA, ODBORA ZA ORGANIZA-</persName>
+  </person>
+  <person xml:id="OsmanKarabegović">
+    <persName>Predsednik Osman Karabegović</persName>
+  </person>
+  <person xml:id="JakobFundak">
+    <persName>Jakob Fundak (Izborna jedinica Čakovec)</persName>
+  </person>
+  <person xml:id="SergejKraigher">
+    <persName>Sergej Kraigher (Izborna jedinica Celje I)</persName>
+  </person>
+  <person xml:id="DušanPantić">
+    <persName>Dušan Pantić (Izborna jedinica Doboj)</persName>
+  </person>
+  <person xml:id="IvicaGretić">
+    <persName>Ivica Gretić (Izborna jedinica Zagreb IV)</persName>
+  </person>
+  <person xml:id="MajdaŠkerbic">
+    <persName>Majda Škerbic (Izborna jedinica Maribor)</persName>
+  </person>
+  <person xml:id="MilePerkovič">
+    <persName>Mile Perkovič (Izborna jedinica Livno)</persName>
+  </person>
+  <person xml:id="PaškoRomac">
+    <persName>Paško Romac (Izborna jedinica Kikinda)</persName>
+  </person>
+  <person xml:id="StjepanĐureta">
+    <persName>Stjepan Đureta (Izborna jedinica Varaždin)</persName>
+  </person>
+  <person xml:id="AntonBole">
+    <persName>Anton Bole (Izborna jedinica Ptuj)</persName>
+  </person>
+  <person xml:id="BorisKraigher">
+    <persName>Boris Kraigher</persName>
+  </person>
+  <person xml:id="NikolaDžuverović">
+    <persName>Nikola Džuverović</persName>
+  </person>
+  <person xml:id="KrstoPopivođa">
+    <persName>Predsednik Krsto Popivođa</persName>
+  </person>
+  <person xml:id="KrstoPopivoda">
+    <persName>Predsednik Krsto Popivoda</persName>
+  </person>
+  <person xml:id="IlijaDošen">
+    <persName>Ilija Došen</persName>
+  </person>
+  <person xml:id="KarcljĐetvai">
+    <persName>Dr Karclj Đetvai (Izborna jedinica Senta)</persName>
+  </person>
+  <person xml:id="PetarRihtar">
+    <persName>Dr Petar Rihtar (Izborna jedinica Krapina)</persName>
+  </person>
+  <person xml:id="SadetaBegović">
+    <persName>Sadeta Begović (SR Bosna i Hercegovina)</persName>
+  </person>
+  <person xml:id="FrancHočevar">
+    <persName>Franc Hočevar</persName>
+  </person>
+  <person xml:id="ĐorđiJankovič">
+    <persName>Đorđi Jankovič (Izborna jedinica Tuzla)</persName>
+  </person>
+  <person xml:id="FemiMuča">
+    <persName>Femi Muča (SR Makedonija)</persName>
+  </person>
+  <person xml:id="AnteRoje">
+    <persName>Ante Roje (SR Hrvatska)</persName>
+  </person>
+  <person xml:id="VladaZečević">
+    <persName>Vlada Zečević (Izborna jedinica Loznica)</persName>
+  </person>
+  <person xml:id="MijaikoTodorovič">
+    <persName>Predsedavajući MijaIko Todorovič</persName>
+  </person>
+  <person xml:id="EsadCengić">
+    <persName>Esad Cengić (Izborna jedinica Goražde)</persName>
+  </person>
+  <person xml:id="JocoVoćkić">
+    <persName>Joco Voćkić (Izborna jedinica Brčko)</persName>
+  </person>
+  <person xml:id="MarošJanoš">
+    <persName>Maroš Janoš (Izborna jedinica Sombor)</persName>
+  </person>
+  <person xml:id="MijalkoTodorović">
+    <persName>Predsedavajući Mijalko Todorović</persName>
+  </person>
+  <person xml:id="BoroDugandžijski">
+    <persName>Boro Dugandžijski (Izborna jedinica Stip II)</persName>
+  </person>
+  <person xml:id="MaksoBace">
+    <persName>Makso Bace (Izbama jedinica Dubrovnik)</persName>
+  </person>
+  <person xml:id="MaksoBaće">
+    <persName>Makso Baće</persName>
+  </person>
+  <person xml:id="OlgaVrabič">
+    <persName>Predsednik Olga Vrabič</persName>
+  </person>
+  <person xml:id="MiloradZorić">
+    <persName>Milorad Zorić</persName>
+  </person>
+  <person xml:id="KaticaKušec">
+    <persName>Katica Kušec (Izborna jedinica Zagreb IV)</persName>
+  </person>
+  <person xml:id="SašaLuzar">
+    <persName>Saša Luzar (Izborna jedinica Ljubljana I)</persName>
+  </person>
+  <person xml:id="OigaVrabič">
+    <persName>Predsednik OIga Vrabič</persName>
+  </person>
+  <person xml:id="RužaBartolec">
+    <persName>Ruža Bartolec (Izborna jedinica Varaždin)</persName>
+  </person>
+  <person xml:id="MilanPuškarić">
+    <persName>Milan Puškarić (Izborna jedinica Gospić)</persName>
+  </person>
+  <person xml:id="RobertDidov">
+    <persName>Robert Didov (Izborna jedinica Zadar)</persName>
+  </person>
+  <person xml:id="BrankoSotra">
+    <persName>Branko Sotra (Izborna jedinica Trebinje)</persName>
+  </person>
+  <person xml:id="ElaBervaldi">
+    <persName>Ela Bervaldi (Izborna jedinica Split)</persName>
+  </person>
+  <person xml:id="DragicaVojnovič">
+    <persName>Dragica Vojnovič (Izborna jedinica BeČej)</persName>
+  </person>
+  <person xml:id="MilevaBoca">
+    <persName>Mileva Boca (Izborna jedinica Sombor)</persName>
+  </person>
+</listPerson>

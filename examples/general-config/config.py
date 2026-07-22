@@ -139,8 +139,8 @@ def _probe(filename: str, sample_pages: int = 10):
         def __init__(self):
             super().__init__(resource_manager, laparams=None)
 
-        def receive_layout(self, page):
-            walk(page)
+        def receive_layout(self, ltpage):
+            walk(ltpage)
 
     interpreter = PDFPageInterpreter(resource_manager, ProbeCollector())
     with open(filename, "rb") as source:

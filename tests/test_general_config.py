@@ -5,7 +5,12 @@ import xml.etree.ElementTree as ET
 
 import engine
 import doc2tei.parser as parser_module
-from doc2tei.parser import load_config, parse_document
+from doc2tei.parser import (
+    ParseDiagnostics,
+    ParseResult,
+    load_config,
+    parse_document,
+)
 from doc2tei.extractors import CharacterPDFExtractor, LineRecord, WordPDFExtractor
 from doc2tei.helpers import build_list_person
 from engine import PDFPageContext, make_chunk
@@ -649,6 +654,24 @@ def test_forbidden_xml_control_characters_are_visible_not_dropped(tmp_path):
 
     assert "Pred[U+0000]pona" in "".join(result.root.itertext())
     ET.fromstring(result.to_bytes())
+
+
+def test_pretty_xml_preserves_mixed_content_and_original_tree():
+    root = ET.fromstring(
+        "<TEI><text><body><p>Hello <hi>world</hi>!</p>"
+        "<div><p>Second paragraph.</p></div></body></text></TEI>"
+    )
+    result = ParseResult(root, ParseDiagnostics(input="sample", config="test"))
+    compact_before = result.to_bytes()
+
+    pretty = result.to_bytes(xml_declaration=True, pretty=True)
+
+    assert b"\n  <text>" in pretty
+    pretty_root = ET.fromstring(pretty)
+    paragraph = pretty_root.find(".//p")
+    assert paragraph is not None
+    assert "".join(paragraph.itertext()) == "Hello world!"
+    assert result.to_bytes() == compact_before
 
 
 def test_malformed_pdf_still_returns_serializable_outputs(tmp_path):

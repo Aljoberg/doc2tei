@@ -1,0 +1,314 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TEI version="3.3.0" xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title type="main">Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990</title>
+        <title type="sub" />
+      </titleStmt>
+      <editionStmt>
+        <edition />
+      </editionStmt>
+      <extent>
+        <measure unit="speeches" quantity="0">0 speeches</measure>
+        <measure unit="words" quantity="1252">1252 words</measure>
+      </extent>
+      <publicationStmt>
+        <publisher>
+          <orgName />
+        </publisher>
+        <idno type="URI" subtype="handle" />
+        <availability status="free">
+          <licence />
+          <p />
+        </availability>
+        <date />
+      </publicationStmt>
+      <sourceDesc>
+        <bibl>
+          <title type="main">Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990</title>
+          <edition />
+          <idno type="URI" subtype="parliament" />
+          <date />
+        </bibl>
+      </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <projectDesc>
+        <p xml:lang="en">Automatically converted from a searchable PDF by doc2tei.</p>
+      </projectDesc>
+      <tagsDecl>
+        <namespace name="http://www.tei-c.org/ns/1.0">
+          <tagUsage gi="body" occurs="1" />
+          <tagUsage gi="div" occurs="18" />
+          <tagUsage gi="head" occurs="8" />
+          <tagUsage gi="p" occurs="202" />
+          <tagUsage gi="text" occurs="1" />
+        </namespace>
+      </tagsDecl>
+    </encodingDesc>
+    <profileDesc>
+      <settingDesc>
+        <setting>
+          <name type="city" />
+          <name type="country" />
+          <date />
+        </setting>
+      </settingDesc>
+    </profileDesc>
+    <revisionDesc>
+      <change>
+        <name>doc2tei</name>: Automatic conversion from source PDF.</change>
+    </revisionDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <div type="debateSection">
+        <div type="frontMatter" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div1">
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p1">SKUPŠČINA SOCIALISTIČNE REPUBLIKE SLOVENIJE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p2">ZBOR ZDRUŽENEGA DELA, ZBOR OBČIN IN</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p3">DRUŽBENOPOLITIČNI ZBOR</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p4">Sejni zapiski</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p5">Zapisniki skupnih zasedanj</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p6">17. december 1986</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p7">20. julij 1987</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p8">6. november 1987</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p9">20. november 1987</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p10">14. december 1987</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p11">25. december 1987</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p12">25. maj 1988</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p13">11. januar 1990</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p14">7. februar 1990</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p15">Dokumentacijsko-knjižnični oddelek</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p16">Pododdelek sejnih zapiskov</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p17">Ljubljana, 2001</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p18">ZAPISNIK</p>
+        </div>
+        <div type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div2">
+          <head type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.head1">SKUPNO ZASEDANJE</head>
+        </div>
+        <div type="backMatter" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div3">
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p19">ZBORA ZDRUŽENEGA DELA, ZBORA OBČIN IN</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p20">DRUŽBENOPOLITIČNEGA ZBORA</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p21">SKUPŠČINE SOCIALISTIČNE REPUBLIKE SLOVENIJE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p22">(17. december 1986)</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p23">Predsedovala: Valerija Skerbec, predsednica Družbeno-</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p24">političnega zbora Skupščine SR Slovenije.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p25">Na skupnem zasedanju so delegati poslušali:</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p26">- poročilo delegacije Skupščine SR Slovenije v Zboru republik</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p27">in pokrajin Skupščine SFRJ o 8. seji Zbora republik in pokrajin,</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p28">ki je bila 10.12.1986 in o rezultatih prvega kroga usklajevanja</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p29">osnutka resolucije o politiki uresničevanja družbenga plana</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p30">Jugoslavije za obdobje 1986-1990 v letu 1987 s spremljajočimi</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p31">akti za leto 1987 ter nekaterih drugih aktov iz pristojnosti</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p32">Zbora republik in pokrajin Skupščine SFRJ, ki ga je podal tovariš</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p33">Martin Mlinar, vodja delegacije.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p34">Po končanem skupnem zasedanju so zbori nadaljevali z delom na</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p35">ločenih sejah.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p36">ZAPISNIK</p>
+        </div>
+        <div type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div4">
+          <head type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.head2">SKUPNO ZASEDANJE</head>
+        </div>
+        <div type="backMatter" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div5">
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p37">ZBORA ZDRUŽENEGA DELA,</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p38">ZBORA OBČIN IN DRUŽBENOPOLITIČNEGA ZBORA</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p39">SKUPŠČINE SOCIALISTIČNE REPUBLIKE SLOVENIJE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p40">(20. julij 1987)</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p41">Predsedovala: Valerija Škerbec, predsednica Družbeno-</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p42">političnega zbora Skupščine SR Slovenije.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p43">Na skupnem zasedanju so delegati poslušali:</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p44">- ekspoze Izvršnega sveta Skupščine SR Slovenije k poročilu o</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p45">izvajanju družbenega plana SR Slovenije za odbodje 1986-1990, ki</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p46">ga je podal tovariš Dušan Šinigoj, predsednik Izvršnega sveta.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p47">Po končanem skupnem zasedanju so zbori nadaljevali z delom na</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p48">ločenih sejah.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p49">ZAPISNIK</p>
+        </div>
+        <div type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div6">
+          <head type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.head3">SKUPNO ZASEDANJE</head>
+        </div>
+        <div type="backMatter" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div7">
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p50">ZBORA ZDRUŽENEGA DELA, ZBORA OBČIN</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p51">IN DRUŽBENOPOLITIČNEGA ZBORA</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p52">SKUPŠČINE SOCIALISTIČNE REPUBLIKE SLOVENIJE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p53">(6. november 1987)</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p54">Predsedoval: Vlado Beznik, predsednik Zbora občin Skupščine</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p55">SR Slovenije.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p56">Na skupnem zasedanju so delegati vseh treh zborov poslušali:</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p57">- uvodno besedo Izvršnega sveta Skupščine SR Slovenije k</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p58">osnutku resolucije o politiki uresničevanja družbenega plana SR</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p59">Slovenije za obdobje 1986-1990 v letu 1988, ki jo je podal Janez</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p60">Dohorič, podpredsednik Izvršnega sveta Skupščine SR Slovenije</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p61">- uvodno besedo Jožeta Kneza, podpredsednika Skupščine SR</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p62">Slovenije in predsednika skupine delegatov vseh zborov za</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p63">proučevanje aktov iz pristojnosti zborov Skupščine SFRJ v zvezi s</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p64">predlogom mnenj, pripomb in predlogov Skupščine SR Slovenije k</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p65">programu ukrpov in aktivnosti za znižanje inflacije in</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p66">stabilizacijo gospodarstva, ki jih je pripravila in predložila ta</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p67">skupina delegatov.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p68">ZAPISNIK</p>
+        </div>
+        <div type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div8">
+          <head type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.head4">SKUPNO ZASEDANJE</head>
+        </div>
+        <div type="backMatter" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div9">
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p69">ZBORA ZDRUŽENEGA DELA, ZBORA OBČIN IN</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p70">DRUŽBENOPOLITIČNEGA ZBORA</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p71">SKUPŠČINE SOCIALISTIČNE REPUBLIKE SLOVENIJE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p72">(20. november 1987)</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p73">Predsedovala: Valerija Škerbec, predsednica Družbeno-</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p74">političnega zbora Skupščine SR Slovenije.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p75">Delegati so na skupnem zasedanju poslušali:</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p76">- poročilo delegacije Skupščine SR Slovenije v Zboru republik</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p77">in pokrajin Skupščine SFRJ o 19. seji Zbora republik in pokrajin,</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p78">ki je bila 13. in 14. novembra 1987, ki ga je podal vodja</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p79">delegacije Skupščine SR Slovenije tovariš Martin Mlinar;</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p80">obvestilo delegatov iz SR Slovenije v Zveznem zboru</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p81">Skupščine SFRJ o obravnavi programa ukrepov in aktivnosti za</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p82">zmanjšanje inflacije in stabilizacijo gospodarstva ter o sprejemu</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p83">interventnih zakonov, ki ga je podal koordinator delegatov iz SR</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p84">Slovenije v Zveznem zboru Skupščine SFRJ tovariš Jože Sušmelj;</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p85">- informacijo o sprej tem programu ukrepov in aktivnostih za</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p86">znižanje inflacije in stabiliziacijo gospodarstva, sprejetih</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p87">interventnih ukrepih Zveznega izvršnega sveta ter predvidenih</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p88">aktivnostih Izvršnega sveta Skupščine SR Slovenije, ki jo je</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p89">podal tovariš Milivoj Samar, član Izvršnega sveta Skupščine SR</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p90">Slovenije in predsednik Republikškega komiteja za družbeno</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p91">planiranje;</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p92">- uvodno besedo k predlogu Jugoslovanskega programa ukrepov</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p93">in aktivnosti za zaustavljanje izseljevanja Srbov in Črnogorcev</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p94">iz Kosova, hitrejšo vrnitev tistih, ki so ga zapustili in prihod</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p95">vseh, ki želijo živeti in delati na Kosov, ki jo je podal tovariš</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p96">Jože Knez, podpredsednik Skupščine SR Slovenije in vodja Skupine</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p97">delegatov vseh zborov za proučevanje aktov iz pristojnosti zborov</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p98">Skupščine SFRJ;</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p99">- uvodno obrazložitev k predlogu odloka o ustanovitvi in</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p100">izvolitvi Komisije skupščine SR Slovenije za ustavna vprašanja,</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p101">ki jo je podal tovariš Ivan Godec, predsednik Komisije za</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p102">volitve, imenovanja in administrativne zadeve Skupščine SR</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p103">Slovenije ter</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p104">informacijo o delu Komisije Skupščine SR Slovenije za</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p105">ustavna vprašanja, ki jo je podal tovariš Miran Potrč, predsednik</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p106">Skupščine SR Slovenije in predsednik Komisije za ustavna</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p107">vprašanja.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p108">Po končnem skupnem zasedanju so zbori nadaljevali z delom na</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p109">ločenih sejah.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p110">ZAPISNIK</p>
+        </div>
+        <div type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div10">
+          <head type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.head5">SKUPNO ZASEDANJE</head>
+        </div>
+        <div type="backMatter" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div11">
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p111">ZBORA ZDRUŽENEGA DELA, ZBORA OBČIN IN</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p112">DRUŽBENOPOLITIČNEGA ZBORA</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p113">(14. december 1987)</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p114">Predsedoval: Valentin Dvojmoč, predsednik Zbora združenega</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p115">dela Skupščine SR Slovenije.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p116">Na skupnem zasedanju so delegati poslušali uvodno besedo</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p117">Izvršnega sveta Skupščine SR Slovenije, ki jo je podal tovariš</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p118">Milivoj Samar, član Izvršnega sveta Skupščine</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p119">SR Slovenije in predsednik Republiškega komiteja za družbeno</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p120">planiranje k osnutku resolucije o uresničevanju družbenega plana</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p121">SFRJ za obdobje 1986-1990 v letu 1988 in k osnutku resolucije o</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p122">uresničevanju družbenega plana SR Slovenije za obdobje 1986-1990</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p123">v letu 1988.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p124">Po končanem skupnem zasedanju so zbori nadaljevali z delom na</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p125">ločenih sejah.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p126">ZAPISNIK</p>
+        </div>
+        <div type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div12">
+          <head type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.head6">SKUPNO ZASEDANJE</head>
+        </div>
+        <div type="backMatter" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div13">
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p127">ZBORA ZDRUŽENEGA DELA, ZBORA OBČIN IN</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p128">DRUŽBENOPOLITIČNEGA ZBORA</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p129">SKUPŠČINE SOCIALISTIČNE REPUBLIKE SLOVENIJE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p130">(25. december 1987)</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p131">Predsedoval: Vlado Beznik, predsednik Zbora občin Skupščine</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p132">SR Slovenije.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p133">Na skupnem zasedanju so delegati poslušali poročilo</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p134">delegacije Skupščine SR Slovenije v Zboru republik in pokrajin</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p135">Skupščine SFRJ o poteku usklajevanja osnutka resolucije o</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p136">Politiki uresničevanja družbenga plana Jugoslavije za obdobje</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p137">1986-1990 v letu 1988 in nekaterih drugih aktov iz pristojnosti</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p138">Zbora republik in pokrajin Skupščine SFRJ, ki ga je podal vodja</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p139">delegacije Skupščine SR Slovenije v Zboru republik in pokrajin</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p140">Skupščine SFRJ tovariš Martin Mlinar.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p141">Po končanem skupnem zasedanju so zbori nadaljevali z delom na</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p142">ločenih sejah.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p143">ZAPISNIK</p>
+        </div>
+        <div type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div14">
+          <head type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.head7">SKUPNO ZASEDANJE</head>
+        </div>
+        <div type="backMatter" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div15">
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p144">ZBORA ZDRUŽENEGA DELA, ZBORA OBČIN IN</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p145">DRUŽBENOPOLITIČNEGA ZBORA SKUPŠČINE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p146">SOCIALISTIČNE REPUBLIKE SLOVENIJE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p147">(25. maj 1988)</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p148">Predsedoval: Valentin Dvojmoč, predsednik Zbora združenega</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p149">dela.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p150">Na skupnem zasedanju so delegati poslušali:</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p151">- informacijo o poteku zadnje seje Zbora republik in pokrajin</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p152">Skupščine SFRJ v zvezi s poročilom Zveznega izvršnega sveta, ki</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p153">jo je podal vodja delegacije Skupščine SR Slovenije v Zboru</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p154">Republik in pokrajin Skupščine SFRJ tovariš Martin Mlinar;</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p155">- uvodno besedo Izvršnega sveta Skupščine SR Slovenije k</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p156">Informaciji sprejetih in uveljavljenih ukrepih ekonomske politike</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p157">Po 15. maju ter potrebnih aktivnosti v SR Sloveniji, ki jo je</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p158">Podal predsednik Izvršnega sveta tovariš Janez Bohorič,</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p159">- uvodno besedo k ugotovitvam, stališčem in sklepom o vlogi</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p160">SR Slovenije pri oblikovanju in uresničevanju zunanje politike in</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p161">Mednarodnih odnosov SFRJ, ki jo je podal predsednik Komisije</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p162">Skupščine SR Slovenije za mednarodne odnose tovariš Andrej</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p163">Skerlavaj in</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p164">uvodno besedo k poročilu o mednarodnem sodelovanju SR</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p165">Slovenije, ki jo je podala članica Izvršnega sveta Skupščine SR</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p166">Slovenije in predsednica Republiškega komiteja za mednarodno</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p167">sodelovanje tovarišica Cvetka Selšek.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p168">Po končanem skupnem zasedanje so zbori nadaljevali z delom na</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p169">ločenih sejah.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p170">ZAPISNIK</p>
+        </div>
+        <div type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div16">
+          <head type="session" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.head8">SKUPNO ZASEDANJE</head>
+        </div>
+        <div type="backMatter" xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.div17">
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p171">ZBORA ZDRUŽENEGA DELA, ZBORA OBČIN IN</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p172">DRUŽBENOPOLITIČNEGA ZBORA</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p173">SKUPŠČINE SOCIALISTIČNE REPUBLIKE SLOVENIJE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p174">(11. januar 1990)</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p175">Predsedoval: Valentin Dvojmoč, predsednik Zbora združenega</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p176">dela Skupščine SR Slovenije.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p177">Na skupnem zasedanju so delegati poslušali:</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p178">- uvodno besedo k predlogu Zveznega izvršnega sveta, da se</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p179">začne postopek za spremembo ustave SFRJ in k predlogu Skupščine</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p180">SR Slovenije, da se začne postopek za spremembo ustave SFRJ, ki</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p181">jo je podal Miran Potrč, predsednik Skupščine SR Slovenije in</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p182">Predsednik Komisije za ustavna vprašanja.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p183">ZAPISNIK</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p184">SKUPNO ZASEDDANJE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p185">ZBORA ZDRUŽENEGA DELA,</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p186">ZBORA OBČIN IN DRUŽBENOPOLITIČNEGA ZBORA</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p187">SKUPŠČINE SOCIALISTIČNE REPUBALIKE SLOVENIJE</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p188">(7. februar 1990)</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p189">Predsedoval: Vlado Beznik, predsednik Zbora občin Skupščine</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p190">SR Slovenije.</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p191">Na skupnem zasedanju so delegati poslušali:</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p192">ekspoze k informacijama Izvršnega sveta Skupščine SR</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p193">Slovenije o uresničevanju gospodarske reforme s spremljajočimi</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p194">akti in o prekinitvi poslovnih odnosov srbskih s slovenskimi</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p195">Podjetji, ki ga je podal Dušan Šinigoj, predsednik Izvršnega</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p196">sveta Skupščine SR Slovenije,</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p197">- uvodno besedo k predlogu, da se začne postopek za spremembo</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p198">Ustave SR Slovenije, ki jo je podal Geza Bačič, podpredsednik</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p199">Socialistične zveze Slovenije in</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p200">- uvodno besedo k spremembam zakonov o volitvah, ki jo je</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p201">podal Tone Jerovšek, predsednik Zakonodaj no-pravne komisije</p>
+          <p xml:id="Zbor_zdruzenega_dela_zbor_obcin_druzbenopoliticni_zapisniki_skupnih_zasedanj_17.12.1986-07.02.1990.p202">Skupščine SR Slovenije.</p>
+        </div>
+      </div>
+    </body>
+  </text>
+</TEI>

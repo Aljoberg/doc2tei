@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
 from collections import Counter
+from copy import deepcopy
 from dataclasses import dataclass, field
 import importlib.util
 import inspect
@@ -156,11 +157,46 @@ class ParseResult:
     diagnostics: ParseDiagnostics
     data: dict[str, object] = field(default_factory=dict)
 
-    def to_bytes(self, *, xml_declaration: bool = False) -> bytes:
-        return ET.tostring(self.root, encoding="utf-8", xml_declaration=xml_declaration)
+    @staticmethod
+    def _xml_bytes(
+        root: ET.Element,
+        *,
+        xml_declaration: bool = False,
+        pretty: bool = False,
+    ) -> bytes:
+        serializable = root
+        if pretty:
+            # Work on a copy: indentation adds whitespace nodes, and callers
+            # may still need the original mixed-content tree afterward.
+            serializable = deepcopy(root)
+            ET.indent(serializable, space="  ")
+        return ET.tostring(
+            serializable,
+            encoding="utf-8",
+            xml_declaration=xml_declaration,
+        )
 
-    def write_xml(self, path: str | Path, *, xml_declaration: bool = False) -> None:
-        Path(path).write_bytes(self.to_bytes(xml_declaration=xml_declaration))
+    def to_bytes(
+        self, *, xml_declaration: bool = False, pretty: bool = False
+    ) -> bytes:
+        return self._xml_bytes(
+            self.root,
+            xml_declaration=xml_declaration,
+            pretty=pretty,
+        )
+
+    def write_xml(
+        self,
+        path: str | Path,
+        *,
+        xml_declaration: bool = False,
+        pretty: bool = False,
+    ) -> None:
+        content = self.to_bytes(
+            xml_declaration=xml_declaration,
+            pretty=pretty,
+        )
+        Path(path).write_bytes(content + (b"\n" if pretty else b""))
 
     def write_diagnostics(self, path: str | Path) -> None:
         Path(path).write_text(
@@ -179,6 +215,7 @@ class ParseResult:
         *,
         data_key: str = "speakers",
         xml_declaration: bool = False,
+        pretty: bool = False,
     ) -> None:
         mapping = self.data.get(data_key)
         safe_mapping = (
@@ -191,9 +228,12 @@ class ParseResult:
             else {}
         )
         root = build_list_person(safe_mapping)
-        Path(path).write_bytes(
-            ET.tostring(root, encoding="utf-8", xml_declaration=xml_declaration)
+        content = self._xml_bytes(
+            root,
+            xml_declaration=xml_declaration,
+            pretty=pretty,
         )
+        Path(path).write_bytes(content + (b"\n" if pretty else b""))
 
 
 def load_config(path: str | Path) -> LoadedConfig:

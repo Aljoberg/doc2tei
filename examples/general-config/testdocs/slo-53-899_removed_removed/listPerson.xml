@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listPerson xmlns="http://www.tei-c.org/ns/1.0">
+  <person xml:id="ZoranPolič">
+    <persName>PREDSEDNIK ZORAN POLIČ(SR Slovenija)</persName>
+  </person>
+  <person xml:id="VeselinDjuranovič">
+    <persName>VESELIN DJURANOVIČ, predsednik ZIS</persName>
+  </person>
+  <person xml:id="SvetozarPepovski">
+    <persName>SVETOZAR PEPOVSKI, član ZIS in predsednik zvez</persName>
+  </person>
+  <person xml:id="StojanMatkalijev">
+    <persName>STOJAN MATKALIJEV, član ZIS in predsednik zvez</persName>
+  </person>
+  <person xml:id="BerislavŠefer">
+    <persName>BERISLAV ŠEFER (SR Hrvatska)</persName>
+  </person>
+  <person xml:id="ImerPulja">
+    <persName>IMER PULJA, zvezni sekretar za trg in splošne gospo</persName>
+  </person>
+  <person xml:id="LjubisavMarkovič">
+    <persName>LJUBISAV MARKOVIČ, predsednik odbora zbora</persName>
+  </person>
+  <person xml:id="StojanČosev">
+    <persName>STOJAN ČOSEV, predsednik odbora zbora republik in</persName>
+  </person>
+  <person xml:id="VladimirJovanovič">
+    <persName>VLADIMIR JOVANOVIČ(SR Črna gora)</persName>
+  </person>
+  <person xml:id="MilijaKovačevič">
+    <persName>MILIJA KOVAČEVIČ, predsednik odbora republik in</persName>
+  </person>
+  <person xml:id="MustafaSefo">
+    <persName>MUSTAFA SEFO, član odbora zbora republik in</persName>
+  </person>
+  <person xml:id="AsanKerim">
+    <persName>ASAN KERIM, poročevalec odbora· zbora republik in</persName>
+  </person>
+</listPerson>

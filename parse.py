@@ -33,6 +33,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--xml-declaration", action="store_true", help="include an XML declaration"
     )
+    parser.add_argument(
+        "--pretty",
+        action="store_true",
+        help="indent XML output without changing mixed-content text",
+    )
     return parser
 
 
@@ -51,10 +56,18 @@ def main(argv: list[str] | None = None) -> int:
             result = parse_document(args.input, config=args.config)
 
     if args.out:
-        result.write_xml(args.out, xml_declaration=args.xml_declaration)
+        result.write_xml(
+            args.out,
+            xml_declaration=args.xml_declaration,
+            pretty=args.pretty,
+        )
     else:
         sys.stdout.buffer.write(
-            result.to_bytes(xml_declaration=args.xml_declaration) + b"\n"
+            result.to_bytes(
+                xml_declaration=args.xml_declaration,
+                pretty=args.pretty,
+            )
+            + b"\n"
         )
     if args.diagnostics:
         result.write_diagnostics(args.diagnostics)
@@ -62,7 +75,9 @@ def main(argv: list[str] | None = None) -> int:
         result.write_data(args.data_output)
     if args.list_person_output:
         result.write_list_person(
-            args.list_person_output, xml_declaration=args.xml_declaration
+            args.list_person_output,
+            xml_declaration=args.xml_declaration,
+            pretty=args.pretty,
         )
     return 0
 
