@@ -654,7 +654,9 @@ is desired.
 
 For batch pipelines, avoid nesting two full levels of process parallelism. Run
 one document at a time with `"page_workers": 0`, or parallelize whole documents
-and set `"page_workers": 1` in each document process.
+and set `"page_workers": 1` in each document process. `batch_parse.py` applies
+this automatically: one-document runs retain the config setting, while
+multi-document runs default to one page worker per document.
 
 PDF configs have one top-level `rules` group. There is no alignment wrapper.
 
@@ -1215,3 +1217,34 @@ There is no need to copy it to the repository root or maintain a symlink.
 Dependencies: `pdfminer.six` (PDF extraction), `python-docx` (Word mode),
 `pypdf` (the coord-dump tool, should be reworked into pdfminer), `requests`
 (optional Wikidata enrichment).
+
+### Batch conversion
+
+For collections, use the dedicated runner instead of starting many independent
+`parse.py` commands:
+
+```bash
+python batch_parse.py path/to/documents --output-dir out/batch
+```
+
+It recursively discovers PDF and DOCX inputs, preserves their relative
+directory layout, writes one output bundle per document, and maintains
+`batch-manifest.json`. The default config is
+`examples/general-config/config.py`; select another with `--config`.
+
+`--workers 0` (the default) uses up to four document processes. Multiple
+document workers automatically imply `page_workers=1`, avoiding nested process
+pools. Use `--workers 1` to process documents sequentially while retaining the
+config's page-level parallelism. Workers are normally recycled after each file
+to release PDF parser memory; `--reuse-workers` is faster for many tiny files.
+
+The runner is resumable. A completed `status.json` records a fingerprint of the
+source, config, parser implementation, and output options, so unchanged
+documents are skipped and changed documents or code are rebuilt. `--overwrite`
+disables this check.
+
+Hard per-document failures are converted into reviewable fallback bundles and
+reported as `recovered`; they do not stop other documents or make the batch
+command fail. A `failed` status is reserved for cases where output files cannot
+be written. See `python batch_parse.py --help` for filtering, Wikidata, XML,
+and concurrency options.

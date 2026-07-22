@@ -164,9 +164,9 @@ def _extract_pdfminer_range(task: _PDFMinerRangeTask) -> list[_PageRecordBatch]:
             self.width = 0.0
             self.height = 0.0
 
-        def receive_layout(self, page: LTPage):
-            self.width = float(page.width)
-            self.height = float(page.height)
+        def receive_layout(self, ltpage: LTPage):
+            self.width = float(ltpage.width)
+            self.height = float(ltpage.height)
 
             def walk(obj: Iterable[object]):
                 for item in obj:
@@ -175,7 +175,7 @@ def _extract_pdfminer_range(task: _PDFMinerRangeTask) -> list[_PageRecordBatch]:
                     elif isinstance(item, Iterable):
                         walk(cast(Iterable[object], item))
 
-            walk(cast(Iterable[object], page))
+            walk(cast(Iterable[object], ltpage))
 
     device = CharCollector()
     interpreter = PDFPageInterpreter(resource_manager, device)
@@ -375,9 +375,9 @@ class CharacterPDFExtractor:
                 self.width = 0.0
                 self.height = 0.0
 
-            def receive_layout(self, page: LTPage):
-                self.width = float(page.width)
-                self.height = float(page.height)
+            def receive_layout(self, ltpage: LTPage):
+                self.width = float(ltpage.width)
+                self.height = float(ltpage.height)
 
                 def walk(obj: Iterable[object]):
                     for item in obj:
@@ -386,7 +386,7 @@ class CharacterPDFExtractor:
                         elif isinstance(item, Iterable):
                             walk(cast(Iterable[object], item))
 
-                walk(cast(Iterable[object], page))
+                walk(cast(Iterable[object], ltpage))
 
         device = CharCollector()
         interpreter = PDFPageInterpreter(resource_manager, device)

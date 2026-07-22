@@ -1,0 +1,3 @@
+[submodule "sistory-dl"]
+	path = sistory-dl
+	url = git@github.com:Aljoberg/sistory-dl.git

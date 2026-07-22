@@ -68,6 +68,43 @@ The old `make_list_person.py data.json -o listPerson.xml` command remains as a
 compatibility wrapper around the same implementation. Omit `--include-wikidata`
 for deterministic, offline output.
 
+## Batch processing
+
+`batch_parse.py` recursively converts every PDF and DOCX below one or more
+inputs. It uses the general config by default and creates an independent output
+bundle for every source document:
+
+```powershell
+python .\batch_parse.py "D:\documents" `
+  --output-dir "D:\tei-output" `
+  --pretty `
+  --xml-declaration
+```
+
+Each bundle contains `document.xml`, `listPerson.xml`, `data.json`,
+`diagnostics.json`, and `status.json`. The output root also contains a
+`batch-manifest.json` progress and result summary. Add `--include-wikidata` for
+best-effort enrichment or `--no-list-person` when no person list is needed.
+
+By default, the runner uses up to four document processes. When multiple
+documents run together, it forces each document's page extractor to one worker,
+preventing nested process pools from multiplying CPU and memory use. `-j 1`
+instead lets the general config use its own page-level parallelism. Explicit
+`-j N` and `--page-workers N` values are available for tuning.
+
+Completed bundles are fingerprinted from the source, config, parser code, and
+relevant options. Re-running the command skips unchanged work, while changed
+inputs or code are automatically rebuilt; use `--overwrite` to force
+everything. Worker processes
+are recycled after each document so PDF library memory is returned to the OS.
+For very small documents, `--reuse-workers` trades that isolation for less
+startup overhead.
+
+A document-level exception does not stop the batch. The runner emits a minimal
+reviewable TEI document, diagnostics, and an `UnknownSpeaker` listPerson, marks
+the bundle `recovered`, and moves on. Only an output failure that prevents even
+that fallback is marked `failed` and makes the command return a nonzero status.
+
 Again, I've written everything in CONFIG.md, so if you're interested in running this, you should start with that file.
 
 ### Good luck!

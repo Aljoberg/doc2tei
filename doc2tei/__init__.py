@@ -16,6 +16,15 @@ from .parser import (
     load_config,
     parse_document,
 )
+from .batch import (
+    BatchItemResult,
+    BatchJob,
+    BatchOptions,
+    automatic_document_workers,
+    batch_counts,
+    discover_batch_jobs,
+    run_batch,
+)
 from .selectors import AllOf, AnyOf, Attribute, Between, LineStart, Metadata, Not, Text
 from .tei_header import (
     Change,
@@ -35,6 +44,9 @@ __all__ = [
     "AnyOf",
     "Attribute",
     "Between",
+    "BatchItemResult",
+    "BatchJob",
+    "BatchOptions",
     "Change",
     "CharacterPDFExtractor",
     "Funder",
@@ -60,9 +72,13 @@ __all__ = [
     "Text",
     "WordPDFExtractor",
     "build_list_person",
+    "automatic_document_workers",
+    "batch_counts",
+    "discover_batch_jobs",
     "fill_counts",
     "load_config",
     "parse_document",
     "rule",
     "rule_group",
+    "run_batch",
 ]

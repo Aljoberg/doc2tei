@@ -693,10 +693,21 @@ def build_list_person(
                 term, timeout=wikidata_timeout
             )
 
+        def safe_fetch(term: str) -> list[WikidataBinding]:
+            try:
+                bindings = fetcher(term)
+                if not isinstance(bindings, list):
+                    return []
+                return [
+                    binding for binding in bindings if isinstance(binding, dict)
+                ]
+            except Exception:
+                return []
+
         if terms:
             worker_count = min(max(1, wikidata_workers), len(terms))
             with ThreadPoolExecutor(max_workers=worker_count) as pool:
-                lookup_results = dict(zip(terms, pool.map(fetcher, terms)))
+                lookup_results = dict(zip(terms, pool.map(safe_fetch, terms)))
 
     used_ids: set[str] = set()
     for reference, label, details in entries:

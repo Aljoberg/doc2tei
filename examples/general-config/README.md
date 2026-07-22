@@ -29,3 +29,13 @@ python .\parse.py "path\to\source.pdf" `
 mixed-content elements such as utterances, references, and inline styling.
 Add `--include-wikidata` to enrich `listPerson.xml`; omit it for deterministic,
 offline output matching the checked-in bundles.
+
+For a directory of source documents, the batch runner uses this config by
+default and produces the same bundle layout:
+
+```powershell
+python .\batch_parse.py "path\to\documents" `
+  --output-dir ".\out\general-config" `
+  --pretty `
+  --xml-declaration
+```

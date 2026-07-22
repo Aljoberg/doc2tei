@@ -215,6 +215,8 @@ class ParseResult:
         xml_declaration: bool = False,
         pretty: bool = False,
         include_wikidata: bool = False,
+        wikidata_workers: int = 4,
+        wikidata_timeout: float = 20.0,
     ) -> None:
         mapping = self.data.get(data_key)
         safe_mapping = (
@@ -229,6 +231,8 @@ class ParseResult:
         root = build_list_person(
             safe_mapping,
             include_wikidata=include_wikidata,
+            wikidata_workers=wikidata_workers,
+            wikidata_timeout=wikidata_timeout,
         )
         content = self._xml_bytes(
             root,
