@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listPerson xmlns="http://www.tei-c.org/ns/1.0">
+  <person xml:id="MilanApih">
+    <persName>Predsedujoči Milan Apih</persName>
+  </person>
+  <person xml:id="Mi1Anapih">
+    <persName>Predsedujoči M i 1 a n A p i h</persName>
+  </person>
+  <person xml:id="MirkoZlatnaR">
+    <persName>Mirko Zlatna r</persName>
+  </person>
+  <person xml:id="MatijaMaležič">
+    <persName>Matija Maležič</persName>
+  </person>
+  <person xml:id="DaniloDougan">
+    <persName>Dr. Danilo Dougan</persName>
+  </person>
+  <person xml:id="DavorinFerligoj">
+    <persName>Davorin Ferligoj</persName>
+  </person>
+  <person xml:id="MilanЛPih">
+    <persName>Predsedujoči Milan Л p i h</persName>
+  </person>
+  <person xml:id="IvoKlemenčič">
+    <persName>Inž. Ivo Klemenčič</persName>
+  </person>
+  <person xml:id="PepcaPerovšek">
+    <persName>Inž. Pepca Perovšek</persName>
+  </person>
+  <person xml:id="MiloVižintin">
+    <persName>Milo Vižintin</persName>
+  </person>
+  <person xml:id="PavleZaucer">
+    <persName>Predsednik inž. Pavle Zaucer</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="FranceKimovec">
+    <persName>France Kimovec</persName>
+  </person>
+  <person xml:id="JožaVilfan">
+    <persName>Dr. Joža Vilfan</persName>
+  </person>
+  <person xml:id="VladimirKadunc">
+    <persName>Vladimir Kadunc</persName>
+  </person>
+  <person xml:id="Pavle2Aucer">
+    <persName>Predsednik inž. Pavle 2 a u c e r</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="MilkoGoršič">
+    <persName>Milko Goršič</persName>
+  </person>
+  <person xml:id="VladoMajhen">
+    <persName>Vlado Majhen</persName>
+  </person>
+  <person xml:id="Pavlezaucer">
+    <persName>Predsednik inž. PavleZaucer</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="MarijaAljančič">
+    <persName>Marija Aljančič</persName>
+  </person>
+  <person xml:id="MaksVale">
+    <persName>Maks Vale</persName>
+  </person>
+  <person xml:id="PavloZaucer">
+    <persName>Predsednik inž. Pavlo Zaucer</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="ŠtefanGyofi">
+    <persName>Štefan Gyofi</persName>
+  </person>
+  <person xml:id="BorisKocijančič">
+    <persName>Boris Kocijančič</persName>
+  </person>
+  <person xml:id="Pavle">
+    <persName>Predsednik inž. Pavle Za u cer</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="Pav1Ezaucer">
+    <persName>Predsednik i n ž. P a v 1 e Z a u c e r</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="LojzeOcepek">
+    <persName>Predsednik Lojze Ocepek</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="AngelaBoštjančič">
+    <persName>Angela Boštjančič</persName>
+  </person>
+  <person xml:id="LojzeGcepek">
+    <persName>Predsednik Lojze Gcepek</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="MihaBerčič">
+    <persName>Predsedujoči Miha Berčič</persName>
+  </person>
+  <person xml:id="AntonMartinšek">
+    <persName>Anton Martinšek</persName>
+  </person>
+  <person xml:id="JankoDekleva">
+    <persName>Janko Dekleva</persName>
+  </person>
+  <person xml:id="NadaBožič">
+    <persName>Nada Božič</persName>
+  </person>
+  <person xml:id="MihaBerčić">
+    <persName>Podpredsednik Miha B e r č i ć</persName>
+    <affiliation role="podpredsednik">
+      <roleName xml:lang="sl">Podpredsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="MarjanPrezelj">
+    <persName>Inž. Marjan Prezelj</persName>
+  </person>
+  <person xml:id="JožeIngolič">
+    <persName>Jože Ingolič</persName>
+  </person>
+  <person xml:id="Lojzeocepek">
+    <persName>Predsednik LojzeOcepek</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="MihaMarinko">
+    <persName>Predsednik Miha Marinko</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="FrancTreven">
+    <persName>Franc Treven</persName>
+  </person>
+  <person xml:id="JankoRudolf">
+    <persName>Janko Rudolf</persName>
+  </person>
+  <person xml:id="MurskaSobota">
+    <persName>Murska Sobota</persName>
+  </person>
+  <person xml:id="StaneKavčič">
+    <persName>Stane Kavčič</persName>
+  </person>
+  <person xml:id="JožeVonta">
+    <persName>Jože Vonta</persName>
+  </person>
+  <person xml:id="MiranKošmelj">
+    <persName>Miran Košmelj</persName>
+  </person>
+  <person xml:id="MirkoRemec">
+    <persName>Mirko Remec</persName>
+  </person>
+  <person xml:id="MiHaMarinko">
+    <persName>Predsednik Mi ha Marinko</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="JožeSlavič">
+    <persName>Jože Slavič</persName>
+  </person>
+  <person xml:id="ViktorKotnik">
+    <persName>Inž. Viktor Kotnik</persName>
+  </person>
+  <person xml:id="ŠtefanPavšič">
+    <persName>Štefan Pavšič</persName>
+  </person>
+  <person xml:id="NikoŠilih">
+    <persName>Niko Šilih</persName>
+  </person>
+  <person xml:id="FrancSebjanič">
+    <persName>Franc Sebjanič</persName>
+  </person>
+  <person xml:id="BojanPolak">
+    <persName>Bojan Polak</persName>
+  </person>
+  <person xml:id="FrancPopit">
+    <persName>Franc Popit</persName>
+  </person>
+  <person xml:id="AleksanderPirher">
+    <persName>Aleksander Pirher</persName>
+  </person>
+  <person xml:id="StanePele">
+    <persName>Stane Pele</persName>
+  </person>
+  <person xml:id="ToneBole">
+    <persName>Tone Bole</persName>
+  </person>
+  <person xml:id="SlaneFele">
+    <persName>Slane Fele (govori iz klopi)</persName>
+    <affiliation role="member">
+      <orgName>govori iz klopi</orgName>
+    </affiliation>
+  </person>
+  <person xml:id="Mi1AMarinko">
+    <persName>Predsednik M i 1? a Marinko</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="MihaMar">
+    <persName>Predsednik Miha Mar In ko</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="RikoJerman">
+    <persName>Riko Jerman</persName>
+  </person>
+  <person xml:id="VladimirKrivic">
+    <persName>Vladimir Krivic</persName>
+  </person>
+  <person xml:id="HumbertGačnik">
+    <persName>Humbert Gačnik</persName>
+  </person>
+  <person xml:id="MarinkaRibičič">
+    <persName>Marinka Ribičič</persName>
+  </person>
+  <person xml:id="Mihamarinko">
+    <persName>Predsednik MihaMarinko</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="Tonebo1E">
+    <persName>T o n e B o 1 e</persName>
+  </person>
+  <person xml:id="StaneFele">
+    <persName>Stane Fele</persName>
+  </person>
+  <person xml:id="HeliModic">
+    <persName>Podpredsednik dr. Heli Modic</persName>
+    <affiliation role="podpredsednik">
+      <roleName xml:lang="sl">Podpredsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="He1Imodic">
+    <persName>Podpredsednik dr. H e 1 i M o d i c</persName>
+    <affiliation role="podpredsednik">
+      <roleName xml:lang="sl">Podpredsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="PoročevalecPredsednik">
+    <persName>Poročevalec; Predsednik</persName>
+  </person>
+  <person xml:id="StaneRavljen1RPredsednik">
+    <persName>Stane Ravljen 1. r. Predsednik</persName>
+  </person>
+</listPerson>

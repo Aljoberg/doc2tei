@@ -1,0 +1,77 @@
+{
+  "source": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\2. sklic (1951-1953)\\03 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - III. izredno zasedanje (Drugi slkic) 30. junija 1952.pdf",
+  "output": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_long-paths\\03 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - III. izredno-943447bcaded",
+  "status": "ok",
+  "elapsed_seconds": 25.92,
+  "chunk_count": 11037,
+  "recovery_count": 0,
+  "message": "completed with warnings",
+  "warning_count": 1,
+  "completed_at": "2026-07-22T13:03:53+00:00",
+  "fingerprint": {
+    "source": {
+      "path": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\2. sklic (1951-1953)\\03 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - III. izredno zasedanje (Drugi slkic) 30. junija 1952.pdf",
+      "exists": true,
+      "size": 36185006,
+      "modified_ns": 1784723804334457500
+    },
+    "config": {
+      "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
+      "exists": true,
+      "size": 42702,
+      "modified_ns": 1784724902486837000
+    },
+    "implementation": {
+      "batch": {
+        "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\doc2tei\\batch.py",
+        "exists": true,
+        "size": 22969,
+        "modified_ns": 1784724902495187300
+      },
+      "engine": {
+        "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\engine.py",
+        "exists": true,
+        "size": 19242,
+        "modified_ns": 1784637830530037700
+      },
+      "extractors": {
+        "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\doc2tei\\extractors.py",
+        "exists": true,
+        "size": 44907,
+        "modified_ns": 1784708355618513400
+      },
+      "helpers": {
+        "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\doc2tei\\helpers.py",
+        "exists": true,
+        "size": 26916,
+        "modified_ns": 1784721180944091200
+      },
+      "parser": {
+        "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\doc2tei\\parser.py",
+        "exists": true,
+        "size": 30405,
+        "modified_ns": 1784724902486837000
+      },
+      "tei_header": {
+        "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\doc2tei\\tei_header.py",
+        "exists": true,
+        "size": 10526,
+        "modified_ns": 1784627210807020100
+      },
+      "types": {
+        "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\type_decs.py",
+        "exists": true,
+        "size": 5608,
+        "modified_ns": 1784722128964848000
+      }
+    },
+    "options": {
+      "pretty": true,
+      "xml_declaration": true,
+      "write_list_person": true,
+      "include_wikidata": false,
+      "wikidata_timeout": 20.0,
+      "page_workers": 1
+    }
+  }
+}

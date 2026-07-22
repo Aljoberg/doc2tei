@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listPerson xmlns="http://www.tei-c.org/ns/1.0">
+  <person xml:id="Prisotni">
+    <persName>PRISOTNI ČLANI VLADE</persName>
+  </person>
+  <person xml:id="FerdoKozak">
+    <persName>Predsednik dr. Ferdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="PopitFranc">
+    <persName>Popit Franc</persName>
+  </person>
+  <person xml:id="MarijanBrecelj">
+    <persName>Marijan Brecelj</persName>
+  </person>
+  <person xml:id="FrancPopit">
+    <persName>Franc Popit</persName>
+  </person>
+  <person xml:id="DavorinFerligoj">
+    <persName>Davorin Ferligoj</persName>
+  </person>
+  <person xml:id="MiranKošmelj">
+    <persName>Miran Košmelj</persName>
+  </person>
+  <person xml:id="MihaPotočnik">
+    <persName>D r. M i h a Potočnik</persName>
+  </person>
+  <person xml:id="StankoŠtor">
+    <persName>Dr. Stanko Štor</persName>
+  </person>
+  <person xml:id="AlojzColarič">
+    <persName>Alojz Colarič</persName>
+  </person>
+  <person xml:id="EđoZorko">
+    <persName>Eđo Zorko</persName>
+  </person>
+  <person xml:id="AntonMeLik">
+    <persName>Dr. Anton Me lik</persName>
+  </person>
+  <person xml:id="VladeLrs">
+    <persName>Predsednik vlade LRS</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik vlade</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="VladeLrr">
+    <persName>Predsednik vlade LRR</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik vlade</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="VinkoŠumrada">
+    <persName>Vinko Šumrada</persName>
+  </person>
+  <person xml:id="FranceKimovec">
+    <persName>France Kimovec</persName>
+  </person>
+  <person xml:id="DjFerdoKozak">
+    <persName>Predsednik dj. Ferdo KOzak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="FerdoKdzak">
+    <persName>Predsednik dr. Ferdo Kdzak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="FrancSimonič">
+    <persName>Franc Simonič</persName>
+  </person>
+  <person xml:id="AnionMelik">
+    <persName>Dr. Anion Melik</persName>
+  </person>
+  <person xml:id="JožePotrč">
+    <persName>Dr. Jože Potrč</persName>
+  </person>
+  <person xml:id="DrFerdoKdzak">
+    <persName>Predsednik'dr. Ferdo Kdzak</persName>
+  </person>
+  <person xml:id="AntonMelik">
+    <persName>Dr. Anton Melik</persName>
+  </person>
+  <person xml:id="BožidarLavrič">
+    <persName>Dr. Božidar Lavrič</persName>
+  </person>
+  <person xml:id="AlojzVrhovec">
+    <persName>Alojz Vrhovec</persName>
+  </person>
+  <person xml:id="VelPoljane">
+    <persName>Vel. Poljane (del)</persName>
+    <affiliation role="member">
+      <orgName>del</orgName>
+    </affiliation>
+  </person>
+  <person xml:id="SvGregor">
+    <persName>Sv. Gregor (del)</persName>
+    <affiliation role="member">
+      <orgName>del</orgName>
+    </affiliation>
+  </person>
+  <person xml:id="SvAna">
+    <persName>Sv. Ana (del)</persName>
+    <affiliation role="member">
+      <orgName>del</orgName>
+    </affiliation>
+  </person>
+  <person xml:id="SvKatarina">
+    <persName>Sv. Katarina</persName>
+  </person>
+  <person xml:id="StaraLoka">
+    <persName>Stara Loka</persName>
+  </person>
+  <person xml:id="SvBarbara">
+    <persName>Sv. Barbara</persName>
+  </person>
+  <person xml:id="SvOžbolt">
+    <persName>Sv. Ožbolt (del)</persName>
+    <affiliation role="member">
+      <orgName>del</orgName>
+    </affiliation>
+  </person>
+  <person xml:id="SpGortina">
+    <persName>Sp. Gortina</persName>
+  </person>
+  <person xml:id="ZgGortina">
+    <persName>Zg. Gortina</persName>
+  </person>
+  <person xml:id="SpMuta">
+    <persName>Sp. Muta</persName>
+  </person>
+  <person xml:id="SvJernej">
+    <persName>Sv. Jernej</persName>
+  </person>
+  <person xml:id="VardaIi">
+    <persName>Varda II</persName>
+  </person>
+  <person xml:id="MaliDolenci">
+    <persName>Mali Dolenci</persName>
+  </person>
+  <person xml:id="VelikiDolenci">
+    <persName>Veliki Dolenci</persName>
+  </person>
+  <person xml:id="DolnjiSlaveči">
+    <persName>Dolnji Slaveči</persName>
+  </person>
+  <person xml:id="GorPetrovci">
+    <persName>Gor. Petrovci</persName>
+  </person>
+  <person xml:id="GornjiSlaveči">
+    <persName>Gornji Slaveči</persName>
+  </person>
+  <person xml:id="MurskiPetrovci">
+    <persName>Murski Petrovci</persName>
+  </person>
+  <person xml:id="NoviBeznovci">
+    <persName>Novi Beznovci</persName>
+  </person>
+  <person xml:id="StariBeznovci">
+    <persName>Stari Beznovci</persName>
+  </person>
+  <person xml:id="SpBreg">
+    <persName>Sp. Breg (del)</persName>
+    <affiliation role="member">
+      <orgName>del</orgName>
+    </affiliation>
+  </person>
+  <person xml:id="ZgBreg">
+    <persName>Zg. Breg</persName>
+  </person>
+  <person xml:id="ZgPristava">
+    <persName>Zg. Pristava</persName>
+  </person>
+  <person xml:id="SpRočica">
+    <persName>Sp. Ročica</persName>
+  </person>
+  <person xml:id="SvBenedikt">
+    <persName>Sv. Benedikt</persName>
+  </person>
+  <person xml:id="SpŠčavnica">
+    <persName>Sp. Ščavnica</persName>
+  </person>
+  <person xml:id="SpVelka">
+    <persName>Sp. Velka</persName>
+  </person>
+  <person xml:id="ZgVelka">
+    <persName>Zg. Velka</persName>
+  </person>
+  <person xml:id="ZgRočica">
+    <persName>Zg. Ročica</persName>
+  </person>
+</listPerson>

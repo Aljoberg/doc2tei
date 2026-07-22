@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listPerson xmlns="http://www.tei-c.org/ns/1.0">
+  <person xml:id="JosipRus">
+    <persName>Predsednik Josip Rus</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="BorisKraigher">
+    <persName>Boris Kraigher (Govori iz poslanske klopi)</persName>
+    <affiliation role="member">
+      <orgName>Govori iz poslanske klopi</orgName>
+    </affiliation>
+  </person>
+  <person xml:id="AlojzKrivec">
+    <persName>Alojz Krivec</persName>
+  </person>
+  <person xml:id="AngelaOcepek">
+    <persName>Angela Ocepek</persName>
+  </person>
+  <person xml:id="FrancPirkovič">
+    <persName>Franc Pirkovič</persName>
+  </person>
+  <person xml:id="MihaPotočnik">
+    <persName>Dr. Miha Potočnik</persName>
+  </person>
+  <person xml:id="JulijBeltram">
+    <persName>Julij Beltram</persName>
+  </person>
+  <person xml:id="OlgaVrabič">
+    <persName>Olga Vrabič</persName>
+  </person>
+  <person xml:id="IvanBertoncelj">
+    <persName>Ivan Bertoncelj</persName>
+  </person>
+  <person xml:id="ToneZupančič">
+    <persName>Tone Zupančič</persName>
+  </person>
+  <person xml:id="BogomilVižintin">
+    <persName>Bogomil Vižintin</persName>
+  </person>
+  <person xml:id="LojzkaStropnik">
+    <persName>Lojzka Stropnik</persName>
+  </person>
+  <person xml:id="StaneKavčič">
+    <persName>Stane Kavčič</persName>
+  </person>
+  <person xml:id="MihaMarinko">
+    <persName>Miha Marinko</persName>
+  </person>
+  <person xml:id="JožeIngolič">
+    <persName>Jože Ingolič</persName>
+  </person>
+  <person xml:id="FrancLubej">
+    <persName>Franc Lubej</persName>
+  </person>
+  <person xml:id="MatijaMaležič">
+    <persName>Matija Maležič</persName>
+  </person>
+  <person xml:id="MavricijBore">
+    <persName>Predsednik Mavricij Bore</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="BorisPipan">
+    <persName>Inž. Boris Pipan</persName>
+  </person>
+  <person xml:id="AntonKoželj">
+    <persName>Inž. Anton Koželj</persName>
+  </person>
+  <person xml:id="FeliksRazdrih">
+    <persName>Feliks Razdrih</persName>
+  </person>
+  <person xml:id="FrancHabjan">
+    <persName>Franc Habjan</persName>
+  </person>
+  <person xml:id="ToneBole">
+    <persName>Tone Bole (govori iz klopi)</persName>
+    <affiliation role="member">
+      <orgName>govori iz klopi</orgName>
+    </affiliation>
+  </person>
+  <person xml:id="AntonTruden">
+    <persName>Anton Truden</persName>
+  </person>
+  <person xml:id="MiranMejak">
+    <persName>Inž. Miran Mejak (govori'iz klopi)</persName>
+    <affiliation role="member">
+      <orgName>govori'iz klopi</orgName>
+    </affiliation>
+  </person>
+  <person xml:id="MilošVehovar">
+    <persName>Inž. Miloš Vehovar</persName>
+  </person>
+  <person xml:id="MihaMarjnko">
+    <persName>Predsednik Miha MarJnko</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="MiranCvenk">
+    <persName>Miran Cvenk</persName>
+  </person>
+  <person xml:id="MirkoLorger">
+    <persName>Mirko Lorger</persName>
+  </person>
+  <person xml:id="StaneRenko">
+    <persName>Stane Renko</persName>
+  </person>
+  <person xml:id="MihaMarinkoIlvIhIvirmj">
+    <persName>Predsednik Miha Marinko! Ilv.ih. IVirmj</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="LeopoldPotočnik">
+    <persName>Leopold Potočnik</persName>
+  </person>
+  <person xml:id="IvanCurk">
+    <persName>Ivan Curk</persName>
+  </person>
+  <person xml:id="FrancKrese">
+    <persName>Franc Krese</persName>
+  </person>
+  <person xml:id="PoročevalecPredsednik">
+    <persName>Poročevalec Predsednik</persName>
+  </person>
+  <person xml:id="JožeBaričevič">
+    <persName>Jože Baričevič, dr. Ivan Bele, Jože Cerne, Albin Dobrajc,</persName>
+  </person>
+</listPerson>

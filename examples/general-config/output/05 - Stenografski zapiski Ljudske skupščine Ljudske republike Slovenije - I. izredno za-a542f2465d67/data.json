@@ -1,0 +1,34 @@
+{
+  "speakers": {
+    "#AndrejPetelin": "Andrej Petelin:",
+    "#FerdoKozak": "Predsednik dr. Ferdo Kozak:",
+    "#ZoraNPolič": "Zora n Polič:",
+    "#FrancZalaznik": "Franc Zalaznik:",
+    "#AlojzDular": "Alojz Dular:",
+    "#KarelReberšek": "Karel Reberšek:",
+    "#AlojzBenko": "Alojz Benko:",
+    "#FErdoKozak": "Predsednik d r. F erdo Kozak:",
+    "#JankoMarkič": "Janko Markič:",
+    "#ToneSušteršič": "Tone Sušteršič:",
+    "#JožePetejan": "Jože Petejan:",
+    "#ToneUlrih": "Tone Ulrih:",
+    "#AntonLabura": "Anton L a b u r a :",
+    "#IvanMaček": "Ivan Maček:",
+    "#ZoranPolič": "Zoran Polič:",
+    "#FrancLeskošek": "Franc Leskošek:",
+    "#AlojzHrovat": "Inž. Alojz Hrovat:",
+    "#MihaBerčič": "Miha Berčič:",
+    "#LožePotrč": "Dr lože Potrč:",
+    "#JanezMlakar": "Janez Mlakar:",
+    "#FcrdoKozak": "Predsednik d r. F c r d o Kozak:",
+    "#LcoKovučič": "Lco Kovučič:",
+    "#AntonMclik": "D r. A n t o n Mclik:",
+    "#MarijaSme": "Marija Sme :",
+    "#FerdoKoztK": "Predsednik dr. Ferdo Kozt^k:",
+    "#PavleŽaucer": "Inž. Pavle Žaucer:",
+    "#CvetkaVodopivec": "Cvetka Vodopivec:"
+  },
+  "warnings": [
+    "29 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+  ]
+}

@@ -1,0 +1,219 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listPerson xmlns="http://www.tei-c.org/ns/1.0">
+  <person xml:id="Prisotni">
+    <persName>PRISOTNI ČLANI VLADE</persName>
+  </person>
+  <person xml:id="FrancKimovec">
+    <persName>Franc Kimovec</persName>
+  </person>
+  <person xml:id="FerdoKozak">
+    <persName>Predsednik dr. Ferdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="SlavkoEovalčič">
+    <persName>Slavko Eovalčič</persName>
+  </person>
+  <person xml:id="Ferdokozak">
+    <persName>Predsednik dr. FerdoKozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="AlojzVrbovec">
+    <persName>Alojz Vrbovec</persName>
+  </person>
+  <person xml:id="OtonŽupančič">
+    <persName>Oton Župančič</persName>
+  </person>
+  <person xml:id="MihaMarinko">
+    <persName>Miha Marinko</persName>
+  </person>
+  <person xml:id="VinkoŠumrada">
+    <persName>Vinko Šumrada</persName>
+  </person>
+  <person xml:id="LojzeRilbdč">
+    <persName>Lojze Rilbdč</persName>
+  </person>
+  <person xml:id="FrancSimonič">
+    <persName>Franc Simonič</persName>
+  </person>
+  <person xml:id="MaraBešter">
+    <persName>Mara Bešter</persName>
+  </person>
+  <person xml:id="ToneZupančič">
+    <persName>Tone Zupančič</persName>
+  </person>
+  <person xml:id="JožeLevstik">
+    <persName>Inž. Jože Levstik</persName>
+  </person>
+  <person xml:id="StankoŠtor">
+    <persName>Dr. Stanko Štor</persName>
+  </person>
+  <person xml:id="MarijanBrecelj">
+    <persName>Dr. Marijan Brecelj</persName>
+  </person>
+  <person xml:id="FranceLubej">
+    <persName>France Lubej</persName>
+  </person>
+  <person xml:id="Marijanđrece1J">
+    <persName>D r. M a r i j a n Đ r e c e 1 j</persName>
+  </person>
+  <person xml:id="FerdoKOzak">
+    <persName>Predsednik dr. Ferdo K'ozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="AndrejVerbič">
+    <persName>Andrej Verbič, tajnik iVifnko Knol, člana</persName>
+    <affiliation role="člana">
+      <roleName xml:lang="sl">tajnik iVifnko Knol, člana</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="JosipVidmar">
+    <persName>Josip Vidmar</persName>
+  </person>
+  <person xml:id="FerdoKo">
+    <persName>Predsednik dr. Ferdo K o za Ik</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="DivMihaKambsči">
+    <persName>Div Miha KambSči</persName>
+  </person>
+  <person xml:id="MihaKambilč">
+    <persName>Dr. Miha Kambilč</persName>
+  </person>
+  <person xml:id="ZoranPolič">
+    <persName>Zoran Polič</persName>
+  </person>
+  <person xml:id="BorisKraigher">
+    <persName>Boris Kraigher</persName>
+  </person>
+  <person xml:id="MarjanAhčin">
+    <persName>Dr. Marjan Ahčin</persName>
+  </person>
+  <person xml:id="FerdoHozak">
+    <persName>Predsednik dr. Ferdo Hozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="AlojzDiaoci">
+    <persName>Alojz D i a o c i</persName>
+  </person>
+  <person xml:id="JožePetejan">
+    <persName>Jože Petejan</persName>
+  </person>
+  <person xml:id="FerdoEozak">
+    <persName>Predsednik dr. Ferdo Eozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="ToneUlrih">
+    <persName>Tone Ulrih</persName>
+  </person>
+  <person xml:id="LojzeRibič">
+    <persName>Lojze Ribič</persName>
+  </person>
+  <person xml:id="MatijaMaležič">
+    <persName>Matija Maležič</persName>
+  </person>
+  <person xml:id="AntonMelik">
+    <persName>Dr. Anton Melik</persName>
+  </person>
+  <person xml:id="BožidarJakac">
+    <persName>Božidar Jakac</persName>
+  </person>
+  <person xml:id="KarelReberšek">
+    <persName>Karel Reberšek</persName>
+  </person>
+  <person xml:id="PrisotniClaniVlade">
+    <persName>PRISOTNI CLANI VLADE</persName>
+  </person>
+  <person xml:id="PoročevalecFrancPopit">
+    <persName>Poročevalec Franc Popit</persName>
+  </person>
+  <person xml:id="KarelŠtrukelj">
+    <persName>&gt; Karel Štrukelj</persName>
+  </person>
+  <person xml:id="AlojzVrhovec">
+    <persName>Alojz Vrhovec</persName>
+  </person>
+  <person xml:id="PoročevalecAlojzVrbovec">
+    <persName>Poročevalec Alojz Vrbovec</persName>
+  </person>
+  <person xml:id="Far">
+    <persName>Predsednik dr. Far do , Kozajk</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="AlojzRibič">
+    <persName>Alojz Ribič</persName>
+  </person>
+  <person xml:id="RudiHribar">
+    <persName>Rudi Hribar</persName>
+  </person>
+  <person xml:id="FrancDragan">
+    <persName>Franc Dragan</persName>
+  </person>
+  <person xml:id="JožeKlarič">
+    <persName>Jože Klarič</persName>
+  </person>
+  <person xml:id="MihaPotočnik">
+    <persName>Dr. Miha Potočnik</persName>
+  </person>
+  <person xml:id="FrancLeskošek">
+    <persName>Franc Leskošek</persName>
+  </person>
+  <person xml:id="LidijaŠentjurc">
+    <persName>Lidija Šentjurc</persName>
+  </person>
+  <person xml:id="FerdoKozAk">
+    <persName>Predsednik dr. Ferdo Koz«ak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="DrMarijanBrecelj">
+    <persName>« Dr. Marijan Brecelj</persName>
+  </person>
+  <person xml:id="BorisKidrič">
+    <persName>Boris Kidrič</persName>
+  </person>
+  <person xml:id="JakaAvšič">
+    <persName>Jaka Avšič</persName>
+  </person>
+  <person xml:id="MartinGreif">
+    <persName>Martin Greif</persName>
+  </person>
+  <person xml:id="JožeŠiftar">
+    <persName>Jože Šiftar</persName>
+  </person>
+  <person xml:id="IvanTrojar">
+    <persName>Ivan Trojar</persName>
+  </person>
+  <person xml:id="Antonmelik">
+    <persName>Dr. AntonMelik</persName>
+  </person>
+  <person xml:id="JožePotrč">
+    <persName>Dr. Jože Potrč</persName>
+  </person>
+  <person xml:id="SergejKraigher">
+    <persName>Sergej Kraigher</persName>
+  </person>
+  <person xml:id="Marijanbrece1Ji">
+    <persName>D r. M a r i j a n B r e c e 1 j i</persName>
+  </person>
+  <person xml:id="FerdoKoaak">
+    <persName>Predsednik dr. Ferdo Koaak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+</listPerson>

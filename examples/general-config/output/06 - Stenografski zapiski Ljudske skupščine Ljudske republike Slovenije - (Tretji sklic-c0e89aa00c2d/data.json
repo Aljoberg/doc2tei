@@ -1,0 +1,38 @@
+{
+  "speakers": {
+    "#JosipRus": "Predsednik Josip Rus:",
+    "#LojzkaStropnik": "Lojzka Stropnik:",
+    "#MarijanBrecelj": "Dr. Marijan Brecelj:",
+    "#AntonDolgan": "Anton Dolgan:",
+    "#MartinGreif": "Martin Greif:",
+    "#MihaBerčič": "Miha Berčič:",
+    "#JožePetejan": "Jože Petejan:",
+    "#BorisKocijančič": "Boris Kocijančič:",
+    "#FrancKimovec": "Franc Kimovec:",
+    "#MatijaMaležič": "Matija Maležič:",
+    "#MarjanAhčin": "Dr. Marjan Ahčin:",
+    "#StaneBobnar": "Stane Bobnar:",
+    "#MavricijBore": "Predsednik Mavricij Bore:",
+    "#LojzeOcepek": "Lojze Ocepek:",
+    "#VilmaPirkovič": "Inž. Vilma Pirkovič:",
+    "#ZoranPolič": "Zoran Polič:",
+    "#ŠtefanPavšič": "Štefan Pavšič:",
+    "#AdolfTavčar": "Inž. Adolf Tavčar:",
+    "#JanezKermavner": "Janez Kermavner:",
+    "#MilanZidar": "Milan Zidar:",
+    "#MarjanGarzarolli": "Marjan Garzarolli:",
+    "#MaVricijBore": "Predsednik Ma v r i c i j Bore:",
+    "#MiranMejak": "Inž. Miran Mejak:",
+    "#GregorKlančnik": "Gregor Klančnik:",
+    "#KarelGrm": "Karel Grm:",
+    "#FerdoKozak": "Podpredsednik dr. Ferdo Kozak:",
+    "#JakobMojškerc": "Podpredsednik Jakob Mojškerc:",
+    "#MitjaRibičič": "Mitja Ribičič:",
+    "#LojzePiškur": "Lojze Piškur:",
+    "#VladoVodopivec": "Vlado Vodopivec:",
+    "#PoročevalecPredsednik": "Poročevalec; Predsednik:"
+  },
+  "warnings": [
+    "20 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+  ]
+}

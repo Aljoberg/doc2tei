@@ -7,10 +7,14 @@ has its own directory containing:
 - `listPerson.xml` - pretty-printed minimal speaker list;
 - `data.json` - data exported by configuration hooks;
 - `diagnostics.json` - rule counts, unmatched samples, fonts, pages, and
-  recovery information.
+  recovery information;
+- `status.json` - batch status, warning counts, timings, and the reproducibility
+  fingerprint.
 
-The first directory level identifies the source set (`testdocs`,
-`novi-primeri`, or `uploaded-example`). Source PDFs are not duplicated here.
+The 35 current bundles are collected under `output/`. They correspond to the
+SIstory menu used as the common source for the former `testdocs`,
+`novi-primeri`, and `uploaded-example` snapshots. Source PDFs are not duplicated
+here.
 
 To regenerate a bundle, run this from the repository root:
 

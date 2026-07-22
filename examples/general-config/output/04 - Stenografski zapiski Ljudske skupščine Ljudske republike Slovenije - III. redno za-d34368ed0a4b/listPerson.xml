@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='utf-8'?>
+<listPerson xmlns="http://www.tei-c.org/ns/1.0">
+  <person xml:id="LerdoKozak">
+    <persName>Predsednik dr. L e r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="VladoMajhen">
+    <persName>Vlado Majhen</persName>
+  </person>
+  <person xml:id="FranceLubej">
+    <persName>France Lubej</persName>
+  </person>
+  <person xml:id="FerdoKozak">
+    <persName>Predsednik dr. Ferdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="MarijanBrecelj">
+    <persName>Dr. Marijan Brecelj</persName>
+  </person>
+  <person xml:id="speaker-1ErdoKozak">
+    <persName>Predsednik dr. 1' e r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="PavleZaucer">
+    <persName>Inž. Pavle Zaucer</persName>
+  </person>
+  <person xml:id="DГFerdoKozak">
+    <persName>Predsednik d г. Ferdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="DaniloPetrinja">
+    <persName>Danilo Petrinja</persName>
+  </person>
+  <person xml:id="IerdoKozak">
+    <persName>Predsednik dr. I" e r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="JožeGrabrijan">
+    <persName>Jože Grabrijan</persName>
+  </person>
+  <person xml:id="FrancLubej">
+    <persName>Franc Lubej</persName>
+  </person>
+  <person xml:id="KerdoKozak">
+    <persName>Predsednik dr. K e r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="JanezPetrovič">
+    <persName>Janez Petrovič</persName>
+  </person>
+  <person xml:id="FeRd">
+    <persName>Predsednik d r. F e rd o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="BogomilVižintin">
+    <persName>Bogomil Vižintin</persName>
+  </person>
+  <person xml:id="JožePrimožič">
+    <persName>Jože Primožič</persName>
+  </person>
+  <person xml:id="MirkoRemec">
+    <persName>Mirko Remec</persName>
+  </person>
+  <person xml:id="MirkaCiglič">
+    <persName>Mirka Ciglič</persName>
+  </person>
+  <person xml:id="FcrdoKozak">
+    <persName>Predsednik dr. Fcrdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="MirkoZlaTnar">
+    <persName>Mirko Zla t n a r</persName>
+  </person>
+  <person xml:id="MitjaRibičič">
+    <persName>Mitja Ribičič</persName>
+  </person>
+  <person xml:id="JakobDernač">
+    <persName>Jakob Dernač</persName>
+  </person>
+  <person xml:id="MihaPotočnik">
+    <persName>Dr. Miha Potočnik</persName>
+  </person>
+  <person xml:id="IvanRegent">
+    <persName>Ivan Regent</persName>
+  </person>
+  <person xml:id="speaker-1ERdoKozak">
+    <persName>Predsednik d r. 1'e r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="FerdoKozakPričneOb1015SejoZNaslednjimiBesedami">
+    <persName>Predsednik dr. Ferdo Kozak prične ob 10.15 sejo z naslednjimi besedami</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="FranceHočevar">
+    <persName>France Hočevar</persName>
+  </person>
+  <person xml:id="JakaAvšič">
+    <persName>Jaka Avšič</persName>
+  </person>
+  <person xml:id="JožeGlobačnik">
+    <persName>Jože Globačnik</persName>
+  </person>
+  <person xml:id="VladoKrivic">
+    <persName>Vlado Krivic</persName>
+  </person>
+  <person xml:id="MarijanBrccclj">
+    <persName>Dr. Marijan Brccclj</persName>
+  </person>
+  <person xml:id="JožePetejan">
+    <persName>Jože Petejan</persName>
+  </person>
+  <person xml:id="FerD">
+    <persName>Predsednik dr. Fer d O Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="TiCFErdoKozak">
+    <persName>Predsednik ti c. F erdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="VinkoHafner">
+    <persName>Vinko Hafner</persName>
+  </person>
+  <person xml:id="HeliModic">
+    <persName>Dr Heli Modic</persName>
+  </person>
+  <person xml:id="DrFerdoKozak">
+    <persName>Predsednik • d r. Ferdo Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="KarelReberšek">
+    <persName>Karel Reberšek</persName>
+  </person>
+  <person xml:id="ViktorStopar">
+    <persName>Viktor Stopar</persName>
+  </person>
+  <person xml:id="AngelaOcepek">
+    <persName>Angela Ocepek</persName>
+  </person>
+  <person xml:id="EdoMavric">
+    <persName>Edo Mavric</persName>
+  </person>
+  <person xml:id="FeRdoKozak">
+    <persName>Predsednik d r. Fe r d o Kozak</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="IvanJakomin">
+    <persName>Ivan Jakomin</persName>
+  </person>
+  <person xml:id="AlbinDuje">
+    <persName>Albin Duje</persName>
+  </person>
+  <person xml:id="VladeLrs">
+    <persName>Predsednik vlade LRS</persName>
+    <affiliation role="predsednik">
+      <roleName xml:lang="sl">Predsednik vlade</roleName>
+    </affiliation>
+  </person>
+  <person xml:id="VladeInPredsednik">
+    <persName>Podpredsednik vlade in predsednik gospodarskega sveta Ivan Maček</persName>
+    <affiliation role="podpredsednik">
+      <roleName xml:lang="sl">Podpredsednik vlade</roleName>
+    </affiliation>
+  </person>
+</listPerson>
