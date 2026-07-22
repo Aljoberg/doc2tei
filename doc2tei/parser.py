@@ -625,17 +625,28 @@ def _sanitize_tree(root: ET.Element, diagnostics: ParseDiagnostics) -> None:
                 element.set(key, " ".join(tokens))
 
 
-def _append_recovery_notes(result: ParseResult) -> None:
-    """Expose fail-soft events in the TEI header as well as diagnostics JSON."""
-    messages = [
+def _append_conversion_notes(result: ParseResult) -> None:
+    """Expose recoveries and non-fatal review warnings in the TEI header."""
+    recovery_messages = [
         f"{sample['stage']}: {sample['message']}"
         for sample in result.diagnostics.recovery_samples
     ]
     exported = result.data.get("recoveries")
     if isinstance(exported, list):
-        messages.extend(str(message) for message in exported)
-    messages = list(dict.fromkeys(message for message in messages if message))
-    if not messages:
+        recovery_messages.extend(str(message) for message in exported)
+    warnings = result.data.get("warnings")
+    warning_messages = (
+        [str(message) for message in warnings] if isinstance(warnings, list) else []
+    )
+    note_groups = (
+        ("conversionRecovery", recovery_messages),
+        ("conversionWarning", warning_messages),
+    )
+    note_groups = tuple(
+        (note_type, list(dict.fromkeys(message for message in messages if message)))
+        for note_type, messages in note_groups
+    )
+    if not any(messages for _, messages in note_groups):
         return
 
     header = result.root.find("teiHeader")
@@ -655,11 +666,12 @@ def _append_recovery_notes(result: ParseResult) -> None:
             else len(file_desc)
         )
         file_desc.insert(index, notes_stmt)
-    for index, message in enumerate(messages, start=1):
-        note = ET.SubElement(
-            notes_stmt, "note", type="conversionRecovery", n=str(index)
-        )
-        note.text = engine.xml_safe_text(message)
+    for note_type, messages in note_groups:
+        for index, message in enumerate(messages, start=1):
+            note = ET.SubElement(
+                notes_stmt, "note", type=note_type, n=str(index)
+            )
+            note.text = engine.xml_safe_text(message)
 
 
 def parse_document(
@@ -858,5 +870,5 @@ def parse_document(
         recover("hook.on_end", error)
     if recover_errors:
         _sanitize_tree(result.root, diagnostics)
-        _append_recovery_notes(result)
+        _append_conversion_notes(result)
     return result

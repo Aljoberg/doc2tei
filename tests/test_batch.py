@@ -91,7 +91,10 @@ def test_batch_job_writes_outputs_and_skips_an_unchanged_bundle(tmp_path, monkey
                 config=str(config_path),
                 chunk_count=1,
             ),
-            data={"speakers": {"#JanezNovak": "Janez Novak:"}},
+            data={
+                "speakers": {"#JanezNovak": "Janez Novak:"},
+                "warnings": ["review retained superscript"],
+            },
         )
 
     monkeypatch.setattr(batch_module, "load_config", lambda _path: loaded)
@@ -108,7 +111,10 @@ def test_batch_job_writes_outputs_and_skips_an_unchanged_bundle(tmp_path, monkey
     second = process_batch_job(job, options)
 
     assert first.status == "ok"
+    assert first.warning_count == 1
+    assert first.message == "completed with warnings"
     assert second.status == "skipped"
+    assert second.warning_count == 1
     assert calls == 1
     assert (bundle / "document.xml").is_file()
     assert (bundle / "diagnostics.json").is_file()
@@ -126,6 +132,7 @@ def test_batch_job_writes_outputs_and_skips_an_unchanged_bundle(tmp_path, monkey
     status = json.loads((bundle / "status.json").read_text(encoding="utf-8"))
     assert status["status"] == "ok"
     assert status["chunk_count"] == 1
+    assert status["warning_count"] == 1
     assert "parser" in status["fingerprint"]["implementation"]
 
     source.write_bytes(b"changed fake PDF")

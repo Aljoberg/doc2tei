@@ -744,9 +744,11 @@ def test_unresolved_superscript_is_retained_as_typography_not_a_reference(tmp_pa
     superscript = result.root.find(".//hi[@rend='superscript']")
     assert superscript is not None
     assert "7" in "".join(superscript.itertext())
-    recovery_note = result.root.find(".//note[@type='conversionRecovery']")
-    assert recovery_note is not None
-    assert "no matching footnote definition" in (recovery_note.text or "")
+    assert result.root.find(".//note[@type='conversionRecovery']") is None
+    warning_note = result.root.find(".//note[@type='conversionWarning']")
+    assert warning_note is not None
+    assert "no matching footnote definition" in (warning_note.text or "")
+    assert result.data["warnings"] == [warning_note.text]
 
 
 def test_rule_and_extractor_failures_are_recorded_without_losing_prior_text(tmp_path):

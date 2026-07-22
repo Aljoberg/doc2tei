@@ -104,6 +104,8 @@ A document-level exception does not stop the batch. The runner emits a minimal
 reviewable TEI document, diagnostics, and an `UnknownSpeaker` listPerson, marks
 the bundle `recovered`, and moves on. Only an output failure that prevents even
 that fallback is marked `failed` and makes the command return a nonzero status.
+Non-fatal review warnings remain visible in `data.json`, the TEI header, and the
+batch manifest without changing an otherwise successful document from `ok`.
 
 ### Downloading directly from SIstory
 

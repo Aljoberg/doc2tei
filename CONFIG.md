@@ -1246,8 +1246,11 @@ disables this check.
 Hard per-document failures are converted into reviewable fallback bundles and
 reported as `recovered`; they do not stop other documents or make the batch
 command fail. A `failed` status is reserved for cases where output files cannot
-be written. See `python batch_parse.py --help` for filtering, Wikidata, XML,
-and concurrency options.
+be written. Intentional best-effort outcomes that merely need human review are
+reported as warnings in `data.json`, the TEI header, each `status.json`, and the
+batch manifest; they do not change a document's `ok` status. See
+`python batch_parse.py --help` for filtering, Wikidata, XML, and concurrency
+options.
 
 The batch runner can also acquire its inputs from the bundled `sistory-dl`
 submodule before conversion:

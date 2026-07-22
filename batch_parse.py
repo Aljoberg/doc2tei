@@ -357,6 +357,9 @@ def main(argv: list[str] | None = None) -> int:
         if current == total or current % checkpoint_interval == 0:
             manifest["items"] = [item.as_dict() for item in observed]
             manifest["counts"] = batch_counts(observed)
+            manifest["warning_count"] = sum(
+                item.warning_count for item in observed
+            )
             write_batch_manifest(manifest_path, manifest)
         if not args.quiet:
             _progress(result, current, total)
@@ -382,18 +385,22 @@ def main(argv: list[str] | None = None) -> int:
         if counts["failed"]
         else "incomplete" if acquisition_failed else "complete"
     )
+    warning_count = sum(item.warning_count for item in results)
     manifest.update(
         status=final_status,
         completed_at=utc_now(),
         counts=counts,
+        warning_count=warning_count,
         # Restore deterministic discovery order in the final manifest.
         items=[item.as_dict() for item in results],
     )
     write_batch_manifest(manifest_path, manifest)
     if not args.quiet:
+        summary = ", ".join(f"{name}={count}" for name, count in counts.items())
+        if warning_count:
+            summary += f", warnings={warning_count}"
         print(
-            "Finished: "
-            + ", ".join(f"{name}={count}" for name, count in counts.items()),
+            f"Finished: {summary}",
             flush=True,
         )
         print(f"Manifest: {manifest_path}", flush=True)

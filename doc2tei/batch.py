@@ -75,6 +75,7 @@ class BatchItemResult:
     chunk_count: int = 0
     recovery_count: int = 0
     message: str = ""
+    warning_count: int = 0
 
     def as_dict(self) -> dict[str, object]:
         value = asdict(self)
@@ -353,6 +354,11 @@ def _result_recovery_count(result: ParseResult) -> int:
     return max(diagnostic_count, exported_count)
 
 
+def _result_warning_count(result: ParseResult) -> int:
+    exported = result.data.get("warnings")
+    return len(exported) if isinstance(exported, list) else 0
+
+
 def _write_result_bundle(
     result: ParseResult,
     bundle: Path,
@@ -466,6 +472,7 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
             chunk_count=int(previous.get("chunk_count", 0)),
             recovery_count=int(previous.get("recovery_count", 0)),
             message="unchanged completed bundle",
+            warning_count=int(previous.get("warning_count", 0)),
         )
 
     debug_temporary = _atomic_path(bundle / "debug.log")
@@ -479,6 +486,7 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
                     parsed = parse_document(source, config=loaded)
                     _write_result_bundle(parsed, bundle, options)
                 recoveries = _result_recovery_count(parsed)
+                warnings = _result_warning_count(parsed)
                 status: BatchStatus = "recovered" if recoveries else "ok"
                 final_result = BatchItemResult(
                     source=str(source),
@@ -487,7 +495,12 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
                     elapsed_seconds=time.perf_counter() - started,
                     chunk_count=parsed.diagnostics.chunk_count,
                     recovery_count=recoveries,
-                    message=("completed with recoveries" if recoveries else ""),
+                    message=(
+                        "completed with recoveries"
+                        if recoveries
+                        else "completed with warnings" if warnings else ""
+                    ),
+                    warning_count=warnings,
                 )
             except Exception as error:
                 traceback.print_exc(file=debug_stream)

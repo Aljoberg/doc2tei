@@ -718,9 +718,9 @@ def finish_document(result):
     footnotes.finalize()
     speaker_hook.export(result)
     if footnotes.unresolved_count:
-        recoveries = result.data.setdefault("recoveries", [])
-        if isinstance(recoveries, list):
-            recoveries.append(
+        warnings = result.data.setdefault("warnings", [])
+        if isinstance(warnings, list):
+            warnings.append(
                 f"{footnotes.unresolved_count} raised numeric run(s) had no "
                 "matching footnote definition and were preserved as "
                 "<hi rend='superscript'> instead of dangling references."
