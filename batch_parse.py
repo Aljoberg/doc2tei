@@ -168,11 +168,12 @@ def _progress(result: BatchItemResult, current: int, total: int) -> None:
     )
 
 
-def _sistory_cache_directory(base: Path, menu_path: str) -> Path:
-    normalized = normalize_sistory_menu_path(menu_path)
-    readable = re.sub(r"[^\w.-]+", "-", normalized.replace("/", "-")).strip("-.")
+def _sistory_cache_directory(base: Path, normalized_menu_path: str) -> Path:
+    readable = re.sub(
+        r"[^\w.-]+", "-", normalized_menu_path.replace("/", "-")
+    ).strip("-.")
     readable = readable[:80].rstrip("-.") or "menu"
-    digest = hashlib.sha1(normalized.encode("utf-8")).hexdigest()[:8]
+    digest = hashlib.sha1(normalized_menu_path.encode("utf-8")).hexdigest()[:8]
     return base / f"{readable}-{digest}"
 
 
@@ -200,24 +201,20 @@ def _download_sistory_inputs(
                 message=str(error),
             )
         else:
-            try:
-                result = download_sistory_menu(
-                    normalized,
-                    cache,
-                    downloader_directory=downloader_directory,
-                )
-            except Exception as error:
-                result = SIstoryDownloadResult(
-                    menu_path=normalized,
-                    output=str(cache),
-                    status="failed",
-                    stats={},
-                    message=f"{type(error).__name__}: {error}"[:500],
-                )
+            result = download_sistory_menu(
+                normalized,
+                cache,
+                downloader_directory=downloader_directory,
+            )
             # A failed refresh can still leave a useful prior cache. Discovery
             # below will parse any complete files already present there.
             if cache.is_dir():
-                roots.append(sistory_filesystem_path(cache))
+                roots.append(
+                    sistory_filesystem_path(
+                        cache,
+                        downloader_directory=downloader_directory,
+                    )
+                )
         results.append(result)
         if result.status != "ok":
             print(

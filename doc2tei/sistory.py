@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, is_dataclass
+from dataclasses import asdict, dataclass
 from functools import lru_cache
 import importlib.util
-import os
 from pathlib import Path
 from types import ModuleType
-from typing import cast
-from urllib.parse import unquote, urlsplit
 import sys
+from urllib.parse import unquote, urlsplit
 
 from type_decs import SIstoryDownloadStatus
 
@@ -60,20 +58,6 @@ def normalize_sistory_menu_path(value: str) -> str:
     return "/".join(parts)
 
 
-def sistory_filesystem_path(path: str | Path) -> Path:
-    """Use the same Windows long-path spelling as the downloader."""
-
-    value = Path(path).expanduser().absolute()
-    if os.name != "nt":
-        return value
-    absolute = str(value)
-    if absolute.startswith("\\\\?\\"):
-        return value
-    if absolute.startswith("\\\\"):
-        return Path(f"\\\\?\\UNC\\{absolute[2:]}")
-    return Path(f"\\\\?\\{absolute}")
-
-
 @lru_cache(maxsize=None)
 def _load_sistory_module(directory: str) -> ModuleType:
     root = Path(directory)
@@ -97,12 +81,20 @@ def _load_sistory_module(directory: str) -> ModuleType:
     return module
 
 
-def _stats_dict(value: object) -> dict[str, int]:
-    if is_dataclass(value) and not isinstance(value, type):
-        raw = cast(dict[str, object], asdict(value))
-    else:
-        raw = {name: getattr(value, name, 0) for name in STAT_FIELDS}
-    return {name: int(raw.get(name, 0)) for name in STAT_FIELDS}
+def sistory_filesystem_path(
+    path: str | Path,
+    *,
+    downloader_directory: str | Path = DEFAULT_SISTORY_DL_DIRECTORY,
+) -> Path:
+    """Delegate Windows long-path handling to the bundled downloader."""
+
+    value = Path(path).expanduser().absolute()
+    try:
+        module = _load_sistory_module(str(Path(downloader_directory).resolve()))
+        return module.filesystem_path(value)
+    except Exception:
+        # Cache discovery must still work when the downloader cannot be loaded.
+        return value
 
 
 def download_sistory_menu(
@@ -135,7 +127,8 @@ def download_sistory_menu(
             output_directory=output,
             dry_run=dry_run,
         )
-        stats = _stats_dict(run(options))
+        raw_stats = asdict(run(options))
+        stats = {name: int(raw_stats.get(name, 0)) for name in STAT_FIELDS}
         failed = stats.get("failed", 0)
         return SIstoryDownloadResult(
             menu_path=normalized,

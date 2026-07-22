@@ -5,10 +5,11 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 import batch_parse
 import doc2tei.sistory as sistory
 from doc2tei.sistory import SIstoryDownloadResult
-import pytest
 
 
 def test_sistory_adapter_accepts_paths_and_urls_and_returns_stats(
@@ -36,7 +37,15 @@ def test_sistory_adapter_accepts_paths_and_urls_and_returns_stats(
         observed["options"] = options
         return FakeStats()
 
-    module = SimpleNamespace(Options=FakeOptions, run=run)
+    def filesystem_path(path):
+        observed["filesystem_path"] = path
+        return path / "from-downloader"
+
+    module = SimpleNamespace(
+        Options=FakeOptions,
+        run=run,
+        filesystem_path=filesystem_path,
+    )
     monkeypatch.setattr(sistory, "_load_sistory_module", lambda _path: module)
 
     result = sistory.download_sistory_menu(
@@ -50,6 +59,13 @@ def test_sistory_adapter_accepts_paths_and_urls_and_returns_stats(
     assert result.stats["files_found"] == 4
     assert observed["options"].root_segments == ["1", "7", "397", "407"]
     assert observed["options"].dry_run is False
+
+    filesystem_result = sistory.sistory_filesystem_path(
+        tmp_path,
+        downloader_directory=tmp_path / "sistory-dl",
+    )
+    assert filesystem_result == tmp_path.absolute() / "from-downloader"
+    assert observed["filesystem_path"] == tmp_path.absolute()
 
 
 def test_sistory_adapter_turns_loader_and_download_failures_into_status(
@@ -69,6 +85,10 @@ def test_sistory_adapter_turns_loader_and_download_failures_into_status(
 
     assert result.status == "failed"
     assert "ImportError: requests unavailable" in result.message
+    assert sistory.sistory_filesystem_path(
+        tmp_path,
+        downloader_directory=tmp_path / "missing",
+    ) == tmp_path.absolute()
     invalid = sistory.download_sistory_menu("../bad", tmp_path)
     assert invalid.status == "failed"
     wrong_site = sistory.download_sistory_menu(
