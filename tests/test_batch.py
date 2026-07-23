@@ -17,7 +17,6 @@ from doc2tei.batch import (
 )
 from doc2tei.parser import LoadedConfig, ParseDiagnostics, ParseResult
 
-
 TEI_NAMESPACE = {"tei": "http://www.tei-c.org/ns/1.0"}
 
 
@@ -55,16 +54,11 @@ def test_batch_discovery_is_recursive_collision_safe_and_excludes_output(tmp_pat
         "same.docx",
         "other.PDF",
     }
-    relative_bundles = {
-        Path(job.bundle).relative_to(output).as_posix() for job in jobs
-    }
+    relative_bundles = {Path(job.bundle).relative_to(output).as_posix() for job in jobs}
     assert "nested/other" in relative_bundles
     assert len(relative_bundles) == 3
     assert any(name.startswith("same-") for name in relative_bundles)
-    groups = {
-        Path(job.source).name: Path(job.group or "")
-        for job in jobs
-    }
+    groups = {Path(job.source).name: Path(job.group or "") for job in jobs}
     assert groups["other.PDF"] == output / "nested"
     assert groups["same.pdf"] == output
     assert groups["same.docx"] == output
@@ -214,9 +208,7 @@ def test_batch_job_turns_a_hard_parser_error_into_a_reviewable_bundle(
     assert recovery_note is not None
     assert "ValueError: bad PDF" in (recovery_note.text or "")
     assert document.find(".//tei:p[@type='unparsed']", TEI_NAMESPACE) is not None
-    diagnostics = json.loads(
-        (bundle / "diagnostics.json").read_text(encoding="utf-8")
-    )
+    diagnostics = json.loads((bundle / "diagnostics.json").read_text(encoding="utf-8"))
     assert diagnostics["recovery_counts"] == {"batch.document": 1}
     assert "ValueError: bad PDF" in (bundle / "debug.log").read_text(encoding="utf-8")
     list_person = ET.parse(bundle / "listPerson.xml").getroot()
@@ -305,9 +297,13 @@ def test_batch_writes_folder_and_corpus_list_person_outputs(tmp_path):
     }
     assert not (output / "listPerson.xml").exists()
     assert not any((Path(job.bundle) / "listPerson.xml").exists() for job in jobs)
-    first_people = ET.parse(first_group / "listPerson.xml").getroot().findall(
-        "tei:person",
-        TEI_NAMESPACE,
+    first_people = (
+        ET.parse(first_group / "listPerson.xml")
+        .getroot()
+        .findall(
+            "tei:person",
+            TEI_NAMESPACE,
+        )
     )
     assert {
         person.attrib["{http://www.w3.org/XML/1998/namespace}id"]
@@ -331,9 +327,13 @@ def test_batch_writes_folder_and_corpus_list_person_outputs(tmp_path):
     assert corpus_outputs == [(output / "listPerson.xml").resolve()]
     assert not (first_group / "listPerson.xml").exists()
     assert not (second_group / "listPerson.xml").exists()
-    corpus_people = ET.parse(output / "listPerson.xml").getroot().findall(
-        "tei:person",
-        TEI_NAMESPACE,
+    corpus_people = (
+        ET.parse(output / "listPerson.xml")
+        .getroot()
+        .findall(
+            "tei:person",
+            TEI_NAMESPACE,
+        )
     )
     assert {
         person.attrib["{http://www.w3.org/XML/1998/namespace}id"]
@@ -363,11 +363,14 @@ def test_batch_writes_folder_and_corpus_list_person_outputs(tmp_path):
         write_list_person=False,
         list_person_scope="corpus",
     )
-    assert write_batch_list_person_outputs(
-        jobs,
-        output,
-        disabled_options,
-    ) == []
+    assert (
+        write_batch_list_person_outputs(
+            jobs,
+            output,
+            disabled_options,
+        )
+        == []
+    )
     assert not (output / "listPerson.xml").exists()
 
 

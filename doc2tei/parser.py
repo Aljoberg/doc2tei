@@ -671,9 +671,7 @@ def _append_conversion_notes(result: ParseResult) -> None:
         file_desc.insert(index, notes_stmt)
     for note_type, messages in note_groups:
         for index, message in enumerate(messages, start=1):
-            note = ET.SubElement(
-                notes_stmt, "note", type=note_type, n=str(index)
-            )
+            note = ET.SubElement(notes_stmt, "note", type=note_type, n=str(index))
             note.text = engine.xml_safe_text(message)
 
 

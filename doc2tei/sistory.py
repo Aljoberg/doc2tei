@@ -12,7 +12,6 @@ from urllib.parse import unquote, urlsplit
 
 from type_decs import SIstoryDownloadStatus
 
-
 DEFAULT_SISTORY_DL_DIRECTORY = Path(__file__).parents[1] / "sistory-dl"
 STAT_FIELDS = (
     "folders",

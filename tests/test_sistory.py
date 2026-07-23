@@ -85,10 +85,13 @@ def test_sistory_adapter_turns_loader_and_download_failures_into_status(
 
     assert result.status == "failed"
     assert "ImportError: requests unavailable" in result.message
-    assert sistory.sistory_filesystem_path(
-        tmp_path,
-        downloader_directory=tmp_path / "missing",
-    ) == tmp_path.absolute()
+    assert (
+        sistory.sistory_filesystem_path(
+            tmp_path,
+            downloader_directory=tmp_path / "missing",
+        )
+        == tmp_path.absolute()
+    )
     invalid = sistory.download_sistory_menu("../bad", tmp_path)
     assert invalid.status == "failed"
     wrong_site = sistory.download_sistory_menu(
@@ -133,21 +136,22 @@ def test_batch_cli_downloads_a_sistory_menu_then_parses_the_cache(
 
     monkeypatch.setattr(batch_parse, "download_sistory_menu", fake_download)
 
-    assert batch_parse.main(
-        [
-            "--sistory-menu",
-            "1/7/397/407",
-            "--output-dir",
-            str(output),
-            "--list-person-scope",
-            "folder",
-            "--quiet",
-        ]
-    ) == expected_exit
-
-    manifest = json.loads(
-        (output / "batch-manifest.json").read_text(encoding="utf-8")
+    assert (
+        batch_parse.main(
+            [
+                "--sistory-menu",
+                "1/7/397/407",
+                "--output-dir",
+                str(output),
+                "--list-person-scope",
+                "folder",
+                "--quiet",
+            ]
+        )
+        == expected_exit
     )
+
+    manifest = json.loads((output / "batch-manifest.json").read_text(encoding="utf-8"))
     assert manifest["status"] == manifest_status
     assert manifest["document_count"] == 1
     assert manifest["sistory_downloads"][0]["menu_path"] == "1/7/397/407"

@@ -288,9 +288,8 @@ class FootnoteLinker:
         if not indexes:
             return False
         prefix = "".join(run.text for run in runs[: min(indexes)]).strip()
-        return (
-            0 < len(prefix) <= 8
-            and not any(character.isalpha() for character in prefix)
+        return 0 < len(prefix) <= 8 and not any(
+            character.isalpha() for character in prefix
         )
 
     def _starts_at_text_column(self, chunk: PDFChunk) -> bool:
@@ -301,18 +300,13 @@ class FootnoteLinker:
             return True
         raw_columns = context.metadata.get("columns")
         columns = (
-            [
-                float(value)
-                for value in raw_columns
-                if isinstance(value, (int, float))
-            ]
+            [float(value) for value in raw_columns if isinstance(value, (int, float))]
             if isinstance(raw_columns, list)
             else []
         )
         return bool(
             columns
-            and min(abs(chunk.x - column) for column in columns)
-            <= context.width * 0.06
+            and min(abs(chunk.x - column) for column in columns) <= context.width * 0.06
         )
 
     def _plausible_definition_number(
@@ -388,9 +382,7 @@ class FootnoteLinker:
         ]
         return (
             sum(
-                character.isalpha()
-                for run in definition_runs
-                for character in run.text
+                character.isalpha() for run in definition_runs for character in run.text
             )
             >= 4
         )
@@ -814,9 +806,7 @@ def build_list_person(
                 bindings = fetcher(term)
                 if not isinstance(bindings, list):
                     return []
-                return [
-                    binding for binding in bindings if isinstance(binding, dict)
-                ]
+                return [binding for binding in bindings if isinstance(binding, dict)]
             except Exception:
                 return []
 

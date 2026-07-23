@@ -382,13 +382,9 @@ def _mark_tabular_labels(page: PDFPageContext, records: list[LineRecord]) -> Non
     # chosen for one particular document.
     inline_candidates: list[tuple[LineRecord, float, float, bool, bool]] = []
     for record in records:
-        meaningful_runs = [
-            run for run in record.runs if run.text and run.text.strip()
-        ]
+        meaningful_runs = [run for run in record.runs if run.text and run.text.strip()]
         for index, run in enumerate(meaningful_runs[:-1]):
-            label = " ".join(
-                item.text.strip() for item in meaningful_runs[: index + 1]
-            )
+            label = " ".join(item.text.strip() for item in meaningful_runs[: index + 1])
             if (
                 not label.endswith(":")
                 or len(label) > 72
@@ -397,8 +393,7 @@ def _mark_tabular_labels(page: PDFPageContext, records: list[LineRecord]) -> Non
                 continue
             value_run = meaningful_runs[index + 1]
             label_italic = any(
-                marker in run.font_name.casefold()
-                for marker in ("italic", "oblique")
+                marker in run.font_name.casefold() for marker in ("italic", "oblique")
             )
             style_change = run.font_name != value_run.font_name
             inline_candidates.append(
@@ -406,9 +401,7 @@ def _mark_tabular_labels(page: PDFPageContext, records: list[LineRecord]) -> Non
             )
             break
 
-    inline_clusters: list[
-        list[tuple[LineRecord, float, float, bool, bool]]
-    ] = []
+    inline_clusters: list[list[tuple[LineRecord, float, float, bool, bool]]] = []
     label_tolerance = max(8.0, page.width * 0.02)
     value_tolerance = max(5.0, page.width * 0.012)
     for candidate in sorted(inline_candidates, key=lambda item: (item[1], item[2])):
@@ -433,10 +426,9 @@ def _mark_tabular_labels(page: PDFPageContext, records: list[LineRecord]) -> Non
         style_change_count = sum(candidate[4] for candidate in cluster)
         # Three styled rows or five exceptionally regular unstyled rows are
         # stronger evidence of a table than of consecutive speaker labels.
-        styled_table = (
-            italic_count * 2 >= len(cluster)
-            and style_change_count * 2 >= len(cluster)
-        )
+        styled_table = italic_count * 2 >= len(
+            cluster
+        ) and style_change_count * 2 >= len(cluster)
         unstyled_table = len(cluster) >= 5 and (
             max(candidate[2] for candidate in cluster)
             - min(candidate[2] for candidate in cluster)
@@ -458,10 +450,7 @@ def _mark_tabular_labels(page: PDFPageContext, records: list[LineRecord]) -> Non
         if sum(character.isdigit() for character in value) < 3:
             continue
         leading_token = next(
-            (
-                token
-                for token in re.findall(r"[^\W\d_]+", value, re.UNICODE)
-            ),
+            (token for token in re.findall(r"[^\W\d_]+", value, re.UNICODE)),
             "",
         )
         if _looks_like_person_prefix(label) and not leading_token[:1].islower():
@@ -494,8 +483,7 @@ def _mark_tabular_labels(page: PDFPageContext, records: list[LineRecord]) -> Non
         for candidate in sorted(compact_rows, key=lambda item: item[0].x):
             if (
                 not compact_clusters
-                or abs(candidate[0].x - compact_clusters[-1][0][0].x)
-                > x_tolerance
+                or abs(candidate[0].x - compact_clusters[-1][0][0].x) > x_tolerance
             ):
                 compact_clusters.append([candidate])
             else:
@@ -520,10 +508,7 @@ def _mark_tabular_labels(page: PDFPageContext, records: list[LineRecord]) -> Non
                 continue
             for record, _value in cluster:
                 label = record.text.split(":", 1)[0]
-                if (
-                    has_compact_qualifier
-                    or not _looks_like_person_prefix(label)
-                ):
+                if has_compact_qualifier or not _looks_like_person_prefix(label):
                     record.metadata["tabular_label"] = True
 
 
@@ -942,8 +927,10 @@ def _collapse_spaced_letters(text: str):
                 if current.casefold() == "dr":
                     words.append(current)
                     current = core
-                elif current and core[:1].isupper() and any(
-                    character.islower() for character in current
+                elif (
+                    current
+                    and core[:1].isupper()
+                    and any(character.islower() for character in current)
                 ):
                     words.append(current)
                     current = core
@@ -1004,10 +991,7 @@ def _speaker_label_quality(label: str, frequency: int) -> tuple[int, int, int, i
     tokens = [_word_core(token) for token in prefix.split()]
     noisy = sum(
         character.isdigit()
-        or (
-            not character.isascii()
-            and "LATIN" not in unicodedata.name(character, "")
-        )
+        or (not character.isascii() and "LATIN" not in unicodedata.name(character, ""))
         for character in prefix
     )
     singletons = sum(len(token) == 1 for token in tokens if token)
@@ -1081,11 +1065,7 @@ def _remove_empty_utterances(root: ET.Element) -> None:
 
     for parent in root.iter():
         for child in list(parent):
-            if (
-                child.tag == "u"
-                and not list(child)
-                and not (child.text or "").strip()
-            ):
+            if child.tag == "u" and not list(child) and not (child.text or "").strip():
                 parent.remove(child)
 
 

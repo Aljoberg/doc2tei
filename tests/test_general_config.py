@@ -115,9 +115,7 @@ def test_appointment_list_prose_is_not_a_speaker():
     assert not module._looks_like_person_prefix(
         "Predsednik vlade je predložil skupščini naslednje"
     )
-    assert not module._looks_like_person_prefix(
-        "Predsednik opravlja tele zadeve"
-    )
+    assert not module._looks_like_person_prefix("Predsednik opravlja tele zadeve")
     assert module._looks_like_person_prefix("Boris Prešern")
     assert module._looks_like_person_prefix("Predsednik Boris Prešern")
     assert not module._looks_like_person_prefix(
@@ -409,9 +407,7 @@ def test_only_complete_parenthetical_lines_are_stage_directions():
     module = load_config(CONFIG_PATH).module
     module.PROFILE.update(mode="ocr", body_size=10.0, styled=False)
 
-    assert module.is_generic_note(
-        pdf_line("(Poslanci ploskajo.)", indent=10.0)
-    )
+    assert module.is_generic_note(pdf_line("(Poslanci ploskajo.)", indent=10.0))
     assert not module.is_generic_note(
         pdf_line("(Glede predloga želim povedati naslednje.", indent=10.0)
     )

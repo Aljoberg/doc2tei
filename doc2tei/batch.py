@@ -32,7 +32,6 @@ from .parser import (
 )
 from .tei_header import SourceBibl, TEIHeader
 
-
 SUPPORTED_EXTENSIONS = frozenset({".pdf", ".docx"})
 BATCH_MANIFEST_NAME = "batch-manifest.json"
 BUNDLE_STATUS_NAME = "status.json"
@@ -203,9 +202,7 @@ def discover_batch_jobs(
 
         iterator = specification.rglob("*") if recursive else specification.glob("*")
         prefix = Path(specification.name) if multiple_inputs else Path()
-        output_is_nested = output != specification and _is_within(
-            output, specification
-        )
+        output_is_nested = output != specification and _is_within(output, specification)
         for source in iterator:
             resolved = source.resolve()
             if (
@@ -437,9 +434,7 @@ def _write_result_bundle(
 
 def _bundle_speaker_mapping(job: BatchJob) -> Mapping[str, str]:
     try:
-        data = json.loads(
-            (Path(job.bundle) / "data.json").read_text(encoding="utf-8")
-        )
+        data = json.loads((Path(job.bundle) / "data.json").read_text(encoding="utf-8"))
     except (OSError, ValueError, TypeError):
         return {}
     mapping = data.get("speakers") if isinstance(data, dict) else None
@@ -486,22 +481,16 @@ def write_batch_list_person_outputs(
     """Write the selected listPerson layout and remove stale alternative scopes."""
 
     root = Path(output_root).expanduser().resolve()
-    document_paths = {
-        Path(job.bundle) / "listPerson.xml": job for job in jobs
-    }
+    document_paths = {Path(job.bundle) / "listPerson.xml": job for job in jobs}
     folder_paths = {
-        (
-            Path(job.group) if job.group else Path(job.bundle).parent
-        )
-        / "listPerson.xml"
+        (Path(job.group) if job.group else Path(job.bundle).parent) / "listPerson.xml"
         for job in jobs
     }
     grouped: dict[Path, list[BatchJob]] = {}
     if options.write_list_person:
         if options.list_person_scope == "document":
             grouped = {
-                destination: [job]
-                for destination, job in document_paths.items()
+                destination: [job] for destination, job in document_paths.items()
             }
         elif options.list_person_scope == "folder":
             for job in jobs:

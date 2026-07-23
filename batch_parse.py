@@ -30,7 +30,6 @@ from doc2tei.sistory import (
     sistory_filesystem_path,
 )
 
-
 DEFAULT_CONFIG = Path(__file__).parent / "examples" / "general-config" / "config.py"
 
 
@@ -179,9 +178,9 @@ def _progress(result: BatchItemResult, current: int, total: int) -> None:
 
 
 def _sistory_cache_directory(base: Path, normalized_menu_path: str) -> Path:
-    readable = re.sub(
-        r"[^\w.-]+", "-", normalized_menu_path.replace("/", "-")
-    ).strip("-.")
+    readable = re.sub(r"[^\w.-]+", "-", normalized_menu_path.replace("/", "-")).strip(
+        "-."
+    )
     readable = readable[:80].rstrip("-.") or "menu"
     digest = hashlib.sha1(normalized_menu_path.encode("utf-8")).hexdigest()[:8]
     return base / f"{readable}-{digest}"
@@ -291,9 +290,7 @@ def main(argv: list[str] | None = None) -> int:
             manifest["completed_at"] = utc_now()
             write_batch_manifest(manifest_path, manifest)
             return 130
-        manifest["sistory_downloads"] = [
-            result.as_dict() for result in sistory_results
-        ]
+        manifest["sistory_downloads"] = [result.as_dict() for result in sistory_results]
         write_batch_manifest(manifest_path, manifest)
 
     jobs: list[BatchJob] = []
@@ -374,9 +371,7 @@ def main(argv: list[str] | None = None) -> int:
         if current == total or current % checkpoint_interval == 0:
             manifest["items"] = [item.as_dict() for item in observed]
             manifest["counts"] = batch_counts(observed)
-            manifest["warning_count"] = sum(
-                item.warning_count for item in observed
-            )
+            manifest["warning_count"] = sum(item.warning_count for item in observed)
             write_batch_manifest(manifest_path, manifest)
         if not args.quiet:
             _progress(result, current, total)
