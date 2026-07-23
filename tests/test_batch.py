@@ -13,6 +13,7 @@ from doc2tei.batch import (
     automatic_document_workers,
     discover_batch_jobs,
     process_batch_job,
+    write_batch_list_person_outputs,
 )
 from doc2tei.parser import LoadedConfig, ParseDiagnostics, ParseResult
 
@@ -60,12 +61,36 @@ def test_batch_discovery_is_recursive_collision_safe_and_excludes_output(tmp_pat
     assert "nested/other" in relative_bundles
     assert len(relative_bundles) == 3
     assert any(name.startswith("same-") for name in relative_bundles)
+    groups = {
+        Path(job.source).name: Path(job.group or "")
+        for job in jobs
+    }
+    assert groups["other.PDF"] == output / "nested"
+    assert groups["same.pdf"] == output
+    assert groups["same.docx"] == output
 
     same_root_jobs, _ = discover_batch_jobs([inputs], inputs, recursive=False)
     assert {Path(job.source).name for job in same_root_jobs} == {
         "same.pdf",
         "same.docx",
     }
+
+
+def test_batch_keeps_same_named_source_folders_as_separate_groups(tmp_path):
+    first = tmp_path / "one" / "conference"
+    second = tmp_path / "two" / "conference"
+    output = tmp_path / "output"
+    first.mkdir(parents=True)
+    second.mkdir(parents=True)
+    (first / "minutes.pdf").touch()
+    (second / "minutes.pdf").touch()
+
+    jobs, warnings = discover_batch_jobs([first, second], output)
+
+    assert warnings == []
+    assert len(jobs) == 2
+    assert len({job.group for job in jobs}) == 2
+    assert all(Path(job.bundle).parent == Path(job.group or "") for job in jobs)
 
 
 def test_batch_job_writes_outputs_and_skips_an_unchanged_bundle(tmp_path, monkeypatch):
@@ -115,6 +140,15 @@ def test_batch_job_writes_outputs_and_skips_an_unchanged_bundle(tmp_path, monkey
     assert first.message == "completed with warnings"
     assert second.status == "skipped"
     assert second.warning_count == 1
+    assert calls == 1
+    folder_options = BatchOptions(
+        config=str(config_path),
+        pretty=True,
+        xml_declaration=True,
+        page_workers=1,
+        list_person_scope="folder",
+    )
+    assert process_batch_job(job, folder_options).status == "skipped"
     assert calls == 1
     assert (bundle / "document.xml").is_file()
     assert (bundle / "diagnostics.json").is_file()
@@ -205,7 +239,183 @@ def test_batch_shortens_unsafe_and_excessively_long_output_paths(tmp_path):
     source = tmp_path / "source.pdf"
 
     safe = batch_module._safe_relative_bundle(relative, source, tmp_path)
+    long_group = Path("a" * 100) / ("b" * 100) / ("c" * 100)
+    safe_group = batch_module._safe_relative_group(long_group, tmp_path)
 
     assert "CON" not in safe.parts
     assert all(len(part) <= 100 for part in safe.parts)
     assert len(str(tmp_path / safe / "diagnostics.json")) <= 240
+    assert len(str(tmp_path / safe_group / "listPerson.xml")) <= 240
+
+
+def test_batch_writes_folder_and_corpus_list_person_outputs(tmp_path):
+    output = tmp_path / "output"
+    first_group = output / "conference-a"
+    second_group = output / "conference-b"
+    jobs = [
+        BatchJob(
+            str(tmp_path / "a1.pdf"),
+            str(first_group / "a1"),
+            str(first_group),
+        ),
+        BatchJob(
+            str(tmp_path / "a2.pdf"),
+            str(first_group / "a2"),
+            str(first_group),
+        ),
+        BatchJob(
+            str(tmp_path / "b1.pdf"),
+            str(second_group / "b1"),
+            str(second_group),
+        ),
+    ]
+    mappings = [
+        {"#JanezNovak": "Janez Novak:"},
+        {
+            "#JanezNovak": "Predsednik Janez Novak:",
+            "#MajaZupan": "Maja Zupan:",
+        },
+        {"#MihaKovac": "Miha Kovač:"},
+    ]
+    for job, mapping in zip(jobs, mappings):
+        bundle = Path(job.bundle)
+        bundle.mkdir(parents=True)
+        (bundle / "data.json").write_text(
+            json.dumps({"speakers": mapping}, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        (bundle / "listPerson.xml").write_text("stale", encoding="utf-8")
+    (output / "listPerson.xml").write_text("stale", encoding="utf-8")
+
+    folder_options = BatchOptions(
+        config=str(tmp_path / "config.py"),
+        pretty=True,
+        xml_declaration=True,
+        list_person_scope="folder",
+    )
+    folder_outputs = write_batch_list_person_outputs(
+        jobs,
+        output,
+        folder_options,
+    )
+
+    assert set(folder_outputs) == {
+        (first_group / "listPerson.xml").resolve(),
+        (second_group / "listPerson.xml").resolve(),
+    }
+    assert not (output / "listPerson.xml").exists()
+    assert not any((Path(job.bundle) / "listPerson.xml").exists() for job in jobs)
+    first_people = ET.parse(first_group / "listPerson.xml").getroot().findall(
+        "tei:person",
+        TEI_NAMESPACE,
+    )
+    assert {
+        person.attrib["{http://www.w3.org/XML/1998/namespace}id"]
+        for person in first_people
+    } == {"JanezNovak", "MajaZupan"}
+    assert (
+        first_people[0].findtext("tei:persName", namespaces=TEI_NAMESPACE)
+        == "Predsednik Janez Novak"
+    )
+
+    corpus_options = BatchOptions(
+        config=str(tmp_path / "config.py"),
+        list_person_scope="corpus",
+    )
+    corpus_outputs = write_batch_list_person_outputs(
+        jobs,
+        output,
+        corpus_options,
+    )
+
+    assert corpus_outputs == [(output / "listPerson.xml").resolve()]
+    assert not (first_group / "listPerson.xml").exists()
+    assert not (second_group / "listPerson.xml").exists()
+    corpus_people = ET.parse(output / "listPerson.xml").getroot().findall(
+        "tei:person",
+        TEI_NAMESPACE,
+    )
+    assert {
+        person.attrib["{http://www.w3.org/XML/1998/namespace}id"]
+        for person in corpus_people
+    } == {"JanezNovak", "MajaZupan", "MihaKovac"}
+
+    document_options = BatchOptions(
+        config=str(tmp_path / "config.py"),
+        list_person_scope="document",
+    )
+    document_outputs = write_batch_list_person_outputs(
+        jobs,
+        output,
+        document_options,
+    )
+
+    assert set(document_outputs) == {
+        (Path(job.bundle) / "listPerson.xml").resolve() for job in jobs
+    }
+    assert not (output / "listPerson.xml").exists()
+    assert not (first_group / "listPerson.xml").exists()
+    assert not (second_group / "listPerson.xml").exists()
+    assert all(path.is_file() for path in document_outputs)
+
+    disabled_options = BatchOptions(
+        config=str(tmp_path / "config.py"),
+        write_list_person=False,
+        list_person_scope="corpus",
+    )
+    assert write_batch_list_person_outputs(
+        jobs,
+        output,
+        disabled_options,
+    ) == []
+    assert not (output / "listPerson.xml").exists()
+
+
+def test_document_list_replaces_colliding_stale_folder_list(tmp_path):
+    output = tmp_path / "output"
+    colliding_bundle_and_group = output / "conference"
+    nested_bundle = colliding_bundle_and_group / "minutes"
+    root_job = BatchJob(
+        str(tmp_path / "conference.pdf"),
+        str(colliding_bundle_and_group),
+        str(output),
+    )
+    nested_job = BatchJob(
+        str(tmp_path / "conference" / "minutes.pdf"),
+        str(nested_bundle),
+        str(colliding_bundle_and_group),
+    )
+    for job, mapping in (
+        (root_job, {"#RootSpeaker": "Root Speaker:"}),
+        (nested_job, {"#FolderSpeaker": "Folder Speaker:"}),
+    ):
+        bundle = Path(job.bundle)
+        bundle.mkdir(parents=True, exist_ok=True)
+        (bundle / "data.json").write_text(
+            json.dumps({"speakers": mapping}),
+            encoding="utf-8",
+        )
+
+    folder_options = BatchOptions(
+        config=str(tmp_path / "config.py"),
+        list_person_scope="folder",
+    )
+    write_batch_list_person_outputs(
+        [root_job, nested_job],
+        output,
+        folder_options,
+    )
+    collided = colliding_bundle_and_group / "listPerson.xml"
+    assert "Folder Speaker" in collided.read_text(encoding="utf-8")
+
+    document_options = BatchOptions(
+        config=str(tmp_path / "config.py"),
+        list_person_scope="document",
+    )
+    write_batch_list_person_outputs(
+        [root_job, nested_job],
+        output,
+        document_options,
+    )
+    assert "Root Speaker" in collided.read_text(encoding="utf-8")
+    assert "Folder Speaker" not in collided.read_text(encoding="utf-8")

@@ -57,6 +57,7 @@ SelectorTest: TypeAlias = Callable[[Chunk], bool]
 SpeakerIdentifier: TypeAlias = Callable[[str], str]
 LocalizedText: TypeAlias = Mapping[str, str]
 BatchStatus: TypeAlias = Literal["ok", "recovered", "failed", "skipped"]
+ListPersonScope: TypeAlias = Literal["document", "folder", "corpus"]
 SIstoryDownloadStatus: TypeAlias = Literal["ok", "partial", "failed"]
 
 

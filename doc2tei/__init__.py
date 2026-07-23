@@ -8,7 +8,12 @@ from .extractors import (
     RunRecord,
     WordPDFExtractor,
 )
-from .helpers import FootnoteLinker, SpeakerUtteranceHook, build_list_person
+from .helpers import (
+    FootnoteLinker,
+    SpeakerUtteranceHook,
+    build_list_person,
+    merge_speaker_mappings,
+)
 from .parser import (
     LoadedConfig,
     ParseDiagnostics,
@@ -24,6 +29,7 @@ from .batch import (
     batch_counts,
     discover_batch_jobs,
     run_batch,
+    write_batch_list_person_outputs,
 )
 from .sistory import (
     SIstoryDownloadResult,
@@ -78,6 +84,7 @@ __all__ = [
     "Text",
     "WordPDFExtractor",
     "build_list_person",
+    "merge_speaker_mappings",
     "automatic_document_workers",
     "batch_counts",
     "discover_batch_jobs",
@@ -89,4 +96,5 @@ __all__ = [
     "rule",
     "rule_group",
     "run_batch",
+    "write_batch_list_person_outputs",
 ]

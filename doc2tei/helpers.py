@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
@@ -562,6 +562,45 @@ def _normalized_name(value: str) -> str:
         for character in decomposed
         if not unicodedata.combining(character) and character.isalnum()
     )
+
+
+def _speaker_label_score(reference: str, label: str) -> tuple[float, int, int, int]:
+    """Rank labels for one stable speaker ID without merging different IDs."""
+
+    details = _speaker_details(reference, label)
+    identifier = _normalized_name(reference.removeprefix("#"))
+    name = _normalized_name(details.lookup_name)
+    similarity = SequenceMatcher(None, identifier, name).ratio()
+    noise = sum(
+        not character.isalnum()
+        and not character.isspace()
+        and character not in ".,:;()/-"
+        for character in label
+    )
+    metadata = int(details.role is not None) + int(details.organization is not None)
+    return similarity, -noise, metadata, -len(label)
+
+
+def merge_speaker_mappings(
+    mappings: Iterable[Mapping[str, str]],
+) -> dict[str, str]:
+    """Combine speaker maps, deduplicating exact IDs and keeping the best label.
+
+    IDs are deliberately not fuzzily merged across documents: doing so would
+    require rewriting their ``who`` references and could conflate two people.
+    """
+
+    merged: dict[str, str] = {}
+    for mapping in mappings:
+        for reference, label in mapping.items():
+            if not isinstance(reference, str) or not isinstance(label, str):
+                continue
+            existing = merged.get(reference)
+            if existing is None or _speaker_label_score(
+                reference, label
+            ) > _speaker_label_score(reference, existing):
+                merged[reference] = label
+    return merged
 
 
 def _binding_value(binding: WikidataBinding, key: str) -> str | None:

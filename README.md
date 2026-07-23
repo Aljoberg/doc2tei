@@ -81,10 +81,27 @@ python .\batch_parse.py "D:\documents" `
   --xml-declaration
 ```
 
-Each bundle contains `document.xml`, `listPerson.xml`, `data.json`,
-`diagnostics.json`, and `status.json`. The output root also contains a
-`batch-manifest.json` progress and result summary. Add `--include-wikidata` for
-best-effort enrichment or `--no-list-person` when no person list is needed.
+Each bundle contains `document.xml`, `data.json`, `diagnostics.json`, and
+`status.json`. By default it also contains its own `listPerson.xml`. Choose a
+different aggregation level with:
+
+```powershell
+# One list beside all document bundles downloaded into the same source folder
+python .\batch_parse.py "D:\documents" -o "D:\tei-output" `
+  --list-person-scope folder
+
+# One list covering every document in the complete batch
+python .\batch_parse.py "D:\documents" -o "D:\tei-output" `
+  --list-person-scope corpus
+```
+
+Folder-scoped lists are written in the corresponding output folder; a
+corpus-scoped list is written at `OUTPUT_DIR/listPerson.xml`. Exact speaker IDs
+are deduplicated while their document `who` references remain unchanged.
+Changing only the scope reuses existing parsed `data.json` files rather than
+reparsing PDFs. The selected scope and output paths are recorded in
+`batch-manifest.json`. Add `--include-wikidata` for best-effort enrichment or
+`--no-list-person` when no person list is needed.
 
 By default, the runner uses up to four document processes. When multiple
 documents run together, it forces each document's page extractor to one worker,

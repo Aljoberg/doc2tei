@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable, MutableMapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, MutableMapping, Sequence
 from concurrent.futures import FIRST_COMPLETED, Future, ProcessPoolExecutor, wait
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import asdict, dataclass
@@ -20,8 +20,9 @@ from typing import cast
 import xml.etree.ElementTree as ET
 
 import engine
-from type_decs import BatchStatus
+from type_decs import BatchStatus, ListPersonScope
 
+from .helpers import build_list_person, merge_speaker_mappings
 from .parser import (
     LoadedConfig,
     ParseDiagnostics,
@@ -52,6 +53,7 @@ def utc_now() -> str:
 class BatchJob:
     source: str
     bundle: str
+    group: str | None = None
 
 
 @dataclass(frozen=True)
@@ -60,6 +62,7 @@ class BatchOptions:
     pretty: bool = False
     xml_declaration: bool = False
     write_list_person: bool = True
+    list_person_scope: ListPersonScope = "document"
     include_wikidata: bool = False
     wikidata_timeout: float = 20.0
     page_workers: int | None = None
@@ -147,6 +150,20 @@ def _safe_relative_bundle(relative: Path, source: Path, output: Path) -> Path:
     return Path("_long-paths") / f"{stem[:maximum_stem].rstrip(' .-')}-{digest}"
 
 
+def _safe_relative_group(relative: Path, output: Path) -> Path:
+    """Keep source-folder grouping even when document bundles need flattening."""
+
+    if not relative.parts:
+        return Path()
+    safe = Path(*(_safe_bundle_component(part) for part in relative.parts))
+    if len(str(output / safe / "listPerson.xml")) <= MAX_BUNDLE_PATH_LENGTH:
+        return safe
+    digest = hashlib.sha1(relative.as_posix().encode("utf-8")).hexdigest()[:12]
+    name = _safe_bundle_component(relative.name or "folder")
+    maximum = MAX_BUNDLE_COMPONENT_LENGTH - len(digest) - 1
+    return Path("_groups") / f"{name[:maximum].rstrip(' .-')}-{digest}"
+
+
 def discover_batch_jobs(
     inputs: Sequence[str | Path],
     output_root: str | Path,
@@ -203,6 +220,8 @@ def discover_batch_jobs(
     jobs: list[BatchJob] = []
     seen_sources: set[str] = set()
     used_bundles: set[str] = set()
+    used_groups: set[str] = set()
+    group_paths: dict[str, Path] = {}
     for source, relative in sorted(
         candidates,
         key=lambda item: (item[1].as_posix().casefold(), str(item[0]).casefold()),
@@ -211,8 +230,25 @@ def discover_batch_jobs(
         if source_key in seen_sources:
             continue
         seen_sources.add(source_key)
+        group_relative = relative.parent
+        # The display path can collide when two separately supplied source
+        # directories have the same basename. Physical parent identity keeps
+        # those conferences distinct while still assigning readable paths.
+        group_key = os.path.normcase(str(source.parent))
+        unique_group = group_paths.get(group_key)
+        if unique_group is None:
+            safe_group = _safe_relative_group(group_relative, output)
+            group_suffix = hashlib.sha1(
+                group_relative.as_posix().encode("utf-8")
+            ).hexdigest()[:10]
+            unique_group = _unique_bundle_path(
+                safe_group,
+                used_groups,
+                group_suffix,
+            )
+            group_paths[group_key] = unique_group
         safe_relative = _safe_relative_bundle(
-            relative if relative.name else Path("document"),
+            unique_group / (relative.name or "document"),
             source,
             output,
         )
@@ -221,7 +257,13 @@ def discover_batch_jobs(
             used_bundles,
             source.suffix.removeprefix(".").casefold() or "document",
         )
-        jobs.append(BatchJob(str(source), str(output / unique_relative)))
+        jobs.append(
+            BatchJob(
+                str(source),
+                str(output / unique_relative),
+                str(output / unique_group),
+            )
+        )
     return jobs, warnings
 
 
@@ -306,15 +348,15 @@ def _job_fingerprint(job: BatchJob, options: BatchOptions) -> dict[str, object]:
     }
 
 
-def _required_outputs(bundle: Path, options: BatchOptions) -> list[Path]:
-    required = [
+def _required_outputs(bundle: Path) -> list[Path]:
+    # listPerson scope is a cheap post-processing choice over data.json. It is
+    # deliberately not part of completion so changing scopes never reparses a
+    # PDF; write_batch_list_person_outputs repairs the selected sidecars.
+    return [
         bundle / "document.xml",
         bundle / "diagnostics.json",
         bundle / "data.json",
     ]
-    if options.write_list_person:
-        required.append(bundle / "listPerson.xml")
-    return required
 
 
 def _completed_status(
@@ -335,7 +377,7 @@ def _completed_status(
         return None
     if status.get("fingerprint") != fingerprint:
         return None
-    complete = all(path.is_file() for path in _required_outputs(bundle, options))
+    complete = all(path.is_file() for path in _required_outputs(bundle))
     return status if complete else None
 
 
@@ -375,7 +417,7 @@ def _write_result_bundle(
     )
     _atomic_result_write(bundle / "diagnostics.json", result.write_diagnostics)
     _atomic_result_write(bundle / "data.json", result.write_data)
-    if options.write_list_person:
+    if options.write_list_person and options.list_person_scope == "document":
         _atomic_result_write(
             bundle / "listPerson.xml",
             lambda path: result.write_list_person(
@@ -391,6 +433,110 @@ def _write_result_bundle(
         )
     else:
         (bundle / "listPerson.xml").unlink(missing_ok=True)
+
+
+def _bundle_speaker_mapping(job: BatchJob) -> Mapping[str, str]:
+    try:
+        data = json.loads(
+            (Path(job.bundle) / "data.json").read_text(encoding="utf-8")
+        )
+    except (OSError, ValueError, TypeError):
+        return {}
+    mapping = data.get("speakers") if isinstance(data, dict) else None
+    if not isinstance(mapping, dict):
+        return {}
+    return {
+        reference: label
+        for reference, label in mapping.items()
+        if isinstance(reference, str) and isinstance(label, str)
+    }
+
+
+def _write_list_person_mapping(
+    destination: Path,
+    mapping: Mapping[str, str],
+    options: BatchOptions,
+) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+
+    def writer(path: Path) -> None:
+        root = build_list_person(
+            mapping,
+            include_wikidata=options.include_wikidata,
+            wikidata_workers=4,
+            wikidata_timeout=options.wikidata_timeout,
+        )
+        if options.pretty:
+            ET.indent(root, space="  ")
+        content = ET.tostring(
+            root,
+            encoding="utf-8",
+            xml_declaration=options.xml_declaration,
+        )
+        path.write_bytes(content + (b"\n" if options.pretty else b""))
+
+    _atomic_result_write(destination, writer)
+
+
+def write_batch_list_person_outputs(
+    jobs: Sequence[BatchJob],
+    output_root: str | Path,
+    options: BatchOptions,
+) -> list[Path]:
+    """Write the selected listPerson layout and remove stale alternative scopes."""
+
+    root = Path(output_root).expanduser().resolve()
+    document_paths = {
+        Path(job.bundle) / "listPerson.xml": job for job in jobs
+    }
+    folder_paths = {
+        (
+            Path(job.group) if job.group else Path(job.bundle).parent
+        )
+        / "listPerson.xml"
+        for job in jobs
+    }
+    grouped: dict[Path, list[BatchJob]] = {}
+    if options.write_list_person:
+        if options.list_person_scope == "document":
+            grouped = {
+                destination: [job]
+                for destination, job in document_paths.items()
+            }
+        elif options.list_person_scope == "folder":
+            for job in jobs:
+                group = Path(job.group) if job.group else Path(job.bundle).parent
+                grouped.setdefault(group / "listPerson.xml", []).append(job)
+        elif options.list_person_scope == "corpus":
+            grouped[root / "listPerson.xml"] = list(jobs)
+        else:
+            raise ValueError(
+                f"unsupported listPerson scope: {options.list_person_scope}"
+            )
+
+    for destination, group_jobs in grouped.items():
+        # Document-scoped files were already produced beside each parse. This
+        # fallback only repairs a missing sidecar, avoiding duplicate Wikidata
+        # requests during normal runs.
+        if (
+            options.list_person_scope == "document"
+            and destination.is_file()
+            and destination not in folder_paths
+        ):
+            continue
+        mapping = merge_speaker_mappings(
+            _bundle_speaker_mapping(job) for job in group_jobs
+        )
+        _write_list_person_mapping(destination, mapping, options)
+
+    desired = {path.resolve() for path in grouped}
+    candidates = {root / "listPerson.xml"}
+    candidates.update(document_paths)
+    candidates.update(folder_paths)
+    for candidate in candidates:
+        if candidate.resolve() not in desired:
+            candidate.unlink(missing_ok=True)
+    return sorted(desired, key=lambda path: str(path).casefold())
 
 
 def _failure_parse_result(

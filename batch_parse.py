@@ -19,6 +19,7 @@ from doc2tei.batch import (
     discover_batch_jobs,
     run_batch,
     utc_now,
+    write_batch_list_person_outputs,
     write_batch_manifest,
 )
 from doc2tei.sistory import (
@@ -122,6 +123,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--no-list-person",
         action="store_true",
         help="do not generate listPerson.xml",
+    )
+    parser.add_argument(
+        "--list-person-scope",
+        choices=("document", "folder", "corpus"),
+        default="document",
+        help=(
+            "generate one listPerson per document, source folder, or complete "
+            "batch corpus (default: document)"
+        ),
     )
     parser.add_argument(
         "--include-wikidata",
@@ -252,6 +262,11 @@ def main(argv: list[str] | None = None) -> int:
         "started_at": started_at,
         "config": str(config),
         "output": str(output_root),
+        "list_person": {
+            "enabled": not args.no_list_person,
+            "scope": args.list_person_scope,
+            "outputs": [],
+        },
         "items": [],
     }
     write_batch_manifest(manifest_path, manifest)
@@ -335,6 +350,7 @@ def main(argv: list[str] | None = None) -> int:
         pretty=args.pretty,
         xml_declaration=args.xml_declaration,
         write_list_person=not args.no_list_person,
+        list_person_scope=args.list_person_scope,
         include_wikidata=args.include_wikidata,
         wikidata_timeout=args.wikidata_timeout,
         page_workers=page_workers,
@@ -345,6 +361,7 @@ def main(argv: list[str] | None = None) -> int:
         document_workers=document_workers,
         page_workers="config" if page_workers is None else page_workers,
         document_count=len(jobs),
+        list_person_scope=args.list_person_scope,
         discovery_warnings=warnings,
     )
     write_batch_manifest(manifest_path, manifest)
@@ -378,11 +395,31 @@ def main(argv: list[str] | None = None) -> int:
         write_batch_manifest(manifest_path, manifest)
         return 130
 
+    list_person_paths: list[Path] = []
+    list_person_error = ""
+    try:
+        if not args.quiet and not args.no_list_person:
+            print(
+                f"Building listPerson output(s): {args.list_person_scope}",
+                flush=True,
+            )
+        list_person_paths = write_batch_list_person_outputs(
+            jobs,
+            output_root,
+            options,
+        )
+    except Exception as error:
+        list_person_error = f"{type(error).__name__}: {error}"[:500]
+        print(
+            f"error: listPerson generation failed: {list_person_error}",
+            file=sys.stderr,
+        )
+
     counts = batch_counts(results)
     acquisition_failed = any(result.status != "ok" for result in sistory_results)
     final_status = (
         "failed"
-        if counts["failed"]
+        if counts["failed"] or list_person_error
         else "incomplete" if acquisition_failed else "complete"
     )
     warning_count = sum(item.warning_count for item in results)
@@ -391,6 +428,12 @@ def main(argv: list[str] | None = None) -> int:
         completed_at=utc_now(),
         counts=counts,
         warning_count=warning_count,
+        list_person={
+            "enabled": not args.no_list_person,
+            "scope": args.list_person_scope,
+            "outputs": [str(path) for path in list_person_paths],
+            **({"error": list_person_error} if list_person_error else {}),
+        },
         # Restore deterministic discovery order in the final manifest.
         items=[item.as_dict() for item in results],
     )
@@ -403,8 +446,14 @@ def main(argv: list[str] | None = None) -> int:
             f"Finished: {summary}",
             flush=True,
         )
+        if list_person_paths:
+            print(
+                f"listPerson: scope={args.list_person_scope}, "
+                f"files={len(list_person_paths)}",
+                flush=True,
+            )
         print(f"Manifest: {manifest_path}", flush=True)
-    return 1 if counts["failed"] or acquisition_failed else 0
+    return 1 if counts["failed"] or acquisition_failed or list_person_error else 0
 
 
 if __name__ == "__main__":

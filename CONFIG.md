@@ -1232,6 +1232,27 @@ directory layout, writes one output bundle per document, and maintains
 `batch-manifest.json`. The default config is
 `examples/general-config/config.py`; select another with `--config`.
 
+Speaker lists support three scopes:
+
+```bash
+# Default: OUTPUT/.../document/listPerson.xml
+python batch_parse.py documents -o out --list-person-scope document
+
+# One OUTPUT/.../source-folder/listPerson.xml for each input folder
+python batch_parse.py documents -o out --list-person-scope folder
+
+# One OUTPUT/listPerson.xml for the complete discovered corpus
+python batch_parse.py documents -o out --list-person-scope corpus
+```
+
+Folder identity is retained even when long document paths have to be shortened.
+Combined lists deduplicate exact speaker IDs without fuzzily merging different
+IDs, so existing document `who` references remain valid. `--include-wikidata`
+enriches the resulting combined list rather than repeating lookups for every
+document. Changing only `--list-person-scope` rebuilds the inexpensive XML
+sidecars from existing `data.json` files and does not reparse the source PDFs.
+Use `--no-list-person` to suppress all three forms.
+
 `--workers 0` (the default) uses up to four document processes. Multiple
 document workers automatically imply `page_workers=1`, avoiding nested process
 pools. Use `--workers 1` to process documents sequentially while retaining the
