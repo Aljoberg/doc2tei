@@ -16,7 +16,7 @@ from doc2tei.batch import (
     document_path,
     metadata_dir,
     process_batch_job,
-    write_batch_corpus_outputs,
+    write_batch_subcorpus_outputs,
     write_batch_list_person_outputs,
 )
 from doc2tei.helpers import build_tei_corpus
@@ -503,7 +503,7 @@ def test_build_tei_corpus_without_list_person_has_no_particdesc():
     assert _include_hrefs(corpus) == ["documents/a.xml"]
 
 
-def _corpus_jobs_with_documents(tmp_path):
+def _subcorpus_jobs_with_documents(tmp_path):
     output = tmp_path / "output"
     group = output / "mandate"
     jobs = [
@@ -517,21 +517,21 @@ def _corpus_jobs_with_documents(tmp_path):
     return output, group, jobs
 
 
-def _corpus_options(tmp_path, **overrides):
+def _subcorpus_options(tmp_path, **overrides):
     return BatchOptions(
         config=str(tmp_path / "config.py"),
-        emit_corpus=True,
+        emit_subcorpus=True,
         pretty=True,
         **overrides,
     )
 
 
-def test_write_batch_corpus_folder_scope_aggregates_and_includes_one_list(tmp_path):
-    output, group, jobs = _corpus_jobs_with_documents(tmp_path)
+def test_write_batch_subcorpus_folder_scope_aggregates_and_includes_one_list(tmp_path):
+    output, group, jobs = _subcorpus_jobs_with_documents(tmp_path)
     (group / "listPerson.xml").write_text("<listPerson/>", encoding="utf-8")
 
-    outputs = write_batch_corpus_outputs(
-        jobs, output, _corpus_options(tmp_path, list_person_scope="folder")
+    outputs = write_batch_subcorpus_outputs(
+        jobs, output, _subcorpus_options(tmp_path, list_person_scope="folder")
     )
 
     assert outputs == [group / "mandate.xml"]
@@ -544,17 +544,17 @@ def test_write_batch_corpus_folder_scope_aggregates_and_includes_one_list(tmp_pa
     assert 'unit="texts" quantity="2"' in text
     assert 'unit="speeches" quantity="8"' in text
     assert 'unit="words" quantity="300"' in text
-    # The group folder name titles the corpus.
+    # The group folder name titles the subcorpus.
     assert '<title type="main" xml:lang="sl">mandate</title>' in text
 
 
-def test_write_batch_corpus_document_scope_includes_each_existing_list(tmp_path):
-    output, group, jobs = _corpus_jobs_with_documents(tmp_path)
+def test_write_batch_subcorpus_document_scope_includes_each_existing_list(tmp_path):
+    output, group, jobs = _subcorpus_jobs_with_documents(tmp_path)
     # Only the first document has a per-document list on disk.
     document_list_person_path(jobs[0]).write_text("<listPerson/>", encoding="utf-8")
 
-    write_batch_corpus_outputs(
-        jobs, output, _corpus_options(tmp_path, list_person_scope="document")
+    write_batch_subcorpus_outputs(
+        jobs, output, _subcorpus_options(tmp_path, list_person_scope="document")
     )
 
     text = (group / "mandate.xml").read_text(encoding="utf-8")
@@ -562,12 +562,12 @@ def test_write_batch_corpus_document_scope_includes_each_existing_list(tmp_path)
     assert "b.listPerson.xml" not in text
 
 
-def test_write_batch_corpus_corpus_scope_omits_list_person(tmp_path):
-    output, group, jobs = _corpus_jobs_with_documents(tmp_path)
+def test_write_batch_subcorpus_corpus_scope_omits_list_person(tmp_path):
+    output, group, jobs = _subcorpus_jobs_with_documents(tmp_path)
     (output / "listPerson.xml").write_text("<listPerson/>", encoding="utf-8")
 
-    write_batch_corpus_outputs(
-        jobs, output, _corpus_options(tmp_path, list_person_scope="corpus")
+    write_batch_subcorpus_outputs(
+        jobs, output, _subcorpus_options(tmp_path, list_person_scope="corpus")
     )
 
     text = (group / "mandate.xml").read_text(encoding="utf-8")
@@ -575,9 +575,9 @@ def test_write_batch_corpus_corpus_scope_omits_list_person(tmp_path):
     assert "particDesc" not in text
 
 
-def test_write_batch_corpus_disabled_emits_nothing(tmp_path):
-    output, group, jobs = _corpus_jobs_with_documents(tmp_path)
-    disabled = BatchOptions(config=str(tmp_path / "config.py"), emit_corpus=False)
+def test_write_batch_subcorpus_disabled_emits_nothing(tmp_path):
+    output, group, jobs = _subcorpus_jobs_with_documents(tmp_path)
+    disabled = BatchOptions(config=str(tmp_path / "config.py"), emit_subcorpus=False)
 
-    assert write_batch_corpus_outputs(jobs, output, disabled) == []
+    assert write_batch_subcorpus_outputs(jobs, output, disabled) == []
     assert not (group / "mandate.xml").exists()

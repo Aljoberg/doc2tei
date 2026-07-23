@@ -95,8 +95,8 @@ class BatchOptions:
     wikidata_timeout: float = 20.0
     page_workers: int | None = None
     overwrite: bool = False
-    emit_corpus: bool = False
-    corpus_language: str = "sl"
+    emit_subcorpus: bool = False
+    subcorpus_language: str = "sl"
 
 
 @dataclass(frozen=True)
@@ -575,10 +575,10 @@ def write_batch_list_person_outputs(
     return sorted(desired, key=lambda path: str(path).casefold())
 
 
-def _corpus_path(group: Path) -> Path:
+def _subcorpus_path(group: Path) -> Path:
     """Where a group's ``teiCorpus`` file is written, named after the group."""
 
-    name = _safe_bundle_component(group.name or "corpus")
+    name = _safe_bundle_component(group.name or "subcorpus")
     destination = group / f"{name}.xml"
     fit = MAX_BUNDLE_PATH_LENGTH - _ATOMIC_TEMP_RESERVE
     if len(str(destination)) <= fit:
@@ -589,7 +589,7 @@ def _corpus_path(group: Path) -> Path:
     return group / f"{name}.xml"
 
 
-def _corpus_document_counts(document_file: Path) -> dict[str, int]:
+def _subcorpus_document_counts(document_file: Path) -> dict[str, int]:
     """Best-effort speech/word counts read from a written document's extent."""
 
     try:
@@ -608,19 +608,19 @@ def _corpus_document_counts(document_file: Path) -> dict[str, int]:
     return counts
 
 
-def _corpus_header(
+def _subcorpus_header(
     group: Path, jobs: Sequence[BatchJob], options: BatchOptions
 ) -> ET.Element:
-    """A skeleton corpus ``teiHeader`` titled after the group, with aggregates.
+    """A skeleton subcorpus ``teiHeader`` titled after the group, with aggregates.
 
     The parser fills each document's own header; here we only sum the already
-    computed speech/word counts and title the corpus after its folder so the
+    computed speech/word counts and title the subcorpus after its folder so the
     result is a valid, reviewable header ready to be enriched by hand.
     """
 
     totals: Counter[str] = Counter()
     for job in jobs:
-        for unit, value in _corpus_document_counts(document_path(job)).items():
+        for unit, value in _subcorpus_document_counts(document_path(job)).items():
             totals[unit] += value
     measures = [
         Measure(unit="texts", quantity=str(len(jobs)), texts={"": f"{len(jobs)} texts"})
@@ -634,24 +634,28 @@ def _corpus_header(
                     texts={"": f"{totals[unit]} {unit}"},
                 )
             )
-    language = options.corpus_language
-    title = group.name or "Corpus"
+    language = options.subcorpus_language
+    title = group.name or "Subcorpus"
     return TEIHeader(
-        tei_id=engine.sanitize_xml_id(group.name or "corpus", prefix="corpus"),
+        tei_id=_subcorpus_id(group),
         language=language,
         main_titles={language: title},
         measures=measures,
     ).build()
 
 
-def _corpus_list_person_hrefs(
+def _subcorpus_id(group: Path) -> str:
+    return engine.sanitize_xml_id(group.name or "subcorpus", prefix="subcorpus")
+
+
+def _subcorpus_list_person_hrefs(
     group: Path, jobs: Sequence[BatchJob], options: BatchOptions
 ) -> list[str]:
     """XInclude targets for speaker lists, matching the active scope.
 
     ``document`` references every per-document list that exists, ``folder`` the
     single group-wide list, and ``corpus`` none -- that list lives at the output
-    root and is deliberately left out of the group corpus.
+    root and is deliberately left out of the per-group subcorpus.
     """
 
     if not options.write_list_person:
@@ -667,7 +671,9 @@ def _corpus_list_person_hrefs(
     return []
 
 
-def _write_corpus_xml(path: Path, *, root: ET.Element, options: BatchOptions) -> None:
+def _write_subcorpus_xml(
+    path: Path, *, root: ET.Element, options: BatchOptions
+) -> None:
     if options.pretty:
         ET.indent(root, space="  ")
     content = ET.tostring(
@@ -676,19 +682,20 @@ def _write_corpus_xml(path: Path, *, root: ET.Element, options: BatchOptions) ->
     path.write_bytes(content + (b"\n" if options.pretty else b""))
 
 
-def write_batch_corpus_outputs(
+def write_batch_subcorpus_outputs(
     jobs: Sequence[BatchJob],
     output_root: str | Path,
     options: BatchOptions,
 ) -> list[Path]:
-    """Emit one ``teiCorpus`` per source folder, XIncluding its bundle.
+    """Emit one subcorpus ``teiCorpus`` per source folder, XIncluding its bundle.
 
-    Each group's corpus file references that group's ``documents`` and, when a
+    Each group's subcorpus file references that group's ``documents`` and, when a
     speaker list exists at the active scope, its ``listPerson`` file(s). No
-    output is produced unless ``options.emit_corpus`` is set.
+    output is produced unless ``options.emit_subcorpus`` is set. These are the
+    per-group members of an eventual top-level corpus, not the corpus itself.
     """
 
-    if not options.emit_corpus:
+    if not options.emit_subcorpus:
         return []
     grouped: dict[str, list[BatchJob]] = {}
     for job in jobs:
@@ -701,16 +708,16 @@ def write_batch_corpus_outputs(
         document_hrefs = [
             document_path(job).relative_to(group).as_posix() for job in group_jobs
         ]
-        corpus = build_tei_corpus(
+        subcorpus = build_tei_corpus(
             document_hrefs,
-            header=_corpus_header(group, group_jobs, options),
-            list_person_hrefs=_corpus_list_person_hrefs(group, group_jobs, options),
-            corpus_id=engine.sanitize_xml_id(group.name or "corpus", prefix="corpus"),
-            language=options.corpus_language,
+            header=_subcorpus_header(group, group_jobs, options),
+            list_person_hrefs=_subcorpus_list_person_hrefs(group, group_jobs, options),
+            corpus_id=_subcorpus_id(group),
+            language=options.subcorpus_language,
         )
-        destination = _corpus_path(group)
+        destination = _subcorpus_path(group)
         _atomic_result_write(
-            destination, partial(_write_corpus_xml, root=corpus, options=options)
+            destination, partial(_write_subcorpus_xml, root=subcorpus, options=options)
         )
         written.append(destination)
     return sorted(written, key=lambda path: str(path).casefold())

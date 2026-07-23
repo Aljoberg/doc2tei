@@ -1258,18 +1258,20 @@ document. Changing only `--list-person-scope` rebuilds the inexpensive XML
 sidecars from existing `data.json` files and does not reparse the source PDFs.
 Use `--no-list-person` to suppress all three forms.
 
-`--corpus` additionally emits one `<teiCorpus>` per source folder, modelled on
-the siParl mandate corpora (e.g. `SDT2.xml`). Each is named after its folder,
-sits beside that folder's `documents/`, and pairs a generated corpus
-`teiHeader` (titled after the folder, with the constituent documents' speech and
-word counts summed into `<extent>`) with an `<xi:include>` per document. Speaker
-lists are referenced, not inlined: one `listPerson.xml` under `particDesc` at
-`folder` scope, each per-document list at `document` scope, and none at `corpus`
-scope (that single list stays at the output root). `--corpus-lang` sets the
-header's `xml:lang` (default `sl`). Corpus generation is a post-processing pass
-over the written outputs, so it does not reparse the source PDFs. Because the
-component paths are relative, the file XIncludes correctly wherever the folder is
-moved, as long as `documents/` and the listPerson file move with it.
+`--subcorpus` additionally emits one per-group subcorpus (`<teiCorpus>`) per
+source folder, modelled on the siParl mandate corpora (e.g. `SDT2.xml`). Each is
+named after its folder, sits beside that folder's `documents/`, and pairs a
+generated `teiHeader` (titled after the folder, with the constituent documents'
+speech and word counts summed into `<extent>`) with an `<xi:include>` per
+document. These are the per-group members of an eventual top-level corpus, not
+the corpus itself. Speaker lists are referenced, not inlined: one
+`listPerson.xml` under `particDesc` at `folder` scope, each per-document list at
+`document` scope, and none at `corpus` scope (that single list stays at the
+output root). `--subcorpus-lang` sets the header's `xml:lang` (default `sl`).
+Subcorpus generation is a post-processing pass over the written outputs, so it
+does not reparse the source PDFs. Because the component paths are relative, the
+file XIncludes correctly wherever the folder is moved, as long as `documents/`
+and the listPerson file move with it.
 
 `--workers 0` (the default) uses up to four document processes. Multiple
 document workers automatically imply `page_workers=1`, avoiding nested process
