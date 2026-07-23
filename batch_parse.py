@@ -19,6 +19,7 @@ from doc2tei.batch import (
     discover_batch_jobs,
     run_batch,
     utc_now,
+    write_batch_corpus_outputs,
     write_batch_list_person_outputs,
     write_batch_manifest,
 )
@@ -131,6 +132,19 @@ def build_parser() -> argparse.ArgumentParser:
             "generate one listPerson per document, source folder, or complete "
             "batch corpus (default: document)"
         ),
+    )
+    parser.add_argument(
+        "--corpus",
+        action="store_true",
+        help=(
+            "emit a group-wise teiCorpus XML per source folder that XIncludes "
+            "its documents and listPerson file(s), modelled on siParl mandates"
+        ),
+    )
+    parser.add_argument(
+        "--corpus-lang",
+        default="sl",
+        help="xml:lang for the emitted teiCorpus header (default: sl)",
     )
     parser.add_argument(
         "--include-wikidata",
@@ -266,6 +280,10 @@ def main(argv: list[str] | None = None) -> int:
             "scope": args.list_person_scope,
             "outputs": [],
         },
+        "corpus": {
+            "enabled": args.corpus,
+            "outputs": [],
+        },
         "items": [],
     }
     write_batch_manifest(manifest_path, manifest)
@@ -352,6 +370,8 @@ def main(argv: list[str] | None = None) -> int:
         wikidata_timeout=args.wikidata_timeout,
         page_workers=page_workers,
         overwrite=args.overwrite,
+        emit_corpus=args.corpus,
+        corpus_language=args.corpus_lang,
     )
     manifest.update(
         status="running",
@@ -410,11 +430,25 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
 
+    corpus_paths: list[Path] = []
+    corpus_error = ""
+    if args.corpus:
+        try:
+            if not args.quiet:
+                print("Building group-wise teiCorpus output(s)", flush=True)
+            corpus_paths = write_batch_corpus_outputs(jobs, output_root, options)
+        except Exception as error:
+            corpus_error = f"{type(error).__name__}: {error}"[:500]
+            print(
+                f"error: teiCorpus generation failed: {corpus_error}",
+                file=sys.stderr,
+            )
+
     counts = batch_counts(results)
     acquisition_failed = any(result.status != "ok" for result in sistory_results)
     final_status = (
         "failed"
-        if counts["failed"] or list_person_error
+        if counts["failed"] or list_person_error or corpus_error
         else "incomplete" if acquisition_failed else "complete"
     )
     warning_count = sum(item.warning_count for item in results)
@@ -428,6 +462,11 @@ def main(argv: list[str] | None = None) -> int:
             "scope": args.list_person_scope,
             "outputs": [str(path) for path in list_person_paths],
             **({"error": list_person_error} if list_person_error else {}),
+        },
+        corpus={
+            "enabled": args.corpus,
+            "outputs": [str(path) for path in corpus_paths],
+            **({"error": corpus_error} if corpus_error else {}),
         },
         # Restore deterministic discovery order in the final manifest.
         items=[item.as_dict() for item in results],
@@ -447,8 +486,14 @@ def main(argv: list[str] | None = None) -> int:
                 f"files={len(list_person_paths)}",
                 flush=True,
             )
+        if corpus_paths:
+            print(f"teiCorpus: files={len(corpus_paths)}", flush=True)
         print(f"Manifest: {manifest_path}", flush=True)
-    return 1 if counts["failed"] or acquisition_failed or list_person_error else 0
+    return (
+        1
+        if counts["failed"] or acquisition_failed or list_person_error or corpus_error
+        else 0
+    )
 
 
 if __name__ == "__main__":

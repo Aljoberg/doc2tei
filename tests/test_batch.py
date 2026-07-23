@@ -16,15 +16,37 @@ from doc2tei.batch import (
     document_path,
     metadata_dir,
     process_batch_job,
+    write_batch_corpus_outputs,
     write_batch_list_person_outputs,
 )
+from doc2tei.helpers import build_tei_corpus
 from doc2tei.parser import LoadedConfig, ParseDiagnostics, ParseResult
+from doc2tei.tei_header import TEIHeader
 
 TEI_NAMESPACE = {"tei": "http://www.tei-c.org/ns/1.0"}
 
 
 def _job(source: Path, group: Path, title: str) -> BatchJob:
     return BatchJob(str(source), str(group), title)
+
+
+def _include_hrefs(parent: ET.Element) -> list[str]:
+    """hrefs of the direct ``xi:include`` children of an in-memory element.
+
+    The builders use literal ``xi:include`` tags (no namespace registration), so
+    ElementPath prefix lookups don't apply -- match the tag string directly.
+    """
+
+    return [child.get("href") for child in parent if child.tag == "xi:include"]
+
+
+def _fake_document(speeches: int, words: int) -> str:
+    return (
+        '<TEI xmlns="http://www.tei-c.org/ns/1.0"><teiHeader><fileDesc><extent>'
+        f'<measure unit="speeches" quantity="{speeches}">{speeches} speeches</measure>'
+        f'<measure unit="words" quantity="{words}">{words} words</measure>'
+        "</extent></fileDesc></teiHeader><text/></TEI>"
+    )
 
 
 def _loaded_config(path: Path) -> LoadedConfig:
@@ -443,3 +465,113 @@ def test_scope_switch_separates_document_and_folder_list_person(tmp_path):
     assert "Folder Speaker" in document_list_person_path(nested_job).read_text(
         encoding="utf-8"
     )
+
+
+def test_build_tei_corpus_structure_and_list_person_placement():
+    header = TEIHeader(main_titles={"sl": "2. mandat"}).build()
+    corpus = build_tei_corpus(
+        ["documents/a.xml", "documents/b.xml"],
+        header=header,
+        list_person_hrefs=["listPerson.xml"],
+        corpus_id="corpus.mandat-2",
+        language="sl",
+    )
+
+    assert corpus.tag == "teiCorpus"
+    assert corpus.get("xmlns") == "http://www.tei-c.org/ns/1.0"
+    assert corpus.get("xmlns:xi") == "http://www.w3.org/2001/XInclude"
+    assert corpus.get("xml:id") == "corpus.mandat-2"
+    assert corpus.get("xml:lang") == "sl"
+    # The header is retained and speaker lists are referenced from particDesc,
+    # not inlined, without clobbering the header's existing settingDesc.
+    profile = corpus.find("teiHeader/profileDesc")
+    assert profile.find("settingDesc") is not None
+    assert _include_hrefs(profile.find("particDesc")) == ["listPerson.xml"]
+    # One document include per href, as direct children after the header.
+    assert _include_hrefs(corpus) == ["documents/a.xml", "documents/b.xml"]
+
+
+def test_build_tei_corpus_without_list_person_has_no_particdesc():
+    corpus = build_tei_corpus(["documents/a.xml"], header=TEIHeader().build())
+    assert corpus.find("teiHeader/profileDesc/particDesc") is None
+    assert _include_hrefs(corpus) == ["documents/a.xml"]
+
+
+def _corpus_jobs_with_documents(tmp_path):
+    output = tmp_path / "output"
+    group = output / "mandate"
+    jobs = [
+        _job(tmp_path / "a.pdf", group, "a"),
+        _job(tmp_path / "b.pdf", group, "b"),
+    ]
+    for job, speeches, words in ((jobs[0], 3, 100), (jobs[1], 5, 200)):
+        document = document_path(job)
+        document.parent.mkdir(parents=True, exist_ok=True)
+        document.write_text(_fake_document(speeches, words), encoding="utf-8")
+    return output, group, jobs
+
+
+def _corpus_options(tmp_path, **overrides):
+    return BatchOptions(
+        config=str(tmp_path / "config.py"),
+        emit_corpus=True,
+        pretty=True,
+        **overrides,
+    )
+
+
+def test_write_batch_corpus_folder_scope_aggregates_and_includes_one_list(tmp_path):
+    output, group, jobs = _corpus_jobs_with_documents(tmp_path)
+    (group / "listPerson.xml").write_text("<listPerson/>", encoding="utf-8")
+
+    outputs = write_batch_corpus_outputs(
+        jobs, output, _corpus_options(tmp_path, list_person_scope="folder")
+    )
+
+    assert outputs == [group / "mandate.xml"]
+    text = (group / "mandate.xml").read_text(encoding="utf-8")
+    assert "<teiCorpus" in text
+    assert 'href="documents/a.xml"' in text
+    assert 'href="documents/b.xml"' in text
+    assert 'href="listPerson.xml"' in text
+    # Extents are summed across the group's documents.
+    assert 'unit="texts" quantity="2"' in text
+    assert 'unit="speeches" quantity="8"' in text
+    assert 'unit="words" quantity="300"' in text
+    # The group folder name titles the corpus.
+    assert '<title type="main" xml:lang="sl">mandate</title>' in text
+
+
+def test_write_batch_corpus_document_scope_includes_each_existing_list(tmp_path):
+    output, group, jobs = _corpus_jobs_with_documents(tmp_path)
+    # Only the first document has a per-document list on disk.
+    document_list_person_path(jobs[0]).write_text("<listPerson/>", encoding="utf-8")
+
+    write_batch_corpus_outputs(
+        jobs, output, _corpus_options(tmp_path, list_person_scope="document")
+    )
+
+    text = (group / "mandate.xml").read_text(encoding="utf-8")
+    assert 'href="documents/a.listPerson.xml"' in text
+    assert "b.listPerson.xml" not in text
+
+
+def test_write_batch_corpus_corpus_scope_omits_list_person(tmp_path):
+    output, group, jobs = _corpus_jobs_with_documents(tmp_path)
+    (output / "listPerson.xml").write_text("<listPerson/>", encoding="utf-8")
+
+    write_batch_corpus_outputs(
+        jobs, output, _corpus_options(tmp_path, list_person_scope="corpus")
+    )
+
+    text = (group / "mandate.xml").read_text(encoding="utf-8")
+    assert "listPerson" not in text
+    assert "particDesc" not in text
+
+
+def test_write_batch_corpus_disabled_emits_nothing(tmp_path):
+    output, group, jobs = _corpus_jobs_with_documents(tmp_path)
+    disabled = BatchOptions(config=str(tmp_path / "config.py"), emit_corpus=False)
+
+    assert write_batch_corpus_outputs(jobs, output, disabled) == []
+    assert not (group / "mandate.xml").exists()

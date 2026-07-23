@@ -12,6 +12,7 @@ from .helpers import (
     FootnoteLinker,
     SpeakerUtteranceHook,
     build_list_person,
+    build_tei_corpus,
     merge_speaker_mappings,
 )
 from .parser import (
@@ -32,6 +33,7 @@ from .batch import (
     document_path,
     metadata_dir,
     run_batch,
+    write_batch_corpus_outputs,
     write_batch_list_person_outputs,
 )
 from .sistory import (
@@ -87,6 +89,7 @@ __all__ = [
     "Text",
     "WordPDFExtractor",
     "build_list_person",
+    "build_tei_corpus",
     "merge_speaker_mappings",
     "automatic_document_workers",
     "batch_counts",
@@ -102,5 +105,6 @@ __all__ = [
     "rule",
     "rule_group",
     "run_batch",
+    "write_batch_corpus_outputs",
     "write_batch_list_person_outputs",
 ]

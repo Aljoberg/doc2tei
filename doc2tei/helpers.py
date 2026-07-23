@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
@@ -27,6 +27,7 @@ from type_decs import (
 )
 
 TEI_NAMESPACE = "http://www.tei-c.org/ns/1.0"
+XINCLUDE_NAMESPACE = "http://www.w3.org/2001/XInclude"
 WIKIDATA_ENDPOINT = "https://query.wikidata.org/sparql"
 WIKIDATA_USER_AGENT = "doc2tei/1.0 (https://github.com/Aljoberg/doc2tei)"
 
@@ -841,3 +842,55 @@ def build_list_person(
             organization=details.organization,
         )
     return list_person
+
+
+def _attach_list_person_includes(header: ET.Element, hrefs: Sequence[str]) -> None:
+    """Reference speaker lists from ``profileDesc/particDesc`` via XInclude.
+
+    Any existing ``profileDesc``/``particDesc`` is reused so the ``settingDesc``
+    a generated header already carries is preserved rather than duplicated.
+    """
+
+    profile = header.find("profileDesc")
+    if profile is None:
+        profile = ET.SubElement(header, "profileDesc")
+    particdesc = profile.find("particDesc")
+    if particdesc is None:
+        particdesc = ET.SubElement(profile, "particDesc")
+    for href in hrefs:
+        ET.SubElement(particdesc, "xi:include", {"href": href})
+
+
+def build_tei_corpus(
+    document_hrefs: Sequence[str],
+    *,
+    header: ET.Element | None = None,
+    list_person_hrefs: Sequence[str] = (),
+    corpus_id: str = "",
+    language: str = "",
+) -> ET.Element:
+    """Assemble a ``<teiCorpus>`` that XIncludes its constituent files.
+
+    Modelled on the siParl mandate corpora (e.g. ``SDT2.xml``): a corpus-level
+    ``teiHeader`` followed by one ``<xi:include>`` per component document. Speaker
+    lists are referenced from ``teiHeader/profileDesc/particDesc`` via
+    ``list_person_hrefs`` -- one entry for a folder-wide list, or several for
+    per-document lists -- rather than inlined. Every href is written verbatim, so
+    callers pass paths already relative to the corpus file's own location.
+    """
+
+    attributes = {"xmlns": TEI_NAMESPACE, "xmlns:xi": XINCLUDE_NAMESPACE}
+    if corpus_id:
+        attributes["xml:id"] = corpus_id
+    if language:
+        attributes["xml:lang"] = language
+    corpus = ET.Element("teiCorpus", attributes)
+
+    if header is not None:
+        if list_person_hrefs:
+            _attach_list_person_includes(header, list_person_hrefs)
+        corpus.append(header)
+
+    for href in document_hrefs:
+        ET.SubElement(corpus, "xi:include", {"href": href})
+    return corpus

@@ -107,6 +107,16 @@ reparsing PDFs. The selected scope and output paths are recorded in
 `batch-manifest.json`. Add `--include-wikidata` for best-effort enrichment or
 `--no-list-person` when no person list is needed.
 
+Add `--corpus` to also emit a group-wise `<teiCorpus>` file per source folder
+(modelled on the siParl mandate corpora), named after the folder and placed
+beside its `documents/`. It carries a generated corpus `teiHeader` (titled after
+the folder, with the documents' speech/word counts summed into `<extent>`) and
+then references every constituent file with XInclude: one `<xi:include>` per
+document, plus the folder's `listPerson.xml` under `particDesc`. With
+`--list-person-scope document` it instead includes each per-document list; with
+`corpus` scope it emits no `listPerson` reference (that single list lives at the
+output root). `--corpus-lang` sets the header's `xml:lang` (default `sl`).
+
 By default, the runner uses up to four document processes. When multiple
 documents run together, it forces each document's page extractor to one worker,
 preventing nested process pools from multiplying CPU and memory use. `-j 1`
