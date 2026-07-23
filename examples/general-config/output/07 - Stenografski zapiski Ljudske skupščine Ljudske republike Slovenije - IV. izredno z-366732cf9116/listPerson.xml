@@ -1,16 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <listPerson xmlns="http://www.tei-c.org/ns/1.0">
-  <person xml:id="Prisotni">
-    <persName>PRISOTNI ČLANI VLADE</persName>
-  </person>
   <person xml:id="FerdoKozak">
     <persName>Predsednik dr. Ferdo Kozak</persName>
     <affiliation role="predsednik">
       <roleName xml:lang="sl">Predsednik</roleName>
     </affiliation>
   </person>
-  <person xml:id="MihaKamBič">
-    <persName>Dr. Miha Kam bič</persName>
+  <person xml:id="MihaKambič">
+    <persName>Dr. Miha Kambič</persName>
   </person>
   <person xml:id="ZoranPolič">
     <persName>Zoran Polič</persName>
@@ -24,7 +21,7 @@
   <person xml:id="JožePetejan">
     <persName>Jože Petejan</persName>
   </person>
-  <person xml:id="DpVEr">
+  <person xml:id="DpVerdoKozak">
     <persName>Predsednik d p. V er do Kozak</persName>
     <affiliation role="predsednik">
       <roleName xml:lang="sl">Predsednik</roleName>
@@ -51,9 +48,6 @@
   <person xml:id="BožidarLavrič">
     <persName>Dr. Božidar Lavrič</persName>
   </person>
-  <person xml:id="MihaKambič">
-    <persName>Dr. Miha Kambič</persName>
-  </person>
   <person xml:id="FrancFurlan">
     <persName>Franc Furlan</persName>
   </person>
@@ -77,20 +71,5 @@
   </person>
   <person xml:id="JanezPor">
     <persName>Janez Por</persName>
-  </person>
-  <person xml:id="ViadeLhs">
-    <persName>Predsednik viade LHS</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="VladeLhs">
-    <persName>Predsednik vlade LHS</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik vlade</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="KpuhliKi">
-    <persName>|{ KPUHLI KI</persName>
   </person>
 </listPerson>

@@ -2,23 +2,24 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\07 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 1. marca do 31. avgusta 1961.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 36551,
-  "unmatched_count": 8955,
+  "unmatched_count": 29249,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 2,
+    "AFTER_FOOTNOTE": 13,
+    "AFTER_GENERIC_NOTE": 4,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 8,
     "CONSUMED_FOOTNOTE_RUN": 2,
-    "CONSUMED_LINE": 141,
+    "CONSUMED_LINE": 153,
     "CONTENTS": 1,
-    "FOOTNOTE_CONTINUATION": 11,
-    "FOOTNOTE_ENTRY": 2,
+    "FOOTNOTE_CONTINUATION": 25,
+    "FOOTNOTE_ENTRY": 17,
     "GENERIC_NOTE": 14,
-    "HEAD": 10,
-    "PARAGRAPH": 25400,
+    "HEAD": 9,
+    "PARAGRAPH": 4782,
     "SCRIBE": 11,
-    "SEG": 803,
-    "SOURCE_ARTIFACT": 1044,
-    "SPEAKER": 131,
+    "SEG": 805,
+    "SOURCE_ARTIFACT": 1312,
+    "SPEAKER": 130,
     "TIME": 15
   },
   "page_counts": {
@@ -744,6 +745,142 @@
   },
   "unmatched_samples": [
     {
+      "text": "i 997",
+      "x": 21.6,
+      "y": 573.96,
+      "page": 1,
+      "font_size": 26.0,
+      "line_text": "i 997"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 175.92,
+      "y": 497.17,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "W W",
+      "x": 287.52,
+      "y": 467.03,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "W W"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 97.92,
+      "y": 437.03,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 97.92,
+      "y": 411.49,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 183.6,
+      "y": 358.12,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje od 1. marca do 31. avgusta 1961",
+      "x": 110.88,
+      "y": 301.81,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Seje od 1. marca do 31. avgusta 1961"
+    },
+    {
+      "text": "1961",
+      "x": 215.04,
+      "y": 92.2,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1961"
+    },
+    {
+      "text": "L i n h i i u n a",
+      "x": 198.0,
+      "y": 51.4,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "L i n h i i u n a"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 152.16,
+      "y": 524.02,
+      "page": 3,
+      "font_size": 15.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "w \\/",
+      "x": 263.04,
+      "y": 492.49,
+      "page": 3,
+      "font_size": 11.0,
+      "line_text": "w \\/"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 73.92,
+      "y": 463.89,
+      "page": 3,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 74.4,
+      "y": 438.11,
+      "page": 3,
+      "font_size": 15.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Čelrli sklic)",
+      "x": 160.08,
+      "y": 384.97,
+      "page": 3,
+      "font_size": 11.0,
+      "line_text": "(Čelrli sklic)"
+    },
+    {
+      "text": "Seje od I. marca do 31. avgusta 1961",
+      "x": 87.36,
+      "y": 328.91,
+      "page": 3,
+      "font_size": 15.0,
+      "line_text": "Seje od I. marca do 31. avgusta 1961"
+    },
+    {
+      "text": "997",
+      "x": 206.88,
+      "y": 302.76,
+      "page": 4,
+      "font_size": 26.0,
+      "line_text": "997"
+    },
+    {
+      "text": "/^",
+      "x": 180.0,
+      "y": 197.91,
+      "page": 4,
+      "font_size": 17.0,
+      "line_text": "/^а v. 1963"
+    },
+    {
       "text": "а",
       "x": 191.28,
       "y": 197.35,
@@ -806,142 +943,6 @@
       "page": 5,
       "font_size": 10.0,
       "line_text": "liškega zbora.)"
-    },
-    {
-      "text": "se nihče.) Ce nihče, ugotavljam, da je zapisnik odobren in da ga bom podpisal.",
-      "x": 26.16,
-      "y": 285.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "se nihče.) Ce nihče, ugotavljam, da je zapisnik odobren in da ga bom podpisal."
-    },
-    {
-      "text": "predložil Izvršni svet, predlagam za današnjo sejo naslednji dnevni red:",
-      "x": 26.16,
-      "y": 259.67,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "predložil Izvršni svet, predlagam za današnjo sejo naslednji dnevni red:"
-    },
-    {
-      "text": "o organizaciji zdravstvene službe v Ljudski republiki Sloveniji;",
-      "x": 26.4,
-      "y": 236.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "o organizaciji zdravstvene službe v Ljudski republiki Sloveniji;"
-    },
-    {
-      "text": "razpolaganja s sredstvi skupnih rezerv gospodarskih organizacij;",
-      "x": 26.4,
-      "y": 214.79,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "razpolaganja s sredstvi skupnih rezerv gospodarskih organizacij;"
-    },
-    {
-      "text": "plačuje v rezervni sklad Ljudske republike Slovenije za potrebe gospodarskih",
-      "x": 26.64,
-      "y": 193.43,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "plačuje v rezervni sklad Ljudske republike Slovenije za potrebe gospodarskih"
-    },
-    {
-      "text": "organizacij;",
-      "x": 26.88,
-      "y": 182.63,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "organizacij;"
-    },
-    {
-      "text": "v družbeni investicijski sklad Ljudske republike Slovenije;",
-      "x": 26.64,
-      "y": 161.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "v družbeni investicijski sklad Ljudske republike Slovenije;"
-    },
-    {
-      "text": "republike Slovenije za šolstvo;",
-      "x": 27.12,
-      "y": 139.91,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "republike Slovenije za šolstvo;"
-    },
-    {
-      "text": "sklade za šolstvo, ki pripada občinskim skladom za šolstvo;",
-      "x": 26.88,
-      "y": 118.55,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "sklade za šolstvo, ki pripada občinskim skladom za šolstvo;"
-    },
-    {
-      "text": "v družbene sklade za šolstvo, ki ga plačujejo zasebne obrti;",
-      "x": 27.12,
-      "y": 97.19,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "v družbene sklade za šolstvo, ki ga plačujejo zasebne obrti;"
-    },
-    {
-      "text": "upravnih organih v Ljudski republiki Sloveniji;",
-      "x": 27.36,
-      "y": 75.59,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "upravnih organih v Ljudski republiki Sloveniji;"
-    },
-    {
-      "text": "Zavod LRS za zaposlovanje delavcev in o načinu uporabe teh sredstev.",
-      "x": 27.36,
-      "y": 53.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Zavod LRS za zaposlovanje delavcev in o načinu uporabe teh sredstev."
-    },
-    {
-      "text": "dopolnilni predlog? (Ne javi se nihče.) Ker ni pripomb, ugotavljam, da je pred",
-      "x": 48.72,
-      "y": 554.87,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "dopolnilni predlog? (Ne javi se nihče.) Ker ni pripomb, ugotavljam, da je pred"
-    },
-    {
-      "text": "lagani dnevni red sprejet.",
-      "x": 48.72,
-      "y": 544.55,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "lagani dnevni red sprejet."
-    },
-    {
-      "text": "rišice Marije Aljančič. Prosim predstavnika Izvršnega sveta, da na omenjeno",
-      "x": 48.72,
-      "y": 520.79,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "rišice Marije Aljančič. Prosim predstavnika Izvršnega sveta, da na omenjeno"
-    },
-    {
-      "text": "poslansko vprašanje odgovori.",
-      "x": 48.72,
-      "y": 510.23,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "poslansko vprašanje odgovori."
-    },
-    {
-      "text": "rišica Marija Aljančič iz Kopra je naslovila na Izvršni svet pismeno vprašanje",
-      "x": 48.48,
-      "y": 478.07,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "rišica Marija Aljančič iz Kopra je naslovila na Izvršni svet pismeno vprašanje"
     }
   ],
   "recovery_counts": {},

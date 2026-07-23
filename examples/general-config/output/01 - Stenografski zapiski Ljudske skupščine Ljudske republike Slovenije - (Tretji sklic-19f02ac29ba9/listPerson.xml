@@ -72,12 +72,6 @@
   <person xml:id="IvanCurk">
     <persName>Ivan Curk</persName>
   </person>
-  <person xml:id="Vi1Mapirkovič">
-    <persName>Podpredsednik i n ž. V i 1 m a P i r k o v i č</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="FeliksRazdrih">
     <persName>Feliks Razdrih</persName>
   </person>

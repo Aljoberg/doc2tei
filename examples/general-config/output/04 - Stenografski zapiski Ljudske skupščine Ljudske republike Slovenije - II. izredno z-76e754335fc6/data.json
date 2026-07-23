@@ -1,6 +1,5 @@
 {
   "speakers": {
-    "#Prisotni": "PRISOTNI ČLANI VLADE:",
     "#FerdoKozak": "Predsednik d r. F e r d o Kozak:",
     "#MihaMarinko": "Miha Marinko:",
     "#ZoranPolič": "Zoran Polič:",
@@ -8,7 +7,6 @@
     "#MarijanBrecelj": "Marijan Brecelj:",
     "#LidijaŠentjurC": "Lidija Šentjur c:",
     "#ToneFajfar": "Tone Fajfar:",
-    "#FerdoKozlaK": "Predsednik dr. Ferdo Kozla k:",
     "#JožeBorštnar": "Jože Borštnar:",
     "#IvanRegent": "Ivan Regent:",
     "#ViktorAvbelj": "Viktor Avbelj:",
@@ -23,21 +21,11 @@
     "#FrancHojnik": "Franc Hojnik:",
     "#AntonMelik": "Dr. Anton Melik:",
     "#ToneUlrih": "Tone Ulrih :",
-    "#Ferdokozak": "Predsednik dr. FerdoKozak:",
     "#FrancSimonič": "Franc Simonič:",
     "#PerdoKoАк": "Predsednik dr. Perdo Ko/.ак:",
     "#VinkoŠumRada": "Vinko Šum r a d a :",
     "#GabrijelPeternel": "Gabrijel Peternel:",
-    "#StankoŠtor": "Dr. Stanko Štor:",
-    "#Drav1Je": "D r a v 1 j e :",
-    "#Spšiška": "S p. Š i š k a (del):",
-    "#Štvidde1": "Š t. V i d (d e 1:",
-    "#Zgšiška": "Z g. Š i š k a (del):",
-    "#SpŠiška": "S p. Šiška (del):",
-    "#Zgšiska": "Z g. Š i s k a (del):",
-    "#IlirskaBistrica": "Ilirska Bistrica, Postojna, Sežana in Tolmin.<:",
-    "#SvMagdalena": "Sv. Magdalena:",
-    "#ZgRadvanje": "Z g. Radvanje:"
+    "#StankoŠtor": "Dr. Stanko Štor:"
   },
   "warnings": [
     "125 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."

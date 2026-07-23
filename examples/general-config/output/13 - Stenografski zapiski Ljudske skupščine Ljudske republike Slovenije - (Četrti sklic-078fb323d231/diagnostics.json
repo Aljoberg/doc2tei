@@ -2,22 +2,23 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\13 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 1. septembra 1958 do 30. aprila 1959.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 34313,
-  "unmatched_count": 10546,
+  "unmatched_count": 28025,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 4,
+    "AFTER_FOOTNOTE": 18,
+    "AFTER_GENERIC_NOTE": 1,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 9,
-    "CONSUMED_LINE": 72,
+    "CONSUMED_LINE": 98,
     "CONTENTS": 1,
-    "FOOTNOTE_CONTINUATION": 23,
-    "FOOTNOTE_ENTRY": 5,
-    "GENERIC_NOTE": 23,
-    "HEAD": 14,
-    "PARAGRAPH": 21798,
+    "FOOTNOTE_CONTINUATION": 40,
+    "FOOTNOTE_ENTRY": 28,
+    "GENERIC_NOTE": 22,
+    "HEAD": 13,
+    "PARAGRAPH": 3977,
     "SCRIBE": 12,
-    "SEG": 1187,
-    "SOURCE_ARTIFACT": 428,
-    "SPEAKER": 172,
+    "SEG": 1192,
+    "SOURCE_ARTIFACT": 688,
+    "SPEAKER": 170,
     "TIME": 18
   },
   "page_counts": {
@@ -681,6 +682,62 @@
   },
   "unmatched_samples": [
     {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 109.92,
+      "y": 470.15,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 110.64,
+      "y": 447.25,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(flclrli sklic)",
+      "x": 200.4,
+      "y": 395.56,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(flclrli sklic)"
+    },
+    {
+      "text": "Seje od 1. septembra do 30. aprila 1959",
+      "x": 124.32,
+      "y": 343.24,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Seje od 1. septembra do 30. aprila 1959"
+    },
+    {
+      "text": "1959",
+      "x": 223.44,
+      "y": 140.2,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1959"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 207.6,
+      "y": 100.84,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "SI ono",
+      "x": 142.56,
+      "y": 522.83,
+      "page": 3,
+      "font_size": 15.0,
+      "line_text": "SI ono цга Is k i zapiski"
+    },
+    {
       "text": "цга",
       "x": 180.24,
       "y": 522.33,
@@ -697,6 +754,14 @@
       "line_text": "SI ono цга Is k i zapiski"
     },
     {
+      "text": "W",
+      "x": 275.04,
+      "y": 493.58,
+      "page": 3,
+      "font_size": 6.0,
+      "line_text": "W \\У"
+    },
+    {
       "text": "\\",
       "x": 291.12,
       "y": 493.58,
@@ -711,6 +776,62 @@
       "page": 3,
       "font_size": 6.0,
       "line_text": "W \\У"
+    },
+    {
+      "text": "LJUDSKE SKIPSCIM",
+      "x": 79.2,
+      "y": 463.19,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKIPSCIM"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 79.68,
+      "y": 440.5,
+      "page": 3,
+      "font_size": 15.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Celrli sklic)",
+      "x": 175.92,
+      "y": 388.36,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Celrli sklic)"
+    },
+    {
+      "text": "Seje od 1. septembra do 30. aprila 1959",
+      "x": 94.32,
+      "y": 335.56,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Seje od 1. septembra do 30. aprila 1959"
+    },
+    {
+      "text": "1959",
+      "x": 200.64,
+      "y": 131.32,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "1959"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 183.84,
+      "y": 91.24,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "^",
+      "x": 188.64,
+      "y": 205.88,
+      "page": 4,
+      "font_size": 19.0,
+      "line_text": "^а v. 1963/^у"
     },
     {
       "text": "а",
@@ -759,126 +880,6 @@
       "page": 5,
       "font_size": 10.0,
       "line_text": "Kocijančič, dr. Sonja Kukovcc in Beno Zupančič opravičili svojo odsotnost in"
-    },
-    {
-      "text": "predlagam, da jim Republiški zbor odsotnost opraviči. (Poslanci se s predlogom",
-      "x": 33.84,
-      "y": 343.67,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "predlagam, da jim Republiški zbor odsotnost opraviči. (Poslanci se s predlogom"
-    },
-    {
-      "text": "strinjajo.) Ugotavljam, da je imenovanim zbor opravičil odsotnost.",
-      "x": 33.6,
-      "y": 333.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "strinjajo.) Ugotavljam, da je imenovanim zbor opravičil odsotnost."
-    },
-    {
-      "text": "zapisnikarja tovariša Draga Seligerja, da prebere zapisnik prejšnje seje. (Za",
-      "x": 33.6,
-      "y": 310.31,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zapisnikarja tovariša Draga Seligerja, da prebere zapisnik prejšnje seje. (Za"
-    },
-    {
-      "text": "pisnikar Drago Seliger prebere zapisnik 3. seje.) Ima kdo od tovarišev ljudskih",
-      "x": 34.08,
-      "y": 299.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "pisnikar Drago Seliger prebere zapisnik 3. seje.) Ima kdo od tovarišev ljudskih"
-    },
-    {
-      "text": "poslancev kakšno pripombo k zapisniku? (Ne javi se nihče.) Ker ni pripomb,",
-      "x": 34.08,
-      "y": 289.43,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "poslancev kakšno pripombo k zapisniku? (Ne javi se nihče.) Ker ni pripomb,"
-    },
-    {
-      "text": "menim, da je zapisnik odobren in da se lahko podpiše. (Predsednik in zapisnikar",
-      "x": 34.08,
-      "y": 278.87,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "menim, da je zapisnik odobren in da se lahko podpiše. (Predsednik in zapisnikar"
-    },
-    {
-      "text": "podpišeta zapisnik.)",
-      "x": 34.08,
-      "y": 268.55,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "podpišeta zapisnik.)"
-    },
-    {
-      "text": "okrajev in občin v.Ljudski republiki Sloveniji, predlog zakona o izvedbi odprave",
-      "x": 33.84,
-      "y": 245.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "okrajev in občin v.Ljudski republiki Sloveniji, predlog zakona o izvedbi odprave"
-    },
-    {
-      "text": "nekaterih občin v okrajih Celje in Maribor, predlog zakona o spremembah in",
-      "x": 34.08,
-      "y": 234.95,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "nekaterih občin v okrajih Celje in Maribor, predlog zakona o spremembah in"
-    },
-    {
-      "text": "dopolnitvah zakona o upravnih organih Ljudske republike Slovenije, predlog",
-      "x": 34.08,
-      "y": 224.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "dopolnitvah zakona o upravnih organih Ljudske republike Slovenije, predlog"
-    },
-    {
-      "text": "zakona o potrditvi sklepnega računa o izvršitvi proračuna Ljudske republike",
-      "x": 34.08,
-      "y": 213.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zakona o potrditvi sklepnega računa o izvršitvi proračuna Ljudske republike"
-    },
-    {
-      "text": "Slovenije (republiškega proračuna) za leto 1957, predlog odloka o ustanovitvi",
-      "x": 34.08,
-      "y": 203.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Slovenije (republiškega proračuna) za leto 1957, predlog odloka o ustanovitvi"
-    },
-    {
-      "text": "in krajevnem območju okrožnega sodišča v Murski Soboti.",
-      "x": 34.08,
-      "y": 192.95,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "in krajevnem območju okrožnega sodišča v Murski Soboti."
-    },
-    {
-      "text": "v Ljudski republiki Sloveniji v prvih sedmih mesecih leta 1958, obstoja pa tudi",
-      "x": 34.32,
-      "y": 169.91,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "v Ljudski republiki Sloveniji v prvih sedmih mesecih leta 1958, obstoja pa tudi"
-    },
-    {
-      "text": "poročilo mandatno-imunitetnega odbora o nadomestnih volitvah v 113. volilnem",
-      "x": 34.32,
-      "y": 159.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "poročilo mandatno-imunitetnega odbora o nadomestnih volitvah v 113. volilnem"
     }
   ],
   "recovery_counts": {},

@@ -69,12 +69,6 @@
   <person xml:id="MarjanGarzarolli">
     <persName>Marjan Garzarolli</persName>
   </person>
-  <person xml:id="MaVricijBore">
-    <persName>Predsednik Ma v r i c i j Bore</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MiranMejak">
     <persName>Inž. Miran Mejak</persName>
   </person>
@@ -104,8 +98,5 @@
   </person>
   <person xml:id="VladoVodopivec">
     <persName>Vlado Vodopivec</persName>
-  </person>
-  <person xml:id="PoročevalecPredsednik">
-    <persName>Poročevalec; Predsednik</persName>
   </person>
 </listPerson>

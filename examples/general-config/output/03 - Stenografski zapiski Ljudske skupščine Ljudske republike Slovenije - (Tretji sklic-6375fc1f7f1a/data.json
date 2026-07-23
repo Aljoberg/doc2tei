@@ -26,16 +26,13 @@
     "#AntonTruden": "Anton Truden:",
     "#MiranMejak": "Inž. Miran Mejak (govori'iz klopi):",
     "#MilošVehovar": "Inž. Miloš Vehovar:",
-    "#MihaMarjnko": "Predsednik Miha MarJnko:",
     "#MiranCvenk": "Miran Cvenk:",
     "#MirkoLorger": "Mirko Lorger:",
     "#StaneRenko": "Stane Renko:",
     "#MihaMarinkoIlvIhIvirmj": "Predsednik Miha Marinko! Ilv.ih. IVirmj:",
     "#LeopoldPotočnik": "Leopold Potočnik:",
     "#IvanCurk": "Ivan Curk:",
-    "#FrancKrese": "Franc Krese:",
-    "#PoročevalecPredsednik": "Poročevalec Predsednik:",
-    "#JožeBaričevič": "Jože Baričevič, dr. Ivan Bele, Jože Cerne, Albin Dobrajc,:"
+    "#FrancKrese": "Franc Krese:"
   },
   "warnings": [
     "9 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."

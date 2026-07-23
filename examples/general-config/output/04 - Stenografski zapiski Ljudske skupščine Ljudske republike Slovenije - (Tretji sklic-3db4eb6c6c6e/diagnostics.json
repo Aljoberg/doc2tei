@@ -2,18 +2,22 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\3. sklic (1953-1957)\\04 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Tretji sklic) - Seje od 1.decembra 1955 do 31.maja 1956.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 27883,
-  "unmatched_count": 10055,
+  "unmatched_count": 21415,
   "rule_counts": {
+    "AFTER_FOOTNOTE": 1,
+    "AFTER_GENERIC_NOTE": 2,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 9,
-    "CONSUMED_LINE": 191,
-    "GENERIC_NOTE": 29,
+    "CONSUMED_LINE": 189,
+    "FOOTNOTE_CONTINUATION": 9,
+    "FOOTNOTE_ENTRY": 1,
+    "GENERIC_NOTE": 23,
     "HEAD": 14,
-    "PARAGRAPH": 15298,
+    "PARAGRAPH": 3929,
     "SCRIBE": 10,
-    "SEG": 867,
+    "SEG": 873,
     "SOURCE_ARTIFACT": 1133,
-    "SPEAKER": 262,
+    "SPEAKER": 260,
     "TIME": 14
   },
   "page_counts": {
@@ -599,6 +603,70 @@
   },
   "unmatched_samples": [
     {
+      "text": "^r V",
+      "x": 281.04,
+      "y": 521.37,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "^r V"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 89.76,
+      "y": 489.59,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 90.24,
+      "y": 458.65,
+      "page": 1,
+      "font_size": 21.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 190.32,
+      "y": 409.48,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od 1. decembra 1955 do 31. maja 1956",
+      "x": 94.08,
+      "y": 350.72,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "Seje od 1. decembra 1955 do 31. maja 1956"
+    },
+    {
+      "text": "1956",
+      "x": 208.56,
+      "y": 140.96,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "1956"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 194.64,
+      "y": 101.84,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "П",
+      "x": 5.28,
+      "y": 518.71,
+      "page": 2,
+      "font_size": 17.0,
+      "line_text": "П1{ bi."
+    },
+    {
       "text": "1{ bi.",
       "x": 13.92,
       "y": 519.27,
@@ -607,12 +675,108 @@
       "line_text": "П1{ bi."
     },
     {
+      "text": "У",
+      "x": 57.6,
+      "y": 512.97,
+      "page": 2,
+      "font_size": 15.0,
+      "line_text": "У}-!"
+    },
+    {
       "text": "}-!",
       "x": 69.6,
       "y": 513.62,
       "page": 2,
       "font_size": 15.0,
       "line_text": "У}-!"
+    },
+    {
+      "text": "Stenograiski zapiski ^*«",
+      "x": 138.72,
+      "y": 547.16,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "Stenograiski zapiski ^*«"
+    },
+    {
+      "text": "4",
+      "x": 373.2,
+      "y": 557.21,
+      "page": 3,
+      "font_size": 12.35,
+      "line_text": "4"
+    },
+    {
+      "text": "*",
+      "x": 384.24,
+      "y": 547.16,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "*"
+    },
+    {
+      "text": "v v",
+      "x": 270.24,
+      "y": 514.44,
+      "page": 3,
+      "font_size": 11.0,
+      "line_text": "v v"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 78.24,
+      "y": 483.11,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 78.24,
+      "y": 452.41,
+      "page": 3,
+      "font_size": 21.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 179.04,
+      "y": 402.78,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od 1. decembra 1955 do 31. maja 1956",
+      "x": 82.08,
+      "y": 344.24,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "Seje od 1. decembra 1955 do 31. maja 1956"
+    },
+    {
+      "text": "1956",
+      "x": 195.84,
+      "y": 134.48,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "1956"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 181.68,
+      "y": 95.6,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "/ ^",
+      "x": 251.52,
+      "y": 340.62,
+      "page": 4,
+      "font_size": 9.0,
+      "line_text": "/ ^"
     },
     {
       "text": "čenjam 13. sejo Republiškega zbora, ki jo je sklical predsednik Ljudske",
@@ -637,166 +801,6 @@
       "page": 5,
       "font_size": 10.0,
       "line_text": "zapisnikar tovarišica Ančka Globačnik."
-    },
-    {
-      "text": "opravičili svojo odsotnost. Predlagam zboru, da omenjenim poslancem opra",
-      "x": 35.28,
-      "y": 332.63,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "opravičili svojo odsotnost. Predlagam zboru, da omenjenim poslancem opra"
-    },
-    {
-      "text": "vičimo odsotaost. Ali se zbor strinja s tem predlogom? (Poslanci se strinja",
-      "x": 35.28,
-      "y": 321.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "vičimo odsotaost. Ali se zbor strinja s tem predlogom? (Poslanci se strinja"
-    },
-    {
-      "text": "jo.) Ugotavljam, da je navedenim poslancem odsotnost opravičena.",
-      "x": 34.8,
-      "y": 311.03,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "jo.) Ugotavljam, da je navedenim poslancem odsotnost opravičena."
-    },
-    {
-      "text": "zapisnik 12. seje. (Ljudski poslanec Dušan Bole prečita zapisnik 12. seje.)",
-      "x": 35.04,
-      "y": 289.43,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zapisnik 12. seje. (Ljudski poslanec Dušan Bole prečita zapisnik 12. seje.)"
-    },
-    {
-      "text": "Ima kdo od tovarišev ljudskih poslancev kako pripombo k temu zapisniku?",
-      "x": 35.04,
-      "y": 278.63,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ima kdo od tovarišev ljudskih poslancev kako pripombo k temu zapisniku?"
-    },
-    {
-      "text": "(Ne javi se nihče.) Ker nihče, ugotavljam, da je zapisnik odobren in da se",
-      "x": 36.0,
-      "y": 267.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "(Ne javi se nihče.) Ker nihče, ugotavljam, da je zapisnik odobren in da se"
-    },
-    {
-      "text": "lahko podpiše. (Predsednik in zapisnikar podpišeta zapisnik.) Ker tovarišice",
-      "x": 35.28,
-      "y": 257.03,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "lahko podpiše. (Predsednik in zapisnikar podpišeta zapisnik.) Ker tovarišice"
-    },
-    {
-      "text": "Ančke Globačnik, ki bi morala danes voditi zapisnik, ni, prosim tovariša",
-      "x": 35.04,
-      "y": 246.23,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ančke Globačnik, ki bi morala danes voditi zapisnik, ni, prosim tovariša"
-    },
-    {
-      "text": "Dušana Boleta, da vodi današnji zapisnik.",
-      "x": 35.28,
-      "y": 235.43,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Dušana Boleta, da vodi današnji zapisnik."
-    },
-    {
-      "text": "Izvršnega sveta Ljudske skupščine LRS v obravnavo predlog zakona o",
-      "x": 35.76,
-      "y": 213.59,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Izvršnega sveta Ljudske skupščine LRS v obravnavo predlog zakona o"
-    },
-    {
-      "text": "potrditvi sklepnega računa o izvršitvi republiškega proračuna Ljudske",
-      "x": 35.52,
-      "y": 202.79,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "potrditvi sklepnega računa o izvršitvi republiškega proračuna Ljudske"
-    },
-    {
-      "text": "republike Slovenije za leto 1954, predlog odloka o spremembah in dopol",
-      "x": 35.76,
-      "y": 191.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "republike Slovenije za leto 1954, predlog odloka o spremembah in dopol"
-    },
-    {
-      "text": "nitvah družbenega plana Ljudske republike Slovenije za leto 1955, predlog",
-      "x": 35.52,
-      "y": 181.19,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "nitvah družbenega plana Ljudske republike Slovenije za leto 1955, predlog"
-    },
-    {
-      "text": "zakona o uporabi zemljišč za gradbene namene, predlog zakona o pokopa",
-      "x": 35.52,
-      "y": 170.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zakona o uporabi zemljišč za gradbene namene, predlog zakona o pokopa"
-    },
-    {
-      "text": "liščih, predlog odloka o vodstvu kulturno-prosvetnih, umetniških in znan",
-      "x": 35.76,
-      "y": 159.59,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "liščih, predlog odloka o vodstvu kulturno-prosvetnih, umetniških in znan"
-    },
-    {
-      "text": "stvenih zavodov, predlog odloka o ustanovitvi, odpravi in določitvi sedeža",
-      "x": 35.52,
-      "y": 148.79,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "stvenih zavodov, predlog odloka o ustanovitvi, odpravi in določitvi sedeža"
-    },
-    {
-      "text": "nekaterih okrožnih in okrajnih sodišč ter o krajevnem območju okrožnih",
-      "x": 36.0,
-      "y": 137.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "nekaterih okrožnih in okrajnih sodišč ter o krajevnem območju okrožnih"
-    },
-    {
-      "text": "in okrajnih sodišč v Ljudski republiki Sloveniji in predlog odloka o dolo",
-      "x": 35.76,
-      "y": 127.19,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "in okrajnih sodišč v Ljudski republiki Sloveniji in predlog odloka o dolo"
-    },
-    {
-      "text": "čitvi krajevnega območja okrožnih gospodarskih sodišč v Ljudski repu",
-      "x": 36.0,
-      "y": 116.63,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "čitvi krajevnega območja okrožnih gospodarskih sodišč v Ljudski repu"
-    },
-    {
-      "text": "bliki Sloveniji.",
-      "x": 36.0,
-      "y": 105.59,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "bliki Sloveniji."
     }
   ],
   "recovery_counts": {},

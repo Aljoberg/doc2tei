@@ -2,19 +2,18 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\1. sklic (1947-1950)\\03 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - V. redno zasedanje 6. maja 1949 - VI. redno zasedanje 21. oktobra 1949.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 7509,
-  "unmatched_count": 2578,
+  "unmatched_count": 5679,
   "rule_counts": {
     "APPENDIX_HEAD": 2,
-    "CONSUMED_LINE": 6,
-    "GENERIC_NOTE": 9,
-    "HEAD": 6,
-    "PARAGRAPH": 4163,
+    "GENERIC_NOTE": 1,
+    "HEAD": 4,
+    "PARAGRAPH": 1674,
     "SCRIBE": 17,
-    "SEG": 601,
+    "SEG": 101,
     "SOURCE_ARTIFACT": 6,
-    "SPEAKER": 89,
-    "TIME": 4,
-    "UNMATCHED_LINE": 28
+    "SPEAKER": 23,
+    "TIME": 1,
+    "UNSTRUCTURED_START": 1
   },
   "page_counts": {
     "1": 17,
@@ -216,6 +215,182 @@
   },
   "unmatched_samples": [
     {
+      "text": "342.533(497.4)\"1949",
+      "x": 6.0,
+      "y": 598.55,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "342.533(497.4)\"1949"
+    },
+    {
+      "text": "019500074",
+      "x": 6.48,
+      "y": 564.81,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "019500074"
+    },
+    {
+      "text": "C0BISS",
+      "x": 129.12,
+      "y": 564.1,
+      "page": 1,
+      "font_size": 6.5,
+      "line_text": "C0BISS"
+    },
+    {
+      "text": "o",
+      "x": 158.88,
+      "y": 564.81,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "o"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 140.88,
+      "y": 540.85,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 59.52,
+      "y": 479.49,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 59.52,
+      "y": 447.8,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "V. redno zasedanje",
+      "x": 133.2,
+      "y": 361.88,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "V. redno zasedanje"
+    },
+    {
+      "text": "6. maia 1949",
+      "x": 177.6,
+      "y": 341.58,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "6. maia 1949"
+    },
+    {
+      "text": "in",
+      "x": 209.52,
+      "y": 316.55,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "in"
+    },
+    {
+      "text": "VI. redno zasedanje",
+      "x": 131.04,
+      "y": 281.96,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "VI. redno zasedanje"
+    },
+    {
+      "text": "21. oktobra 1949",
+      "x": 166.56,
+      "y": 261.66,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "21. oktobra 1949"
+    },
+    {
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 128.64,
+      "y": 95.82,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1949",
+      "x": 192.48,
+      "y": 71.72,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "1949"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 144.72,
+      "y": 526.49,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 62.88,
+      "y": 465.09,
+      "page": 3,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 62.4,
+      "y": 433.61,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "V. redno zasedanje",
+      "x": 107.76,
+      "y": 333.48,
+      "page": 3,
+      "font_size": 26.0,
+      "line_text": "V. redno zasedanje"
+    },
+    {
+      "text": "6. maja 1949",
+      "x": 168.48,
+      "y": 307.13,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "6. maja 1949"
+    },
+    {
+      "text": "Izdala Ljudska skupščina JLRS",
+      "x": 130.32,
+      "y": 79.96,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Izdala Ljudska skupščina JLRS"
+    },
+    {
+      "text": "1949",
+      "x": 194.88,
+      "y": 55.61,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "1949"
+    },
+    {
+      "text": "■",
+      "x": 202.56,
+      "y": 239.24,
+      "page": 4,
+      "font_size": 4.0,
+      "line_text": "■ /"
+    },
+    {
       "text": "/",
       "x": 233.28,
       "y": 239.41,
@@ -224,196 +399,20 @@
       "line_text": "■ /"
     },
     {
-      "text": "industrijo;",
-      "x": 26.64,
-      "y": 311.29,
+      "text": "16, III. rr-o",
+      "x": 175.2,
+      "y": 167.19,
+      "page": 4,
+      "font_size": 17.0,
+      "line_text": "16, III. rr-o"
+    },
+    {
+      "text": "Ljudske skupščine Ljudske republike Slovenije",
+      "x": 25.2,
+      "y": 455.17,
       "page": 5,
-      "font_size": 11.0,
-      "line_text": "industrijo;"
-    },
-    {
-      "text": "l» 3",
-      "x": 29.52,
-      "y": 39.85,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "l» 3"
-    },
-    {
-      "text": "rinkom na čelu, ki jih pozdravijo člani Ljudske skupščine LRS z dolgo",
-      "x": 40.8,
-      "y": 601.69,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "rinkom na čelu, ki jih pozdravijo člani Ljudske skupščine LRS z dolgo"
-    },
-    {
-      "text": "trajnim ploskanjem.",
-      "x": 40.56,
-      "y": 590.65,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "trajnim ploskanjem."
-    },
-    {
-      "text": "Ljudske skupščine LRS k V. rednemu zasedanju, ki ga poslušajo po",
-      "x": 40.8,
-      "y": 568.57,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "Ljudske skupščine LRS k V. rednemu zasedanju, ki ga poslušajo po"
-    },
-    {
-      "text": "slanci stoje. Ukaz se glasi:",
-      "x": 41.04,
-      "y": 557.53,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "slanci stoje. Ukaz se glasi:"
-    },
-    {
-      "text": "Ukaz",
-      "x": 201.12,
-      "y": 540.25,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "Ukaz"
-    },
-    {
-      "text": "ustave LRS",
-      "x": 40.8,
-      "y": 487.45,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "ustave LRS"
-    },
-    {
-      "text": "odloča:",
-      "x": 195.36,
-      "y": 476.65,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "odloča:"
-    },
-    {
-      "text": "zasedanju na dan 6. maja 1949 v Ljubljani.",
-      "x": 40.56,
-      "y": 448.33,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "zasedanju na dan 6. maja 1949 v Ljubljani."
-    },
-    {
-      "text": "PREZIDU LJUDSKE SKUPŠČINE",
-      "x": 136.56,
-      "y": 391.69,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "PREZIDU LJUDSKE SKUPŠČINE"
-    },
-    {
-      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
-      "x": 131.28,
-      "y": 378.49,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
-    },
-    {
-      "text": "ZA PREDSEDNIKA",
-      "x": 295.44,
-      "y": 361.69,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "ZA PREDSEDNIKA"
-    },
-    {
-      "text": "F r a n c e L u b e j 1. r. F r a n c e B e v k 1. r.",
-      "x": 41.04,
-      "y": 336.97,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "F r a n c e L u b e j 1. r. F r a n c e B e v k 1. r."
-    },
-    {
-      "text": "sedanja Ljudske skupščine LRS. Zapisnik današnje seje bo vodil tajnik",
-      "x": 41.04,
-      "y": 288.01,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "sedanja Ljudske skupščine LRS. Zapisnik današnje seje bo vodil tajnik"
-    },
-    {
-      "text": "Jože Jurač.",
-      "x": 40.56,
-      "y": 276.25,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "Jože Jurač."
-    },
-    {
-      "text": "pravo in sklepanje naslednje zakonske predloge:",
-      "x": 40.8,
-      "y": 239.53,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "pravo in sklepanje naslednje zakonske predloge:"
-    },
-    {
-      "text": "in o načinu prenosa pristojnosti na oblastne ljudske odbore;",
-      "x": 40.8,
-      "y": 207.13,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "in o načinu prenosa pristojnosti na oblastne ljudske odbore;"
-    },
-    {
-      "text": "republike Slovenije temeljnemu zakonu o prekrških;",
-      "x": 40.8,
-      "y": 173.77,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "republike Slovenije temeljnemu zakonu o prekrških;"
-    },
-    {
-      "text": "9. majem 1946, ki se jim je po prejšnjih predpisih oporekala veljavnost;",
-      "x": 41.04,
-      "y": 151.69,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "9. majem 1946, ki se jim je po prejšnjih predpisih oporekala veljavnost;"
-    },
-    {
-      "text": "akademiji znanosti in umetnosti.",
-      "x": 41.28,
-      "y": 117.85,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "akademiji znanosti in umetnosti."
-    },
-    {
-      "text": "/.akonodajnemu odboru. Odbor je o zakonskih predlogih sklepal v celoti, jih",
-      "x": 41.76,
-      "y": 94.09,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "/.akonodajnemu odboru. Odbor je o zakonskih predlogih sklepal v celoti, jih"
-    },
-    {
-      "text": "v celoti sprejel ter dostavil Ljudski skupKini l-HS svoja poro&la. Vsi ti",
-      "x": 41.52,
-      "y": 83.05,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "v celoti sprejel ter dostavil Ljudski skupKini l-HS svoja poro&la. Vsi ti"
-    },
-    {
-      "text": "zakonski predlog] so bili z obrazložitvami in poročil] razmnoženi in raz",
-      "x": 41.28,
-      "y": 72.01,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "zakonski predlog] so bili z obrazložitvami in poročil] razmnoženi in raz"
+      "font_size": 16.0,
+      "line_text": "Ljudske skupščine Ljudske republike Slovenije"
     }
   ],
   "recovery_counts": {},

@@ -2,23 +2,18 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\2. sklic (1951-1953)\\03 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - III. izredno zasedanje (Drugi slkic) 30. junija 1952.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 11037,
-  "unmatched_count": 2295,
+  "unmatched_count": 7896,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 1,
     "APPENDIX_HEAD": 1,
-    "CONSUMED_LINE": 2,
     "CONTENTS": 1,
-    "FOOTNOTE_CONTINUATION": 8,
-    "FOOTNOTE_ENTRY": 1,
-    "GENERIC_NOTE": 10,
-    "HEAD": 32,
-    "PARAGRAPH": 8199,
+    "GENERIC_NOTE": 1,
+    "HEAD": 5,
+    "PARAGRAPH": 3028,
     "SCRIBE": 8,
-    "SEG": 444,
+    "SEG": 73,
     "SOURCE_ARTIFACT": 7,
-    "SPEAKER": 20,
-    "TIME": 6,
-    "UNMATCHED_LINE": 2
+    "SPEAKER": 13,
+    "UNSTRUCTURED_START": 4
   },
   "page_counts": {
     "1": 9,
@@ -284,6 +279,158 @@
   },
   "unmatched_samples": [
     {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 65.28,
+      "y": 457.65,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 65.76,
+      "y": 426.89,
+      "page": 1,
+      "font_size": 18.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "III. izredno zasedanje",
+      "x": 126.24,
+      "y": 355.61,
+      "page": 1,
+      "font_size": 18.0,
+      "line_text": "III. izredno zasedanje"
+    },
+    {
+      "text": "(Drugi sklic)",
+      "x": 178.56,
+      "y": 335.34,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "(Drugi sklic)"
+    },
+    {
+      "text": "30. junija 1952",
+      "x": 171.6,
+      "y": 309.66,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "30. junija 1952"
+    },
+    {
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 125.76,
+      "y": 89.05,
+      "page": 1,
+      "font_size": 11.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1952",
+      "x": 198.0,
+      "y": 59.93,
+      "page": 1,
+      "font_size": 18.0,
+      "line_text": "1952"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 131.76,
+      "y": 534.83,
+      "page": 3,
+      "font_size": 15.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 55.68,
+      "y": 473.95,
+      "page": 3,
+      "font_size": 29.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 55.44,
+      "y": 442.73,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "III. izredno zasedanje",
+      "x": 116.16,
+      "y": 370.49,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "III. izredno zasedanje"
+    },
+    {
+      "text": "(Drugi sklic)",
+      "x": 169.44,
+      "y": 350.2,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
+    },
+    {
+      "text": "30. junija 1952",
+      "x": 162.24,
+      "y": 324.28,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "30. junija 1952"
+    },
+    {
+      "text": "Izdala Ljudska skupScina LRS",
+      "x": 116.88,
+      "y": 107.32,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Izdala Ljudska skupScina LRS"
+    },
+    {
+      "text": "1952",
+      "x": 188.4,
+      "y": 78.41,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "1952"
+    },
+    {
+      "text": "997",
+      "x": 179.04,
+      "y": 336.57,
+      "page": 4,
+      "font_size": 25.0,
+      "line_text": "997"
+    },
+    {
+      "text": "J>",
+      "x": 123.84,
+      "y": 256.39,
+      "page": 4,
+      "font_size": 24.0,
+      "line_text": "J>"
+    },
+    {
+      "text": "'^ XI. 1952/",
+      "x": 153.12,
+      "y": 270.25,
+      "page": 4,
+      "font_size": 15.0,
+      "line_text": "'^ XI. 1952/"
+    },
+    {
+      "text": "TISK TISKARNE",
+      "x": 104.88,
+      "y": 73.41,
+      "page": 4,
+      "font_size": 9.0,
+      "line_text": "TISK TISKARNE JTONETA T0MSICA< V LJUBLJANI"
+    },
+    {
       "text": "JTONETA",
       "x": 179.04,
       "y": 73.8,
@@ -300,188 +447,36 @@
       "line_text": "TISK TISKARNE JTONETA T0MSICA< V LJUBLJANI"
     },
     {
-      "text": "1",
-      "x": 122.16,
-      "y": 76.53,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "25. in 26. junija 1ЧУ2."
+      "text": "Ljudske skupščine Ljudske republike Slovenije",
+      "x": 15.36,
+      "y": 508.69,
+      "page": 5,
+      "font_size": 16.0,
+      "line_text": "Ljudske skupščine Ljudske republike Slovenije"
     },
     {
-      "text": "ЧУ",
-      "x": 123.36,
-      "y": 76.23,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "25. in 26. junija 1ЧУ2."
-    },
-    {
-      "text": "2.",
-      "x": 136.32,
-      "y": 76.53,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "25. in 26. junija 1ЧУ2."
-    },
-    {
-      "text": "v",
-      "x": 86.4,
-      "y": 189.11,
-      "page": 7,
+      "text": "ki se je vršila dne 50. juniju 1952 v Ljubljani.",
+      "x": 89.28,
+      "y": 488.87,
+      "page": 5,
       "font_size": 10.0,
-      "line_text": "delovnih mest v organizacijskih enotah okrajnega oziroma mestnega ljudskega"
+      "line_text": "ki se je vršila dne 50. juniju 1952 v Ljubljani."
     },
     {
-      "text": "organizacijskih enotah okrajnega oziroma mestnega ljudskega",
-      "x": 95.28,
-      "y": 189.11,
-      "page": 7,
+      "text": "zidija Ljudske skupščine LRS o sklicanju Ljudske skupščine LRS k 111. izred",
+      "x": 17.52,
+      "y": 423.59,
+      "page": 5,
       "font_size": 10.0,
-      "line_text": "delovnih mest v organizacijskih enotah okrajnega oziroma mestnega ljudskega"
+      "line_text": "zidija Ljudske skupščine LRS o sklicanju Ljudske skupščine LRS k 111. izred"
     },
     {
-      "text": "tem",
-      "x": 117.36,
-      "y": 178.31,
-      "page": 7,
+      "text": "nemu zasedanju drugega sklica.",
+      "x": 17.52,
+      "y": 412.31,
+      "page": 5,
       "font_size": 10.0,
-      "line_text": "odbora, ker sta na tem vprašanju živo zainteresirana oba zbora oziroma"
-    },
-    {
-      "text": "vprašanju živo zainteresirana oba zbora oziroma",
-      "x": 140.16,
-      "y": 178.31,
-      "page": 7,
-      "font_size": 10.0,
-      "line_text": "odbora, ker sta na tem vprašanju živo zainteresirana oba zbora oziroma"
-    },
-    {
-      "text": "mest.",
-      "x": 225.11,
-      "y": 124.31,
-      "page": 7,
-      "font_size": 10.0,
-      "line_text": "soodločanje tudi pri sistemizaciji delovnih mest."
-    },
-    {
-      "text": "(Strinja.)",
-      "x": 17.04,
-      "y": 569.51,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "(Strinja.)"
-    },
-    {
-      "text": "navajamo v svojem poročilu in ki si je pridržala pravieo do posebnega poro",
-      "x": 17.28,
-      "y": 544.31,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "navajamo v svojem poročilu in ki si je pridržala pravieo do posebnega poro"
-    },
-    {
-      "text": "čila na zasedanju skupščine, sporočila, da umakne svoje manjšinsko mnenje",
-      "x": 16.8,
-      "y": 533.75,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "čila na zasedanju skupščine, sporočila, da umakne svoje manjšinsko mnenje"
-    },
-    {
-      "text": "tako, da se lahko smatra, da je tudi ta sprememba, ki je navedena v 85. členu",
-      "x": 17.76,
-      "y": 522.95,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "tako, da se lahko smatra, da je tudi ta sprememba, ki je navedena v 85. členu"
-    },
-    {
-      "text": "predloga zakona o okrajnih ljudskih odhorih oziroma v 89. členu zakonskega",
-      "x": 17.76,
-      "y": 512.39,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "predloga zakona o okrajnih ljudskih odhorih oziroma v 89. členu zakonskega"
-    },
-    {
-      "text": "predloga o ljudskih odhorih mest in mestnih občin in v 62. členu zakonskega",
-      "x": 18.0,
-      "y": 501.59,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "predloga o ljudskih odhorih mest in mestnih občin in v 62. členu zakonskega"
-    },
-    {
-      "text": "predloga o občinskih ljudskih odhorih in ki je bila sklenjena na podlagi",
-      "x": 18.24,
-      "y": 490.79,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "predloga o občinskih ljudskih odhorih in ki je bila sklenjena na podlagi"
-    },
-    {
-      "text": "predlaganega amandmaja od vlade LRS, soglasno sprejeta.",
-      "x": 18.24,
-      "y": 479.75,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "predlaganega amandmaja od vlade LRS, soglasno sprejeta."
-    },
-    {
-      "text": "predsednik sveta za zakonodajo in izgradnjo ljudske oblasti dr. Marijan",
-      "x": 18.0,
-      "y": 451.91,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "predsednik sveta za zakonodajo in izgradnjo ljudske oblasti dr. Marijan"
-    },
-    {
-      "text": "Rrecelj.",
-      "x": 18.24,
-      "y": 440.15,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "Rrecelj."
-    },
-    {
-      "text": "Ljudska skupščina FLRJ je sprejela 1. aprila 1952 nov splošni zakon o ljud",
-      "x": 18.24,
-      "y": 414.71,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "Ljudska skupščina FLRJ je sprejela 1. aprila 1952 nov splošni zakon o ljud"
-    },
-    {
-      "text": "skih odborih. S tem zakonom, ki ima značaj ustavnega zveznega zakona, se",
-      "x": 17.76,
-      "y": 403.91,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "skih odborih. S tem zakonom, ki ima značaj ustavnega zveznega zakona, se"
-    },
-    {
-      "text": "uvaja pri nas nov sistem v organizaciji in poslovanju lokalnih organov ljudske",
-      "x": 18.48,
-      "y": 393.11,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "uvaja pri nas nov sistem v organizaciji in poslovanju lokalnih organov ljudske"
-    },
-    {
-      "text": "oblasti in državne uprave. Za razliko od prejšnjih ta zakon ni stopil nepo",
-      "x": 18.0,
-      "y": 382.31,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "oblasti in državne uprave. Za razliko od prejšnjih ta zakon ni stopil nepo"
-    },
-    {
-      "text": "sredno v veljavo, ampak je uzakonil splošna načela in izdal smernice za",
-      "x": 18.24,
-      "y": 371.51,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "sredno v veljavo, ampak je uzakonil splošna načela in izdal smernice za"
+      "line_text": "nemu zasedanju drugega sklica."
     }
   ],
   "recovery_counts": {},

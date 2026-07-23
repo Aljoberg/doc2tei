@@ -2,24 +2,20 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\03 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 10. oktobra 1962 do 28. februarja 1963.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 32878,
-  "unmatched_count": 12766,
+  "unmatched_count": 25816,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 3,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 12,
-    "CONSUMED_FOOTNOTE_RUN": 2,
-    "CONSUMED_LINE": 105,
-    "FOOTNOTE_CONTINUATION": 27,
-    "FOOTNOTE_ENTRY": 4,
-    "GENERIC_NOTE": 47,
-    "HEAD": 32,
-    "PARAGRAPH": 16340,
+    "CONSUMED_FOOTNOTE_RUN": 1,
+    "CONSUMED_LINE": 136,
+    "GENERIC_NOTE": 21,
+    "HEAD": 15,
+    "PARAGRAPH": 4079,
     "SCRIBE": 15,
-    "SEG": 2593,
-    "SOURCE_ARTIFACT": 782,
-    "SPEAKER": 121,
-    "TIME": 26,
-    "UNMATCHED_LINE": 2
+    "SEG": 1509,
+    "SOURCE_ARTIFACT": 1135,
+    "SPEAKER": 115,
+    "TIME": 23
   },
   "page_counts": {
     "1": 15,
@@ -711,6 +707,30 @@
   },
   "unmatched_samples": [
     {
+      "text": "9T",
+      "x": 58.56,
+      "y": 588.38,
+      "page": 1,
+      "font_size": 27.0,
+      "line_text": "9T"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 169.92,
+      "y": 541.57,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "w",
+      "x": 280.56,
+      "y": 511.02,
+      "page": 1,
+      "font_size": 9.0,
+      "line_text": "w ч/"
+    },
+    {
       "text": "ч",
       "x": 296.4,
       "y": 510.63,
@@ -725,6 +745,126 @@
       "page": 1,
       "font_size": 9.0,
       "line_text": "w ч/"
+    },
+    {
+      "text": "LJUDSKE SRIPSCINE",
+      "x": 91.68,
+      "y": 481.22,
+      "page": 1,
+      "font_size": 32.0,
+      "line_text": "LJUDSKE SRIPSCINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 92.16,
+      "y": 455.65,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 177.84,
+      "y": 402.04,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje od 10. oktobra 1962 do 28. februarja 1963",
+      "x": 73.92,
+      "y": 345.97,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Seje od 10. oktobra 1962 do 28. februarja 1963"
+    },
+    {
+      "text": "1963",
+      "x": 209.52,
+      "y": 131.56,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1963"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 193.68,
+      "y": 91.24,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 165.36,
+      "y": 532.21,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "LJUDSKE SKIPŠČIME",
+      "x": 86.4,
+      "y": 472.07,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKIPŠČIME"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 86.88,
+      "y": 446.05,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Celrti sklic)",
+      "x": 171.6,
+      "y": 393.4,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Celrti sklic)"
+    },
+    {
+      "text": "Sejo od 10. oktobra 1962 do 2«. februarja 1963",
+      "x": 67.44,
+      "y": 337.09,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Sejo od 10. oktobra 1962 do 2«. februarja 1963"
+    },
+    {
+      "text": "963",
+      "x": 208.8,
+      "y": 122.48,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "963"
+    },
+    {
+      "text": "L i n I) I i a n a",
+      "x": 185.52,
+      "y": 82.84,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "L i n I) I i a n a"
+    },
+    {
+      "text": "997",
+      "x": 219.36,
+      "y": 326.52,
+      "page": 4,
+      "font_size": 26.0,
+      "line_text": "997"
+    },
+    {
+      "text": "Z)f1t. XI.",
+      "x": 180.96,
+      "y": 219.36,
+      "page": 4,
+      "font_size": 21.0,
+      "line_text": "Z)f1t. XI. ш/ш"
     },
     {
       "text": "ш",
@@ -751,164 +891,20 @@
       "line_text": "Z)f1t. XI. ш/ш"
     },
     {
-      "text": "Pričenjam 30. sejo Republiškega /bora Ljudske skupščine LRS, ki jo je sklical",
-      "x": 27.84,
-      "y": 410.85,
+      "text": "в",
+      "x": 166.32,
+      "y": 421.11,
       "page": 5,
       "font_size": 9.0,
-      "line_text": "Pričenjam 30. sejo Republiškega /bora Ljudske skupščine LRS, ki jo je sklical"
+      "line_text": "Predsednik inž, Pavle 2в u cer: Tovarišice in tovariši ljudski poslanci!"
     },
     {
-      "text": "predsednik Ljudske skupščine LRS.",
-      "x": 27.84,
-      "y": 399.81,
+      "text": "u cer: Tovarišice in tovariši ljudski poslanci!",
+      "x": 176.4,
+      "y": 421.41,
       "page": 5,
       "font_size": 9.0,
-      "line_text": "predsednik Ljudske skupščine LRS."
-    },
-    {
-      "text": "zapisnik. (Zapisnikar Slavica Zirkelbach prebere zapisnik 29. seje Republiškega",
-      "x": 27.84,
-      "y": 356.61,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "zapisnik. (Zapisnikar Slavica Zirkelbach prebere zapisnik 29. seje Republiškega"
-    },
-    {
-      "text": "zbora.)",
-      "x": 28.32,
-      "y": 345.81,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "zbora.)"
-    },
-    {
-      "text": "nihče.) Ce ne smatram, da je zapisnik odobren.",
-      "x": 28.32,
-      "y": 324.21,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "nihče.) Ce ne smatram, da je zapisnik odobren."
-    },
-    {
-      "text": "ki ga je Ljudski skupščini predložil Izvršni svet, in sicer:",
-      "x": 28.56,
-      "y": 300.45,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "ki ga je Ljudski skupščini predložil Izvršni svet, in sicer:"
-    },
-    {
-      "text": "pospeševanje proizvodnje in predvajanja filmov.",
-      "x": 28.56,
-      "y": 276.69,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "pospeševanje proizvodnje in predvajanja filmov."
-    },
-    {
-      "text": "dnevnemu redu? (Ne javi se nihče.) Ce ne, smatram, da je dnevni red sprejel.",
-      "x": 28.32,
-      "y": 255.09,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "dnevnemu redu? (Ne javi se nihče.) Ce ne, smatram, da je dnevni red sprejel."
-    },
-    {
-      "text": "staviti kakšno ustno ali pismeno vprašanje Izvršnemu svetu? (Ne javi se nihče.)",
-      "x": 28.08,
-      "y": 233.49,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "staviti kakšno ustno ali pismeno vprašanje Izvršnemu svetu? (Ne javi se nihče.)"
-    },
-    {
-      "text": "sklepanje o predlogu zakona o skladu LR Slovenije za pospeševanje proizvodnje",
-      "x": 28.32,
-      "y": 209.97,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "sklepanje o predlogu zakona o skladu LR Slovenije za pospeševanje proizvodnje"
-    },
-    {
-      "text": "in predvajanja filmov.",
-      "x": 28.56,
-      "y": 198.93,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "in predvajanja filmov."
-    },
-    {
-      "text": "čevalec odbora za prosveto in kulturo ljudski poslanec Milo V i ž i n t i n",
-      "x": 28.32,
-      "y": 177.09,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "čevalec odbora za prosveto in kulturo ljudski poslanec Milo V i ž i n t i n"
-    },
-    {
-      "text": "prebere odborovo poročilo. — Glej priloge.)",
-      "x": 28.56,
-      "y": 166.29,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "prebere odborovo poročilo. — Glej priloge.)"
-    },
-    {
-      "text": "odbora za gospodarstvo, ljudski poslanec Jože Marolt, prebere odborovo",
-      "x": 28.32,
-      "y": 144.45,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "odbora za gospodarstvo, ljudski poslanec Jože Marolt, prebere odborovo"
-    },
-    {
-      "text": "poročilo. — Glej priloge.)",
-      "x": 28.56,
-      "y": 133.41,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "poročilo. — Glej priloge.)"
-    },
-    {
-      "text": "(Poročevalec odbora za organizacijo oblasti in upravo ljudski poslanec T i n e",
-      "x": 29.04,
-      "y": 110.13,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "(Poročevalec odbora za organizacijo oblasti in upravo ljudski poslanec T i n e"
-    },
-    {
-      "text": "Remškar prebere odborovo poročilo. — Glej priloge.)",
-      "x": 28.8,
-      "y": 99.33,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "Remškar prebere odborovo poročilo. — Glej priloge.)"
-    },
-    {
-      "text": "zakonodajnega odbora, ljudski poslanec Vera Kolarič, prebere odborovo",
-      "x": 28.56,
-      "y": 75.57,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "zakonodajnega odbora, ljudski poslanec Vera Kolarič, prebere odborovo"
-    },
-    {
-      "text": "poročilo. — Glej priloge.)",
-      "x": 29.04,
-      "y": 64.77,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "poročilo. — Glej priloge.)"
-    },
-    {
-      "text": "LR Slovenije za pospeševanje proizvodnje in predvajanja filmov smo slišali",
-      "x": 40.08,
-      "y": 577.17,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "LR Slovenije za pospeševanje proizvodnje in predvajanja filmov smo slišali"
+      "line_text": "Predsednik inž, Pavle 2в u cer: Tovarišice in tovariši ljudski poslanci!"
     }
   ],
   "recovery_counts": {},

@@ -6,9 +6,6 @@
       <roleName xml:lang="sl">Predsednik</roleName>
     </affiliation>
   </person>
-  <person xml:id="JožoTurnšek">
-    <persName>Jožo Turnšek</persName>
-  </person>
   <person xml:id="JožeTurnšek">
     <persName>Jože Turnšek</persName>
   </person>
@@ -33,14 +30,8 @@
   <person xml:id="JakobZen">
     <persName>Jakob Zen</persName>
   </person>
-  <person xml:id="MarijanBrocelj">
-    <persName>Dr. Marijan Brocelj</persName>
-  </person>
   <person xml:id="JakobZon">
     <persName>Jakob Zon</persName>
-  </person>
-  <person xml:id="MarijanBrccelj">
-    <persName>Dr. Marijan Brccelj</persName>
   </person>
   <person xml:id="StaneNunčič">
     <persName>Stane Nunčič</persName>
@@ -72,15 +63,6 @@
   <person xml:id="FrancFicko">
     <persName>Franc Ficko</persName>
   </person>
-  <person xml:id="Marijanbroce1J">
-    <persName>D r. M a r i j a n B r o c e 1 j</persName>
-  </person>
-  <person xml:id="V1Adomajhen">
-    <persName>Predsednik V 1 a d o M a j h e n</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="KarmeloBudihna">
     <persName>Inž. Karmelo Budihna</persName>
   </person>
@@ -111,9 +93,6 @@
       <roleName xml:lang="sl">Predsednik</roleName>
     </affiliation>
   </person>
-  <person xml:id="AntonkoŽelj">
-    <persName>Inž. AntonKo želj</persName>
-  </person>
   <person xml:id="AdolfTavčar">
     <persName>Inž. Adolf Tavčar</persName>
   </person>
@@ -135,17 +114,11 @@
   <person xml:id="ŠtefanPavšič">
     <persName>Štefan Pavšič</persName>
   </person>
-  <person xml:id="BogdanKnaf1Ič">
-    <persName>Bogdan K n a f 1 i č</persName>
+  <person xml:id="BogdanKnaflič">
+    <persName>Bogdan Knaflič</persName>
   </person>
   <person xml:id="JanezKermavner">
     <persName>Janez Kermavner</persName>
-  </person>
-  <person xml:id="MavriciJBore">
-    <persName>Predsednik Mavrici j Bore</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="IvanHercog">
     <persName>Ivan Hercog</persName>
@@ -156,11 +129,8 @@
   <person xml:id="StaneBizjak">
     <persName>Stane Bizjak</persName>
   </person>
-  <person xml:id="ZoranPolie">
-    <persName>Zoran Polie</persName>
-  </person>
-  <person xml:id="MarijanGarzarolli">
-    <persName>Marijan Garzarolli</persName>
+  <person xml:id="MarjanGarzarolli">
+    <persName>Marjan Garzarolli</persName>
   </person>
   <person xml:id="IvanŽagar">
     <persName>Ivan Žagar</persName>
@@ -180,12 +150,6 @@
   <person xml:id="MatijaPfajfar">
     <persName>Matija Pfajfar</persName>
   </person>
-  <person xml:id="MavriciBore">
-    <persName>Predsednik Mavrici] Bore</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="StanislavKeber">
     <persName>Stanislav Keber</persName>
   </person>
@@ -197,12 +161,6 @@
   </person>
   <person xml:id="DanijelLepin">
     <persName>Danijel Lepin</persName>
-  </person>
-  <person xml:id="DanijelLopin">
-    <persName>Danijel Lopin (govori iz poslansko klopi)</persName>
-    <affiliation role="member">
-      <orgName>govori iz poslansko klopi</orgName>
-    </affiliation>
   </person>
   <person xml:id="IvanCurk">
     <persName>Ivan Curk</persName>
@@ -216,21 +174,6 @@
   <person xml:id="IvanGorjup">
     <persName>Ivan Gorjup</persName>
   </person>
-  <person xml:id="MavricjBore">
-    <persName>Predsednik Mavricj Bore</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="MarjanGarzarolli">
-    <persName>Marjan Garzarolli</persName>
-  </person>
-  <person xml:id="Mavricijborc">
-    <persName>Predsednik M a v r i c i j B o r c</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="PoročevalecBogdanKnaflič">
     <persName>Poročevalec Bogdan Knaflič</persName>
   </person>
@@ -243,21 +186,6 @@
       <roleName xml:lang="sl">Podpredsednik</roleName>
     </affiliation>
   </person>
-  <person xml:id="Vilmapirkovič">
-    <persName>Podpredsednik inž. VilmaPirkovič</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="Vi1Mapirkovič">
-    <persName>Podpredsednik i n ž. V i 1 m a P i r k o v i č</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="BogdanKnaflič">
-    <persName>Bogdan Knaflič</persName>
-  </person>
   <person xml:id="JožeK1Anšek">
     <persName>Jože K 1 a n š e k</persName>
   </person>
@@ -269,15 +197,6 @@
     <affiliation role="podpredsednik">
       <roleName xml:lang="sl">Podpredsednik</roleName>
     </affiliation>
-  </person>
-  <person xml:id="FordoKozak">
-    <persName>Podpredsednik dr. Fordo Kozak</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="Marijanbrecc1J">
-    <persName>D r. M a r i j a n B r e c c 1 j</persName>
   </person>
   <person xml:id="AlbertJakopič">
     <persName>Albert Jakopič</persName>

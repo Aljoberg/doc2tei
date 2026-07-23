@@ -4,12 +4,10 @@
     "#JožeGlobevnik": "Dr. Jože Globevnik:",
     "#MilanApih": "Milan Apih:",
     "#AlojzLibnik": "Alojz Libnik:",
-    "#PaViEZaucer": "Predsednik inž. P a vi e Z a u c e r :",
     "#TeodorTominšek": "Dr. Teodor Tominšek:",
     "#MatijaMaležič": "Matija Maležič:",
     "#FranceKimovec": "France Kimovec:",
     "#VilmaPirKovic": "Inž. Vilma Pir kovic:",
-    "#Pavle2Aucer": "Predsednik inž. Pavle 2aucer:",
     "#AleksanderPirher": "Aleksander Pirher:",
     "#RikoJerman": "Riko Jerman:",
     "#JožeVonta": "Jože Vonta:",
@@ -17,8 +15,6 @@
     "#JožeVilfan": "Dr. Jože Vilfan:",
     "#MaksoSnuderl": "Dr. Makso Snuderl:",
     "#RudiCačinovič": "Rudi Cačinovič:",
-    "#Pavlezaucer": "Predsednik inž. PavleZaucer:",
-    "#FrancKimovec": "Franc Kimovec:",
     "#MihaMarinko": "Predsednik Miha Marinko:",
     "#JožeIngolič": "Jože Ingolič:",
     "#BorisKocijančič": "Boris Kocijančič:",
@@ -39,7 +35,6 @@
     "#GregorKlančnik": "Gregor Klančnik:",
     "#ŠtefanPavšič": "Štefan Pavšič:",
     "#TineLah": "Tine Lah:",
-    "#JožaVilfan": "Dr. Joža Vilfan:",
     "#NikoŠilih": "Niko Šilih:",
     "#JožeBergant": "Jože Bergant:",
     "#MiranCvenk": "Miran Cvenk :",
@@ -50,7 +45,6 @@
     "#MarijaAljančič": "Marija Aljančič:",
     "#TineRemškar": "Tine Remškar:",
     "#RužaSegedin": "Dr. Ruža Segedin:",
-    "#LojzeLibnik": "Lojze Libnik:",
     "#IvoJanžekovič": "Ivo Janžekovič:",
     "#StaneSotlar": "Stane Sotlar:",
     "#JožeTramšek": "Jože Tramšek:",
@@ -60,6 +54,6 @@
     "#MirkoZ1Atnar": "Mirko Z 1 a t n a r :"
   },
   "warnings": [
-    "27 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+    "19 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
   ]
 }

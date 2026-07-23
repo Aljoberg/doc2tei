@@ -21,9 +21,6 @@
   <person xml:id="PoročevalecNikoJakofčič">
     <persName>Poročevalec Niko Jakofčič</persName>
   </person>
-  <person xml:id="Prisotni">
-    <persName>PRISOTNI ČLANI VLADE</persName>
-  </person>
   <person xml:id="NikoJakofčič">
     <persName>Niko Jakofčič</persName>
   </person>
@@ -39,20 +36,8 @@
   <person xml:id="FrancLeskošek">
     <persName>Franc Leskošek</persName>
   </person>
-  <person xml:id="Navzoči">
-    <persName>NAVZOČI ČLANI VLADE</persName>
-  </person>
-  <person xml:id="SekretarPredsednik">
-    <persName>Sekretar; Predsednik</persName>
-  </person>
   <person xml:id="HeliModic">
     <persName>Dr. Heli Modic</persName>
-  </person>
-  <person xml:id="Ferdokozak">
-    <persName>Predsednik dr. FerdoKozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="AntonMelik">
     <persName>Dr. Anton Melik</persName>
@@ -81,50 +66,20 @@
   <person xml:id="MarijanBrecelj">
     <persName>Dr. Marijan Brecelj</persName>
   </person>
-  <person xml:id="Stankoštor">
-    <persName>D r. S t a n k o Š t o r</persName>
-  </person>
-  <person xml:id="StankoŠior">
-    <persName>Dr. Stanko Šior</persName>
-  </person>
-  <person xml:id="FerdokoZaK">
-    <persName>Predsednik d r. F e r d o K o za k</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="He1Imodic">
-    <persName>D r. H e 1 i M o d i c</persName>
-  </person>
-  <person xml:id="LerdoKozak">
-    <persName>Predsednik dr. L e r d o Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="He1IModic">
-    <persName>D r. H e 1 i Modic</persName>
-  </person>
   <person xml:id="VladeDrMarijanBrecelj">
     <persName>Podpredsednik vlade d r. M a r i j a n Brecelj</persName>
     <affiliation role="podpredsednik">
       <roleName xml:lang="sl">Podpredsednik vlade</roleName>
     </affiliation>
   </person>
-  <person xml:id="TiRFerdoKozak">
+  <person xml:id="TirFerdoKozak">
     <persName>Predsednik ti r. F e r d o Kozak</persName>
     <affiliation role="predsednik">
       <roleName xml:lang="sl">Predsednik</roleName>
     </affiliation>
   </person>
-  <person xml:id="MaRijAnBRecelJ">
-    <persName>Dr. Ma r i j an B recel j</persName>
-  </person>
   <person xml:id="JosipVidmar">
     <persName>Josip Vidmar</persName>
-  </person>
-  <person xml:id="HeLiModic">
-    <persName>D r. H e li Modic</persName>
   </person>
   <person xml:id="JožeRus">
     <persName>Jože Rus</persName>
@@ -132,26 +87,11 @@
   <person xml:id="JožePetejan">
     <persName>Jože Petejan</persName>
   </person>
-  <person xml:id="Marijanbrece1J">
-    <persName>D r. M a r i j a n B r e c e 1 j</persName>
-  </person>
-  <person xml:id="VladeLrs">
-    <persName>Predsednik vlade LRS je poslal ljudski skupščini naslednje pismo</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik vlade</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="Mihakambič">
+  <person xml:id="MihaKambič">
     <persName>D r. M i h a K a m b i č</persName>
   </person>
   <person xml:id="ZoranPolič">
     <persName>Zoran Polič</persName>
-  </person>
-  <person xml:id="IERdoKozak">
-    <persName>Predsednik dr. I'e r d o Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="ViktorAvbelj">
     <persName>Viktor Avbelj</persName>
@@ -186,32 +126,11 @@
   <person xml:id="AntonIngolič">
     <persName>Anton Ingolič</persName>
   </person>
-  <person xml:id="FevdoKozak">
-    <persName>Predsednik dr. FeVdo Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="MihaKambič">
-    <persName>Dr. Miha Kambič</persName>
-  </person>
-  <person xml:id="PrisotniClAniVlade">
-    <persName>PRISOTNI CL ANI VLADE</persName>
-  </person>
-  <person xml:id="TajnikPredsednik">
-    <persName>Tajnik Predsednik</persName>
+  <person xml:id="MihaPotočnik">
+    <persName>Dr. Miha Potočnik</persName>
   </person>
   <person xml:id="AlojzColarič">
     <persName>Alojz Colarič</persName>
-  </person>
-  <person xml:id="VinkoKnol">
-    <persName>Vinko Knol</persName>
-  </person>
-  <person xml:id="ErvinDolgan">
-    <persName>Ervin Dolgan</persName>
-  </person>
-  <person xml:id="MihaPotočnik">
-    <persName>Dr. Miha Potočnik</persName>
   </person>
   <person xml:id="VinkoŠumrada">
     <persName>Vinko Šumrada</persName>

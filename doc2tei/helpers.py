@@ -276,6 +276,69 @@ class FootnoteLinker:
         after = "".join(run.text for run in runs[max(indexes) + 1 :]).lstrip()
         return before.endswith(("/", "%")) or after.startswith(("/", "%"))
 
+    def _starts_definition_line(self, chunk: PDFChunk) -> bool:
+        """Accept markers preceded only by OCR punctuation on the same line."""
+
+        if chunk.is_line_start:
+            return True
+        group = self.numeric_run_group(chunk)
+        group_ids = {id(run) for run in group}
+        runs = chunk.line_chunk.runs
+        indexes = [index for index, run in enumerate(runs) if id(run) in group_ids]
+        if not indexes:
+            return False
+        prefix = "".join(run.text for run in runs[: min(indexes)]).strip()
+        return (
+            0 < len(prefix) <= 8
+            and not any(character.isalpha() for character in prefix)
+        )
+
+    def _starts_at_text_column(self, chunk: PDFChunk) -> bool:
+        context = chunk.page_context
+        if context is None:
+            return False
+        if chunk.x <= context.width * 0.30:
+            return True
+        raw_columns = context.metadata.get("columns")
+        columns = (
+            [
+                float(value)
+                for value in raw_columns
+                if isinstance(value, (int, float))
+            ]
+            if isinstance(raw_columns, list)
+            else []
+        )
+        return bool(
+            columns
+            and min(abs(chunk.x - column) for column in columns)
+            <= context.width * 0.06
+        )
+
+    def _plausible_definition_number(
+        self,
+        chunk: PDFChunk,
+        number: str,
+    ) -> bool:
+        normalized = number.lstrip("0")
+        if not normalized.isdigit():
+            return False
+        value = int(normalized)
+        if not 1 <= value:
+            return False
+        if value <= 99 or self.references.get((chunk.page_num, number)):
+            return True
+
+        # Large numbers are uncommon but valid in continuously numbered
+        # editions. Require evidence from the definitions already observed
+        # instead of imposing an absolute maximum or accepting a table count.
+        previous_numbers = [
+            int(marker.lstrip("0"))
+            for _page, marker in self.definitions
+            if marker.lstrip("0").isdigit()
+        ]
+        return bool(previous_numbers and value == previous_numbers[-1] + 1)
+
     def is_inline_reference(self, chunk: PDFChunk) -> bool:
         return (
             not chunk.is_line_start
@@ -299,23 +362,37 @@ class FootnoteLinker:
 
     def is_entry(self, chunk: PDFChunk) -> bool:
         context = chunk.page_context
+        number = self.number(chunk)
         if (
-            not self.structural_page(chunk)
+            not self._starts_definition_line(chunk)
+            or not self.structural_page(chunk)
             or context is None
             or not self.is_small_numeric_run(chunk)
             or not self.is_first_numeric_run(chunk)
+            or not self._plausible_definition_number(chunk, number)
+            or self._looks_like_percentage(chunk)
         ):
             return False
         relative_y = chunk.y / context.height
         if relative_y > self.y_max or relative_y < self.y_min:
             return False
+        if not self._starts_at_text_column(chunk):
+            return False
         runs = chunk.line_chunk.runs
         group = self.numeric_run_group(chunk)
         last_index = next(index for index, run in enumerate(runs) if run is group[-1])
-        return any(
-            run.font_size <= self.body_size() - 1.0
-            and any(character.isalpha() for character in run.text)
+        definition_runs = [
+            run
             for run in runs[last_index + 1 :]
+            if run.font_size <= self.body_size() - 1.0
+        ]
+        return (
+            sum(
+                character.isalpha()
+                for run in definition_runs
+                for character in run.text
+            )
+            >= 4
         )
 
     def entry_action(self, chunk: PDFChunk) -> None:

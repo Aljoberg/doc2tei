@@ -6,7 +6,6 @@
     "#JožePetejan": "Jože Petejan:",
     "#MarjanAhčin": "Dr. Marjan Ahčin:",
     "#FerdoKozak": "Dr. Ferdo Kozak:",
-    "#StaneKAvčič": "Stane K.avčič:",
     "#KarmeloBudihna": "Inž. Karmelo Budihna:",
     "#MarijanBrecelj": "Dr. Marijan Brecelj:",
     "#JožeTramšek": "Jože Tramšek:",
@@ -17,7 +16,6 @@
     "#AleksanderPirher": "Aleksander Pirher:",
     "#AntonPeternelj": "Anton Peternelj:",
     "#MihaPotočnik": "Dr. Miha Potočnik:",
-    "#VinkoŠumrada": "Vinko Šumrada:",
     "#AlojzColarič": "Alojz Colarič:",
     "#MihaBerčič": "Miha Berčič:",
     "#BorisKocijančič": "Boris Kocijančič:",
@@ -35,7 +33,6 @@
     "#JožeŠtrukelj": "Jože Štrukelj:",
     "#AntonTruden": "Anton Truden:",
     "#StaneBizjak": "Stane Bizjak:",
-    "#STaneBizjak": "S.tane Bizjak:",
     "#MiranMejak": "Inž. Miran Mejak:",
     "#LeopoldBoštjančič": "Leopold Boštjančič:",
     "#JanezKermavner": "Janez Kermavner:",
@@ -62,9 +59,7 @@
     "#BorisKraigher": "Boris Kraigher:",
     "#MihaelaDermastia": "Mihaela Dermastia:",
     "#NikoŠilih": "Niko Šilih:",
-    "#FrancKrese": "Franc Krese:",
-    "#InPoročevalec": "Predsednik in poročevalec:",
-    "#Izvoli": "(Ur. 1. FLRJ, št. 31/54) izvoli:"
+    "#FrancKrese": "Franc Krese:"
   },
   "warnings": [
     "6 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."

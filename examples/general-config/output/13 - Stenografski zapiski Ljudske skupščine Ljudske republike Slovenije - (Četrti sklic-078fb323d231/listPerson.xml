@@ -15,12 +15,6 @@
   <person xml:id="AlojzLibnik">
     <persName>Alojz Libnik</persName>
   </person>
-  <person xml:id="PaViEZaucer">
-    <persName>Predsednik inž. P a vi e Z a u c e r</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="TeodorTominšek">
     <persName>Dr. Teodor Tominšek</persName>
   </person>
@@ -32,12 +26,6 @@
   </person>
   <person xml:id="VilmaPirKovic">
     <persName>Inž. Vilma Pir kovic</persName>
-  </person>
-  <person xml:id="Pavle2Aucer">
-    <persName>Predsednik inž. Pavle 2aucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="AleksanderPirher">
     <persName>Aleksander Pirher</persName>
@@ -59,15 +47,6 @@
   </person>
   <person xml:id="RudiCačinovič">
     <persName>Rudi Cačinovič</persName>
-  </person>
-  <person xml:id="Pavlezaucer">
-    <persName>Predsednik inž. PavleZaucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="FrancKimovec">
-    <persName>Franc Kimovec</persName>
   </person>
   <person xml:id="MihaMarinko">
     <persName>Predsednik Miha Marinko</persName>
@@ -138,9 +117,6 @@
   <person xml:id="TineLah">
     <persName>Tine Lah</persName>
   </person>
-  <person xml:id="JožaVilfan">
-    <persName>Dr. Joža Vilfan</persName>
-  </person>
   <person xml:id="NikoŠilih">
     <persName>Niko Šilih</persName>
   </person>
@@ -170,9 +146,6 @@
   </person>
   <person xml:id="RužaSegedin">
     <persName>Dr. Ruža Segedin</persName>
-  </person>
-  <person xml:id="LojzeLibnik">
-    <persName>Lojze Libnik</persName>
   </person>
   <person xml:id="IvoJanžekovič">
     <persName>Ivo Janžekovič</persName>

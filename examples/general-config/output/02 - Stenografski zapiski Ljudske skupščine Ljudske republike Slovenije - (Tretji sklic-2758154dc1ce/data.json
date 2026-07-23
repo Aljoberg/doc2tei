@@ -17,7 +17,6 @@
     "#StaneKeber": "Stane Keber:",
     "#JožeIngolič": "Jože Ingolič (govori iz klopi):",
     "#StaneRebernak": "Stane Rebernak:",
-    "#VilmaPirKovic": "Podpredsednik inž. Vilma Pir kovic:",
     "#PepcaJež": "Pepca Jež:",
     "#PavelKorošec": "Pavel Korošec:",
     "#LeopoldBoštjančič": "Leopold Boštjančič:",
@@ -33,12 +32,9 @@
     "#AlojzLukač": "Alojz Lukač:",
     "#StaneBrečko": "Stane Brečko:",
     "#JanezKermavner": "Janez Kermavner:",
-    "#MiHaMarinko": "Predsednik Mi ha Marinko:",
     "#MatevžHace": "Matevž Hace:",
-    "#MihaMarinKo": "Predsednik Miha Marin ko:",
     "#JožeKlanšek": "Jože Klanšek:",
     "#FrancMarinko": "Franc Marinko:",
-    "#Mihamarinko": "Predsednik MihaMarinko:",
     "#MarijanDermastia": "Dr. Marijan Dermastia:",
     "#JožeEberl": "Jože Eberl:",
     "#IvanJakomin": "Ivan Jakomin:",
@@ -66,8 +62,7 @@
     "#VinkoHafner": "Vinko Hafner:",
     "#MirkoBračič": "Mirko Bračič:",
     "#BogomilVižintin": "Bogomil Vižintin:",
-    "#AleksanderPirher": "Aleksander Pirher:",
-    "#JožEPetejan": "Jož e Petejan:"
+    "#AleksanderPirher": "Aleksander Pirher:"
   },
   "warnings": [
     "15 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."

@@ -9,20 +9,8 @@
   <person xml:id="BorisKocijančič">
     <persName>Boris Kocijančič</persName>
   </person>
-  <person xml:id="Pavle2Aucer">
-    <persName>Predsednik inž. Pavle 2aucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="VladoMajhen">
     <persName>Vlado Majhen</persName>
-  </person>
-  <person xml:id="PavleŽaucer">
-    <persName>Predsednik inž. Pavle Ž a u c e r</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="Pavlo">
     <persName>Predsednik inž. Pavlo Za u cer</persName>
@@ -32,12 +20,6 @@
   </person>
   <person xml:id="BenoZupančič">
     <persName>Beno Zupančič</persName>
-  </person>
-  <person xml:id="PavloZaucer">
-    <persName>Predsednik inž. Pavlo Zaucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="MihaBerčič">
     <persName>Predsednik Miha Berčič</persName>
@@ -51,20 +33,14 @@
   <person xml:id="JožeBenigar">
     <persName>Dr. Jože Benigar</persName>
   </person>
-  <person xml:id="LojzeOČopek">
-    <persName>Predsednik Lojze O čopek</persName>
+  <person xml:id="LojzeOcepek">
+    <persName>Predsednik Lojze Ocepek</persName>
     <affiliation role="predsednik">
       <roleName xml:lang="sl">Predsednik</roleName>
     </affiliation>
   </person>
   <person xml:id="JanezKermavner">
     <persName>Janez Kermavner</persName>
-  </person>
-  <person xml:id="LojzeOcepek">
-    <persName>Predsednik Lojze Ocepek</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="VidaTomšič">
     <persName>Predsednik Vida Tomšič</persName>

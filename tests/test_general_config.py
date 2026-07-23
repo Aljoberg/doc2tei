@@ -12,7 +12,12 @@ from doc2tei.parser import (
     load_config,
     parse_document,
 )
-from doc2tei.extractors import CharacterPDFExtractor, LineRecord, WordPDFExtractor
+from doc2tei.extractors import (
+    CharacterPDFExtractor,
+    LineRecord,
+    RunRecord,
+    WordPDFExtractor,
+)
 from doc2tei.helpers import build_list_person
 from engine import PDFPageContext, make_chunk
 
@@ -107,9 +112,231 @@ def test_appointment_list_prose_is_not_a_speaker():
     assert not module._looks_like_person_prefix(
         "Jože Brilej, za podpredsednika Janko Cesnik, za člane pa"
     )
+    assert not module._looks_like_person_prefix(
+        "Predsednik vlade je predložil skupščini naslednje"
+    )
+    assert not module._looks_like_person_prefix(
+        "Predsednik opravlja tele zadeve"
+    )
     assert module._looks_like_person_prefix("Boris Prešern")
     assert module._looks_like_person_prefix("Predsednik Boris Prešern")
+    assert not module._looks_like_person_prefix(
+        "Tine Lah, dr. Heli Modic in Franc Sustersic"
+    )
+    assert not module._looks_like_person_prefix(
+        "LR Slovenije (Uradni list LRS, st. 2-11/50)"
+    )
+    assert not module._looks_like_person_prefix("V Prilogi 1")
+    assert not module._looks_like_person_prefix("PRISOTNI CLANI VLADE")
+    assert not module._looks_like_person_prefix("Porocevalec; Predsednik")
     assert module._looks_like_person_prefix("Janez P i r n a t")
+
+
+def test_repeated_parallel_colon_labels_are_marked_as_table_rows():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="ocr", body_size=10.0, styled=False)
+    page = PDFPageContext(0, 600.0, 800.0)
+    records = []
+    for index, label in enumerate(("Sv. Ana:", "Sv. Katarina:", "Mali Dolenci:")):
+        y = 300.0 - index * 12.0
+        records.extend(
+            (
+                LineRecord(label, 50.0, y, "Times-Italic", 10.0, []),
+                LineRecord(
+                    f"Vrednost {index + 1}",
+                    230.0,
+                    y,
+                    "Times-Roman",
+                    10.0,
+                    [],
+                ),
+            )
+        )
+
+    module.enrich_page(page, records)
+
+    assert all(
+        record.metadata.get("tabular_label")
+        for record in records
+        if record.text.endswith(":")
+    )
+    table_chunk = pdf_line(
+        "Sv. Ana:",
+        metadata={"tabular_label": True},
+    )
+    assert module.speaker_parts(table_chunk) is None
+    assert not module.is_generic_note(table_chunk)
+
+
+def test_repeated_italic_speaker_labels_are_not_a_table_without_values():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="char-preserve", body_size=10.0, styled=True)
+    page = PDFPageContext(0, 600.0, 800.0)
+    records = [
+        LineRecord(label, 72.0, 300.0 - index * 24.0, "Times-Italic", 10.0, [])
+        for index, label in enumerate(
+            ("Andrej Svetek:", "Vinko Hafner:", "Danijel Lepin:")
+        )
+    ]
+
+    module.enrich_page(page, records)
+
+    assert not any(record.metadata.get("tabular_label") for record in records)
+
+
+def test_combined_table_columns_are_learned_from_run_geometry():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="ocr", body_size=10.0, styled=False)
+    page = PDFPageContext(0, 600.0, 800.0)
+    records = []
+    for index, label in enumerate(("Spodnja Idrija:", "Vojsko:", "Kanal:")):
+        y = 300.0 - index * 12.0
+        records.append(
+            LineRecord(
+                f"{label} Naselje {index + 1}",
+                80.0,
+                y,
+                "Times-Italic",
+                9.0,
+                [
+                    RunRecord(label, 80.0, y, "Times-Italic", 9.0, False),
+                    RunRecord(
+                        f"Naselje {index + 1}",
+                        205.0,
+                        y,
+                        "Times-Roman",
+                        9.0,
+                        True,
+                    ),
+                ],
+            )
+        )
+
+    module.enrich_page(page, records)
+
+    assert all(record.metadata.get("tabular_label") for record in records)
+
+
+def test_same_font_statistical_rows_are_learned_from_repeated_values():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="char-preserve", body_size=10.0, styled=True)
+    page = PDFPageContext(0, 600.0, 800.0)
+    records = [
+        LineRecord(
+            "Murska Sobota: od 130 predloženih 60 ali 46,2 %.",
+            54.0,
+            300.0,
+            "Times-Roman",
+            9.0,
+            [],
+        ),
+        LineRecord(
+            "Novo mesto: od 153 predloženih 70 ali 45,7 %.",
+            54.0,
+            288.0,
+            "Times-Roman",
+            9.0,
+            [],
+        ),
+    ]
+
+    module.enrich_page(page, records)
+
+    assert all(record.metadata.get("tabular_label") for record in records)
+
+
+def test_article_numbers_in_speeches_are_not_statistical_table_rows():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="char-preserve", body_size=10.0, styled=True)
+    page = PDFPageContext(0, 600.0, 800.0)
+    records = [
+        LineRecord(
+            "Dr. Marijan Brecelj: V 113. členu predlagam spremembo.",
+            54.0,
+            300.0,
+            "Times-Roman",
+            9.0,
+            [],
+        ),
+        LineRecord(
+            "Dr. Miha Potočnik: V 120. in 122. členu je določeno.",
+            54.0,
+            288.0,
+            "Times-Roman",
+            9.0,
+            [],
+        ),
+    ]
+
+    module.enrich_page(page, records)
+
+    assert not any(record.metadata.get("tabular_label") for record in records)
+
+
+def test_compact_structural_rows_are_learned_as_a_table():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="char-preserve", body_size=11.0, styled=True)
+    module.reset_state()
+    page = PDFPageContext(0, 600.0, 800.0)
+    records = [
+        LineRecord("Brinje (del): mesto", 20.0, 300.0, "Times-Roman", 11.0, []),
+        LineRecord("Dravlje: mesto", 20.0, 288.0, "Times-Roman", 11.0, []),
+        LineRecord(
+            "Jezica: Jezica, Kleče, Savije",
+            20.0,
+            276.0,
+            "Times-Roman",
+            11.0,
+            [],
+        ),
+        LineRecord(
+            "Murska Sobota: mesto",
+            20.0,
+            264.0,
+            "Times-Roman",
+            11.0,
+            [],
+        ),
+    ]
+
+    module.enrich_page(page, records)
+
+    assert all(record.metadata.get("tabular_label") for record in records)
+
+    debate_rows = [
+        LineRecord("Janez Novak: Da.", 72.0, 240.0, "Times-Roman", 11.0, []),
+        LineRecord("Miha Kovač: Hvala.", 72.0, 228.0, "Times-Roman", 11.0, []),
+        LineRecord("Ana Horvat: Se strinjam.", 72.0, 216.0, "Times-Roman", 11.0, []),
+        LineRecord("Ivo Mlakar: Prosim.", 72.0, 204.0, "Times-Roman", 11.0, []),
+        LineRecord("Maja Zupan: Nadaljujem.", 72.0, 192.0, "Times-Roman", 11.0, []),
+    ]
+    debate_page = PDFPageContext(1, 600.0, 800.0)
+    module.enrich_page(debate_page, debate_rows)
+    assert not any(record.metadata.get("tabular_label") for record in debate_rows)
+
+
+def test_speaker_aliases_merge_only_close_ocr_variants(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    result = parse_document(
+        source,
+        config=CONFIG_PATH,
+        chunks=[
+            pdf_line("Predsednik Ferdo Kozak: Prvi.", y=500.0),
+            pdf_line("Predsednik L e r d o K o z a k: Drugi.", y=480.0),
+            pdf_line("Predsednik Miha Marinko: Tretji.", y=460.0),
+            pdf_line("Predsednik Milan Marinko: Četrti.", y=440.0),
+        ],
+    )
+
+    who = [utterance.attrib["who"] for utterance in result.root.findall(".//u")]
+    assert who[0] == who[1] == "#FerdoKozak"
+    assert who[2] != who[3]
+    assert set(result.data["speakers"]) == {
+        "#FerdoKozak",
+        "#MihaMarinko",
+        "#MilanMarinko",
+    }
 
 
 def test_same_line_speech_is_outside_speaker_note(tmp_path):
@@ -157,6 +384,82 @@ def test_later_heading_opens_a_new_division(tmp_path):
     assert children[0].attrib["type"] == "agendaItem"
 
 
+def test_non_session_heading_uses_a_generic_section_division(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    result = parse_document(
+        source,
+        config=CONFIG_PATH,
+        chunks=[
+            pdf_line("12. SEJA", size=13.0),
+            pdf_line("PREHODNE IN KONČNE DOLOČBE", y=480.0, size=13.0),
+            pdf_line("Besedilo določb.", y=460.0),
+        ],
+    )
+
+    section = result.root.find(".//div[@type='section']")
+    assert section is not None
+    head = section.find("head")
+    assert head is not None
+    assert head.attrib["type"] == "section"
+    assert "".join(head.itertext()) == "PREHODNE IN KONČNE DOLOČBE"
+
+
+def test_only_complete_parenthetical_lines_are_stage_directions():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="ocr", body_size=10.0, styled=False)
+
+    assert module.is_generic_note(
+        pdf_line("(Poslanci ploskajo.)", indent=10.0)
+    )
+    assert not module.is_generic_note(
+        pdf_line("(Glede predloga želim povedati naslednje.", indent=10.0)
+    )
+    assert not module.is_generic_note(
+        pdf_line("(sedež Sevnica) Občina Sevnica obsega:", indent=10.0)
+    )
+
+
+def test_stage_direction_does_not_absorb_the_following_speech_line(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    result = parse_document(
+        source,
+        config=CONFIG_PATH,
+        chunks=[
+            pdf_line("Predsednik Ferdo Kozak: Zacetek.", y=500.0),
+            pdf_line("(Poslanci ploskajo.)", y=480.0, indent=10.0),
+            pdf_line("Nadaljevanje govora.", y=460.0),
+        ],
+    )
+
+    note = result.root.find(".//u/note")
+    assert note is not None
+    assert "".join(note.itertext()) == "(Poslanci ploskajo.)"
+    assert "Nadaljevanje govora." in "".join(result.root.itertext())
+
+
+def test_wrapped_non_speech_lines_stay_in_one_paragraph(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    result = parse_document(
+        source,
+        config=CONFIG_PATH,
+        chunks=[
+            pdf_line("Prva vrstica.", y=500.0),
+            pdf_line("Nadaljevanje istega odstavka.", y=480.0),
+            pdf_line("Nov odstavek.", y=460.0, indent=12.0),
+        ],
+    )
+
+    body = result.root.find("text/body")
+    assert body is not None
+    paragraphs = list(body.iter("p"))
+    assert len(paragraphs) == 2
+    assert "Nadaljevanje istega odstavka." in "".join(paragraphs[0].itertext())
+    assert "Nov odstavek." in "".join(paragraphs[1].itertext())
+
+
 def test_speaker_index_is_preserved_without_disabling_later_sessions():
     module = load_config(CONFIG_PATH).module
     context = PDFPageContext(0, 600.0, 800.0)
@@ -193,6 +496,31 @@ def test_source_artifact_text_is_retained_once(tmp_path):
     assert "".join(result.root.itertext()).count("15. SEJA") == 1
 
 
+def test_source_artifacts_on_one_page_are_grouped_without_text_loss(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    first = pdf_line(
+        "15. SEJA",
+        y=780.0,
+        size=8.0,
+        metadata={"source_artifact": "runningHeader"},
+    )
+    second = pdf_line(
+        "REPUBLIŠKI ZBOR",
+        y=770.0,
+        size=8.0,
+        metadata={"source_artifact": "runningHeader"},
+    )
+
+    result = parse_document(source, config=CONFIG_PATH, chunks=[first, second])
+
+    notes = result.root.findall(
+        ".//note[@type='sourceArtifact'][@subtype='runningHeader']"
+    )
+    assert len(notes) == 1
+    assert (notes[0].text or "").splitlines() == ["15. SEJA", "REPUBLIŠKI ZBOR"]
+
+
 def test_repeated_bottom_series_label_is_not_a_footnote():
     module = load_config(CONFIG_PATH).module
     module.PROFILE.update(mode="char-preserve", body_size=12.0, styled=True)
@@ -208,6 +536,93 @@ def test_repeated_bottom_series_label_is_not_a_footnote():
     )
 
     assert module.source_artifact_type(footer, context) == "runningFooter"
+
+
+def test_midline_exponents_and_percentages_are_not_footnote_entries():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="char-preserve", body_size=10.0, styled=True)
+    module.footnotes.reset()
+    exponent = pdf_runs(
+        [("300 000 m", 10.0), ("3", 7.0), ("lesa", 10.0)],
+        y=100.0,
+    )[1]
+    percentage = pdf_runs([("0", 7.0), ("/o", 7.0)], y=100.0)[0]
+    far_right_table_value = pdf_runs(
+        [("55", 7.0), ("ali 3,0 %", 7.0)],
+        x=350.0,
+        y=100.0,
+    )[0]
+    short_gibberish = pdf_runs(
+        [("5", 7.0), ("ФД! Д", 7.0)],
+        y=100.0,
+    )[0]
+    table_count = pdf_runs(
+        [("613", 7.0), ("podjetij in uslužbencev", 7.0)],
+        y=100.0,
+    )[0]
+
+    assert not module.footnotes.is_entry(exponent)
+    assert not module.footnotes.is_entry(percentage)
+    assert not module.footnotes.is_entry(far_right_table_value)
+    assert not module.footnotes.is_entry(short_gibberish)
+    assert not module.footnotes.is_entry(table_count)
+
+
+def test_footnote_entry_allows_leading_ocr_punctuation():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="char-preserve", body_size=10.0, styled=True)
+    module.footnotes.reset()
+    marker = pdf_runs(
+        [('", ', 7.0), ("7", 7.0), ("Izvoljena na seji.", 7.0)],
+        y=80.0,
+    )[1]
+
+    assert not marker.is_line_start
+    assert module.footnotes.is_entry(marker)
+
+    right_column = pdf_runs(
+        [("2", 7.0), ("Besedilo druge opombe.", 7.0)],
+        x=350.0,
+        y=80.0,
+    )[0]
+    right_column.page_context.metadata["columns"] = [72.0, 350.0]
+    assert module.footnotes.is_entry(right_column)
+
+
+def test_large_footnote_number_requires_document_evidence():
+    module = load_config(CONFIG_PATH).module
+    module.PROFILE.update(mode="char-preserve", body_size=10.0, styled=True)
+    module.footnotes.reset()
+    marker = pdf_runs(
+        [("100", 7.0), ("Besedilo stote opombe.", 7.0)],
+        y=80.0,
+    )[0]
+
+    assert not module.footnotes.is_entry(marker)
+    module.footnotes.references[(marker.page_num, "100")] = [ET.Element("ref")]
+    assert module.footnotes.is_entry(marker)
+
+
+def test_footnotes_remain_enabled_in_back_matter():
+    module = load_config(CONFIG_PATH).module
+    context = PDFPageContext(
+        0,
+        600.0,
+        800.0,
+        metadata={
+            "structure_active": False,
+            "back_matter": True,
+            "speaker_index": False,
+        },
+    )
+    marker = pdf_runs(
+        [("2", 7.0), ("Besedilo opombe.", 7.0)],
+        y=80.0,
+    )[0]
+    marker.page_context = context
+    marker.line_chunk.page_context = context
+
+    assert module.is_footnote_page(marker)
 
 
 def test_unmatched_line_is_preserved_and_flagged(tmp_path):
@@ -560,6 +975,20 @@ def test_session_mention_in_prose_does_not_reactivate_back_matter():
     )
     module.enrich_page(role_prose_page, [role_prose])
     assert role_prose_page.metadata["structure_active"] is False
+
+    quoted_session_page = PDFPageContext(2, 600.0, 800.0)
+    quoted_session = LineRecord(
+        "6. SEJA",
+        270.0,
+        680.0,
+        "Times-Bold",
+        14.0,
+        [],
+        x_end=330.0,
+    )
+    module.enrich_page(quoted_session_page, [quoted_session])
+    assert quoted_session_page.metadata["back_matter"] is True
+    assert quoted_session_page.metadata["structure_active"] is False
 
 
 def test_auto_ids_and_speaker_ids_recover_digit_prefixes(tmp_path):

@@ -39,12 +39,6 @@
   <person xml:id="AlojzHrovat">
     <persName>Inž. Alojz Hrovat</persName>
   </person>
-  <person xml:id="speaker-1ErdoKozak">
-    <persName>Predsednik dr. 1" e r d o Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="AlojzRibič">
     <persName>Alojz Ribič</persName>
   </person>
@@ -53,12 +47,6 @@
   </person>
   <person xml:id="MarijaSme">
     <persName>Marija Sme</persName>
-  </person>
-  <person xml:id="FerdbKozak">
-    <persName>Predsednik dr. Ferdb Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="AlojzBenko">
     <persName>Alojz Benko</persName>
@@ -72,29 +60,11 @@
   <person xml:id="MiranKošmelj">
     <persName>Miran Košmelj</persName>
   </person>
-  <person xml:id="speaker-1RFerdoKozak">
-    <persName>Predsednik &lt;1 r. Ferdo Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="KnrelMikniie">
+  <person xml:id="KnrelMiknIie">
     <persName>Knrel M i k n I i e</persName>
-  </person>
-  <person xml:id="LerdoKozak">
-    <persName>Predsednik dr. lerdo Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="KarelGrm">
     <persName>Karel Grm.</persName>
-  </person>
-  <person xml:id="FcrdoKozak">
-    <persName>Predsednik dr. F c r d o Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="AlojzPohar">
     <persName>I n ž. Alojz Pohar</persName>
@@ -110,12 +80,6 @@
   </person>
   <person xml:id="AndrejStegnar">
     <persName>Andrej Stegnar</persName>
-  </person>
-  <person xml:id="IerdoKozak">
-    <persName>Predsednik dr. I' e r d o Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="FrancNovinšek">
     <persName>Franc Novinšek</persName>
@@ -144,32 +108,17 @@
       <roleName xml:lang="sl">Predsednik</roleName>
     </affiliation>
   </person>
-  <person xml:id="LeRdoKozak">
-    <persName>Predsednik dr. le r d o K O z a k</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="AlojzIlrovat">
     <persName>Inž. Alojz Ilrovat</persName>
   </person>
-  <person xml:id="MarijanBrecclj">
-    <persName>Dr. Marijan Brecclj</persName>
+  <person xml:id="MarijanBrecelj">
+    <persName>Dr. Marijan Brecelj</persName>
   </person>
   <person xml:id="JosiVidmar">
     <persName>Josi!) Vidmar</persName>
   </person>
   <person xml:id="SlaneKavčič">
     <persName>Slane Kavčič</persName>
-  </person>
-  <person xml:id="RFerdoKozak">
-    <persName>Predsednik &lt;] r. Ferdo Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="StaneKavčič">
-    <persName>Stane Kavčič</persName>
   </person>
   <person xml:id="FerdoKozakPričneOb9">
     <persName>Predsednik dr. Ferdo Kozak prične ob 9,25 sejo z naslednjimi besedami</persName>
@@ -183,29 +132,14 @@
   <person xml:id="TeodorTominšek">
     <persName>Dr. Teodor Tominšek</persName>
   </person>
-  <person xml:id="MarijanBrecelj">
-    <persName>Dr. Marijan Brecelj</persName>
-  </person>
   <person xml:id="SergejKraigher">
     <persName>Sergej Kraigher</persName>
   </person>
   <person xml:id="JakobDernač">
     <persName>Jakob Dernač</persName>
   </person>
-  <person xml:id="Ferdokozak">
-    <persName>Predsednik d r. F e r d o K o z a k</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MihaMarinko">
     <persName>Miha Marinko</persName>
-  </person>
-  <person xml:id="FevdoKozak">
-    <persName>Predsednik d r. FeVdo Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="MiraiiKošmeij">
     <persName>Miraii Košmeij</persName>

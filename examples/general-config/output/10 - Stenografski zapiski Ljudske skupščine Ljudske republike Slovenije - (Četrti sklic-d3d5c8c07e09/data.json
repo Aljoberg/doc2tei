@@ -2,7 +2,6 @@
   "speakers": {
     "#PavleZaucer": "Predsednik inž. Pavle Zaucer:",
     "#MiranKošmelj": "Miran Košmelj:",
-    "#Pavle2Aucer": "Predsednik inž. Pavle 2aucer:",
     "#LojzeOcepek": "Predsednik Lojze Ocepek:",
     "#JožeIngolič": "Jože Ingolič:",
     "#MihaMarinko": "Predsednik Miha Marinko:",
@@ -29,7 +28,6 @@
     "#LojzeKoder": "Lojze Koder:",
     "#AlojzLibnik": "Alojz Libnik:",
     "#FrancTreven": "Franc Treven:",
-    "#MihaMarinka": "Predsednik Miha Marinka:",
     "#PgvelZerovnik": "Pgvel Zerovnik:",
     "#VladimirLogar": "Vladimir Logar:",
     "#FranckaBevk": "Francka Bevk:",
@@ -46,6 +44,6 @@
     "#StaneFele": "Stane Fele:"
   },
   "warnings": [
-    "60 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+    "45 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
   ]
 }

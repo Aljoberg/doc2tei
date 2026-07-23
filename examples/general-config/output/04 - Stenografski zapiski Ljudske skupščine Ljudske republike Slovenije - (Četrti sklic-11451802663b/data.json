@@ -11,17 +11,14 @@
     "#MihaBerčič": "Podpredsednik Miha Berčič:",
     "#AntonSeljak": "Anton Seljak:",
     "#RudolfGanziti": "Rudolf Ganziti:",
-    "#MihaBErČič": "Podpredsednik Miha B er č i č :",
     "#LudvikGabrovšek": "Ludvik Gabrovšek:",
     "#MihaMarinko": "Predsednik Miha Marinko:",
     "#ViktorAvbelj": "Viktor Avbelj:",
-    "#SvetkoKobal": "Svetko Kobal:",
     "#MarijaAljančič": "Marija Aljančič:",
     "#MilanOgris": "Milan Ogris:",
     "#HeliModic": "Podpredsednik dr. Heli Modic:",
-    "#VidaTomžič": "Predsednik Vida Tomžič:",
-    "#FrancPirkovič": "Franc Pirkovič:",
     "#VidaTomšič": "Predsednik Vida Tomšič:",
+    "#FrancPirkovič": "Franc Pirkovič:",
     "#MartinKošir": "Martin Košir:",
     "#MiranKošmelj": "Miran Košmelj:",
     "#MarinkaRibičič": "Marinka Ribičič:",
@@ -31,7 +28,6 @@
     "#MatijaMaležič": "Matija Maležič:",
     "#JulijBeltram": "Julij Beltram:",
     "#KarmeloBudihna": "Inž. Karmelo Budihna:",
-    "#ViDaTomšič": "Predsednik Vi da Tomšič:",
     "#RikoJerman": "Riko Jerman:",
     "#MihaPotočnik": "Dr. Miha Potočnik:",
     "#RudiCačinovič": "Rudi Cačinovič:",
@@ -50,6 +46,6 @@
     "#VinkaSimonič": "Vinka Simonič:"
   },
   "warnings": [
-    "37 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+    "29 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
   ]
 }

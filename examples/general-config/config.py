@@ -24,10 +24,12 @@ from __future__ import annotations
 
 import itertools
 import re
+import unicodedata
 import xml.etree.ElementTree as ET
 from bisect import bisect_right
 from collections import Counter
 from dataclasses import replace
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Iterator, cast
 
@@ -257,6 +259,7 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
     if cluster:
         columns.append(flush_edge(cluster))
     page.metadata["columns"] = columns
+    _mark_tabular_labels(page, records)
 
     session_markers = [
         record
@@ -291,7 +294,15 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
     )
     if has_session_marker:
         _STATE["seen_meeting"] = True
-    if has_debate_session_marker or (_STATE["seen_meeting"] and has_transcript_cue):
+    debate_resumes = has_debate_session_marker or (
+        _STATE["seen_meeting"] and has_transcript_cue
+    )
+    if _STATE["back_matter"]:
+        # Appendices quote session names and office-holders frequently. Only
+        # reopen transcript parsing when a real session marker and a speech
+        # cue occur together on the same page.
+        debate_resumes = has_debate_session_marker and has_transcript_cue
+    if debate_resumes:
         _STATE["seen_session"] = True
         _STATE["speaker_index"] = False
         _STATE["back_matter"] = False
@@ -312,6 +323,208 @@ def enrich_page(page: PDFPageContext, records: list[LineRecord]):
     page.metadata["toc_page"] = any(
         CONTENTS_RE.match(record.text.strip()) for record in records
     )
+
+
+def _has_compact_qualifier(text: str) -> bool:
+    match = re.search(r"\(([^)]*)\)", text)
+    if match is None:
+        return False
+    length = sum(character.isalnum() for character in match.group(1))
+    return 1 <= length <= 4
+
+
+def _mark_tabular_labels(page: PDFPageContext, records: list[LineRecord]) -> None:
+    """Mark repeated colon labels that form the left side of a table."""
+
+    candidates = [
+        record
+        for record in records
+        if record.text.strip().endswith(":")
+        and len(record.text.strip()) <= 72
+        and not SESSION_STANDALONE_RE.fullmatch(record.text.strip())
+    ]
+    clusters: list[list[LineRecord]] = []
+    x_tolerance = max(8.0, page.width * 0.025)
+    for record in sorted(candidates, key=lambda item: item.x):
+        if not clusters or abs(record.x - clusters[-1][0].x) > x_tolerance:
+            clusters.append([record])
+        else:
+            clusters[-1].append(record)
+
+    for cluster in clusters:
+        if len(cluster) < 3:
+            continue
+        italic_count = sum(
+            "italic" in record.font_name.casefold()
+            or "oblique" in record.font_name.casefold()
+            for record in cluster
+        )
+        parallel_count = sum(
+            any(
+                other is not record
+                and abs(other.y - record.y) <= 2.5
+                and other.x >= record.x + page.width * 0.15
+                for other in records
+            )
+            for record in cluster
+        )
+        # Italic speaker labels repeat at a common margin too. Treat the
+        # cluster as tabular only when the typography and a parallel value
+        # column corroborate each other.
+        if italic_count * 2 < len(cluster) or parallel_count * 2 < len(cluster):
+            continue
+        for record in cluster:
+            record.metadata["tabular_label"] = True
+
+    # Word extraction commonly reconstructs both table columns as one line:
+    # ``Spodnja Idrija: | Spodnja Kanomlja ...``.  Learn repeated label and
+    # value starts from the run geometry instead of relying on coordinates
+    # chosen for one particular document.
+    inline_candidates: list[tuple[LineRecord, float, float, bool, bool]] = []
+    for record in records:
+        meaningful_runs = [
+            run for run in record.runs if run.text and run.text.strip()
+        ]
+        for index, run in enumerate(meaningful_runs[:-1]):
+            label = " ".join(
+                item.text.strip() for item in meaningful_runs[: index + 1]
+            )
+            if (
+                not label.endswith(":")
+                or len(label) > 72
+                or SESSION_STANDALONE_RE.fullmatch(label)
+            ):
+                continue
+            value_run = meaningful_runs[index + 1]
+            label_italic = any(
+                marker in run.font_name.casefold()
+                for marker in ("italic", "oblique")
+            )
+            style_change = run.font_name != value_run.font_name
+            inline_candidates.append(
+                (record, record.x, value_run.x, label_italic, style_change)
+            )
+            break
+
+    inline_clusters: list[
+        list[tuple[LineRecord, float, float, bool, bool]]
+    ] = []
+    label_tolerance = max(8.0, page.width * 0.02)
+    value_tolerance = max(5.0, page.width * 0.012)
+    for candidate in sorted(inline_candidates, key=lambda item: (item[1], item[2])):
+        matching = next(
+            (
+                cluster
+                for cluster in inline_clusters
+                if abs(candidate[1] - cluster[0][1]) <= label_tolerance
+                and abs(candidate[2] - cluster[0][2]) <= value_tolerance
+            ),
+            None,
+        )
+        if matching is None:
+            inline_clusters.append([candidate])
+        else:
+            matching.append(candidate)
+
+    for cluster in inline_clusters:
+        if len(cluster) < 3:
+            continue
+        italic_count = sum(candidate[3] for candidate in cluster)
+        style_change_count = sum(candidate[4] for candidate in cluster)
+        # Three styled rows or five exceptionally regular unstyled rows are
+        # stronger evidence of a table than of consecutive speaker labels.
+        styled_table = (
+            italic_count * 2 >= len(cluster)
+            and style_change_count * 2 >= len(cluster)
+        )
+        unstyled_table = len(cluster) >= 5 and (
+            max(candidate[2] for candidate in cluster)
+            - min(candidate[2] for candidate in cluster)
+            <= value_tolerance
+        )
+        if styled_table or unstyled_table:
+            for record, *_signals in cluster:
+                record.metadata["tabular_label"] = True
+
+    # Some character PDFs fuse the label and value into one same-font run.
+    # Two or more aligned rows whose value clauses begin alike and contain
+    # several numbers are statistical table rows, not consecutive speeches.
+    numeric_rows: list[tuple[LineRecord, str]] = []
+    for record in records:
+        match = re.match(r"^([^:]{2,72}):\s*(.+)$", record.text.strip())
+        if match is None:
+            continue
+        label, value = match.groups()
+        if sum(character.isdigit() for character in value) < 3:
+            continue
+        leading_token = next(
+            (
+                token
+                for token in re.findall(r"[^\W\d_]+", value, re.UNICODE)
+            ),
+            "",
+        )
+        if _looks_like_person_prefix(label) and not leading_token[:1].islower():
+            continue
+        leading = leading_token.casefold()
+        if leading:
+            numeric_rows.append((record, leading))
+    for record, leading in numeric_rows:
+        peers = [
+            other
+            for other, other_leading in numeric_rows
+            if other is not record
+            and other_leading == leading
+            and abs(other.x - record.x) <= x_tolerance
+        ]
+        if peers:
+            record.metadata["tabular_label"] = True
+
+    # Legal text also contains compact boundary/name tables whose rows are
+    # fused into single same-font runs. A large dense group, or a smaller
+    # group with a structural qualifier such as ``(del)``, is sufficient
+    # evidence without relying on document-specific place names.
+    if records:
+        compact_rows: list[tuple[LineRecord, str]] = []
+        for record in records:
+            match = re.match(r"^[^:]{2,72}:\s*(\S.*)$", record.text.strip())
+            if match is not None:
+                compact_rows.append((record, match.group(1)))
+        compact_clusters: list[list[tuple[LineRecord, str]]] = []
+        for candidate in sorted(compact_rows, key=lambda item: item[0].x):
+            if (
+                not compact_clusters
+                or abs(candidate[0].x - compact_clusters[-1][0][0].x)
+                > x_tolerance
+            ):
+                compact_clusters.append([candidate])
+            else:
+                compact_clusters[-1].append(candidate)
+        for cluster in compact_clusters:
+            if len(cluster) < 3:
+                continue
+            short_values = sum(len(value) <= 50 for _record, value in cluster)
+            if short_values * 2 < len(cluster):
+                continue
+            speaker_like_labels = sum(
+                _looks_like_person_prefix(record.text.split(":", 1)[0])
+                for record, _value in cluster
+            )
+            if speaker_like_labels * 2 >= len(cluster):
+                continue
+            has_compact_qualifier = any(
+                _has_compact_qualifier(record.text.split(":", 1)[0])
+                for record, _value in cluster
+            )
+            if len(cluster) < 5 and not has_compact_qualifier:
+                continue
+            for record, _value in cluster:
+                label = record.text.split(":", 1)[0]
+                if (
+                    has_compact_qualifier
+                    or not _looks_like_person_prefix(label)
+                ):
+                    record.metadata["tabular_label"] = True
 
 
 def enrich_line(
@@ -407,6 +620,20 @@ def is_structural_page(chunk: PDFChunk):
     return bool(context is not None and context.metadata.get("structure_active"))
 
 
+def is_footnote_page(chunk: PDFChunk):
+    """Footnotes occur in both debate text and retained appendices."""
+
+    context = chunk.page_context
+    return bool(
+        context is not None
+        and (
+            context.metadata.get("structure_active")
+            or context.metadata.get("back_matter")
+        )
+        and not context.metadata.get("speaker_index")
+    )
+
+
 def is_heading_page(chunk: PDFChunk):
     context = chunk.page_context
     return bool(
@@ -450,7 +677,34 @@ def _word_core(token: str):
 
 def _looks_like_person_prefix(prefix: str):
     """Distinguish a speaker label from ordinary prose ending in a colon."""
+    raw_prefix = prefix.strip()
+    if ";" in raw_prefix:
+        return False
+    if raw_prefix.startswith("(") and not TITLE_PREFIX_RE.match(
+        raw_prefix[1:].lstrip()
+    ):
+        return False
+    if re.search(
+        r"\b(?:uradni\s+list|ur\.?\s*(?:l|list)|prilog\w*)\b",
+        raw_prefix,
+        re.IGNORECASE,
+    ):
+        return False
+    if "," in raw_prefix:
+        tail = raw_prefix.split(",", 1)[1]
+        capitalized_tail = sum(
+            token[:1].isupper()
+            for token in (_word_core(item) for item in tail.split())
+            if token
+        )
+        if capitalized_tail >= 2 and (
+            raw_prefix.count(",") >= 2
+            or re.search(r"\b(?:in|ter|i)\b", tail, re.IGNORECASE)
+        ):
+            return False
     prefix = re.sub(r"\s*\([^)]*\)\s*$", "", prefix).strip()
+    if re.search(r"\b\d+\.\s*r\.?\b", prefix, re.IGNORECASE):
+        return False
     # Election/appointment prose frequently begins with a plausible name and
     # then enumerates candidates: "Miran Cvenk, za podpredsednika ...:".
     # Inspect that role-bearing remainder before reducing the label to its
@@ -464,19 +718,39 @@ def _looks_like_person_prefix(prefix: str):
     # "VESELIN DJURANOVIĆ, predsednik ZIS" - the role after the comma is
     # ordinary lowercase prose; judge the name part only
     prefix = prefix.split(",", 1)[0].strip()
+    words = [_word_core(token) for token in prefix.split()]
+    words = [token for token in words if token]
+    if (
+        len(words) >= 3
+        and all(len(token) == 1 for token in words)
+        and "".join(words).casefold() in {"govornik", "predsednik"}
+    ):
+        return False
+    letters = "".join(character for character in prefix if character.isalpha())
+    if letters.isupper() and len(words) >= 3 and not TITLE_PREFIX_RE.match(prefix):
+        return False
     # a bare "PREDSEDAVALI:"/"Predsedoval:" is a role announcement, not a
     # person - a title only counts when a name follows it
     # Speaker labels use the title as a displayed label (normally initial
     # uppercase). Lowercase accusative forms such as "predsednika Drago
     # Sotler, za člane pa:" occur inside appointment lists and are prose.
-    if (
-        TITLE_PREFIX_RE.match(prefix)
-        and prefix[:1].isupper()
-        and len(prefix.split()) >= 2
-    ):
-        return True
-    tokens = [_word_core(token) for token in prefix.split()]
-    tokens = [token for token in tokens if token]
+    title = TITLE_PREFIX_RE.match(prefix)
+    if title and prefix[:1].isupper():
+        remainder = prefix[title.end() :].strip()
+        while True:
+            nested = TITLE_PREFIX_RE.match(remainder)
+            if nested is None:
+                break
+            remainder = remainder[nested.end() :].strip()
+        tokens = [_word_core(token) for token in remainder.split()]
+        tokens = [token for token in tokens if token]
+        capitalized = sum(token[:1].isupper() for token in tokens)
+        spaced_ocr_name = sum(len(token) == 1 for token in tokens) >= 3
+        # A title alone is not a person. This rejects prose such as
+        # "Predsednik vlade je predložil ...:" while retaining OCR-spaced
+        # names such as "Predsednik d r. F e r d o K o z a k:".
+        return capitalized >= 2 or spaced_ocr_name
+    tokens = words
     if not 2 <= len(tokens) <= 8 or not tokens[0][:1].isupper():
         return False
     # In appointment lists, prose often starts immediately after a plausible
@@ -507,7 +781,11 @@ def leading_caps(text: str):
 
 
 def speaker_parts(chunk: PDFChunk) -> tuple[str, str] | None:
-    if not chunk.is_line_start or not is_body_line(chunk):
+    if (
+        not chunk.is_line_start
+        or not is_body_line(chunk)
+        or chunk.line_chunk.metadata.get("tabular_label")
+    ):
         return None
     match = re.match(r"^([^:]{2,72}:)\s*(.*)$", line_text(chunk))
     if not match:
@@ -651,20 +929,29 @@ def _collapse_spaced_letters(text: str):
     result: list[str] = []
     i = 0
     while i < len(tokens):
-        run: list[str] = []
+        run: list[tuple[str, str]] = []
         j = i
-        while j < len(tokens) and len(_word_core(tokens[j])) == 1:
+        while j < len(tokens) and 1 <= len(_word_core(tokens[j])) <= 2:
             core = _word_core(tokens[j])
-            if (
-                run
-                and core.isupper()
-                and (run[0].islower() or "".join(run).lower() in {"dr", "inž"})
-            ):
-                break
-            run.append(core)
+            run.append((tokens[j], core))
             j += 1
-        if len(run) >= 2:
-            result.append("".join(run))
+        if len(run) >= 3 and sum(len(core) == 1 for _, core in run) >= 2:
+            words: list[str] = []
+            current = ""
+            for _raw, core in run:
+                if current.casefold() == "dr":
+                    words.append(current)
+                    current = core
+                elif current and core[:1].isupper() and any(
+                    character.islower() for character in current
+                ):
+                    words.append(current)
+                    current = core
+                else:
+                    current += core
+            if current:
+                words.append(current)
+            result.extend(words)
             i = j
         else:
             result.append(tokens[i])
@@ -704,7 +991,102 @@ def speaker_identifier(text: str):
     return "#" + sanitize_xml_id(serialized, prefix="speaker")
 
 
+def _speaker_comparison_key(identifier: str) -> str:
+    value = identifier.removeprefix("#")
+    value = re.sub(r"^speaker-+", "", value, flags=re.IGNORECASE)
+    value = unicodedata.normalize("NFKD", value).casefold()
+    value = value.translate(str.maketrans({"0": "o", "1": "l", "|": "l"}))
+    return "".join(character for character in value if character.isalpha())
+
+
+def _speaker_label_quality(label: str, frequency: int) -> tuple[int, int, int, int]:
+    prefix = label.split(":", 1)[0]
+    tokens = [_word_core(token) for token in prefix.split()]
+    noisy = sum(
+        character.isdigit()
+        or (
+            not character.isascii()
+            and "LATIN" not in unicodedata.name(character, "")
+        )
+        for character in prefix
+    )
+    singletons = sum(len(token) == 1 for token in tokens if token)
+    return frequency, -noisy, -singletons, -len(prefix)
+
+
+def _merge_speaker_aliases(result) -> None:
+    """Merge only very close OCR variants of a document-local speaker ID."""
+
+    mapping = result.data.get("speakers")
+    if not isinstance(mapping, dict):
+        return
+    utterances = [
+        element
+        for element in result.root.iter()
+        if element.tag == "u" and element.attrib.get("who")
+    ]
+    frequencies = Counter(element.attrib["who"] for element in utterances)
+    used = [identifier for identifier in mapping if identifier in frequencies]
+    groups: list[list[str]] = []
+    representative_keys: list[str] = []
+    for identifier in used:
+        key = _speaker_comparison_key(identifier)
+        best_index = None
+        best_ratio = 0.0
+        if len(key) >= 7:
+            for index, representative in enumerate(representative_keys):
+                if abs(len(key) - len(representative)) > 2:
+                    continue
+                ratio = SequenceMatcher(None, key, representative).ratio()
+                if ratio >= 0.90 and ratio > best_ratio:
+                    best_index = index
+                    best_ratio = ratio
+        else:
+            best_index = next(
+                (
+                    index
+                    for index, representative in enumerate(representative_keys)
+                    if key == representative
+                ),
+                None,
+            )
+        if best_index is None:
+            groups.append([identifier])
+            representative_keys.append(key)
+        else:
+            groups[best_index].append(identifier)
+
+    replacements: dict[str, str] = {}
+    merged_mapping: dict[str, str] = {}
+    for group in groups:
+        canonical = max(
+            group,
+            key=lambda identifier: _speaker_label_quality(
+                str(mapping[identifier]), frequencies[identifier]
+            ),
+        )
+        merged_mapping[canonical] = str(mapping[canonical])
+        replacements.update((identifier, canonical) for identifier in group)
+    for utterance in utterances:
+        identifier = utterance.attrib["who"]
+        utterance.set("who", replacements.get(identifier, identifier))
+    result.data["speakers"] = merged_mapping
+
+
 speaker_hook = SpeakerUtteranceHook(speaker_identifier)
+
+
+def _remove_empty_utterances(root: ET.Element) -> None:
+    """Drop hook-created utterances that never received source text."""
+
+    for parent in root.iter():
+        for child in list(parent):
+            if (
+                child.tag == "u"
+                and not list(child)
+                and not (child.text or "").strip()
+            ):
+                parent.remove(child)
 
 
 def start_document():
@@ -717,6 +1099,8 @@ def start_document():
 def finish_document(result):
     footnotes.finalize()
     speaker_hook.export(result)
+    _remove_empty_utterances(result.root)
+    _merge_speaker_aliases(result)
     if footnotes.unresolved_count:
         warnings = result.data.setdefault("warnings", [])
         if isinstance(warnings, list):
@@ -748,15 +1132,19 @@ def finish_document(result):
                     else len(file_desc)
                 )
                 file_desc.insert(index, notes_stmt)
+            grouped_artifacts: dict[tuple[str, str], list[str]] = {}
             for artifact in artifacts:
+                key = artifact["type"], artifact["page"]
+                grouped_artifacts.setdefault(key, []).append(artifact["text"])
+            for (artifact_type, page), texts in grouped_artifacts.items():
                 note = ET.SubElement(
                     notes_stmt,
                     "note",
                     type="sourceArtifact",
-                    subtype=artifact["type"],
-                    n=artifact["page"],
+                    subtype=artifact_type,
+                    n=page,
                 )
-                note.text = artifact["text"]
+                note.text = "\n".join(texts)
 
 
 def build_tei_header():
@@ -795,13 +1183,45 @@ AGENDA_HEAD_RE = re.compile(
     r"^\s*\d+\.\s*(?:TOČK[AE]|TAČK[AE])\s+(?:DNEVNEGA|DNEVNOG)\s+REDA\b",
     re.IGNORECASE,
 )
+CHAMBER_HEAD_RE = re.compile(
+    r"^(?:R\s*E\s*P\s*U\s*B\s*L\s*I\s*Š\s*K\s*I\s+)?ZBOR\b|"
+    r"\bZBORA\s+(?:PROIZVAJALCEV|IN\s+REPUBLIŠKEGA\s+ZBORA)\b",
+    re.IGNORECASE,
+)
+ROMAN_HEADING_RE = re.compile(r"^[IVXLCDM]+\.?$", re.IGNORECASE)
+
+
+def _plausible_heading_text(text: str) -> bool:
+    if ROMAN_HEADING_RE.fullmatch(text.strip()):
+        return True
+    return sum(character.isalpha() for character in text) >= 4
+
+
+def _head_kind(text: str) -> tuple[str, str]:
+    if AGENDA_HEAD_RE.search(text):
+        return "agendaItem", "agendaSection"
+    if _session_number_match(text):
+        return "sessionNumber", "session"
+    if SESSION_CAPS_RE.search(text):
+        return "session", "session"
+    if CHAMBER_HEAD_RE.search(text):
+        return "chamber", "session"
+    if ROMAN_HEADING_RE.fullmatch(text.strip()):
+        return "sectionNumber", "section"
+    return "section", "section"
 
 
 def is_head(chunk: PDFChunk):
     if not chunk.is_line_start or not is_heading_page(chunk):
         return False
     text = line_text(chunk)
-    if not text or len(text) > 100 or text.endswith(":") or is_speaker(chunk):
+    if (
+        not text
+        or len(text) > 100
+        or text.endswith(":")
+        or is_speaker(chunk)
+        or not _plausible_heading_text(text)
+    ):
         return False
     if AGENDA_HEAD_RE.search(text):
         return True
@@ -827,12 +1247,7 @@ def is_head(chunk: PDFChunk):
 
 def head_action(chunk: PDFChunk):
     text = line_text(chunk)
-    if AGENDA_HEAD_RE.search(text):
-        kind = "agendaItem"
-        div_type = "agendaSection"
-    else:
-        kind = "sessionNumber" if _session_number_match(text) else "session"
-        div_type = "session"
+    kind, div_type = _head_kind(text)
 
     # Heads are only schema-valid at the beginning of a div. Create a new
     # structural division once the current one already contains body content.
@@ -846,11 +1261,11 @@ def head_action(chunk: PDFChunk):
         if current_type != "session" or has_body:
             open_root_division("session")
     else:
-        if current_type == "agendaSection" and has_body:
+        if current_type == div_type and has_body:
             engine.pop()
             current_type = engine.stack[-1].element.attrib.get("type")
-        if current_type != "agendaSection":
-            push("div", type="agendaSection")
+        if current_type != div_type:
+            push("div", type=div_type)
     if not tag_is_on_top("head", type=kind):
         push("head", type=kind)
 
@@ -898,10 +1313,19 @@ def is_chairman(chunk: PDFChunk):
 def is_generic_note(chunk: PDFChunk):
     if not chunk.is_line_start or not is_structural_page(chunk):
         return False
+    if chunk.line_chunk.metadata.get("tabular_label"):
+        return False
     text = line_text(chunk)
     if not text:
         return False
-    if is_body_line(chunk) and indent(chunk) >= 6 and text.startswith("("):
+    closing_parenthesis = text.rfind(")")
+    if (
+        is_body_line(chunk)
+        and indent(chunk) >= 6
+        and text.startswith("(")
+        and 0 < closing_parenthesis <= 300
+        and not text[closing_parenthesis + 1 :].strip(" .!?")
+    ):
         return True
     if SEJA_BILA_RE.match(text):
         return True
@@ -917,6 +1341,35 @@ def is_generic_note(chunk: PDFChunk):
 def generic_note_action(chunk: PDFChunk):
     pop_to("u", "div")
     push("note")
+
+
+def is_after_generic_note(chunk: PDFChunk):
+    """Do not let a one-line stage note absorb an unrelated following line."""
+
+    if not chunk.is_line_start or not tag_is_on_top("note"):
+        return False
+    current = next(
+        (entry for entry in reversed(engine.stack) if not entry.cosmetic),
+        None,
+    )
+    return bool(
+        current is not None
+        and current.element.tag == "note"
+        and current.element.attrib.get("type") is None
+        and current.element.attrib.get("place") is None
+        and not is_generic_note(chunk)
+    )
+
+
+def after_generic_note_action(chunk: PDFChunk):
+    while len(engine.stack) > 1 and engine.stack[-1].cosmetic:
+        engine.pop()
+    pop_to("note", invert=True)
+    if tag_is_on_top("u"):
+        push("seg")
+    else:
+        pop_to("div")
+        push("p")
 
 
 def is_contents(chunk: PDFChunk):
@@ -965,8 +1418,19 @@ def has_utterance_context():
 
 
 def is_paragraph(chunk: PDFChunk):
-    """Keep non-speech text in a TEI block instead of directly under div."""
-    return chunk.is_line_start and not has_utterance_context()
+    """Open non-speech paragraphs at measured starts, not every wrapped line."""
+
+    if not chunk.is_line_start or has_utterance_context():
+        return False
+    current = next(
+        (entry for entry in reversed(engine.stack) if not entry.cosmetic),
+        None,
+    )
+    if current is None or current.element.tag != "p":
+        return True
+    if current.element.attrib.get("type") == "unparsed":
+        return True
+    return is_body_line(chunk) and 6.0 <= indent(chunk) <= 45.0
 
 
 def unmatched_line_needs_review(chunk: PDFChunk):
@@ -998,7 +1462,7 @@ def unmatched_line_append(chunk: PDFChunk):
 footnotes = FootnoteLinker(
     body_size=body_size,
     mode=lambda: PROFILE.get("mode"),
-    structural_page=is_structural_page,
+    structural_page=is_footnote_page,
     utterance_context=has_utterance_context,
 )
 
@@ -1145,6 +1609,10 @@ CONFIG: PDFConfig = {
         "AFTER_FOOTNOTE": {
             "test": footnotes.is_after,
             "action": footnotes.after_action,
+        },
+        "AFTER_GENERIC_NOTE": {
+            "test": is_after_generic_note,
+            "action": after_generic_note_action,
         },
         "SEG": {
             "test": is_seg,

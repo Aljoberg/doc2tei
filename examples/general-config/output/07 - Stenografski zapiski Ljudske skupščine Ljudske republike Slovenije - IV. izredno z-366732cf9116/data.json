@@ -1,13 +1,12 @@
 {
   "speakers": {
-    "#Prisotni": "PRISOTNI ČLANI VLADE:",
     "#FerdoKozak": "Predsednik dr. Ferdo Kozak:",
-    "#MihaKamBič": "Dr. Miha Kam bič:",
+    "#MihaKambič": "Dr. Miha Kambič:",
     "#ZoranPolič": "Zoran Polič:",
     "#JankoSmole": "Janko Smole:",
     "#MihaMarinko": "Miha Marinko:",
     "#JožePetejan": "Jože Petejan:",
-    "#DpVEr": "Predsednik d p. V er do Kozak:",
+    "#DpVerdoKozak": "Predsednik d p. V er do Kozak:",
     "#AntonIngoliič": "Anton Ingoliič:",
     "#JožeJurač": "Jože\" Jurač:",
     "#PoldeMaček": "Polde Maček:",
@@ -15,7 +14,6 @@
     "#JakobDernač": "Jakob Dernač:",
     "#AntonMelik": "Dr. Anton Melik:",
     "#BožidarLavrič": "Dr. Božidar Lavrič:",
-    "#MihaKambič": "Dr. Miha Kambič:",
     "#FrancFurlan": "Franc Furlan:",
     "#IvanTrojar": "Ivan Trojar:",
     "#MarijanBrecelj": "Dr. Marijan Brecelj:",
@@ -23,10 +21,7 @@
     "#MatijaMaležič": "Matija Maležič:",
     "#MaksKrmelj": "Maks Krmelj:",
     "#ViktorAvbelj": "Viktor Avbelj:",
-    "#JanezPor": "Janez Por:",
-    "#ViadeLhs": "Predsednik viade LHS:",
-    "#VladeLhs": "Predsednik vlade LHS:",
-    "#KpuhliKi": "|{ KPUHLI KI:"
+    "#JanezPor": "Janez Por:"
   },
   "warnings": [
     "144 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."

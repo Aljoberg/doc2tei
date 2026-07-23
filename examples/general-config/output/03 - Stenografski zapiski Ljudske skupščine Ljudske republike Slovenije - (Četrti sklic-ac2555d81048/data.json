@@ -1,11 +1,9 @@
 {
   "speakers": {
-    "#speaker": "Predsednik inž, Pavle 2в u cer:",
     "#FranceStiglic": "France Stiglic:",
-    "#Pavle2Aucer": "Predsednik inž. Pavle 2 a u c e r :",
+    "#PavleZaucer": "Predsednik inž. Pavle Zaucer:",
     "#Pavle": "Predsednik inž. Pavle Za u cer:",
     "#VinkoHafner": "Vinko Hafner:",
-    "#PavleZaucer": "Predsednik inž. Pavle Zaucer:",
     "#BojanPolak": "Bojan Polak :",
     "#VladoJurančič": "Vlado Jurančič:",
     "#PeterZorko": "Peter Zorko:",
@@ -13,7 +11,6 @@
     "#BorisKocijančič": "Boris Kocijančič:",
     "#TomoBrejc": "Tomo Brejc:",
     "#IvanKreft": "Ivan Kreft:",
-    "#PavleŽaucer": "Predsednik inž. Pavle Žaucer:",
     "#LojzeOcepek": "Predsednik Lojze Ocepek:",
     "#JankoDekleva": "Janko Dekleva:",
     "#AntonMartinšek": "Anton Martinšek:",
@@ -26,7 +23,6 @@
     "#FrancSušteršič": "Franc Sušteršič:",
     "#SlavicaZirkelbach": "Slavica Zirkelbach:",
     "#MaksDimnik": "Maks Dimnik:",
-    "#VidaToMšič": "Predsednik Vida To m š i č :",
     "#KarelSlerban": "Karel Slerban :",
     "#BenoZupančič": "Beno Zupančič:",
     "#RudiCačinovič": "Rudi Cačinovič:",
@@ -42,18 +38,12 @@
     "#GregorKlančnik": "Gregor Klančnik:",
     "#NikoŠilih": "Niko Šilih:",
     "#VladimirKrivic": "Vladimir Krivic:",
-    "#He1IModic": "Podpredsednik dr. H e 1 i Modic:",
     "#HeliModic": "Podpredsednik dr. Heli Modic:",
     "#LojzePiškur": "Lojze Piškur:",
-    "#Lici": "Podpredsednik dr. lici i Modic:",
-    "#HEl": "Podpredsednik dr. H el i M o d i c :",
     "#MilanApih": "Milan Apih:",
-    "#IiE1IModic": "Podpredsednik dr. II e 1 i M o d i c :",
-    "#SrsPredstavljaSkupščino": "Predsednik Skupščine SRS predstavlja Skupščino:",
-    "#PoročevalecPredsednik": "Poročevalec; Predsednik:",
-    "#Govornik": "G o V o r n i k :"
+    "#Iie1IModic": "Podpredsednik dr. II e 1 i M o d i c :"
   },
   "warnings": [
-    "13 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+    "14 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
   ]
 }

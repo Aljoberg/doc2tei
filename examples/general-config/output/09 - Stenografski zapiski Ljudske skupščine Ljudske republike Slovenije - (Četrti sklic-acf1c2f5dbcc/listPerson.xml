@@ -9,12 +9,6 @@
   <person xml:id="JožeIngolič">
     <persName>Jože Ingolič</persName>
   </person>
-  <person xml:id="Pavle2Aucer">
-    <persName>Predsednik inž. Pavle 2aucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="ToneKropušek">
     <persName>Tone Kropušek</persName>
   </person>
@@ -23,12 +17,6 @@
   </person>
   <person xml:id="TineRemškar">
     <persName>Tine Remškar</persName>
-  </person>
-  <person xml:id="PavleZauccr">
-    <persName>Predsednik inž. Pavle Zauccr</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="MihaelaDerjnastia">
     <persName>Predsedujoča Mihaela Derjnastia</persName>
@@ -51,9 +39,6 @@
   <person xml:id="BorisKocijančič">
     <persName>Boris Kocijančič</persName>
   </person>
-  <person xml:id="MatijaMaležič">
-    <persName>Matija Maležič</persName>
-  </person>
   <person xml:id="MatijaMa1Ežič">
     <persName>Matija M a 1 e ž i č</persName>
   </person>
@@ -71,9 +56,6 @@
   </person>
   <person xml:id="ToneBole">
     <persName>Tone Bole</persName>
-  </person>
-  <person xml:id="MatijaMaležlc">
-    <persName>Matija Maležlc</persName>
   </person>
   <person xml:id="ŠtefanAntalič">
     <persName>Štefan Antalič</persName>
@@ -174,12 +156,6 @@
   <person xml:id="MaksVale">
     <persName>Maks Vale</persName>
   </person>
-  <person xml:id="Mihamarinko">
-    <persName>Predsednik M i h a M a r i n k o</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="IvanVideniČ">
     <persName>Ivan Videni č</persName>
   </person>
@@ -192,9 +168,6 @@
   <person xml:id="StaneKavčič">
     <persName>Stane Kavčič</persName>
   </person>
-  <person xml:id="RudolfGanziti">
-    <persName>Rudolf Ganziti</persName>
-  </person>
   <person xml:id="PredsednikMihaMarinko">
     <persName>• Predsednik Miha Marinko</persName>
   </person>
@@ -203,12 +176,6 @@
   </person>
   <person xml:id="RikoJerman">
     <persName>Riko Jerman</persName>
-  </person>
-  <person xml:id="MiHaMarinko">
-    <persName>Predsednik Mi h a Marinko</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="MirkoRemec">
     <persName>Mirko Remec</persName>

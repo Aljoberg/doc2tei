@@ -42,12 +42,6 @@
   <person xml:id="RudolfGanziti">
     <persName>Rudolf Ganziti</persName>
   </person>
-  <person xml:id="MihaBErČič">
-    <persName>Podpredsednik Miha B er č i č</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="LudvikGabrovšek">
     <persName>Ludvik Gabrovšek</persName>
   </person>
@@ -59,9 +53,6 @@
   </person>
   <person xml:id="ViktorAvbelj">
     <persName>Viktor Avbelj</persName>
-  </person>
-  <person xml:id="SvetkoKobal">
-    <persName>Svetko Kobal</persName>
   </person>
   <person xml:id="MarijaAljančič">
     <persName>Marija Aljančič</persName>
@@ -75,20 +66,14 @@
       <roleName xml:lang="sl">Podpredsednik</roleName>
     </affiliation>
   </person>
-  <person xml:id="VidaTomžič">
-    <persName>Predsednik Vida Tomžič</persName>
+  <person xml:id="VidaTomšič">
+    <persName>Predsednik Vida Tomšič</persName>
     <affiliation role="predsednik">
       <roleName xml:lang="sl">Predsednik</roleName>
     </affiliation>
   </person>
   <person xml:id="FrancPirkovič">
     <persName>Franc Pirkovič</persName>
-  </person>
-  <person xml:id="VidaTomšič">
-    <persName>Predsednik Vida Tomšič</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="MartinKošir">
     <persName>Martin Košir</persName>
@@ -116,12 +101,6 @@
   </person>
   <person xml:id="KarmeloBudihna">
     <persName>Inž. Karmelo Budihna</persName>
-  </person>
-  <person xml:id="ViDaTomšič">
-    <persName>Predsednik Vi da Tomšič</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="RikoJerman">
     <persName>Riko Jerman</persName>

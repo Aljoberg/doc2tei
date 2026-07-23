@@ -21,12 +21,6 @@
   <person xml:id="DavorinFerligoj">
     <persName>Davorin Ferligoj</persName>
   </person>
-  <person xml:id="PavleŽaucer">
-    <persName>Predsednik inž. Pavle Žaucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MihaBerčič">
     <persName>Podpredsednik Miha Berčič</persName>
     <affiliation role="podpredsednik">
@@ -96,12 +90,6 @@
   <person xml:id="ViktorZupančič">
     <persName>Viktor Zupančič</persName>
   </person>
-  <person xml:id="He1IModic">
-    <persName>Podpredsednik dr. H e 1 i Modic</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="AntonSeljak">
     <persName>Anton Seljak</persName>
   </person>
@@ -111,37 +99,16 @@
   <person xml:id="AndrejBabnik">
     <persName>Andrej Babnik</persName>
   </person>
-  <person xml:id="He1Imodic">
-    <persName>Podpredsednik dr. H e 1 i M o d i c</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="FrancKrese">
     <persName>Franc Krese</persName>
   </person>
   <person xml:id="MilanApih">
     <persName>Milan Apih</persName>
   </person>
-  <person xml:id="BorisKraigher">
-    <persName>Predsednik; Boris Kraigher, podpredsednika</persName>
-    <affiliation role="podpredsednika">
-      <roleName xml:lang="sl">podpredsednika</roleName>
-    </affiliation>
-  </person>
   <person xml:id="FrancLeskošek">
     <persName>Franc Leskošek, člani</persName>
     <affiliation role="člani">
       <roleName xml:lang="sl">člani</roleName>
     </affiliation>
-  </person>
-  <person xml:id="BogdanNovak">
-    <persName>Bogdan Novak, Franjo Sebjanič, ing. Stojan Subic, tajnik</persName>
-  </person>
-  <person xml:id="PoročevaltcPredsednik">
-    <persName>Poročevaltc; Predsednik</persName>
-  </person>
-  <person xml:id="PoročevalecPodpredsednik">
-    <persName>Poročevalec; Podpredsednik</persName>
   </person>
 </listPerson>

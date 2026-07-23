@@ -18,6 +18,6 @@
     "#JožaVilfan": "Dr. Joža Vilfan:"
   },
   "warnings": [
-    "11 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+    "10 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
   ]
 }

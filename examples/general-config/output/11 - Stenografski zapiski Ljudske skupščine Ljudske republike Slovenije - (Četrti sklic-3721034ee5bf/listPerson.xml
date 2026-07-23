@@ -42,12 +42,6 @@
   <person xml:id="MihaPotočnik">
     <persName>Dr. Miha Potočnik</persName>
   </person>
-  <person xml:id="PavLeZaucer">
-    <persName>Predsednik inž. Pav le Zaucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MitjaRibičič">
     <persName>Mitja Ribičič</persName>
   </person>
@@ -75,12 +69,6 @@
   <person xml:id="MarijaVild">
     <persName>Marija Vild</persName>
   </person>
-  <person xml:id="LojeOcepek">
-    <persName>Predsednik Loje Ocepek</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="ToneHafner">
     <persName>Tone Hafner</persName>
   </person>
@@ -101,12 +89,6 @@
   </person>
   <person xml:id="SlavkoKobal">
     <persName>Slavko Kobal</persName>
-  </person>
-  <person xml:id="LojzeOČepek">
-    <persName>Predsednik Lojze O čepek</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="BojanPolak">
     <persName>Bojan Polak</persName>
@@ -156,12 +138,6 @@
   <person xml:id="JožeSlavič">
     <persName>Jože Slavič</persName>
   </person>
-  <person xml:id="StaNeKavčič">
-    <persName>Podpredsednik Sta ne Kavčič</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MiranCvenk">
     <persName>Miran Cvenk</persName>
   </person>
@@ -188,9 +164,6 @@
   </person>
   <person xml:id="SvetkoKobal">
     <persName>Svetko Kobal</persName>
-  </person>
-  <person xml:id="Vil">
-    <persName>Inž. Vil,ma Pirkovič</persName>
   </person>
   <person xml:id="DavorinFerligoj">
     <persName>Davorin Ferligoj</persName>

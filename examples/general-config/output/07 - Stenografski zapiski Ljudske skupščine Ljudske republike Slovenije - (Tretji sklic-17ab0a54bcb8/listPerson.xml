@@ -21,9 +21,6 @@
   <person xml:id="FerdoKozak">
     <persName>Dr. Ferdo Kozak</persName>
   </person>
-  <person xml:id="StaneKAvčič">
-    <persName>Stane K.avčič</persName>
-  </person>
   <person xml:id="KarmeloBudihna">
     <persName>Inž. Karmelo Budihna</persName>
   </person>
@@ -53,9 +50,6 @@
   </person>
   <person xml:id="MihaPotočnik">
     <persName>Dr. Miha Potočnik</persName>
-  </person>
-  <person xml:id="VinkoŠumrada">
-    <persName>Vinko Šumrada</persName>
   </person>
   <person xml:id="AlojzColarič">
     <persName>Alojz Colarič</persName>
@@ -110,9 +104,6 @@
   </person>
   <person xml:id="StaneBizjak">
     <persName>Stane Bizjak</persName>
-  </person>
-  <person xml:id="STaneBizjak">
-    <persName>S.tane Bizjak</persName>
   </person>
   <person xml:id="MiranMejak">
     <persName>Inž. Miran Mejak</persName>
@@ -203,14 +194,5 @@
   </person>
   <person xml:id="FrancKrese">
     <persName>Franc Krese</persName>
-  </person>
-  <person xml:id="InPoročevalec">
-    <persName>Predsednik in poročevalec</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="Izvoli">
-    <persName>(Ur. 1. FLRJ, št. 31/54) izvoli</persName>
   </person>
 </listPerson>

@@ -2,23 +2,20 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\14 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 10.aprila do 31.avgusta 1958.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 16830,
-  "unmatched_count": 8880,
+  "unmatched_count": 12452,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 2,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 13,
-    "CONSUMED_LINE": 102,
+    "CONSUMED_LINE": 97,
     "CONTENTS": 4,
-    "FOOTNOTE_CONTINUATION": 12,
-    "FOOTNOTE_ENTRY": 2,
-    "GENERIC_NOTE": 24,
-    "HEAD": 23,
-    "PARAGRAPH": 5099,
+    "GENERIC_NOTE": 22,
+    "HEAD": 17,
+    "PARAGRAPH": 2365,
     "SCRIBE": 15,
-    "SEG": 1551,
+    "SEG": 747,
     "SOURCE_ARTIFACT": 881,
-    "SPEAKER": 194,
-    "TIME": 27
+    "SPEAKER": 190,
+    "TIME": 26
   },
   "page_counts": {
     "1": 14,
@@ -408,6 +405,22 @@
   },
   "unmatched_samples": [
     {
+      "text": "Stenografski zapiski",
+      "x": 158.4,
+      "y": 517.59,
+      "page": 1,
+      "font_size": 17.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "w",
+      "x": 292.08,
+      "y": 487.02,
+      "page": 1,
+      "font_size": 9.0,
+      "line_text": "w ч/"
+    },
+    {
       "text": "ч",
       "x": 308.88,
       "y": 486.63,
@@ -422,6 +435,118 @@
       "page": 1,
       "font_size": 9.0,
       "line_text": "w ч/"
+    },
+    {
+      "text": "LJUDSKE SKUPSCIM",
+      "x": 94.08,
+      "y": 456.74,
+      "page": 1,
+      "font_size": 32.0,
+      "line_text": "LJUDSKE SKUPSCIM"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 93.84,
+      "y": 433.11,
+      "page": 1,
+      "font_size": 17.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 191.52,
+      "y": 379.74,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje od 10. aprila do 31. avgusta 1958",
+      "x": 112.56,
+      "y": 325.74,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "Seje od 10. aprila do 31. avgusta 1958"
+    },
+    {
+      "text": "1958",
+      "x": 214.8,
+      "y": 112.14,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "1958"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 197.52,
+      "y": 71.34,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Steno^rafski zapiski",
+      "x": 131.04,
+      "y": 525.25,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Steno^rafski zapiski"
+    },
+    {
+      "text": "LJIDSKE SKIPŠČINE",
+      "x": 66.72,
+      "y": 465.11,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJIDSKE SKIPŠČINE"
+    },
+    {
+      "text": "LJIDSkE KfcPlBLIKI' SL0VE\\IJE",
+      "x": 67.92,
+      "y": 440.77,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "LJIDSkE KfcPlBLIKI' SL0VE\\IJE"
+    },
+    {
+      "text": "(Cetrli sklic)",
+      "x": 164.64,
+      "y": 386.48,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "(Cetrli sklic)"
+    },
+    {
+      "text": "Soje od 10. aprila do 31. avgusta 195}|",
+      "x": 86.64,
+      "y": 333.64,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Soje od 10. aprila do 31. avgusta 195}|"
+    },
+    {
+      "text": "1958",
+      "x": 190.56,
+      "y": 119.8,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "1958"
+    },
+    {
+      "text": "I j u b I j a n a",
+      "x": 173.52,
+      "y": 79.0,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "I j u b I j a n a"
+    },
+    {
+      "text": ": 9",
+      "x": 182.4,
+      "y": 236.73,
+      "page": 4,
+      "font_size": 35.0,
+      "line_text": ": 9П£"
     },
     {
       "text": "П",
@@ -456,156 +581,28 @@
       "line_text": "t л & V. 1963"
     },
     {
-      "text": "da se za zapisnikarja 1. seje prvega sestanka Republiškega zbora Ljudske",
-      "x": 27.6,
-      "y": 198.71,
+      "text": "Zgodilo se je, da moram kot najstarejši izvoljeni poslanec pričeti prvi sestanek",
+      "x": 26.88,
+      "y": 375.59,
       "page": 5,
       "font_size": 10.0,
-      "line_text": "da se za zapisnikarja 1. seje prvega sestanka Republiškega zbora Ljudske"
+      "line_text": "Zgodilo se je, da moram kot najstarejši izvoljeni poslanec pričeti prvi sestanek"
     },
     {
-      "text": "skupščine Ljudske republike Slovenije izvoli tovarišica Lojzka Stropnik.",
+      "text": "nove skupščine oziroma 1. sejo prvega sestanka IV. sklica Republiškega zbora.",
+      "x": 26.64,
+      "y": 364.79,
+      "page": 5,
+      "font_size": 10.0,
+      "line_text": "nove skupščine oziroma 1. sejo prvega sestanka IV. sklica Republiškega zbora."
+    },
+    {
+      "text": "naših perspektivah, da sem zaradi tega mnenja, da mi o tem ni treba več",
       "x": 27.12,
-      "y": 187.91,
+      "y": 343.19,
       "page": 5,
       "font_size": 10.0,
-      "line_text": "skupščine Ljudske republike Slovenije izvoli tovarišica Lojzka Stropnik."
-    },
-    {
-      "text": "nikarja 1. seje prvega sestanka Republiškega zbora izvoli tovarišica Lojzka",
-      "x": 27.6,
-      "y": 155.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "nikarja 1. seje prvega sestanka Republiškega zbora izvoli tovarišica Lojzka"
-    },
-    {
-      "text": "Stropnik. Je morda še kakšen drug predlog? (Ne javi se nihče.) Ker ni drugega",
-      "x": 27.84,
-      "y": 144.71,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Stropnik. Je morda še kakšen drug predlog? (Ne javi se nihče.) Ker ni drugega"
-    },
-    {
-      "text": "predloga, vas prosim, da glasujete o predlogu, ki ga je dal tovariš Pirkovič,",
-      "x": 27.84,
-      "y": 133.67,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "predloga, vas prosim, da glasujete o predlogu, ki ga je dal tovariš Pirkovič,"
-    },
-    {
-      "text": "da se tovarišica Lojzka Stropnik izvoli za zapisnikarja današnje seje. Kdor je",
-      "x": 27.6,
-      "y": 123.11,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "da se tovarišica Lojzka Stropnik izvoli za zapisnikarja današnje seje. Kdor je"
-    },
-    {
-      "text": "za ta predlog, prosim, da dvigne roko. (Vsi poslanci dvignejo roko.) Hvala. Je",
-      "x": 27.6,
-      "y": 112.07,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "za ta predlog, prosim, da dvigne roko. (Vsi poslanci dvignejo roko.) Hvala. Je"
-    },
-    {
-      "text": "kdo proti? (Nihče.) Se je kdo vzdržal? (Nihče.) Tedaj menim, da je tovarišica",
-      "x": 27.84,
-      "y": 101.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "kdo proti? (Nihče.) Se je kdo vzdržal? (Nihče.) Tedaj menim, da je tovarišica"
-    },
-    {
-      "text": "Lojzka Stropnik soglasno izvoljena za zapisnikarja in jo prosim, da zavzame",
-      "x": 27.6,
-      "y": 90.47,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Lojzka Stropnik soglasno izvoljena za zapisnikarja in jo prosim, da zavzame"
-    },
-    {
-      "text": "svoje mesto.",
-      "x": 27.84,
-      "y": 79.91,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "svoje mesto."
-    },
-    {
-      "text": "Ima morda kdo kakšen predlog za izvolitev verifikacijskega odbora? (K besedi",
-      "x": 28.08,
-      "y": 56.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ima morda kdo kakšen predlog za izvolitev verifikacijskega odbora? (K besedi"
-    },
-    {
-      "text": "se prijavi ljudski poslanec Milko Goršič.)",
-      "x": 27.84,
-      "y": 45.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "se prijavi ljudski poslanec Milko Goršič.)"
-    },
-    {
-      "text": "Skoka, Mirka Zlatnarja, Branka Babica, Toneta Fajfarja, dr. Helija Modica,",
-      "x": 42.96,
-      "y": 564.95,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "Skoka, Mirka Zlatnarja, Branka Babica, Toneta Fajfarja, dr. Helija Modica,"
-    },
-    {
-      "text": "dr. Marijana Dermastie, Ivo Janežekoviča, Viktorja Avblja, Rudija Cačinoviča",
-      "x": 42.72,
-      "y": 554.15,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "dr. Marijana Dermastie, Ivo Janežekoviča, Viktorja Avblja, Rudija Cačinoviča"
-    },
-    {
-      "text": "in v svojem lastnem imenu, predlagam, da se v verifikacijski odbor Repub",
-      "x": 42.96,
-      "y": 543.35,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "in v svojem lastnem imenu, predlagam, da se v verifikacijski odbor Repub"
-    },
-    {
-      "text": "liškega zbora Ljudske skupščine LRS izvolijo tovariši: Albert Jakopič, Franc",
-      "x": 42.72,
-      "y": 532.55,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "liškega zbora Ljudske skupščine LRS izvolijo tovariši: Albert Jakopič, Franc"
-    },
-    {
-      "text": "K'movec, Tone Kropušek, Humbert Gačnik, Ivan Horvat, Albin Jensterle,",
-      "x": 42.72,
-      "y": 521.75,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "K'movec, Tone Kropušek, Humbert Gačnik, Ivan Horvat, Albin Jensterle,"
-    },
-    {
-      "text": "Angelca Ocepek, inž. Vilma Pirkovič, Marinka Ribičič, Stane Sotlar in Lojzka",
-      "x": 42.48,
-      "y": 510.95,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "Angelca Ocepek, inž. Vilma Pirkovič, Marinka Ribičič, Stane Sotlar in Lojzka"
-    },
-    {
-      "text": "Stropnik.",
-      "x": 42.48,
-      "y": 500.15,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "Stropnik."
+      "line_text": "naših perspektivah, da sem zaradi tega mnenja, da mi o tem ni treba več"
     }
   ],
   "recovery_counts": {},

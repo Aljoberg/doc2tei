@@ -2,18 +2,18 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\3. sklic (1953-1957)\\02 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Tretji sklic) - Seje od 1. januarja do 31. marca 1957.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 15565,
-  "unmatched_count": 9932,
+  "unmatched_count": 12927,
   "rule_counts": {
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 4,
     "CONSUMED_LINE": 42,
-    "GENERIC_NOTE": 25,
+    "GENERIC_NOTE": 19,
     "HEAD": 7,
-    "PARAGRAPH": 3867,
+    "PARAGRAPH": 872,
     "SCRIBE": 8,
-    "SEG": 837,
+    "SEG": 844,
     "SOURCE_ARTIFACT": 593,
-    "SPEAKER": 243,
+    "SPEAKER": 242,
     "TIME": 6
   },
   "page_counts": {
@@ -362,6 +362,110 @@
   },
   "unmatched_samples": [
     {
+      "text": "v w",
+      "x": 284.88,
+      "y": 498.81,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "v w"
+    },
+    {
+      "text": "IJIDSKE SKUPŠČINE",
+      "x": 87.36,
+      "y": 469.43,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "IJIDSKE SKUPŠČINE"
+    },
+    {
+      "text": "IJUDSKE REPUBIIRE SLOVENIJE",
+      "x": 87.6,
+      "y": 445.81,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "IJUDSKE REPUBIIRE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 184.08,
+      "y": 391.98,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Sej« od 1. januarja do 31. marca 1957",
+      "x": 108.96,
+      "y": 338.22,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "Sej« od 1. januarja do 31. marca 1957"
+    },
+    {
+      "text": "1957",
+      "x": 210.48,
+      "y": 129.18,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "1957"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 193.2,
+      "y": 88.38,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 136.8,
+      "y": 539.43,
+      "page": 3,
+      "font_size": 17.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "v w",
+      "x": 270.0,
+      "y": 508.36,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "v w"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 72.48,
+      "y": 479.75,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 72.72,
+      "y": 456.13,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 169.2,
+      "y": 402.54,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od",
+      "x": 93.84,
+      "y": 348.54,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "Seje od Д. januarja do 31. marca 1957"
+    },
+    {
       "text": "Д",
       "x": 142.32,
       "y": 348.11,
@@ -378,6 +482,38 @@
       "line_text": "Seje od Д. januarja do 31. marca 1957"
     },
     {
+      "text": "1957",
+      "x": 194.64,
+      "y": 139.5,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "1957"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 177.36,
+      "y": 98.7,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "997",
+      "x": 209.28,
+      "y": 320.04,
+      "page": 4,
+      "font_size": 26.0,
+      "line_text": "997"
+    },
+    {
+      "text": "^",
+      "x": 166.56,
+      "y": 240.32,
+      "page": 4,
+      "font_size": 14.0,
+      "line_text": "^Г) 1 O, X. 1957,/"
+    },
+    {
       "text": "Г",
       "x": 171.84,
       "y": 239.86,
@@ -392,6 +528,14 @@
       "page": 4,
       "font_size": 14.0,
       "line_text": "^Г) 1 O, X. 1957,/"
+    },
+    {
+      "text": "Л",
+      "x": 281.28,
+      "y": 239.08,
+      "page": 4,
+      "font_size": 9.1,
+      "line_text": "Л6"
     },
     {
       "text": "6",
@@ -416,150 +560,6 @@
       "page": 5,
       "font_size": 10.0,
       "line_text": "čenjam 18. sejo Republiškega zbora Ljudske skupščine Ljudske republike Slo"
-    },
-    {
-      "text": "venije, ki jo je sklical predsednik Ljudske skupščine LRS. Zapisnik današnje",
-      "x": 23.28,
-      "y": 422.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "venije, ki jo je sklical predsednik Ljudske skupščine LRS. Zapisnik današnje"
-    },
-    {
-      "text": "seje bp vodil zapisnikar tovariš Dušan Bole.",
-      "x": 23.28,
-      "y": 411.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "seje bp vodil zapisnikar tovariš Dušan Bole."
-    },
-    {
-      "text": "Vodovnik in Rudi Janhuba so opravičili svojo odsotnost. Predlagam, da jim",
-      "x": 23.28,
-      "y": 390.23,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Vodovnik in Rudi Janhuba so opravičili svojo odsotnost. Predlagam, da jim"
-    },
-    {
-      "text": "zbor odobri dopust. Se zbor strinja s tem predlogom? (Poslanci se strinjajo.)",
-      "x": 23.52,
-      "y": 379.43,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zbor odobri dopust. Se zbor strinja s tem predlogom? (Poslanci se strinjajo.)"
-    },
-    {
-      "text": "Ker se zbor s predlogom strinja, je omenjenim poslancem dopust odobren.",
-      "x": 23.28,
-      "y": 368.87,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ker se zbor s predlogom strinja, je omenjenim poslancem dopust odobren."
-    },
-    {
-      "text": "zapisnik 17. seje Republiškega zbora. (Zapisnikar Ančka Globačnik prebere",
-      "x": 23.28,
-      "y": 347.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zapisnik 17. seje Republiškega zbora. (Zapisnikar Ančka Globačnik prebere"
-    },
-    {
-      "text": "zapisnik zadnje seje.) Ima kdo od tovarišev poslancev kakšno pripombo k",
-      "x": 23.52,
-      "y": 336.47,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zapisnik zadnje seje.) Ima kdo od tovarišev poslancev kakšno pripombo k"
-    },
-    {
-      "text": "zapisniku? (Ne javi se nihče.) Ker nihče, ugotavljam, da je zapisnik odobren",
-      "x": 23.52,
-      "y": 325.91,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zapisniku? (Ne javi se nihče.) Ker nihče, ugotavljam, da je zapisnik odobren"
-    },
-    {
-      "text": "in da se lahko podpiše. (Predsednik in zapisnikar podpišeta zapisnik.)",
-      "x": 23.52,
-      "y": 315.11,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "in da se lahko podpiše. (Predsednik in zapisnikar podpišeta zapisnik.)"
-    },
-    {
-      "text": "sednika ljudske skupščine predlog družbenega plana LRS za leto 1957, predlog",
-      "x": 23.04,
-      "y": 293.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "sednika ljudske skupščine predlog družbenega plana LRS za leto 1957, predlog"
-    },
-    {
-      "text": "zakona o proračunu Ljudske republike Slovenije s predlogom proračuna LRS",
-      "x": 23.28,
-      "y": 282.71,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zakona o proračunu Ljudske republike Slovenije s predlogom proračuna LRS"
-    },
-    {
-      "text": "za leto 1957, predlog zakona o začasnem finansiranju republiških potreb v",
-      "x": 23.28,
-      "y": 271.91,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "za leto 1957, predlog zakona o začasnem finansiranju republiških potreb v"
-    },
-    {
-      "text": "prvem četrtletju 1957, poročilo in predlog komisije Republiškega zbora za",
-      "x": 23.28,
-      "y": 261.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "prvem četrtletju 1957, poročilo in predlog komisije Republiškega zbora za"
-    },
-    {
-      "text": "statute in predlog odloka o ustanovitvi okrajnega sodišča na Rakeku.",
-      "x": 23.52,
-      "y": 250.55,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "statute in predlog odloka o ustanovitvi okrajnega sodišča na Rakeku."
-    },
-    {
-      "text": "Slovenije za leto 1957;",
-      "x": 23.52,
-      "y": 214.31,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Slovenije za leto 1957;"
-    },
-    {
-      "text": "republiških potreb v prvem četrtletju 1957;",
-      "x": 23.76,
-      "y": 191.03,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "republiških potreb v prvem četrtletju 1957;"
-    },
-    {
-      "text": "like Slovenije (republiškem proračunu) za leto 1957;",
-      "x": 24.24,
-      "y": 167.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "like Slovenije (republiškem proračunu) za leto 1957;"
-    },
-    {
-      "text": "trditve statutov nekaterih okrajev in",
-      "x": 24.0,
-      "y": 143.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "trditve statutov nekaterih okrajev in"
     }
   ],
   "recovery_counts": {},

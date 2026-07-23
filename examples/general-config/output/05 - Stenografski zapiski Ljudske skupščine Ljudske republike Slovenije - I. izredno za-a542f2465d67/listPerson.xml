@@ -24,73 +24,10 @@
   <person xml:id="AlojzBenko">
     <persName>Alojz Benko</persName>
   </person>
-  <person xml:id="FErdoKozak">
-    <persName>Predsednik d r. F erdo Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="JankoMarkič">
     <persName>Janko Markič</persName>
   </person>
   <person xml:id="ToneSušteršič">
     <persName>Tone Sušteršič</persName>
-  </person>
-  <person xml:id="JožePetejan">
-    <persName>Jože Petejan</persName>
-  </person>
-  <person xml:id="ToneUlrih">
-    <persName>Tone Ulrih</persName>
-  </person>
-  <person xml:id="AntonLabura">
-    <persName>Anton L a b u r a</persName>
-  </person>
-  <person xml:id="IvanMaček">
-    <persName>Ivan Maček</persName>
-  </person>
-  <person xml:id="ZoranPolič">
-    <persName>Zoran Polič</persName>
-  </person>
-  <person xml:id="FrancLeskošek">
-    <persName>Franc Leskošek</persName>
-  </person>
-  <person xml:id="AlojzHrovat">
-    <persName>Inž. Alojz Hrovat</persName>
-  </person>
-  <person xml:id="MihaBerčič">
-    <persName>Miha Berčič</persName>
-  </person>
-  <person xml:id="LožePotrč">
-    <persName>Dr lože Potrč</persName>
-  </person>
-  <person xml:id="JanezMlakar">
-    <persName>Janez Mlakar</persName>
-  </person>
-  <person xml:id="FcrdoKozak">
-    <persName>Predsednik d r. F c r d o Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="LcoKovučič">
-    <persName>Lco Kovučič</persName>
-  </person>
-  <person xml:id="AntonMclik">
-    <persName>D r. A n t o n Mclik</persName>
-  </person>
-  <person xml:id="MarijaSme">
-    <persName>Marija Sme</persName>
-  </person>
-  <person xml:id="FerdoKoztK">
-    <persName>Predsednik dr. Ferdo Kozt^k</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="PavleŽaucer">
-    <persName>Inž. Pavle Žaucer</persName>
-  </person>
-  <person xml:id="CvetkaVodopivec">
-    <persName>Cvetka Vodopivec</persName>
   </person>
 </listPerson>

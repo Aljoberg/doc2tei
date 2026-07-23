@@ -244,6 +244,7 @@ def _atomic_json(path: Path, value: object) -> None:
         temporary.write_text(
             json.dumps(value, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
+            newline="\n",
         )
         os.replace(temporary, path)
     finally:

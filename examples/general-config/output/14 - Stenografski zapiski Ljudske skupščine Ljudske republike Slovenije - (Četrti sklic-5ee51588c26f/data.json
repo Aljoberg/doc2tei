@@ -17,7 +17,6 @@
     "#MarijaLevar": "Marija Levar:",
     "#PeterZorko": "Peter Zorko:",
     "#JožeIngolič": "Jože Ingolič:",
-    "#PavleŽaucer": "Predsednik inž. Pavle Žaucer:",
     "#MarijaZupančič": "Marija Zupančič:",
     "#RudiCačinovič": "Rudi Cačinovič:",
     "#JulijBeltram": "Julij Beltram:",
@@ -47,7 +46,6 @@
     "#IvankaKukovec": "Ivanka Kukovec:",
     "#StaneFele": "Stane Fele:",
     "#StaneKavčič": "Stane Kavčič:",
-    "#LiojzeOcepok": "Predsednik liojze Ocepok:",
     "#MihaMarinko": "Predsednik Miha Marinko:",
     "#FrancPopit": "Franc Popit:",
     "#MiraSvetina": "Mira Svetina:",
@@ -63,12 +61,9 @@
     "#FrancFale": "Franc Fale:",
     "#IvanKranjčič": "Ivan Kranjčič:",
     "#MarijanDermastia": "Dr. Marijan Dermastia:",
-    "#JožeGlobevnik": "Dr. Jože Globevnik:",
-    "#OloMariborTineLah": "Podpredsednik OLO Maribor Tine Lah, direktor Rudnika svinca Mež:",
-    "#MartinGosak": "Martin Gosak, člani:",
-    "#MirkoZlatnar": "Mirko Zlatnar, člani:"
+    "#JožeGlobevnik": "Dr. Jože Globevnik:"
   },
   "warnings": [
-    "32 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+    "34 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
   ]
 }

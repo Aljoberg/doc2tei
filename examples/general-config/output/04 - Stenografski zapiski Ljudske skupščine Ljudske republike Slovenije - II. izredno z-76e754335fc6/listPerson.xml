@@ -1,8 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <listPerson xmlns="http://www.tei-c.org/ns/1.0">
-  <person xml:id="Prisotni">
-    <persName>PRISOTNI ČLANI VLADE</persName>
-  </person>
   <person xml:id="FerdoKozak">
     <persName>Predsednik d r. F e r d o Kozak</persName>
     <affiliation role="predsednik">
@@ -26,12 +23,6 @@
   </person>
   <person xml:id="ToneFajfar">
     <persName>Tone Fajfar</persName>
-  </person>
-  <person xml:id="FerdoKozlaK">
-    <persName>Predsednik dr. Ferdo Kozla k</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="JožeBorštnar">
     <persName>Jože Borštnar</persName>
@@ -75,12 +66,6 @@
   <person xml:id="ToneUlrih">
     <persName>Tone Ulrih</persName>
   </person>
-  <person xml:id="Ferdokozak">
-    <persName>Predsednik dr. FerdoKozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="FrancSimonič">
     <persName>Franc Simonič</persName>
   </person>
@@ -98,44 +83,5 @@
   </person>
   <person xml:id="StankoŠtor">
     <persName>Dr. Stanko Štor</persName>
-  </person>
-  <person xml:id="Drav1Je">
-    <persName>D r a v 1 j e</persName>
-  </person>
-  <person xml:id="Spšiška">
-    <persName>S p. Š i š k a (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="Štvidde1">
-    <persName>Š t. V i d (d e 1</persName>
-  </person>
-  <person xml:id="Zgšiška">
-    <persName>Z g. Š i š k a (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SpŠiška">
-    <persName>S p. Šiška (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="Zgšiska">
-    <persName>Z g. Š i s k a (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="IlirskaBistrica">
-    <persName>Ilirska Bistrica, Postojna, Sežana in Tolmin.&lt;</persName>
-  </person>
-  <person xml:id="SvMagdalena">
-    <persName>Sv. Magdalena</persName>
-  </person>
-  <person xml:id="ZgRadvanje">
-    <persName>Z g. Radvanje</persName>
   </person>
 </listPerson>

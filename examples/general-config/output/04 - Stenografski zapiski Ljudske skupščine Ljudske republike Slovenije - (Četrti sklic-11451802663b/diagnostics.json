@@ -2,17 +2,20 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\04 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 1. junija do 9. oktobra 1962.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 19199,
-  "unmatched_count": 7023,
+  "unmatched_count": 14774,
   "rule_counts": {
+    "AFTER_GENERIC_NOTE": 2,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 9,
-    "CONSUMED_LINE": 47,
+    "CONSUMED_LINE": 71,
+    "FOOTNOTE_CONTINUATION": 3,
+    "FOOTNOTE_ENTRY": 5,
     "GENERIC_NOTE": 17,
-    "HEAD": 14,
-    "PARAGRAPH": 10409,
+    "HEAD": 13,
+    "PARAGRAPH": 2335,
     "SCRIBE": 13,
-    "SEG": 966,
-    "SOURCE_ARTIFACT": 577,
+    "SEG": 964,
+    "SOURCE_ARTIFACT": 869,
     "SPEAKER": 105,
     "TIME": 18
   },
@@ -440,12 +443,156 @@
   },
   "unmatched_samples": [
     {
+      "text": "Sejni zapiski",
+      "x": 173.04,
+      "y": 523.37,
+      "page": 1,
+      "font_size": 18.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": ",4/ s/",
+      "x": 280.56,
+      "y": 493.14,
+      "page": 1,
+      "font_size": 8.0,
+      "line_text": ",4/ s/"
+    },
+    {
+      "text": "LJUDSKE SKUPSCmE",
+      "x": 95.04,
+      "y": 462.76,
+      "page": 1,
+      "font_size": 33.0,
+      "line_text": "LJUDSKE SKUPSCmE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 95.04,
+      "y": 437.17,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 179.28,
+      "y": 383.32,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje od 1. junija do 9. oktobra 1962",
+      "x": 111.6,
+      "y": 327.01,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Seje od 1. junija do 9. oktobra 1962"
+    },
+    {
+      "text": "1962",
+      "x": 210.96,
+      "y": 112.84,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1962"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 195.12,
+      "y": 72.28,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 155.28,
+      "y": 508.93,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "\\/",
+      "x": 266.16,
+      "y": 478.02,
+      "page": 3,
+      "font_size": 8.0,
+      "line_text": "\\/ 4/"
+    },
+    {
       "text": "4/",
       "x": 281.76,
       "y": 478.02,
       "page": 3,
       "font_size": 8.0,
       "line_text": "\\/ 4/"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 76.8,
+      "y": 448.31,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 76.56,
+      "y": 422.05,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 160.56,
+      "y": 368.2,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje od 1. junija do 9. oktobra 1962",
+      "x": 92.4,
+      "y": 311.89,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Seje od 1. junija do 9. oktobra 1962"
+    },
+    {
+      "text": "1962",
+      "x": 191.52,
+      "y": 97.48,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "1962"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 175.2,
+      "y": 56.44,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "997",
+      "x": 194.88,
+      "y": 309.98,
+      "page": 4,
+      "font_size": 27.0,
+      "line_text": "997"
+    },
+    {
+      "text": "/>a v. 1963",
+      "x": 160.32,
+      "y": 210.65,
+      "page": 4,
+      "font_size": 18.0,
+      "line_text": "/>a v. 1963"
     },
     {
       "text": "Pričenjam 27. sejo Republiškega zbora Ljudske skupščine LRS, ki jo je sklical",
@@ -494,150 +641,6 @@
       "page": 5,
       "font_size": 10.0,
       "line_text": "se ga lahko podpiše. (Predsednik in zapisnikar podpišeta zapisnik.)"
-    },
-    {
-      "text": "ščini LRS predložil Izvršni svet in poročilo, ki ga zboru predlaga mandatno",
-      "x": 33.36,
-      "y": 274.55,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ščini LRS predložil Izvršni svet in poročilo, ki ga zboru predlaga mandatno"
-    },
-    {
-      "text": "imunitetni odbor. Zato predlagam za današnjo sejo naslednji dnevni red:",
-      "x": 33.84,
-      "y": 263.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "imunitetni odbor. Zato predlagam za današnjo sejo naslednji dnevni red:"
-    },
-    {
-      "text": "računu Ljudske republike Slovenije (republiškem proračunu) za leto 1962;",
-      "x": 34.08,
-      "y": 239.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "računu Ljudske republike Slovenije (republiškem proračunu) za leto 1962;"
-    },
-    {
-      "text": "republiki Sloveniji;",
-      "x": 34.08,
-      "y": 216.47,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "republiki Sloveniji;"
-    },
-    {
-      "text": "delavce v Ljubljani;",
-      "x": 33.6,
-      "y": 192.23,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "delavce v Ljubljani;"
-    },
-    {
-      "text": "nim odborom skladov za zdravstveno zavarovanje kmetijskih proizvajalcev;",
-      "x": 33.36,
-      "y": 168.47,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "nim odborom skladov za zdravstveno zavarovanje kmetijskih proizvajalcev;"
-    },
-    {
-      "text": "delavnic za gluho mladino plačevanja prispevka iz osebnega dohodka delavcev,",
-      "x": 33.6,
-      "y": 144.71,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "delavnic za gluho mladino plačevanja prispevka iz osebnega dohodka delavcev,"
-    },
-    {
-      "text": "ki pripada Ljudski republiki Sloveniji za leto 1962;",
-      "x": 33.6,
-      "y": 134.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ki pripada Ljudski republiki Sloveniji za leto 1962;"
-    },
-    {
-      "text": "niške zbornice Slovenije, ki ga izvoli Ljudska skupščina LRS;",
-      "x": 33.6,
-      "y": 110.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "niške zbornice Slovenije, ki ga izvoli Ljudska skupščina LRS;"
-    },
-    {
-      "text": "polnilni predlog? (Ne javi se nihče.)",
-      "x": 33.84,
-      "y": 61.19,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "polnilni predlog? (Ne javi se nihče.)"
-    },
-    {
-      "text": "sklepanje o predlogu zakona o dopolnitvi zakona o proračunu Ljudske republike",
-      "x": 44.88,
-      "y": 567.83,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "sklepanje o predlogu zakona o dopolnitvi zakona o proračunu Ljudske republike"
-    },
-    {
-      "text": "Slovenije (republiškem proračunu) za leto 1962.",
-      "x": 45.36,
-      "y": 557.27,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "Slovenije (republiškem proračunu) za leto 1962."
-    },
-    {
-      "text": "bora za proračun ljudski poslanec inž. Štefka Lorbek prebere odborovo",
-      "x": 44.64,
-      "y": 535.19,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "bora za proračun ljudski poslanec inž. Štefka Lorbek prebere odborovo"
-    },
-    {
-      "text": "poročilo. — Glej priloge.)",
-      "x": 44.64,
-      "y": 524.63,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "poročilo. — Glej priloge.)"
-    },
-    {
-      "text": "zakonodajnega odbora ljudski poslanec Lado Božič prebere odborovo po",
-      "x": 44.64,
-      "y": 502.55,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "zakonodajnega odbora ljudski poslanec Lado Božič prebere odborovo po"
-    },
-    {
-      "text": "ročilo. — Glej priloge.)",
-      "x": 44.88,
-      "y": 491.75,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "ročilo. — Glej priloge.)"
-    },
-    {
-      "text": "sveta pa me je obvestil, da zakona ne želi še ustno obrazložiti, ker se sklicuje",
-      "x": 44.16,
-      "y": 470.15,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "sveta pa me je obvestil, da zakona ne želi še ustno obrazložiti, ker se sklicuje"
-    },
-    {
-      "text": "na pismeno obrazložitev. Zato dajem predlog zakona v obravnavo. Zeli kdo",
-      "x": 44.16,
-      "y": 459.11,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "na pismeno obrazložitev. Zato dajem predlog zakona v obravnavo. Zeli kdo"
     }
   ],
   "recovery_counts": {},

@@ -2,23 +2,21 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\3. sklic (1953-1957)\\05 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Tretji sklic) - Seje od 1.aprila do 30.novembra 1955.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 22921,
-  "unmatched_count": 14691,
+  "unmatched_count": 17834,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 3,
-    "APPENDIX_HEAD": 1,
+    "AFTER_GENERIC_NOTE": 2,
+    "APPENDIX_HEAD": 2,
     "CHAIRMAN": 10,
-    "CONSUMED_LINE": 250,
-    "FOOTNOTE_CONTINUATION": 19,
-    "FOOTNOTE_ENTRY": 3,
-    "GENERIC_NOTE": 232,
-    "HEAD": 28,
-    "PARAGRAPH": 4033,
+    "CONSUMED_LINE": 191,
+    "GENERIC_NOTE": 20,
+    "HEAD": 15,
+    "PARAGRAPH": 3136,
     "SCRIBE": 13,
-    "SEG": 2290,
-    "SOURCE_ARTIFACT": 693,
-    "SPEAKER": 499,
-    "TIME": 28,
-    "UNMATCHED_LINE": 128
+    "SEG": 563,
+    "SOURCE_ARTIFACT": 899,
+    "SPEAKER": 211,
+    "TIME": 24,
+    "UNSTRUCTURED_START": 1
   },
   "page_counts": {
     "1": 14,
@@ -473,12 +471,172 @@
   },
   "unmatched_samples": [
     {
+      "text": "342.533(497.4)\"1955\"",
+      "x": 7.44,
+      "y": 581.46,
+      "page": 1,
+      "font_size": 8.0,
+      "line_text": "342.533(497.4)\"1955\""
+    },
+    {
+      "text": "lil",
+      "x": 10.08,
+      "y": 553.6,
+      "page": 1,
+      "font_size": 28.0,
+      "line_text": "lil"
+    },
+    {
+      "text": "019560080",
+      "x": 7.68,
+      "y": 548.87,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "019560080"
+    },
+    {
+      "text": "C0BISS 0",
+      "x": 130.56,
+      "y": 548.2,
+      "page": 1,
+      "font_size": 6.5,
+      "line_text": "C0BISS 0 grafski zapiski"
+    },
+    {
       "text": "grafski zapiski",
       "x": 176.16,
       "y": 537.32,
       "page": 1,
       "font_size": 19.0,
       "line_text": "C0BISS 0 grafski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 76.8,
+      "y": 473.27,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 77.04,
+      "y": 442.57,
+      "page": 1,
+      "font_size": 21.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 178.8,
+      "y": 393.64,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od 1. aprila do 30. novembra 1955",
+      "x": 94.56,
+      "y": 334.88,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "Seje od 1. aprila do 30. novembra 1955"
+    },
+    {
+      "text": "1955",
+      "x": 197.52,
+      "y": 123.68,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "1955"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 182.88,
+      "y": 84.8,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 153.36,
+      "y": 550.49,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "V w",
+      "x": 285.6,
+      "y": 518.22,
+      "page": 3,
+      "font_size": 9.0,
+      "line_text": "V w"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 93.12,
+      "y": 486.23,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 93.36,
+      "y": 455.29,
+      "page": 3,
+      "font_size": 21.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 194.88,
+      "y": 406.12,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od 1. aprila do 30. novembra 1955",
+      "x": 110.64,
+      "y": 347.84,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "Seje od 1. aprila do 30. novembra 1955"
+    },
+    {
+      "text": "1955",
+      "x": 213.84,
+      "y": 135.92,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "1955"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 198.96,
+      "y": 97.76,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "997 '",
+      "x": 204.0,
+      "y": 368.28,
+      "page": 4,
+      "font_size": 26.0,
+      "line_text": "997 '"
+    },
+    {
+      "text": "J)",
+      "x": 166.08,
+      "y": 301.83,
+      "page": 4,
+      "font_size": 17.0,
+      "line_text": "J) 2 0.111.1956/^"
     },
     {
       "text": "2 0.111.1956/^",
@@ -489,188 +647,28 @@
       "line_text": "J) 2 0.111.1956/^"
     },
     {
+      "text": "Josip Rus, predsednik",
+      "x": 137.76,
+      "y": 449.27,
+      "page": 5,
+      "font_size": 10.0,
+      "line_text": "Josip Rus, predsednik"
+    },
+    {
+      "text": "Republiškega zbora",
+      "x": 157.2,
+      "y": 436.55,
+      "page": 5,
+      "font_size": 10.0,
+      "line_text": "Republiškega zbora"
+    },
+    {
       "text": "čenjam 9. sejo Republiškega zbora, ki jo je na podlagi 60. člena ustavnega",
       "x": 47.76,
       "y": 350.63,
       "page": 5,
       "font_size": 10.0,
       "line_text": "čenjam 9. sejo Republiškega zbora, ki jo je na podlagi 60. člena ustavnega"
-    },
-    {
-      "text": "zakona sklical predsednik Ljudske skupščine LRS. Zapisnik današnje seje",
-      "x": 48.0,
-      "y": 339.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zakona sklical predsednik Ljudske skupščine LRS. Zapisnik današnje seje"
-    },
-    {
-      "text": "bo vodil ljudski poslanec Anton Peternelj.",
-      "x": 48.72,
-      "y": 329.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "bo vodil ljudski poslanec Anton Peternelj."
-    },
-    {
-      "text": "Cerne in Franc Krese so opravičili svojo odsotnost. Predlagani, da jim",
-      "x": 48.72,
-      "y": 307.43,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Cerne in Franc Krese so opravičili svojo odsotnost. Predlagani, da jim"
-    },
-    {
-      "text": "zbor odobri dopust.",
-      "x": 49.2,
-      "y": 297.11,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zbor odobri dopust."
-    },
-    {
-      "text": "prečita zapisnik 8. seje. (Zapisnikar Dušan Bole prečita zapisnik 8. seje.)",
-      "x": 49.2,
-      "y": 274.55,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "prečita zapisnik 8. seje. (Zapisnikar Dušan Bole prečita zapisnik 8. seje.)"
-    },
-    {
-      "text": "Ima kdo od tovarišev ljudskih poslancev kako pripombo k zapisniku?",
-      "x": 49.68,
-      "y": 263.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ima kdo od tovarišev ljudskih poslancev kako pripombo k zapisniku?"
-    },
-    {
-      "text": "(Ne javi se nihče.) Cc ni pripomb, menim, da je zapisnik odobren in se",
-      "x": 49.2,
-      "y": 252.95,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "(Ne javi se nihče.) Cc ni pripomb, menim, da je zapisnik odobren in se"
-    },
-    {
-      "text": "podpiše. (Podpredsednik in tajnik podpišeta zapisnik.)",
-      "x": 49.2,
-      "y": 241.91,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "podpiše. (Podpredsednik in tajnik podpišeta zapisnik.)"
-    },
-    {
-      "text": "navo predlog zakona o spremembah in dopolnitvah zakona o skladih za",
-      "x": 49.92,
-      "y": 219.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "navo predlog zakona o spremembah in dopolnitvah zakona o skladih za"
-    },
-    {
-      "text": "urejanje voda, predlog zakona 0 lekarniški službi, predlog odloka o izvo",
-      "x": 49.68,
-      "y": 209.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "urejanje voda, predlog zakona 0 lekarniški službi, predlog odloka o izvo"
-    },
-    {
-      "text": "litvi začasnih predstavnikov okraja Koper v Republiški zbor in Zbor pro",
-      "x": 50.88,
-      "y": 197.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "litvi začasnih predstavnikov okraja Koper v Republiški zbor in Zbor pro"
-    },
-    {
-      "text": "izvajalcev Ljudske skupščine L1LS. Okrožno javno tožilstvo v Celju je",
-      "x": 49.68,
-      "y": 187.67,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "izvajalcev Ljudske skupščine L1LS. Okrožno javno tožilstvo v Celju je"
-    },
-    {
-      "text": "20. januarja 1955 poslalo ljudski skupščini predlogi da se poslancu Jožetu",
-      "x": 49.44,
-      "y": 177.11,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "20. januarja 1955 poslalo ljudski skupščini predlogi da se poslancu Jožetu"
-    },
-    {
-      "text": "Turnšku odvzame imunitetna pravica ter omogoči kazenski pregon zaradi",
-      "x": 48.96,
-      "y": 166.31,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Turnšku odvzame imunitetna pravica ter omogoči kazenski pregon zaradi"
-    },
-    {
-      "text": "kaznivega dejanja zaradi zlorabe uradnega položaja in kaznivega dejanja",
-      "x": 49.68,
-      "y": 155.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "kaznivega dejanja zaradi zlorabe uradnega položaja in kaznivega dejanja"
-    },
-    {
-      "text": "prekupčevanja s tujo valuto. Mandalno-inuinitetni odbor je ta predlog pro",
-      "x": 50.16,
-      "y": 144.23,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "prekupčevanja s tujo valuto. Mandalno-inuinitetni odbor je ta predlog pro"
-    },
-    {
-      "text": "učil in bo dal poročilo. Tovariše ljudske poslance obveščam, da je po",
-      "x": 50.64,
-      "y": 133.43,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "učil in bo dal poročilo. Tovariše ljudske poslance obveščam, da je po"
-    },
-    {
-      "text": "15. členu poslovnika Republiškega zbora pretekla enoletna funkcijska doba",
-      "x": 50.4,
-      "y": 122.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "15. členu poslovnika Republiškega zbora pretekla enoletna funkcijska doba"
-    },
-    {
-      "text": "predsedniku Republiškega zbora in moramo znova izvoliti predsednika.",
-      "x": 49.68,
-      "y": 112.07,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "predsedniku Republiškega zbora in moramo znova izvoliti predsednika."
-    },
-    {
-      "text": "Glede na navedeno predlagam za današnjo sejo tale dnevni red:",
-      "x": 49.92,
-      "y": 101.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Glede na navedeno predlagam za današnjo sejo tale dnevni red:"
-    },
-    {
-      "text": "nitvah zakona o skladih za urejanje voda;",
-      "x": 49.92,
-      "y": 64.79,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "nitvah zakona o skladih za urejanje voda;"
-    },
-    {
-      "text": "stavnikov okraja Koper v Republiški zbor in Zbor proizvajalcev Ljudske",
-      "x": 41.28,
-      "y": 564.47,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "stavnikov okraja Koper v Republiški zbor in Zbor proizvajalcev Ljudske"
     }
   ],
   "recovery_counts": {},

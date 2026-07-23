@@ -39,13 +39,10 @@
   <person xml:id="MatijaMaležič">
     <persName>Matija Maležič</persName>
   </person>
-  <person xml:id="MatijaMalcžič">
-    <persName>Matija Malcžič</persName>
-  </person>
   <person xml:id="AnčkaGlobačnik">
     <persName>Ančka Globačnik</persName>
   </person>
-  <person xml:id="MarjanAhČin">
+  <person xml:id="MarjanAHČin">
     <persName>Dr. Marjan A h čin</persName>
   </person>
   <person xml:id="StaneBobnar">
@@ -54,7 +51,7 @@
   <person xml:id="StaneNunčič">
     <persName>Stane Nunčič</persName>
   </person>
-  <person xml:id="MarJaПAhSiN">
+  <person xml:id="MarJAПAhSiN">
     <persName>D r. Mar j a П Ah Si n</persName>
   </person>
   <person xml:id="MihaPotočnik">
@@ -68,9 +65,6 @@
   </person>
   <person xml:id="MarijaaiBrecelj">
     <persName>Dr. Marijaai Brecelj</persName>
-  </person>
-  <person xml:id="MarijanBrecclj">
-    <persName>Dr. Marijan Brecclj</persName>
   </person>
   <person xml:id="BorisKocijančič">
     <persName>Boris Kocijančič</persName>
@@ -87,12 +81,6 @@
   <person xml:id="VladoKrivic">
     <persName>Vlado Krivic</persName>
   </person>
-  <person xml:id="JOsipRus">
-    <persName>Predsednik J osip Rus</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MiranCvenk">
     <persName>Miran Cvenk</persName>
   </person>
@@ -101,12 +89,6 @@
   </person>
   <person xml:id="AntonDolgan">
     <persName>Anton Dolgan</persName>
-  </person>
-  <person xml:id="JoSIPRus">
-    <persName>Predsednik J o s-i p Rus</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="FrancSkok">
     <persName>Franc Skok</persName>
@@ -132,18 +114,6 @@
   <person xml:id="MirkoRemec">
     <persName>Mirko Remec</persName>
   </person>
-  <person xml:id="Josiprus">
-    <persName>Predsednik J o s i p R u s</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="JosiRus">
-    <persName>Predsednik J o s i ]&gt; Rus</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MirkoZlatnar">
     <persName>Mirko Zlatnar</persName>
   </person>
@@ -159,16 +129,10 @@
   <person xml:id="AleksanderPirher">
     <persName>Aleksander Pirher</persName>
   </person>
-  <person xml:id="JosiP">
-    <persName>Predsednik Josi p, Rus</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MiranKošmelj">
     <persName>Miran Košmelj</persName>
   </person>
-  <person xml:id="Vii">
+  <person xml:id="ViIinaPirkovič">
     <persName>Podpredsednik inž. V i I in a Pirkovič</persName>
     <affiliation role="podpredsednik">
       <roleName xml:lang="sl">Podpredsednik</roleName>
@@ -177,20 +141,14 @@
   <person xml:id="ZoranPolič">
     <persName>Zoran Polič</persName>
   </person>
-  <person xml:id="Vi1MaPirkovič">
-    <persName>Podpredsednik i n ž. V i 1 m a Pirkovič</persName>
+  <person xml:id="VilmaPirkovič">
+    <persName>Podpredsednik inž. Vilma Pirkovič</persName>
     <affiliation role="podpredsednik">
       <roleName xml:lang="sl">Podpredsednik</roleName>
     </affiliation>
   </person>
   <person xml:id="IdžЛNionKoželj">
     <persName>I D ž. Л n i o n Koželj</persName>
-  </person>
-  <person xml:id="VilmaPirkovič">
-    <persName>Podpredsednik inž. Vilma Pirkovič</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="KarelGrm">
     <persName>Karel Grm</persName>
@@ -201,44 +159,23 @@
       <roleName xml:lang="sl">Podpredsednik</roleName>
     </affiliation>
   </person>
-  <person xml:id="MavriciJBore">
-    <persName>Predsednik Mavrici j Bore</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="ЛNtonKoželj">
-    <persName>I n ž. Л n t o n Koželj</persName>
-  </person>
-  <person xml:id="MavricIjBore">
-    <persName>Predsednik Mavric i j Bore</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="BorisPipan">
-    <persName>Inž. Boris Pipan</persName>
-  </person>
   <person xml:id="MavricijBore">
     <persName>Predsednik Mavricij Bore</persName>
     <affiliation role="predsednik">
       <roleName xml:lang="sl">Predsednik</roleName>
     </affiliation>
   </person>
-  <person xml:id="AndrejSvetek">
-    <persName>Andrej Svetek</persName>
-  </person>
   <person xml:id="AntonKoželj">
     <persName>Inž. Anton Koželj</persName>
   </person>
-  <person xml:id="ImžBorisPiJau">
-    <persName>I M ž. Boris Pi j) a u</persName>
+  <person xml:id="BorisPipan">
+    <persName>Inž. Boris Pipan</persName>
   </person>
-  <person xml:id="MavricijPore">
-    <persName>Predsednik Mavricij Pore</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
+  <person xml:id="AndrejSvetek">
+    <persName>Andrej Svetek</persName>
+  </person>
+  <person xml:id="ImžBorisPijau">
+    <persName>I M ž. Boris Pi j) a u</persName>
   </person>
   <person xml:id="JožeKlanšek">
     <persName>Jože Klanšek</persName>
@@ -246,32 +183,8 @@
   <person xml:id="IdžAntonKoželj">
     <persName>I D ž, Anton Koželj</persName>
   </person>
-  <person xml:id="MavriciBore">
-    <persName>Predsednik Mavrici] Bore</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="ViktorAvbclj">
-    <persName>Viktor Avbclj</persName>
-  </person>
   <person xml:id="FeliksRazdrih">
     <persName>Feliks Razdrih</persName>
-  </person>
-  <person xml:id="MavriCijBore">
-    <persName>Predsednik Mavri cij Bore</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="AndrejSveiek">
-    <persName>Andrej Sveiek</persName>
-  </person>
-  <person xml:id="MavricijBoRc">
-    <persName>Predsednik Mavricij Bo r c</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="ŠtefanPavšič">
     <persName>Štefan Pavšič</persName>
@@ -293,908 +206,5 @@
     <affiliation role="predsednik">
       <roleName xml:lang="sl">Predsednik</roleName>
     </affiliation>
-  </person>
-  <person xml:id="LjudskiRkirmIki">
-    <persName>LJUDSKI; RKirm.iKi'</persName>
-  </person>
-  <person xml:id="SpodnjaIhutinju">
-    <persName>Spodnja Ihutinju</persName>
-  </person>
-  <person xml:id="LoPolje">
-    <persName>Mr/.lo polje (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SoKrištof">
-    <persName>So. Krištof</persName>
-  </person>
-  <person xml:id="SpodnjaRečica">
-    <persName>Spodnja Rečica</persName>
-  </person>
-  <person xml:id="SvFlorjan">
-    <persName>Sv. Florjan</persName>
-  </person>
-  <person xml:id="SoLenart">
-    <persName>So. Lenart</persName>
-  </person>
-  <person xml:id="PretečnoIdel">
-    <persName>Pretečno Idel)</persName>
-  </person>
-  <person xml:id="SoVid">
-    <persName>So. Vid</persName>
-  </person>
-  <person xml:id="SpodnjaKotlrinnica">
-    <persName>Spodnja Kotlrinnica</persName>
-  </person>
-  <person xml:id="SpodnjeScčooo">
-    <persName>Spodnje Scčooo</persName>
-  </person>
-  <person xml:id="SoKatarina">
-    <persName>So. Katarina</persName>
-  </person>
-  <person xml:id="SoKriž">
-    <persName>So. Križ</persName>
-  </person>
-  <person xml:id="SoMohor">
-    <persName>So. Mohor</persName>
-  </person>
-  <person xml:id="VelikeHodne">
-    <persName>Velike Hodne</persName>
-  </person>
-  <person xml:id="SloderiskeKonjice">
-    <persName>SloDeriske Konjice</persName>
-  </person>
-  <person xml:id="SpodnjiDolič">
-    <persName>Spodnji Dolič (cici)</persName>
-    <affiliation role="member">
-      <orgName>cici</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SpodnjiGrušodjc">
-    <persName>Spodnji' GrušoDJc</persName>
-  </person>
-  <person xml:id="SoJernej">
-    <persName>So. Jernej</persName>
-  </person>
-  <person xml:id="SoKunigunđa">
-    <persName>So. Kunigunđa</persName>
-  </person>
-  <person xml:id="VelikiLipoglao">
-    <persName>Veliki Lipoglao</persName>
-  </person>
-  <person xml:id="MarijaDobje">
-    <persName>Marija Dobje</persName>
-  </person>
-  <person xml:id="SoIij">
-    <persName>So. IIj</persName>
-  </person>
-  <person xml:id="SoJurij">
-    <persName>So. Jurij</persName>
-  </person>
-  <person xml:id="SoPrimoi">
-    <persName>So. Primoi</persName>
-  </person>
-  <person xml:id="SoRozulija">
-    <persName>So. Rozulija</persName>
-  </person>
-  <person xml:id="SoUrban">
-    <persName>So. Urban</persName>
-  </person>
-  <person xml:id="SvUršula">
-    <persName>Sv. Uršula</persName>
-  </person>
-  <person xml:id="SoBarbara">
-    <persName>So. Barbara</persName>
-  </person>
-  <person xml:id="SoMagdalena">
-    <persName>So. Magdalena</persName>
-  </person>
-  <person xml:id="SoTomaž">
-    <persName>So. Tomaž</persName>
-  </person>
-  <person xml:id="ZgornjeSelce">
-    <persName>Zgornje Selce (dcl)</persName>
-    <affiliation role="member">
-      <orgName>dcl</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SoUric">
-    <persName>So. Uric</persName>
-  </person>
-  <person xml:id="MalDole">
-    <persName>Mal'. Dole</persName>
-  </person>
-  <person xml:id="SvJošt">
-    <persName>Sv. Jošt</persName>
-  </person>
-  <person xml:id="SnTomnž">
-    <persName>Sn. Tomnž</persName>
-  </person>
-  <person xml:id="SoJeronim">
-    <persName>So. Jeronim</persName>
-  </person>
-  <person xml:id="MuleBraslooče">
-    <persName>Mule Braslooče</persName>
-  </person>
-  <person xml:id="MarijuRcha">
-    <persName>Mariju Rcha</persName>
-  </person>
-  <person xml:id="SpodnjeGorče">
-    <persName>Spodnje Gorče</persName>
-  </person>
-  <person xml:id="SuLovrenc">
-    <persName>Su. Lovrenc</persName>
-  </person>
-  <person xml:id="SvMagdalena">
-    <persName>Sv. Magdalena</persName>
-  </person>
-  <person xml:id="SvMatevž">
-    <persName>Sv. Matevž</persName>
-  </person>
-  <person xml:id="SvMiklavž">
-    <persName>Sv. Miklavž</persName>
-  </person>
-  <person xml:id="SvNeža">
-    <persName>Sv. Neža</persName>
-  </person>
-  <person xml:id="SvPavel">
-    <persName>Sv. Pavel</persName>
-  </person>
-  <person xml:id="SvPeter">
-    <persName>Sv. Peter</persName>
-  </person>
-  <person xml:id="SvPongrac">
-    <persName>Sv. Pongrac</persName>
-  </person>
-  <person xml:id="StAndraž">
-    <persName>St. Andraž</persName>
-  </person>
-  <person xml:id="VelikaPireiica">
-    <persName>Velika Pireiica</persName>
-  </person>
-  <person xml:id="VelikeZabije">
-    <persName>Velike Zabije</persName>
-  </person>
-  <person xml:id="DolnjeCerovo">
-    <persName>Dolnje Cerovo (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="GornjeCerovo">
-    <persName>Gornje Cerovo (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="JeličniDrh">
-    <persName>Jelični Drh (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="GorenjaKanomlja">
-    <persName>Gorenja Kanomlja</persName>
-  </person>
-  <person xml:id="IdrskeKrnice">
-    <persName>Idrske Krnice</persName>
-  </person>
-  <person xml:id="SpodnjaIdrija">
-    <persName>Spodnja Idrija</persName>
-  </person>
-  <person xml:id="SpodnjaKanomlja">
-    <persName>Spodnja Kanomlja</persName>
-  </person>
-  <person xml:id="SrednjaKanomlja">
-    <persName>Srednja Kanomlja</persName>
-  </person>
-  <person xml:id="VrsnikL">
-    <persName>Vrsnik L</persName>
-  </person>
-  <person xml:id="SoMihael">
-    <persName>So. Mihael</persName>
-  </person>
-  <person xml:id="GorenjaVrtojba">
-    <persName>Gorenja Vrtojba (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SentPeter">
-    <persName>Sent Peter (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="GorenjaTrebida">
-    <persName>Gorenja Trebida</persName>
-  </person>
-  <person xml:id="SnLucija">
-    <persName>Sn. Lucija</persName>
-  </person>
-  <person xml:id="StVid">
-    <persName>St. Vid</persName>
-  </person>
-  <person xml:id="KočevskaReka">
-    <persName>Kočevska Reka</persName>
-  </person>
-  <person xml:id="NomLazi">
-    <persName>Nom Lazi</persName>
-  </person>
-  <person xml:id="DolenjaPodgora">
-    <persName>Dolenja Podgora</persName>
-  </person>
-  <person xml:id="SuGregoi">
-    <persName>Su. Gregoi (dcl)</persName>
-    <affiliation role="member">
-      <orgName>dcl</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SvGregor">
-    <persName>Sv. Gregor (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="VelikeLašče">
-    <persName>Velike Lašče</persName>
-  </person>
-  <person xml:id="VelikePoljane">
-    <persName>Velike Poljane (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="DolnjeLeEče">
-    <persName>Dolnje Le/.eče</persName>
-  </person>
-  <person xml:id="GornjeVreme">
-    <persName>Gornje Vreme</persName>
-  </person>
-  <person xml:id="VremskiIhitof">
-    <persName>Vremski Ihitof</persName>
-  </person>
-  <person xml:id="MaleLoče">
-    <persName>Male Loče</persName>
-  </person>
-  <person xml:id="IlirskuBistrica">
-    <persName>Ilirsku Bistrica (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="DolnjiZemon">
-    <persName>Dolnji Zemon</persName>
-  </person>
-  <person xml:id="GornjiZemon">
-    <persName>Gornji Zemon</persName>
-  </person>
-  <person xml:id="HinkaBitirics">
-    <persName>Hinka BitiriCS (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="MalaBukootea">
-    <persName>Mala Bukootea</persName>
-  </person>
-  <person xml:id="VelikaBukovica">
-    <persName>Velika Bukovica</persName>
-  </person>
-  <person xml:id="SvPeler">
-    <persName>Sv. Peler</persName>
-  </person>
-  <person xml:id="StaraSuilca">
-    <persName>Stara Suilca</persName>
-  </person>
-  <person xml:id="HukOdje">
-    <persName>Huk ODje</persName>
-  </person>
-  <person xml:id="DolenjaPlanina">
-    <persName>Dolenja Planina</persName>
-  </person>
-  <person xml:id="GorenjaPlanina">
-    <persName>Gorenja Planina</persName>
-  </person>
-  <person xml:id="VelikiRepen">
-    <persName>Veliki Repen (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="BohinfskaBela">
-    <persName>Bohinfska Bela (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="HohinjskaCcšnjica">
-    <persName>Hohinjska Ccšnjica (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SpodnjeGorje">
-    <persName>Spodnje Gorje</persName>
-  </person>
-  <person xml:id="ZgornjeGorje">
-    <persName>Zgornje Gorje</persName>
-  </person>
-  <person xml:id="BohinjskaBela">
-    <persName>Bohinjska Bela (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="BohinjskaBistrica">
-    <persName>Bohinjska Bistrica</persName>
-  </person>
-  <person xml:id="BoliinjskaCeSnjica">
-    <persName>Boliinjska Ce'snjica (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SpodnjiBrnik">
-    <persName>Spodnji Brnik</persName>
-  </person>
-  <person xml:id="ZgornjiBrnik">
-    <persName>Zgornji Brnik</persName>
-  </person>
-  <person xml:id="SpodnjaBemica">
-    <persName>Spodnja Bemica</persName>
-  </person>
-  <person xml:id="SpodnjeJezersko">
-    <persName>Spodnje Jezersko</persName>
-  </person>
-  <person xml:id="ZgornjaBesnica">
-    <persName>Zgornja Besnica</persName>
-  </person>
-  <person xml:id="ZgornjeJezersko">
-    <persName>Zgornje Jezersko</persName>
-  </person>
-  <person xml:id="StaraLoka">
-    <persName>Stara Loka (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SkofjaLoka">
-    <persName>Skofja Loka</persName>
-  </person>
-  <person xml:id="SoOžbolt">
-    <persName>So. Ožbolt</persName>
-  </person>
-  <person xml:id="SoAna">
-    <persName>So. Ana</persName>
-  </person>
-  <person xml:id="ZgornjaLuša">
-    <persName>Zgornja Luša</persName>
-  </person>
-  <person xml:id="VrmlkIi">
-    <persName>Vrmlk II</persName>
-  </person>
-  <person xml:id="OtokIi">
-    <persName>Otok II</persName>
-  </person>
-  <person xml:id="SoDuh">
-    <persName>So. Duh</persName>
-  </person>
-  <person xml:id="VelikeBloke">
-    <persName>Velike Bloke</persName>
-  </person>
-  <person xml:id="PolhovGradec">
-    <persName>Polhov Gradec</persName>
-  </person>
-  <person xml:id="SnMiklaoi">
-    <persName>Sn. Miklaoi</persName>
-  </person>
-  <person xml:id="ŠmartnoOTuhinju">
-    <persName>Šmartno o Tuhinju</persName>
-  </person>
-  <person xml:id="ZgornjiMotnik">
-    <persName>Zgornji Motnik</persName>
-  </person>
-  <person xml:id="ZgornjiTuhinj">
-    <persName>Zgornji Tuhinj</persName>
-  </person>
-  <person xml:id="SoAnton">
-    <persName>So. Anton</persName>
-  </person>
-  <person xml:id="VelikaGoba">
-    <persName>Velika Goba (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SpodnjaŠiška">
-    <persName>Spodnja Šiška (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="GUnce">
-    <persName>G Unce (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="ZgornjaŠiška">
-    <persName>Zgornja Šiška (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="DolenjiLogatec">
-    <persName>Dolenji Logatec</persName>
-  </person>
-  <person xml:id="GorenjiLogatec">
-    <persName>Gorenji Logatec</persName>
-  </person>
-  <person xml:id="GorenjeJezero">
-    <persName>Gorenje Jezero</persName>
-  </person>
-  <person xml:id="SvAndrej">
-    <persName>Sv. Andrej</persName>
-  </person>
-  <person xml:id="ZgornjeKoseze">
-    <persName>Zgornje Koseze</persName>
-  </person>
-  <person xml:id="HlulnaBrczooica">
-    <persName>Hlulna Brczooica</persName>
-  </person>
-  <person xml:id="StaraVrhnika">
-    <persName>Stara Vrhnika</persName>
-  </person>
-  <person xml:id="VelikaLigojna">
-    <persName>Velika Ligojna</persName>
-  </person>
-  <person xml:id="MeiaOnkraj">
-    <persName>Meia Onkraj</persName>
-  </person>
-  <person xml:id="MeiaTakraj">
-    <persName>Meia Takraj</persName>
-  </person>
-  <person xml:id="SvDuh">
-    <persName>Sv. Duh</persName>
-  </person>
-  <person xml:id="SpodnjaRočica">
-    <persName>Spodnja Ročica</persName>
-  </person>
-  <person xml:id="SpodnjaSenarska">
-    <persName>Spodnja Senarska</persName>
-  </person>
-  <person xml:id="SpodnjaVoličina">
-    <persName>Spodnja Voličina</persName>
-  </person>
-  <person xml:id="SpodnjeVerjane">
-    <persName>Spodnje Verjane</persName>
-  </person>
-  <person xml:id="SpodnjiGaslcraj">
-    <persName>Spodnji Gaslcraj</persName>
-  </person>
-  <person xml:id="SpodnjiPorčič">
-    <persName>Spodnji Porčič</persName>
-  </person>
-  <person xml:id="SpodnjiZerjaoci">
-    <persName>Spodnji Zerjaoci</persName>
-  </person>
-  <person xml:id="SrednjiGasteraj">
-    <persName>Srednji Gasteraj</persName>
-  </person>
-  <person xml:id="SoTrojica">
-    <persName>So. Trojica</persName>
-  </person>
-  <person xml:id="SoBenedikt">
-    <persName>So. Benedikt</persName>
-  </person>
-  <person xml:id="ZgornjaRočica">
-    <persName>Zgornja Ročica</persName>
-  </person>
-  <person xml:id="ZgornjaSenarska">
-    <persName>Zgornja Senarska</persName>
-  </person>
-  <person xml:id="ZgornjaSčaonica">
-    <persName>Zgornja Sčaonica</persName>
-  </person>
-  <person xml:id="ZgornjaVoličina">
-    <persName>Zgornja Voličina</persName>
-  </person>
-  <person xml:id="ZgornjeVerjane">
-    <persName>Zgornje Verjane</persName>
-  </person>
-  <person xml:id="ZgornjiGasteraj">
-    <persName>Zgornji Gasteraj</persName>
-  </person>
-  <person xml:id="ZgornjiPorčič">
-    <persName>Zgornji Porčič</persName>
-  </person>
-  <person xml:id="ZgornjiZcrjaoci">
-    <persName>Zgornji Zcrjaoci</persName>
-  </person>
-  <person xml:id="MaliRošpoh">
-    <persName>Mali Rošpoh</persName>
-  </person>
-  <person xml:id="ZgornjiSlemen">
-    <persName>Zgornji Slemen</persName>
-  </person>
-  <person xml:id="SpodnjeDobrenje">
-    <persName>Spodnje Dobrenje</persName>
-  </person>
-  <person xml:id="SpodnjeVrtiče">
-    <persName>Spodnje Vrtiče</persName>
-  </person>
-  <person xml:id="ZgornjaKungota">
-    <persName>Zgornja Kungota</persName>
-  </person>
-  <person xml:id="AgonijeVrtiče">
-    <persName>'Agonije Vrtiče</persName>
-  </person>
-  <person xml:id="SpodnjaRadoanjc">
-    <persName>Spodnja Radoanjc</persName>
-  </person>
-  <person xml:id="ZgornjeKadvanje">
-    <persName>Zgornje Kadvanje</persName>
-  </person>
-  <person xml:id="IločkoPohorje">
-    <persName>Iločko Pohorje</persName>
-  </person>
-  <person xml:id="SlivniškoPohorje">
-    <persName>Slivniško Pohorje</persName>
-  </person>
-  <person xml:id="SpodnjaKorena">
-    <persName>Spodnja Korena</persName>
-  </person>
-  <person xml:id="SpodnjeHoče">
-    <persName>Spodnje Hoče</persName>
-  </person>
-  <person xml:id="SoMiklaož">
-    <persName>So. Miklaož</persName>
-  </person>
-  <person xml:id="ZgornjaKorena">
-    <persName>Zgornja Korena</persName>
-  </person>
-  <person xml:id="ZgornjeUoče">
-    <persName>Zgornje Uoče</persName>
-  </person>
-  <person xml:id="ZgornjiDuplek">
-    <persName>Zgornji Duplek</persName>
-  </person>
-  <person xml:id="SpodnjaKapla">
-    <persName>Spodnja Kapla</persName>
-  </person>
-  <person xml:id="SoOžbalt">
-    <persName>So. Ožbalt</persName>
-  </person>
-  <person xml:id="SpodnjaGortina">
-    <persName>Spodnja Gortina</persName>
-  </person>
-  <person xml:id="SpodnjaMuta">
-    <persName>Spodnja Muta</persName>
-  </person>
-  <person xml:id="SpodnjaOrlica">
-    <persName>Spodnja Orlica (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SpodnjaVižinga">
-    <persName>Spodnja Vižinga</persName>
-  </person>
-  <person xml:id="SvJernej">
-    <persName>Sv. Jernej</persName>
-  </person>
-  <person xml:id="ZgornjaCorlina">
-    <persName>Zgornja Corlina</persName>
-  </person>
-  <person xml:id="ZgornjaMuta">
-    <persName>Zgornja Muta</persName>
-  </person>
-  <person xml:id="ZgornjaViiinga">
-    <persName>Zgornja Viiinga</persName>
-  </person>
-  <person xml:id="KoroškiSclooec">
-    <persName>Koroški Sclooec</persName>
-  </person>
-  <person xml:id="SiDanijel">
-    <persName>Si. Danijel</persName>
-  </person>
-  <person xml:id="SpodnjaSeltiica">
-    <persName>Spodnja Seltiica</persName>
-  </person>
-  <person xml:id="SpodnjiSlemen">
-    <persName>Spodnji Slemen</persName>
-  </person>
-  <person xml:id="VelikiHod">
-    <persName>Veliki Hod</persName>
-  </person>
-  <person xml:id="ZgornjaSelnica">
-    <persName>Zgornja Selnica</persName>
-  </person>
-  <person xml:id="SlovenjGradec">
-    <persName>Slovenj Gradec</persName>
-  </person>
-  <person xml:id="GornjiDolič">
-    <persName>Gornji Dolič</persName>
-  </person>
-  <person xml:id="SlodenjemGradcu">
-    <persName>SloDenjem Gradcu</persName>
-  </person>
-  <person xml:id="SlooenskaBistrica">
-    <persName>Slooenska Bistrica</persName>
-  </person>
-  <person xml:id="ZgornjaBistrica">
-    <persName>Zgornja Bistrica</persName>
-  </person>
-  <person xml:id="IfeloTtnje">
-    <persName>Ifelo Ttnje</persName>
-  </person>
-  <person xml:id="SpodnjaLožnica">
-    <persName>Spodnja Ložnica</persName>
-  </person>
-  <person xml:id="SpodnjaIOhkaoa">
-    <persName>Spodnja I'ohkaoa</persName>
-  </person>
-  <person xml:id="ZgornjaLoNica">
-    <persName>Zgornja Lo/nica</persName>
-  </person>
-  <person xml:id="SpodnjeHlapje">
-    <persName>Spodnje Hlapje</persName>
-  </person>
-  <person xml:id="ZgornjeDobrcnje">
-    <persName>Zgornje Dobrcnje</persName>
-  </person>
-  <person xml:id="ŠturuLipu">
-    <persName>Šturu Lipu</persName>
-  </person>
-  <person xml:id="VelikoMraševo">
-    <persName>Veliko Mraševo (det)</persName>
-    <affiliation role="member">
-      <orgName>det</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SlaninaIkis">
-    <persName>Slanina IKIS</persName>
-  </person>
-  <person xml:id="NovnZabukodje">
-    <persName>Novn ZabukoDje</persName>
-  </person>
-  <person xml:id="StaroZabukovje">
-    <persName>Staro Zabukovje (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="GorenjaStraža">
-    <persName>Gorenja Straža (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SmolenjaDas">
-    <persName>Smolenja Das</persName>
-  </person>
-  <person xml:id="VelikiIOdljuben">
-    <persName>Veliki I'odljuben</persName>
-  </person>
-  <person xml:id="MuliVidem">
-    <persName>Muli Videm</persName>
-  </person>
-  <person xml:id="VelihiGaber">
-    <persName>VeliHi Gaber</persName>
-  </person>
-  <person xml:id="GornjiKriž">
-    <persName>Gornji Križ</persName>
-  </person>
-  <person xml:id="DolnjaBistrica">
-    <persName>Dolnja Bistrica</persName>
-  </person>
-  <person xml:id="GornjaBlitrtea">
-    <persName>Gornja Blitrtea</persName>
-  </person>
-  <person xml:id="SrednjaBistrica">
-    <persName>Srednja Bistrica</persName>
-  </person>
-  <person xml:id="GornjiCrnci">
-    <persName>Gornji Crnci</persName>
-  </person>
-  <person xml:id="MaliDolenci">
-    <persName>Mali Dolenci</persName>
-  </person>
-  <person xml:id="VelikiDolenci">
-    <persName>Veliki Dolenci</persName>
-  </person>
-  <person xml:id="GornjaRadgona">
-    <persName>Gornja Radgona (drl)</persName>
-    <affiliation role="member">
-      <orgName>drl</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SpodnjiGris">
-    <persName>Spodnji Gris</persName>
-  </person>
-  <person xml:id="SpodnjaSčaonica">
-    <persName>Spodnja Sčaonica</persName>
-  </person>
-  <person xml:id="DolnjiSlaveči">
-    <persName>Dolnji Slaveči</persName>
-  </person>
-  <person xml:id="GornjaLendava">
-    <persName>Gornja Lendava</persName>
-  </person>
-  <person xml:id="GornjiSlaocči">
-    <persName>Gornji Slaocči</persName>
-  </person>
-  <person xml:id="DolnjaLendava">
-    <persName>Dolnja Lendava (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="DolnjiLakoi">
-    <persName>Dolnji Lakoi</persName>
-  </person>
-  <person xml:id="GornjiLakoš">
-    <persName>Gornji Lakoš</persName>
-  </person>
-  <person xml:id="MalaVolana">
-    <persName>Mala Volana</persName>
-  </person>
-  <person xml:id="VelikaPolnna">
-    <persName>Velika Polnna</persName>
-  </person>
-  <person xml:id="StaraNooaОав">
-    <persName>Stara Nooa оав</persName>
-  </person>
-  <person xml:id="MurskaSobota">
-    <persName>Murska Sobota</persName>
-  </person>
-  <person xml:id="MurskiČrnci">
-    <persName>Murski Črnci</persName>
-  </person>
-  <person xml:id="NooiBeznooci">
-    <persName>Nooi Beznooci</persName>
-  </person>
-  <person xml:id="StariBeznodci">
-    <persName>Stari BeznoDci</persName>
-  </person>
-  <person xml:id="MaliOkič">
-    <persName>Mali Okič (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SpodnjeJablane">
-    <persName>Spodnje Jablane</persName>
-  </person>
-  <person xml:id="Stelja">
-    <persName>Dr stelja</persName>
-  </person>
-  <person xml:id="ZgornjiVeloolek">
-    <persName>Zgornji Veloolek</persName>
-  </person>
-  <person xml:id="SvAna">
-    <persName>Sv. Ana</persName>
-  </person>
-  <person xml:id="SoMiklavž">
-    <persName>So. Miklavž</persName>
-  </person>
-  <person xml:id="SvTamni">
-    <persName>Sv. Tamni</persName>
-  </person>
-  <person xml:id="VelikaNedelja">
-    <persName>Velika Nedelja</persName>
-  </person>
-  <person xml:id="SpodnjiBreg">
-    <persName>Spodnji Breg (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="ZgornjiBreg">
-    <persName>Zgornji Breg</persName>
-  </person>
-  <person xml:id="SpodnjiVeloolek">
-    <persName>Spodnji Veloolek</persName>
-  </person>
-  <person xml:id="MalaVarnica">
-    <persName>Mala Varnica</persName>
-  </person>
-  <person xml:id="SpodnjiLetkooec">
-    <persName>Spodnji Letkooec</persName>
-  </person>
-  <person xml:id="VelikaVamica">
-    <persName>Velika Vamica</persName>
-  </person>
-  <person xml:id="VelikiOkIč">
-    <persName>Veliki Ok-ič</persName>
-  </person>
-  <person xml:id="ZgornjaPrisliidu">
-    <persName>Zgornja PrisliiDu</persName>
-  </person>
-  <person xml:id="DednjuDas">
-    <persName>Dednju Das</persName>
-  </person>
-  <person xml:id="StLenart">
-    <persName>St. Lenart</persName>
-  </person>
-  <person xml:id="VelikaDolina">
-    <persName>Velika Dolina</persName>
-  </person>
-  <person xml:id="FeltkiObrež">
-    <persName>Feltki Obrež</persName>
-  </person>
-  <person xml:id="ZgornjaPohanea">
-    <persName>Zgornja Pohanea</persName>
-  </person>
-  <person xml:id="ZgornjiObrež">
-    <persName>Zgornji Obrež</persName>
-  </person>
-  <person xml:id="SoMarko">
-    <persName>So. Marko (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SoŠtefan">
-    <persName>So. Štefan</persName>
-  </person>
-  <person xml:id="SvJurij">
-    <persName>Sv. Jurij</persName>
-  </person>
-  <person xml:id="StLovrenc">
-    <persName>St. Lovrenc</persName>
-  </person>
-  <person xml:id="MaliKamen">
-    <persName>Mali Kamen</persName>
-  </person>
-  <person xml:id="VelikiDol">
-    <persName>Veliki Dol</persName>
-  </person>
-  <person xml:id="VelikiKamen">
-    <persName>Veliki Kamen</persName>
-  </person>
-  <person xml:id="SoLenari">
-    <persName>So. Lenari (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SoMurko">
-    <persName>So. Murko (del)</persName>
-    <affiliation role="member">
-      <orgName>del</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="StaraDusVidem">
-    <persName>Stara DuS-Videm (tlel)</persName>
-    <affiliation role="member">
-      <orgName>tlel</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="Ljudske">
-    <persName>LJUDSKE REPUBLIKI'</persName>
-  </person>
-  <person xml:id="LjudskiRkpubiIk">
-    <persName>LJUDSKI; RKPUBI.IK!-</persName>
-  </person>
-  <person xml:id="LrSlovenije">
-    <persName>LR Slovenije (Uradni list LRS, št. 2-11/50)</persName>
-    <affiliation role="member">
-      <orgName>Uradni list LRS, št. 2-11/50</orgName>
-    </affiliation>
-  </person>
-  <person xml:id="SDrucikAdiM">
-    <persName>S. DRUCiK /ADI.M-</persName>
-  </person>
-  <person xml:id="VPrilogi1">
-    <persName>V »Prilogi 1«</persName>
-  </person>
-  <person xml:id="VPrilogiIu">
-    <persName>V »Prilogi IU</persName>
-  </person>
-  <person xml:id="VPrilogiIh">
-    <persName>V »Prilogi Ih</persName>
   </person>
 </listPerson>

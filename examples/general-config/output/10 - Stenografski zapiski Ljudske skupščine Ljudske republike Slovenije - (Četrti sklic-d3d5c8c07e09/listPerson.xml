@@ -9,12 +9,6 @@
   <person xml:id="MiranKošmelj">
     <persName>Miran Košmelj</persName>
   </person>
-  <person xml:id="Pavle2Aucer">
-    <persName>Predsednik inž. Pavle 2aucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="LojzeOcepek">
     <persName>Predsednik Lojze Ocepek</persName>
     <affiliation role="predsednik">
@@ -98,12 +92,6 @@
   </person>
   <person xml:id="FrancTreven">
     <persName>Franc Treven</persName>
-  </person>
-  <person xml:id="MihaMarinka">
-    <persName>Predsednik Miha Marinka</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="PgvelZerovnik">
     <persName>Pgvel Zerovnik</persName>

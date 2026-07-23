@@ -2,19 +2,20 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\1. sklic (1947-1950)\\05 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - I. izredno zasedanje 17. januarja 1947 - I. redno zasedanje 14. aprila - 8. julija 1947.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 13950,
-  "unmatched_count": 7578,
+  "unmatched_count": 11022,
   "rule_counts": {
+    "AFTER_GENERIC_NOTE": 6,
     "APPENDIX_HEAD": 2,
-    "CONSUMED_LINE": 12,
+    "CONSUMED_LINE": 11,
     "CONTENTS": 54,
-    "GENERIC_NOTE": 28,
-    "HEAD": 6,
-    "PARAGRAPH": 5081,
+    "GENERIC_NOTE": 9,
+    "HEAD": 5,
+    "PARAGRAPH": 1907,
     "SCRIBE": 18,
-    "SEG": 954,
+    "SEG": 735,
     "SOURCE_ARTIFACT": 20,
-    "SPEAKER": 195,
-    "TIME": 2
+    "SPEAKER": 160,
+    "TIME": 1
   },
   "page_counts": {
     "1": 12,
@@ -322,6 +323,182 @@
   },
   "unmatched_samples": [
     {
+      "text": "Stenografski zapiski",
+      "x": 134.16,
+      "y": 550.21,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 56.4,
+      "y": 489.09,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 56.64,
+      "y": 457.64,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "I",
+      "x": 44.88,
+      "y": 354.34,
+      "page": 1,
+      "font_size": 32.0,
+      "line_text": "I"
+    },
+    {
+      "text": "I. izredno zasedanje",
+      "x": 124.8,
+      "y": 385.4,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "I. izredno zasedanje"
+    },
+    {
+      "text": "17. januarja 1947",
+      "x": 159.36,
+      "y": 367.74,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "17. januarja 1947"
+    },
+    {
+      "text": "in",
+      "x": 202.32,
+      "y": 342.47,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "in"
+    },
+    {
+      "text": "L redno zasedanje",
+      "x": 131.76,
+      "y": 312.44,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "L redno zasedanje"
+    },
+    {
+      "text": "14. aprila — 8. julija 1947",
+      "x": 131.76,
+      "y": 294.3,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "14. aprila — 8. julija 1947"
+    },
+    {
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 119.52,
+      "y": 119.58,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1952",
+      "x": 192.72,
+      "y": 90.92,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "1952"
+    },
+    {
+      "text": "Stenografsk i zapiski",
+      "x": 126.48,
+      "y": 521.65,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Stenografsk i zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 48.48,
+      "y": 460.05,
+      "page": 3,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 48.24,
+      "y": 427.88,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "L izredno zasedanje",
+      "x": 116.4,
+      "y": 354.68,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "L izredno zasedanje"
+    },
+    {
+      "text": "17. januarja 1947",
+      "x": 151.2,
+      "y": 334.38,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "17. januarja 1947"
+    },
+    {
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 112.32,
+      "y": 89.82,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1952",
+      "x": 182.88,
+      "y": 59.48,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "1952"
+    },
+    {
+      "text": ":",
+      "x": 190.08,
+      "y": 307.28,
+      "page": 4,
+      "font_size": 5.85,
+      "line_text": ":"
+    },
+    {
+      "text": ".v",
+      "x": 191.28,
+      "y": 307.89,
+      "page": 4,
+      "font_size": 9.0,
+      "line_text": ".v"
+    },
+    {
+      "text": "ћ",
+      "x": 183.36,
+      "y": 290.49,
+      "page": 4,
+      "font_size": 15.0,
+      "line_text": "ћ"
+    },
+    {
+      "text": "ш",
+      "x": 232.08,
+      "y": 247.68,
+      "page": 4,
+      "font_size": 24.0,
+      "line_text": "ш /"
+    },
+    {
       "text": "/",
       "x": 257.52,
       "y": 248.47,
@@ -330,196 +507,20 @@
       "line_text": "ш /"
     },
     {
-      "text": "1I0J25",
-      "x": 67.68,
-      "y": 276.25,
-      "page": 5,
-      "font_size": 8.8,
-      "line_text": "\" Ob 1I0J25 je predsednik Ustavodajne skupščine LES dr. Ferdo Kozak"
+      "text": "Tisk £iskarne »Toneta Tomšiča« v Ljubljani",
+      "x": 154.32,
+      "y": 59.01,
+      "page": 4,
+      "font_size": 9.0,
+      "line_text": "Tisk £iskarne »Toneta Tomšiča« v Ljubljani"
     },
     {
-      "text": "je predsednik Ustavodajne skupščine LES dr. Ferdo Kozak",
-      "x": 96.96,
-      "y": 275.77,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "\" Ob 1I0J25 je predsednik Ustavodajne skupščine LES dr. Ferdo Kozak"
-    },
-    {
-      "text": "pričel 1. sejo I. izrednega zasedanja Ljudske skupščine LRS z naslednjimi",
-      "x": 25.92,
-      "y": 264.97,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "pričel 1. sejo I. izrednega zasedanja Ljudske skupščine LRS z naslednjimi"
-    },
-    {
-      "text": "besedami:",
-      "x": 25.92,
-      "y": 255.13,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "besedami:"
-    },
-    {
-      "text": "ukaz o sklicanju Ljudske skupščine LRS k prvemu izrednemu zasedanju,",
-      "x": 26.16,
-      "y": 232.33,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "ukaz o sklicanju Ljudske skupščine LRS k prvemu izrednemu zasedanju,"
-    },
-    {
-      "text": "katerega izvolite poslušati stoje. Ukaz se glasi:",
-      "x": 25.92,
-      "y": 221.53,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "katerega izvolite poslušati stoje. Ukaz se glasi:"
-    },
-    {
-      "text": "svoje delo kot ustavodajna skupščina in bo po svojem sklepu z dne 16. ja",
+      "text": "Ljudske skupščine Ljudske republike Slovenije",
       "x": 26.4,
-      "y": 199.45,
+      "y": 505.83,
       "page": 5,
-      "font_size": 11.0,
-      "line_text": "svoje delo kot ustavodajna skupščina in bo po svojem sklepu z dne 16. ja"
-    },
-    {
-      "text": "nuarja 1947 nadaljevala svoje delo kot Ljudska skupščina LRS, je Prezidij",
-      "x": 25.92,
-      "y": 188.41,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "nuarja 1947 nadaljevala svoje delo kot Ljudska skupščina LRS, je Prezidij"
-    },
-    {
-      "text": "Ljudske skupščine LRS na podlagi 56. člena ustave LRS",
-      "x": 26.4,
-      "y": 177.85,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "Ljudske skupščine LRS na podlagi 56. člena ustave LRS"
-    },
-    {
-      "text": "odločil:",
-      "x": 180.72,
-      "y": 162.49,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "odločil:"
-    },
-    {
-      "text": "17. januarja 1947 v Ljubljani.",
-      "x": 26.88,
-      "y": 136.33,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "17. januarja 1947 v Ljubljani."
-    },
-    {
-      "text": "PREZIDIJ LJUDSKE SKUPŠČINE",
-      "x": 123.84,
-      "y": 99.13,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "PREZIDIJ LJUDSKE SKUPŠČINE"
-    },
-    {
-      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
-      "x": 117.36,
-      "y": 88.09,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
-    },
-    {
-      "text": "Sekretar: Predsednik:",
-      "x": 84.72,
-      "y": 74.17,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "Sekretar: Predsednik:"
-    },
-    {
-      "text": "v smislu določil &7. člena ustave izvoli skupščina iz svoje srede predsedstvo,",
-      "x": 49.68,
-      "y": 593.53,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "v smislu določil &7. člena ustave izvoli skupščina iz svoje srede predsedstvo,"
-    },
-    {
-      "text": "ki Sji iz predsednika, 1 podpredsednika in 3 tajnikov, dajem v imenu",
-      "x": 49.2,
-      "y": 582.97,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "ki Sji iz predsednika, 1 podpredsednika in 3 tajnikov, dajem v imenu"
-    },
-    {
-      "text": "predsedstva ustavodajne skupščine ostavko. Dajem besedo ljudskemu po",
-      "x": 48.96,
-      "y": 572.17,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "predsedstva ustavodajne skupščine ostavko. Dajem besedo ljudskemu po"
-    },
-    {
-      "text": "slancu Francu Kimovcu, ki se je priglasil k besedu",
-      "x": 48.96,
-      "y": 559.69,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "slancu Francu Kimovcu, ki se je priglasil k besedu"
-    },
-    {
-      "text": "ostavka predsedstva ustavodajne skupščine sprejme, ker ee po ustavi pred",
-      "x": 48.72,
-      "y": 530.65,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "ostavka predsedstva ustavodajne skupščine sprejme, ker ee po ustavi pred"
-    },
-    {
-      "text": "sedstvo ljudske skupščine formira drugače. Predlagam pa istočasno, da",
-      "x": 48.96,
-      "y": 519.61,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "sedstvo ljudske skupščine formira drugače. Predlagam pa istočasno, da"
-    },
-    {
-      "text": "pooblastite dosedanjega predsednika, da vodi sejo^ do izvolitve novega",
-      "x": 48.48,
-      "y": 508.81,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "pooblastite dosedanjega predsednika, da vodi sejo^ do izvolitve novega"
-    },
-    {
-      "text": "predsedstva ljudske skupščine in da ta imenuje začasnega tajnika, ki bo",
-      "x": 48.48,
-      "y": 497.77,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "predsedstva ljudske skupščine in da ta imenuje začasnega tajnika, ki bo"
-    },
-    {
-      "text": "vodil zapisnik seje.",
-      "x": 48.72,
-      "y": 484.57,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "vodil zapisnik seje."
-    },
-    {
-      "text": "Franca Kimovca na glasovanje. Kdor je za ta predlog, naj dvigne roko. (Vsi",
-      "x": 48.96,
-      "y": 456.49,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "Franca Kimovca na glasovanje. Kdor je za ta predlog, naj dvigne roko. (Vsi"
+      "font_size": 17.0,
+      "line_text": "Ljudske skupščine Ljudske republike Slovenije"
     }
   ],
   "recovery_counts": {},

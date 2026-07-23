@@ -2,24 +2,23 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\3. sklic (1953-1957)\\07 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Tretji sklic) - Seje od 1. junija do 31. decembra 1954.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 13104,
-  "unmatched_count": 5764,
+  "unmatched_count": 9279,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 3,
+    "AFTER_FOOTNOTE": 1,
+    "AFTER_GENERIC_NOTE": 2,
     "APPENDIX_HEAD": 1,
-    "CHAIRMAN": 11,
+    "CHAIRMAN": 10,
     "CONSUMED_LINE": 102,
     "CONTENTS": 2,
-    "FOOTNOTE_CONTINUATION": 13,
-    "FOOTNOTE_ENTRY": 4,
-    "GENERIC_NOTE": 27,
-    "HEAD": 26,
-    "PARAGRAPH": 5198,
+    "FOOTNOTE_ENTRY": 1,
+    "GENERIC_NOTE": 21,
+    "HEAD": 13,
+    "PARAGRAPH": 1886,
     "SCRIBE": 23,
-    "SEG": 805,
+    "SEG": 644,
     "SOURCE_ARTIFACT": 805,
-    "SPEAKER": 299,
-    "TIME": 19,
-    "UNMATCHED_LINE": 2
+    "SPEAKER": 296,
+    "TIME": 18
   },
   "page_counts": {
     "1": 13,
@@ -348,6 +347,174 @@
   },
   "unmatched_samples": [
     {
+      "text": "342.533(497.4 j\"!954'",
+      "x": 11.52,
+      "y": 588.66,
+      "page": 1,
+      "font_size": 8.0,
+      "line_text": "342.533(497.4 j\"!954'"
+    },
+    {
+      "text": "019550112",
+      "x": 12.48,
+      "y": 555.35,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "019550112"
+    },
+    {
+      "text": "COBISS o",
+      "x": 135.12,
+      "y": 554.63,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "COBISS o"
+    },
+    {
+      "text": "[rafski zapiski",
+      "x": 179.04,
+      "y": 553.64,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "[rafski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 75.36,
+      "y": 488.68,
+      "page": 1,
+      "font_size": 33.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 75.12,
+      "y": 458.21,
+      "page": 1,
+      "font_size": 22.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 176.88,
+      "y": 409.26,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od 1. junija do 31. decembra 1954",
+      "x": 96.0,
+      "y": 350.26,
+      "page": 1,
+      "font_size": 15.0,
+      "line_text": "Seje od 1. junija do 31. decembra 1954"
+    },
+    {
+      "text": "1954",
+      "x": 194.16,
+      "y": 140.99,
+      "page": 1,
+      "font_size": 15.0,
+      "line_text": "1954"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 180.24,
+      "y": 101.87,
+      "page": 1,
+      "font_size": 15.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Stenograiski zapiski",
+      "x": 126.48,
+      "y": 529.4,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "Stenograiski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 66.24,
+      "y": 464.2,
+      "page": 3,
+      "font_size": 33.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 66.0,
+      "y": 433.69,
+      "page": 3,
+      "font_size": 21.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 167.52,
+      "y": 383.82,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od 1. junija do 31. decembra 1954",
+      "x": 86.88,
+      "y": 324.8,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "Seje od 1. junija do 31. decembra 1954"
+    },
+    {
+      "text": "1951",
+      "x": 184.8,
+      "y": 114.56,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "1951"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 171.12,
+      "y": 74.96,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "997",
+      "x": 209.28,
+      "y": 337.53,
+      "page": 4,
+      "font_size": 25.0,
+      "line_text": "997"
+    },
+    {
+      "text": ")",
+      "x": 189.12,
+      "y": 258.82,
+      "page": 4,
+      "font_size": 15.0,
+      "line_text": ")"
+    },
+    {
+      "text": "в",
+      "x": 192.0,
+      "y": 257.5,
+      "page": 4,
+      "font_size": 9.75,
+      "line_text": "в"
+    },
+    {
+      "text": "3. VI. 1955",
+      "x": 200.64,
+      "y": 258.82,
+      "page": 4,
+      "font_size": 15.0,
+      "line_text": "3. VI. 1955"
+    },
+    {
       "text": "Anton",
       "x": 133.2,
       "y": 474.71,
@@ -378,174 +545,6 @@
       "page": 5,
       "font_size": 10.0,
       "line_text": "60. člena ustavnega zakona sklical predsednik Ljudske skupščine LRS. Zapis"
-    },
-    {
-      "text": "nik današnje seje bo vodil zapisnikar tovariš Anton Peternelj.",
-      "x": 30.0,
-      "y": 394.07,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "nik današnje seje bo vodil zapisnikar tovariš Anton Peternelj."
-    },
-    {
-      "text": "Verdev, inž. Gašper Muha in Zalka Božičnik so opravičili svojo odsotnost.",
-      "x": 29.76,
-      "y": 372.23,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Verdev, inž. Gašper Muha in Zalka Božičnik so opravičili svojo odsotnost."
-    },
-    {
-      "text": "Predlagam zboru, da navedenim poslancem odobri dopust. Se zbor strinja s",
-      "x": 29.52,
-      "y": 361.19,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Predlagam zboru, da navedenim poslancem odobri dopust. Se zbor strinja s"
-    },
-    {
-      "text": "tem predlogom? (Poslanci se strinjajo.) Ugotavljam, da imajo navedeni po",
-      "x": 29.76,
-      "y": 350.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "tem predlogom? (Poslanci se strinjajo.) Ugotavljam, da imajo navedeni po"
-    },
-    {
-      "text": "slanci odobren dopust za to zasedanje.",
-      "x": 30.0,
-      "y": 339.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "slanci odobren dopust za to zasedanje."
-    },
-    {
-      "text": "zapisnik 4. seje. (Zapisnikar Ančka Globačnik prečita zapisnik 4. seje.)",
-      "x": 30.0,
-      "y": 317.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zapisnik 4. seje. (Zapisnikar Ančka Globačnik prečita zapisnik 4. seje.)"
-    },
-    {
-      "text": "Ce nihče, ugotavljam, da je zapisnik odobren in se podpiše. (Predsednik in",
-      "x": 30.48,
-      "y": 295.67,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ce nihče, ugotavljam, da je zapisnik odobren in se podpiše. (Predsednik in"
-    },
-    {
-      "text": "zapisnikar podpišeta zapisnik.)",
-      "x": 30.24,
-      "y": 284.63,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zapisnikar podpišeta zapisnik.)"
-    },
-    {
-      "text": "bolezni odsoten. Prosim ljudskega poslanca Alojza Krivca, da pristopi",
-      "x": 30.24,
-      "y": 262.79,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "bolezni odsoten. Prosim ljudskega poslanca Alojza Krivca, da pristopi"
-    },
-    {
-      "text": "k predsedniški mizi in opravi prisego. (Ljudski poslanec Alojz Krivec pride",
-      "x": 30.24,
-      "y": 251.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "k predsedniški mizi in opravi prisego. (Ljudski poslanec Alojz Krivec pride"
-    },
-    {
-      "text": "k predsedniški mizi. Vsi drugi poslanci vstanejo in stoje poslušajo prisego.)",
-      "x": 30.24,
-      "y": 240.95,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "k predsedniški mizi. Vsi drugi poslanci vstanejo in stoje poslušajo prisego.)"
-    },
-    {
-      "text": "Prosim, da ponavljate za menoj besedilo prisege. (Predsednik Josip Rus čita",
-      "x": 30.0,
-      "y": 230.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Prosim, da ponavljate za menoj besedilo prisege. (Predsednik Josip Rus čita"
-    },
-    {
-      "text": "besedilo prisege, ki ga poslanec Alojz Krivec ponavlja. Po ustni prisegi imeno",
-      "x": 30.24,
-      "y": 219.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "besedilo prisege, ki ga poslanec Alojz Krivec ponavlja. Po ustni prisegi imeno"
-    },
-    {
-      "text": "vani poslanec podpiše še tiskano besedilo prisege.)",
-      "x": 30.48,
-      "y": 208.31,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "vani poslanec podpiše še tiskano besedilo prisege.)"
-    },
-    {
-      "text": "času nekaj prošenj, od Izvršnega sveta Ljudske skupščine LRS pa zakonske",
-      "x": 30.48,
-      "y": 186.71,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "času nekaj prošenj, od Izvršnega sveta Ljudske skupščine LRS pa zakonske"
-    },
-    {
-      "text": "predloge z obrazložitvami, ki jih je odstopil v obravnavo pristojnim odborom.",
-      "x": 30.48,
-      "y": 176.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "predloge z obrazložitvami, ki jih je odstopil v obravnavo pristojnim odborom."
-    },
-    {
-      "text": "niški pomoči izven zdravstvenih zavodov;",
-      "x": 30.48,
-      "y": 130.79,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "niški pomoči izven zdravstvenih zavodov;"
-    },
-    {
-      "text": "stvenih šol;",
-      "x": 30.72,
-      "y": 107.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "stvenih šol;"
-    },
-    {
-      "text": "ig",
-      "x": 30.48,
-      "y": 63.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ig1avcev;"
-    },
-    {
-      "text": "1",
-      "x": 38.16,
-      "y": 68.64,
-      "page": 5,
-      "font_size": 6.5,
-      "line_text": "ig1avcev;"
-    },
-    {
-      "text": "avcev;",
-      "x": 40.8,
-      "y": 63.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ig1avcev;"
     }
   ],
   "recovery_counts": {},

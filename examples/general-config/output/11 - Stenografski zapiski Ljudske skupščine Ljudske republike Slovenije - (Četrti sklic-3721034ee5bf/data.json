@@ -13,7 +13,6 @@
     "#FrancTreven": "Franc Treven:",
     "#CvetkaVodopivec": "Cvetka Vodopivec:",
     "#MihaPotočnik": "Dr. Miha Potočnik:",
-    "#PavLeZaucer": "Predsednik inž. Pav le Zaucer:",
     "#MitjaRibičič": "Mitja Ribičič:",
     "#JožeTramšek": "Jože Tramšek:",
     "#MiloVižintin": "Milo Vižintin:",
@@ -22,7 +21,6 @@
     "#ToneBole": "Tone Bole:",
     "#FranjoJeraj": "Franjo Jeraj:",
     "#MarijaVild": "Marija Vild:",
-    "#LojeOcepek": "Predsednik Loje Ocepek:",
     "#ToneHafner": "Tone Hafner:",
     "#AntonPire": "Anton Pire:",
     "#PeterPlevel": "Peter Plevel:",
@@ -30,7 +28,6 @@
     "#IvanKnez": "Ivan Knez:",
     "#StaneKavčič": "Stane Kavčič:",
     "#SlavkoKobal": "Slavko Kobal:",
-    "#LojzeOČepek": "Predsednik Lojze O čepek :",
     "#BojanPolak": "Bojan Polak:",
     "#JožeBergant": "Jože Bergant:",
     "#KarelGrm": "Karel Grm:",
@@ -46,7 +43,6 @@
     "#ViktorGrča": "Viktor Grča:",
     "#MatijaMaležič": "Matija Maležič:",
     "#JožeSlavič": "Jože Slavič:",
-    "#StaNeKavčič": "Podpredsednik Sta ne Kavčič:",
     "#MiranCvenk": "Miran Cvenk:",
     "#StaneFele": "Stane Fele:",
     "#IvanKranjčič": "Ivan Kranjčič:",
@@ -56,7 +52,6 @@
     "#AlojZKoder": "Aloj.z Koder:",
     "#RudiCačinovič": "Rudi Cačinovič:",
     "#SvetkoKobal": "Svetko Kobal:",
-    "#Vil": "Inž. Vil,ma Pirkovič:",
     "#DavorinFerligoj": "Davorin Ferligoj:",
     "#HermanSlamič": "Herman Slamič:",
     "#DragaRome": "Draga Rome:",
@@ -69,6 +64,6 @@
     "#StaneNunčič": "Stane Nunčič:"
   },
   "warnings": [
-    "27 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+    "21 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
   ]
 }

@@ -2,21 +2,26 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\02 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 1. marca do 8. aprila 1963.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 34466,
-  "unmatched_count": 8502,
+  "unmatched_count": 28946,
   "rule_counts": {
+    "AFTER_FOOTNOTE": 15,
+    "AFTER_GENERIC_NOTE": 1,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 6,
     "CONSUMED_FOOTNOTE_RUN": 3,
     "CONSUMED_LINE": 70,
     "CONTENTS": 1,
+    "FOOTNOTE_CONTINUATION": 26,
+    "FOOTNOTE_ENTRY": 19,
     "GENERIC_NOTE": 12,
     "HEAD": 10,
-    "PARAGRAPH": 25105,
+    "PARAGRAPH": 4599,
     "SCRIBE": 9,
-    "SEG": 561,
+    "SEG": 562,
     "SOURCE_ARTIFACT": 128,
-    "SPEAKER": 48,
-    "TIME": 10
+    "SPEAKER": 47,
+    "TIME": 10,
+    "UNSTRUCTURED_START": 1
   },
   "page_counts": {
     "1": 15,
@@ -786,6 +791,30 @@
   },
   "unmatched_samples": [
     {
+      "text": "737",
+      "x": 10.56,
+      "y": 577.57,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "737"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 168.24,
+      "y": 539.17,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "•S4",
+      "x": 284.16,
+      "y": 508.72,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "•S4 Ч/"
+    },
+    {
       "text": "Ч",
       "x": 300.0,
       "y": 508.49,
@@ -802,12 +831,140 @@
       "line_text": "•S4 Ч/"
     },
     {
+      "text": "LJUDSKE SKIPSCINE",
+      "x": 93.6,
+      "y": 478.34,
+      "page": 1,
+      "font_size": 32.0,
+      "line_text": "LJUDSKE SKIPSCINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 92.16,
+      "y": 450.61,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 175.44,
+      "y": 397.48,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje od 1. marca do 8. aprila 1963",
+      "x": 113.52,
+      "y": 340.93,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Seje od 1. marca do 8. aprila 1963"
+    },
+    {
+      "text": "1963",
+      "x": 207.36,
+      "y": 125.32,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1963"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 191.28,
+      "y": 85.0,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 162.0,
+      "y": 512.29,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "\\S",
+      "x": 277.92,
+      "y": 481.38,
+      "page": 3,
+      "font_size": 8.0,
+      "line_text": "\\S 4/"
+    },
+    {
       "text": "4/",
       "x": 293.52,
       "y": 481.38,
       "page": 3,
       "font_size": 8.0,
       "line_text": "\\S 4/"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 87.36,
+      "y": 451.89,
+      "page": 3,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 85.2,
+      "y": 423.73,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 168.24,
+      "y": 369.92,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje od 1. marca do ft. aprila 1963",
+      "x": 105.84,
+      "y": 314.53,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Seje od 1. marca do ft. aprila 1963"
+    },
+    {
+      "text": "1963",
+      "x": 198.96,
+      "y": 99.44,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "1963"
+    },
+    {
+      "text": "L juhi i a ii a",
+      "x": 182.4,
+      "y": 60.33,
+      "page": 3,
+      "font_size": 10.0,
+      "line_text": "L juhi i a ii a"
+    },
+    {
+      "text": "997",
+      "x": 217.92,
+      "y": 332.97,
+      "page": 4,
+      "font_size": 25.0,
+      "line_text": "997"
+    },
+    {
+      "text": "£)'",
+      "x": 184.8,
+      "y": 223.88,
+      "page": 4,
+      "font_size": 19.0,
+      "line_text": "£)'П XI. 1963Д//"
     },
     {
       "text": "П",
@@ -832,158 +989,6 @@
       "page": 4,
       "font_size": 19.0,
       "line_text": "£)'П XI. 1963Д//"
-    },
-    {
-      "text": "//",
-      "x": 297.6,
-      "y": 223.88,
-      "page": 4,
-      "font_size": 19.0,
-      "line_text": "£)'П XI. 1963Д//"
-    },
-    {
-      "text": "Začenjam 34. sejo Republiškega zbora Ljudske skupščine LRS. Odsotnost ljud",
-      "x": 32.16,
-      "y": 400.29,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "Začenjam 34. sejo Republiškega zbora Ljudske skupščine LRS. Odsotnost ljud"
-    },
-    {
-      "text": "skih poslancev je bila ugotovljena že na skupni seji.",
-      "x": 32.16,
-      "y": 389.49,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "skih poslancev je bila ugotovljena že na skupni seji."
-    },
-    {
-      "text": "seje, da prebere zapisnik, (Zapisnikar Slavica Zirkelbach prebere zapisnik",
-      "x": 31.92,
-      "y": 368.13,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "seje, da prebere zapisnik, (Zapisnikar Slavica Zirkelbach prebere zapisnik"
-    },
-    {
-      "text": "33. seje.)",
-      "x": 32.16,
-      "y": 357.09,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "33. seje.)"
-    },
-    {
-      "text": "Ce nihče, ugotavljam, da je zapisnik odobren in da se ga lahko podpiše. (Pred",
-      "x": 32.16,
-      "y": 335.97,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "Ce nihče, ugotavljam, da je zapisnik odobren in da se ga lahko podpiše. (Pred"
-    },
-    {
-      "text": "sednik in zapisnikar podpišeta zapisnik.)",
-      "x": 32.16,
-      "y": 325.17,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "sednik in zapisnikar podpišeta zapisnik.)"
-    },
-    {
-      "text": "skupščini LRS predložil Izvršni svet. Zato predlagam za današnjo sejo naslednji",
-      "x": 32.16,
-      "y": 303.81,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "skupščini LRS predložil Izvršni svet. Zato predlagam za današnjo sejo naslednji"
-    },
-    {
-      "text": "dnevni red:",
-      "x": 32.4,
-      "y": 292.53,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "dnevni red:"
-    },
-    {
-      "text": "močjih okrajev in občin v LR Sloveniji;",
-      "x": 32.16,
-      "y": 271.41,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "močjih okrajev in občin v LR Sloveniji;"
-    },
-    {
-      "text": "ljišča;",
-      "x": 32.16,
-      "y": 249.57,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "ljišča;"
-    },
-    {
-      "text": "zatiranje otroške paralize (poliomielitisa):",
-      "x": 32.16,
-      "y": 228.45,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "zatiranje otroške paralize (poliomielitisa):"
-    },
-    {
-      "text": "črtu sklada LR Slovenije za šolstvo za leto 1963;",
-      "x": 32.4,
-      "y": 206.85,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "črtu sklada LR Slovenije za šolstvo za leto 1963;"
-    },
-    {
-      "text": "stvenih zavodov za zdravstveno pomoč in druge zdravstvene storitve;",
-      "x": 32.4,
-      "y": 185.73,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "stvenih zavodov za zdravstveno pomoč in druge zdravstvene storitve;"
-    },
-    {
-      "text": "radio, film in televizijo v Ljubljani; o predlogu zakona o Akademiji za likovno",
-      "x": 32.64,
-      "y": 164.13,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "radio, film in televizijo v Ljubljani; o predlogu zakona o Akademiji za likovno"
-    },
-    {
-      "text": "umetnost v Ljubljani in o predlogu zakona o Akademiji za glasbo v Ljubljani.",
-      "x": 32.64,
-      "y": 153.33,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "umetnost v Ljubljani in o predlogu zakona o Akademiji za glasbo v Ljubljani."
-    },
-    {
-      "text": "dnevnemu redu? (Ne javi se nihče.) Cc nihče, smatram, da je dnevni red sprejet.",
-      "x": 32.64,
-      "y": 131.73,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "dnevnemu redu? (Ne javi se nihče.) Cc nihče, smatram, da je dnevni red sprejet."
-    },
-    {
-      "text": "postaviti kakšno vprašanje Izvršnemu svetu? (Ne javi se nihče.)",
-      "x": 32.4,
-      "y": 110.37,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "postaviti kakšno vprašanje Izvršnemu svetu? (Ne javi se nihče.)"
-    },
-    {
-      "text": "panje o predlogu zakona o spremembi zakona o območjih okrajev in občin",
-      "x": 32.88,
-      "y": 88.77,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "panje o predlogu zakona o spremembi zakona o območjih okrajev in občin"
     }
   ],
   "recovery_counts": {},

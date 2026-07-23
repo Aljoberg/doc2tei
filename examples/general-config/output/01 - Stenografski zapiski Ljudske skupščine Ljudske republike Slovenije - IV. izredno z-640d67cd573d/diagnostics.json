@@ -2,17 +2,17 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\2. sklic (1951-1953)\\01 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - IV. izredno zasedanje (Drugi sklic) 14. marca do 29. junija 1953 - V. redno zasedanje (Drugi slikc) 29.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 11703,
-  "unmatched_count": 3985,
+  "unmatched_count": 9271,
   "rule_counts": {
     "APPENDIX_HEAD": 4,
-    "GENERIC_NOTE": 10,
+    "GENERIC_NOTE": 5,
     "HEAD": 8,
-    "PARAGRAPH": 7178,
+    "PARAGRAPH": 2006,
     "SCRIBE": 11,
-    "SEG": 416,
+    "SEG": 320,
     "SOURCE_ARTIFACT": 7,
-    "SPEAKER": 82,
-    "UNSTRUCTURED_START": 2
+    "SPEAKER": 67,
+    "UNSTRUCTURED_START": 4
   },
   "page_counts": {
     "1": 22,
@@ -279,6 +279,14 @@
   },
   "unmatched_samples": [
     {
+      "text": "342.533(497.",
+      "x": 21.84,
+      "y": 579.38,
+      "page": 1,
+      "font_size": 8.0,
+      "line_text": "342.533(497.вПдБЗ\""
+    },
+    {
       "text": "вПдБЗ",
       "x": 71.04,
       "y": 579.04,
@@ -295,188 +303,180 @@
       "line_text": "342.533(497.вПдБЗ\""
     },
     {
-      "text": "v",
-      "x": 233.52,
-      "y": 381.36,
-      "page": 4,
+      "text": "019540004",
+      "x": 22.32,
+      "y": 546.57,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "019540004"
+    },
+    {
+      "text": "C0BISS 0",
+      "x": 145.2,
+      "y": 545.86,
+      "page": 1,
       "font_size": 6.5,
-      "line_text": "^:'v"
+      "line_text": "C0BISS 0"
     },
     {
-      "text": ".",
-      "x": 210.96,
-      "y": 356.08,
-      "page": 4,
-      "font_size": 5.0,
-      "line_text": "■."
+      "text": "Stenografski zapiski",
+      "x": 147.36,
+      "y": 518.05,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Stenografski zapiski"
     },
     {
-      "text": "I|.",
-      "x": 206.64,
-      "y": 297.27,
-      "page": 4,
-      "font_size": 17.0,
-      "line_text": "i 7. I|. 'Zflj/"
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 72.48,
+      "y": 456.45,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
     },
     {
-      "text": "'Zflj/",
-      "x": 227.76,
-      "y": 297.27,
-      "page": 4,
-      "font_size": 17.0,
-      "line_text": "i 7. I|. 'Zflj/"
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 72.72,
+      "y": 424.76,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
     },
     {
-      "text": "У",
-      "x": 156.72,
-      "y": 276.38,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ljubljana, dne 4. marca 1У55."
+      "text": "IV. izredno zasedanje",
+      "x": 132.0,
+      "y": 371.72,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "IV. izredno zasedanje"
     },
     {
-      "text": "55.",
-      "x": 163.2,
-      "y": 276.71,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ljubljana, dne 4. marca 1У55."
+      "text": "(Drugi sklic)",
+      "x": 185.04,
+      "y": 356.44,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
     },
     {
-      "text": "razpravo in sklepanje predlog zakona o volitvah ljudskih poslancev za",
-      "x": 26.88,
-      "y": 155.03,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "N razpravo in sklepanje predlog zakona o volitvah ljudskih poslancev za"
+      "text": "14. marca do 29. junija 1953",
+      "x": 138.96,
+      "y": 339.16,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "14. marca do 29. junija 1953"
     },
     {
-      "text": "ч",
-      "x": 16.32,
-      "y": 127.23,
-      "page": 5,
-      "font_size": 6.5,
-      "line_text": "'ч| Je o njem razpravljal in sklepal ter poslal skupščini svoje poročilo. Za"
+      "text": "V. redno zasedanje",
+      "x": 141.84,
+      "y": 292.28,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "V. redno zasedanje"
     },
     {
-      "text": "|",
-      "x": 19.2,
-      "y": 127.44,
-      "page": 5,
-      "font_size": 6.5,
-      "line_text": "'ч| Je o njem razpravljal in sklepal ter poslal skupščini svoje poročilo. Za"
+      "text": "(Drugi sklic)",
+      "x": 186.24,
+      "y": 276.52,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
     },
     {
-      "text": "Je o njem razpravljal in sklepal ter poslal skupščini svoje poročilo. Za",
-      "x": 28.8,
-      "y": 122.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "'ч| Je o njem razpravljal in sklepal ter poslal skupščini svoje poročilo. Za"
+      "text": "29. junija do 30. junija 1953",
+      "x": 139.68,
+      "y": 259.24,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "29. junija do 30. junija 1953"
     },
     {
-      "text": "1",
-      "x": 110.88,
-      "y": 95.04,
-      "page": 5,
-      "font_size": 6.5,
-      "line_text": "Državni sekretar1 za pravosodno upravo LRS predlaga skupščini razre"
+      "text": "VI. redno zasedanje",
+      "x": 138.48,
+      "y": 212.6,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "VI. redno zasedanje"
     },
     {
-      "text": "za pravosodno upravo LRS predlaga skupščini razre",
-      "x": 118.8,
-      "y": 89.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Državni sekretar1 za pravosodno upravo LRS predlaga skupščini razre"
+      "text": "(Drugi sklic)",
+      "x": 186.24,
+      "y": 197.08,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
     },
     {
-      "text": "laga, da bi naša skupščina odgodila razpravo o volilnem zakonu. Razlogi so",
-      "x": 35.28,
-      "y": 311.73,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "laga, da bi naša skupščina odgodila razpravo o volilnem zakonu. Razlogi so"
+      "text": "16. septembra 1953",
+      "x": 168.24,
+      "y": 179.8,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "16. septembra 1953"
     },
     {
-      "text": "naslednji:",
-      "x": 35.28,
-      "y": 301.41,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "naslednji:"
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 143.76,
+      "y": 77.8,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
     },
     {
-      "text": "leta in sicer tako, da bi bile volitve v zvezno skupščino in republiške skup",
-      "x": 35.52,
-      "y": 279.33,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "leta in sicer tako, da bi bile volitve v zvezno skupščino in republiške skup"
+      "text": "1953",
+      "x": 210.24,
+      "y": 53.32,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1953"
     },
     {
-      "text": "ščine sočasno. Ko je Zvezni izvršni svel v zadnjih dneh proučil položaj",
-      "x": 35.52,
-      "y": 268.77,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "ščine sočasno. Ko je Zvezni izvršni svel v zadnjih dneh proučil položaj"
+      "text": "Stenografski zapiski",
+      "x": 119.76,
+      "y": 535.85,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "Stenografski zapiski"
     },
     {
-      "text": "v zvezi s pripravami za volitve, je bil mnenja, da je datum za volitve konec",
-      "x": 36.0,
-      "y": 257.73,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "v zvezi s pripravami za volitve, je bil mnenja, da je datum za volitve konec"
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 42.48,
+      "y": 474.93,
+      "page": 3,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
     },
     {
-      "text": "maja neprimeren in to zato, ker še niso v celoti izvršene vse priprave za",
-      "x": 35.52,
-      "y": 246.93,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "maja neprimeren in to zato, ker še niso v celoti izvršene vse priprave za"
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 42.24,
+      "y": 443.45,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
     },
     {
-      "text": "volitve, predvsem pa zato, ker za volilni sistem, ki ga osvaja naš novi ustavni",
-      "x": 36.0,
-      "y": 236.13,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "volitve, predvsem pa zato, ker za volilni sistem, ki ga osvaja naš novi ustavni"
+      "text": "IV. izredno zasedanje",
+      "x": 104.64,
+      "y": 377.93,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "IV. izredno zasedanje"
     },
     {
-      "text": "zakon, obstajajo še spreminjevaliii predlogi. Prav tako smo na našem Izvrš",
-      "x": 35.76,
-      "y": 225.33,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "zakon, obstajajo še spreminjevaliii predlogi. Prav tako smo na našem Izvrš"
+      "text": "(Drugi sklic)",
+      "x": 157.2,
+      "y": 357.88,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
     },
     {
-      "text": "nem svetu razpravljali o tem vprašanju in sklenili predlagati Ljudski skup",
-      "x": 36.48,
-      "y": 214.29,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "nem svetu razpravljali o tem vprašanju in sklenili predlagati Ljudski skup"
-    },
-    {
-      "text": "ščini odgoditev razprave o volilnem zakonu, ker smo volilni zakon, kot rečeno,",
-      "x": 36.0,
-      "y": 203.73,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "ščini odgoditev razprave o volilnem zakonu, ker smo volilni zakon, kot rečeno,"
-    },
-    {
-      "text": "pripravljali v pričakovanju, da bodo volitve konec maja in je bilo zato nujno,",
-      "x": 36.0,
-      "y": 192.93,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "pripravljali v pričakovanju, da bodo volitve konec maja in je bilo zato nujno,"
+      "text": "14, marca do 29. junija 1953",
+      "x": 110.16,
+      "y": 331.72,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "14, marca do 29. junija 1953"
     }
   ],
   "recovery_counts": {},

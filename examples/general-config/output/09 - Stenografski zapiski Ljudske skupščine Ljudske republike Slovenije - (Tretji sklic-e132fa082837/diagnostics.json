@@ -2,19 +2,21 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\3. sklic (1953-1957)\\09 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Tretji sklic) - Seje od 15.decembra 1953 do 28.februarja 1954.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 12092,
-  "unmatched_count": 5105,
+  "unmatched_count": 8616,
   "rule_counts": {
+    "AFTER_GENERIC_NOTE": 2,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 9,
-    "CONSUMED_LINE": 167,
-    "GENERIC_NOTE": 39,
-    "HEAD": 21,
-    "PARAGRAPH": 5079,
+    "CONSUMED_LINE": 179,
+    "GENERIC_NOTE": 23,
+    "HEAD": 17,
+    "PARAGRAPH": 1488,
     "SCRIBE": 9,
-    "SEG": 606,
-    "SOURCE_ARTIFACT": 522,
-    "SPEAKER": 519,
-    "TIME": 15
+    "SEG": 615,
+    "SOURCE_ARTIFACT": 595,
+    "SPEAKER": 517,
+    "TIME": 15,
+    "UNSTRUCTURED_START": 6
   },
   "page_counts": {
     "1": 12,
@@ -324,12 +326,172 @@
   },
   "unmatched_samples": [
     {
+      "text": "342.533",
+      "x": 9.84,
+      "y": 582.47,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "342.533"
+    },
+    {
+      "text": "019540122 coBiss o",
+      "x": 10.08,
+      "y": 549.59,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "019540122 coBiss o jgrafski zapiski"
+    },
+    {
       "text": "jgrafski zapiski",
       "x": 175.92,
       "y": 539.0,
       "page": 1,
       "font_size": 19.0,
       "line_text": "019540122 coBiss o jgrafski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 82.56,
+      "y": 474.98,
+      "page": 1,
+      "font_size": 32.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 82.08,
+      "y": 444.97,
+      "page": 1,
+      "font_size": 21.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 184.56,
+      "y": 396.28,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od 15. decembra 1953 do 28. februarja 1954",
+      "x": 81.12,
+      "y": 337.52,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "Seje od 15. decembra 1953 do 28. februarja 1954"
+    },
+    {
+      "text": "1951",
+      "x": 200.88,
+      "y": 126.56,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "1951"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 187.2,
+      "y": 87.92,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 131.28,
+      "y": 547.4,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "v v",
+      "x": 264.0,
+      "y": 513.76,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "v v"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 70.08,
+      "y": 482.87,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 69.84,
+      "y": 452.17,
+      "page": 3,
+      "font_size": 21.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "{fretji sklic)",
+      "x": 171.12,
+      "y": 403.48,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "{fretji sklic)"
+    },
+    {
+      "text": "Seje od 15. decembra 1953 do 28. februarja 1954",
+      "x": 67.92,
+      "y": 344.24,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "Seje od 15. decembra 1953 do 28. februarja 1954"
+    },
+    {
+      "text": "1951",
+      "x": 186.48,
+      "y": 131.12,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "1951"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 172.32,
+      "y": 92.48,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "997",
+      "x": 206.4,
+      "y": 348.57,
+      "page": 4,
+      "font_size": 25.0,
+      "line_text": "997"
+    },
+    {
+      "text": "t>lu.",
+      "x": 172.8,
+      "y": 268.94,
+      "page": 4,
+      "font_size": 27.0,
+      "line_text": "t>lu."
+    },
+    {
+      "text": "I. ^/£^,",
+      "x": 240.0,
+      "y": 268.01,
+      "page": 4,
+      "font_size": 18.0,
+      "line_text": "I. ^/£^,"
+    },
+    {
+      "text": "^iz",
+      "x": 289.92,
+      "y": 258.89,
+      "page": 4,
+      "font_size": 18.0,
+      "line_text": "^iz"
     },
     {
       "text": "da kol najstarejši poslanec toga zbora pričncm prvo sejo s tem, da prečitam",
@@ -362,166 +524,6 @@
       "page": 5,
       "font_size": 10.0,
       "line_text": "zakona za izvršitev ustavnega zakona"
-    },
-    {
-      "text": "sklicuj e m",
-      "x": 167.52,
-      "y": 338.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "sklicuj e m"
-    },
-    {
-      "text": "za 15. december 1953 ob 16. uri prvi sestanek ljudskih poslancev, ki so bili",
-      "x": 19.68,
-      "y": 316.07,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "za 15. december 1953 ob 16. uri prvi sestanek ljudskih poslancev, ki so bili"
-    },
-    {
-      "text": "pri volitvah od 22. do 24. novembra 1953 izvoljeni v Republiški zbor, in",
-      "x": 19.92,
-      "y": 305.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "pri volitvah od 22. do 24. novembra 1953 izvoljeni v Republiški zbor, in"
-    },
-    {
-      "text": "Ijndskili poslancev, ki so bili izvoljeni v Zbor proizvajalcev Ljudske skup",
-      "x": 19.68,
-      "y": 294.23,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ijndskili poslancev, ki so bili izvoljeni v Zbor proizvajalcev Ljudske skup"
-    },
-    {
-      "text": "ščine Ljudske republike Slovenije.",
-      "x": 19.68,
-      "y": 282.95,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ščine Ljudske republike Slovenije."
-    },
-    {
-      "text": "ljani, Trg revolucije št. 1. Predsednik Ljudske skupščine LRS: dr. Ferdo",
-      "x": 19.68,
-      "y": 261.59,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ljani, Trg revolucije št. 1. Predsednik Ljudske skupščine LRS: dr. Ferdo"
-    },
-    {
-      "text": "Kozak I. r.",
-      "x": 20.16,
-      "y": 251.03,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Kozak I. r."
-    },
-    {
-      "text": "prav iskreno pozdravim in želim največjega uspeha v dobrobit našemu",
-      "x": 19.92,
-      "y": 229.19,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "prav iskreno pozdravim in želim največjega uspeha v dobrobit našemu"
-    },
-    {
-      "text": "ljudsivu in v prospeh Ljudske republike Slovenije",
-      "x": 19.68,
-      "y": 218.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ljudsivu in v prospeh Ljudske republike Slovenije Ш Ljudske republike"
-    },
-    {
-      "text": "Ш",
-      "x": 276.48,
-      "y": 218.06,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ljudsivu in v prospeh Ljudske republike Slovenije Ш Ljudske republike"
-    },
-    {
-      "text": "Ljudske republike",
-      "x": 291.12,
-      "y": 218.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ljudsivu in v prospeh Ljudske republike Slovenije Ш Ljudske republike"
-    },
-    {
-      "text": "Jugoslavije s tovarišem Titom na čelu. (Dolgotrajno in navdušeno plo",
-      "x": 19.44,
-      "y": 207.59,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Jugoslavije s tovarišem Titom na čelu. (Dolgotrajno in navdušeno plo"
-    },
-    {
-      "text": "skanje.)",
-      "x": 19.44,
-      "y": 197.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "skanje.)"
-    },
-    {
-      "text": "današnje seje. (K besedi se prijavi ljudski poslanec dr. Milni Potočnik.)",
-      "x": 18.96,
-      "y": 175.67,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "današnje seje. (K besedi se prijavi ljudski poslanec dr. Milni Potočnik.)"
-    },
-    {
-      "text": "seje izvolimo ljudskega poslanca Tineta Remškarja.",
-      "x": 18.96,
-      "y": 145.67,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "seje izvolimo ljudskega poslanca Tineta Remškarja."
-    },
-    {
-      "text": "dajem ta predlog na glasovanje. Kdor je za to, da se za tajnika izvoli",
-      "x": 18.72,
-      "y": 115.19,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "dajem ta predlog na glasovanje. Kdor je za to, da se za tajnika izvoli"
-    },
-    {
-      "text": "tovariš line Remškar, naj dvigne roko? (Vsi poslanci dvignejo roko.) Hvala.",
-      "x": 19.44,
-      "y": 104.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "tovariš line Remškar, naj dvigne roko? (Vsi poslanci dvignejo roko.) Hvala."
-    },
-    {
-      "text": "Je kdo proti? (Nihče.) Ugotavljam, da je ta predlog soglasno sprejet in",
-      "x": 18.96,
-      "y": 93.11,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Je kdo proti? (Nihče.) Ugotavljam, da je ta predlog soglasno sprejet in"
-    },
-    {
-      "text": "prosim tovariša Remškarja, da zavzame svoje mesto. (Poslanec Tine Rem",
-      "x": 18.96,
-      "y": 82.31,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "prosim tovariša Remškarja, da zavzame svoje mesto. (Poslanec Tine Rem"
-    },
-    {
-      "text": "škar pride k predsedniški mizi.)",
-      "x": 18.72,
-      "y": 71.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "škar pride k predsedniški mizi.)"
     }
   ],
   "recovery_counts": {},

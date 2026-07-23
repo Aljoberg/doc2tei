@@ -2,15 +2,18 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\3. sklic (1953-1957)\\01 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Tretji sklic) - Seje od 1. aprila do 30. septembra 1957.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 17894,
-  "unmatched_count": 4601,
+  "unmatched_count": 12704,
   "rule_counts": {
+    "AFTER_FOOTNOTE": 4,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 12,
     "CONSUMED_LINE": 103,
     "CONTENTS": 1,
+    "FOOTNOTE_CONTINUATION": 6,
+    "FOOTNOTE_ENTRY": 6,
     "GENERIC_NOTE": 21,
     "HEAD": 15,
-    "PARAGRAPH": 11343,
+    "PARAGRAPH": 3224,
     "SCRIBE": 17,
     "SEG": 678,
     "SOURCE_ARTIFACT": 929,
@@ -436,6 +439,94 @@
   },
   "unmatched_samples": [
     {
+      "text": "Slenograliski zapiski",
+      "x": 138.48,
+      "y": 531.27,
+      "page": 1,
+      "font_size": 17.0,
+      "line_text": "Slenograliski zapiski"
+    },
+    {
+      "text": "\\s \\s",
+      "x": 272.88,
+      "y": 500.41,
+      "page": 1,
+      "font_size": 11.0,
+      "line_text": "\\s \\s"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 74.4,
+      "y": 471.35,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 74.64,
+      "y": 447.73,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 171.36,
+      "y": 394.6,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Sejo od I. aprila do 30. seplembra 1957",
+      "x": 89.76,
+      "y": 341.32,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Sejo od I. aprila do 30. seplembra 1957"
+    },
+    {
+      "text": "^ * \"..",
+      "x": 197.04,
+      "y": 217.29,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "^ * \".."
+    },
+    {
+      "text": "1957",
+      "x": 197.52,
+      "y": 133.48,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1957"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 180.24,
+      "y": 92.44,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Slcnogndski zapiski",
+      "x": 132.24,
+      "y": 515.69,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "Slcnogndski zapiski"
+    },
+    {
+      "text": "ч",
+      "x": 267.12,
+      "y": 485.19,
+      "page": 3,
+      "font_size": 9.0,
+      "line_text": "ч/ ч/"
+    },
+    {
       "text": "/",
       "x": 270.96,
       "y": 485.58,
@@ -460,6 +551,46 @@
       "line_text": "ч/ ч/"
     },
     {
+      "text": "LJUDSKE SKUPSOM",
+      "x": 68.16,
+      "y": 455.99,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPSOM"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 68.64,
+      "y": 432.37,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 165.84,
+      "y": 379.0,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Sejo od 1. aprila do 30. septembra 1957",
+      "x": 84.48,
+      "y": 325.72,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Sejo od 1. aprila do 30. septembra 1957"
+    },
+    {
+      "text": "19",
+      "x": 193.44,
+      "y": 117.4,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "19Г)7"
+    },
+    {
       "text": "Г",
       "x": 204.24,
       "y": 117.0,
@@ -476,6 +607,22 @@
       "line_text": "19Г)7"
     },
     {
+      "text": "I, j u 1) i i a n a",
+      "x": 175.68,
+      "y": 76.6,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "I, j u 1) i i a n a"
+    },
+    {
+      "text": "§ i",
+      "x": 193.44,
+      "y": 343.74,
+      "page": 4,
+      "font_size": 9.0,
+      "line_text": "§ i ■■ ч i"
+    },
+    {
       "text": "■■ ч",
       "x": 217.68,
       "y": 343.35,
@@ -490,150 +637,6 @@
       "page": 4,
       "font_size": 9.0,
       "line_text": "§ i ■■ ч i"
-    },
-    {
-      "text": "И",
-      "x": 203.28,
-      "y": 295.78,
-      "page": 4,
-      "font_size": 14.0,
-      "line_text": "/) 18. И. 1958"
-    },
-    {
-      "text": ". 1958",
-      "x": 209.52,
-      "y": 296.38,
-      "page": 4,
-      "font_size": 14.0,
-      "line_text": "/) 18. И. 1958"
-    },
-    {
-      "text": "jo je po 60. členu ustavnega zakona ter 19. členu poslovnika Republiškega",
-      "x": 18.96,
-      "y": 394.31,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "jo je po 60. členu ustavnega zakona ter 19. členu poslovnika Republiškega"
-    },
-    {
-      "text": "zbora sklical predsednik Ljudske skupščine Ljudske republike Slovenije.",
-      "x": 18.72,
-      "y": 383.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zbora sklical predsednik Ljudske skupščine Ljudske republike Slovenije."
-    },
-    {
-      "text": "Julij Beltram, Boris Kocijančič, Franc Krese, Tone Zupančič, Karel Štrukelj,",
-      "x": 18.96,
-      "y": 350.63,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Julij Beltram, Boris Kocijančič, Franc Krese, Tone Zupančič, Karel Štrukelj,"
-    },
-    {
-      "text": "Stanko Brečko, Alojz Lukač, Ivan Rančigaj in Nerino Gobbo. Predlagam, da",
-      "x": 18.96,
-      "y": 340.07,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Stanko Brečko, Alojz Lukač, Ivan Rančigaj in Nerino Gobbo. Predlagam, da"
-    },
-    {
-      "text": "jim zbor opraviči odsotnost. Se tovariši poslanci strinjate s tem predlogom?",
-      "x": 18.96,
-      "y": 329.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "jim zbor opraviči odsotnost. Se tovariši poslanci strinjate s tem predlogom?"
-    },
-    {
-      "text": "(Poslanci se strinjajo.) Ker se zbor strinja s tem predlogom, je imenovanim",
-      "x": 18.96,
-      "y": 318.71,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "(Poslanci se strinjajo.) Ker se zbor strinja s tem predlogom, je imenovanim"
-    },
-    {
-      "text": "za to sejo odsotnost opravičena.",
-      "x": 18.96,
-      "y": 307.91,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "za to sejo odsotnost opravičena."
-    },
-    {
-      "text": "seje. (Zapisnikar Dušan Bole prebere zapisnik 18. seje.) Ima kdo od tovarišev",
-      "x": 18.96,
-      "y": 286.07,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "seje. (Zapisnikar Dušan Bole prebere zapisnik 18. seje.) Ima kdo od tovarišev"
-    },
-    {
-      "text": "poslancev kakšno pripombo k zapisniku? (Ne javi se nihče.) Ker ni pripomb,",
-      "x": 19.2,
-      "y": 275.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "poslancev kakšno pripombo k zapisniku? (Ne javi se nihče.) Ker ni pripomb,"
-    },
-    {
-      "text": "menim, da je zapisnik odobren in da se lahko podpiše. (Predsednik in zapisnikar",
-      "x": 18.96,
-      "y": 264.95,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "menim, da je zapisnik odobren in da se lahko podpiše. (Predsednik in zapisnikar"
-    },
-    {
-      "text": "podpišeta zapisnik.)",
-      "x": 19.44,
-      "y": 254.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "podpišeta zapisnik.)"
-    },
-    {
-      "text": "republike Slovenije v obravnavo predlog zakona o spremembah zakona o",
-      "x": 19.44,
-      "y": 232.55,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "republike Slovenije v obravnavo predlog zakona o spremembah zakona o"
-    },
-    {
-      "text": "gozdovih, o spremembah in dopolnitvah zakona o gozdnih skladih; Izvršni svet",
-      "x": 19.2,
-      "y": 221.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "gozdovih, o spremembah in dopolnitvah zakona o gozdnih skladih; Izvršni svet"
-    },
-    {
-      "text": "je poslal poročilo o svojem delu za leto 1956 ter predlagal, da se na tem zase",
-      "x": 19.2,
-      "y": 210.95,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "je poslal poročilo o svojem delu za leto 1956 ter predlagal, da se na tem zase"
-    },
-    {
-      "text": "danju obenem s predloženimi zakoni obravnava referat o organizaciji gozdar",
-      "x": 19.44,
-      "y": 200.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "danju obenem s predloženimi zakoni obravnava referat o organizaciji gozdar"
-    },
-    {
-      "text": "stva; mandatno-imunitetni odbor ima predlog glede potrditve mandata na",
-      "x": 19.44,
-      "y": 189.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "stva; mandatno-imunitetni odbor ima predlog glede potrditve mandata na"
     }
   ],
   "recovery_counts": {},

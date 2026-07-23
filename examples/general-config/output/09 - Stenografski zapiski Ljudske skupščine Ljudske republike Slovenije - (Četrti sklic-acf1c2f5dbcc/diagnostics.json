@@ -2,21 +2,18 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\09 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 1. maja do 30. septembra 1960.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 20460,
-  "unmatched_count": 7492,
+  "unmatched_count": 14886,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 1,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 6,
-    "CONSUMED_LINE": 145,
-    "FOOTNOTE_CONTINUATION": 8,
-    "FOOTNOTE_ENTRY": 2,
-    "GENERIC_NOTE": 23,
-    "HEAD": 15,
-    "PARAGRAPH": 10797,
+    "CONSUMED_LINE": 188,
+    "GENERIC_NOTE": 17,
+    "HEAD": 13,
+    "PARAGRAPH": 3079,
     "SCRIBE": 9,
-    "SEG": 1086,
-    "SOURCE_ARTIFACT": 713,
-    "SPEAKER": 154,
+    "SEG": 1094,
+    "SOURCE_ARTIFACT": 1006,
+    "SPEAKER": 153,
     "TIME": 8
   },
   "page_counts": {
@@ -471,6 +468,78 @@
   },
   "unmatched_samples": [
     {
+      "text": "Sejni zapiski",
+      "x": 157.92,
+      "y": 511.54,
+      "page": 1,
+      "font_size": 15.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": ">/ w",
+      "x": 261.6,
+      "y": 481.74,
+      "page": 1,
+      "font_size": 9.0,
+      "line_text": ">/ w"
+    },
+    {
+      "text": "LJUDSKE SKUPSCmE",
+      "x": 80.64,
+      "y": 453.83,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPSCmE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 81.6,
+      "y": 431.87,
+      "page": 1,
+      "font_size": 15.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "((drli sklic)",
+      "x": 171.12,
+      "y": 382.12,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "((drli sklic)"
+    },
+    {
+      "text": "Seje od 1. maja do 3(1. septembra 1960",
+      "x": 102.0,
+      "y": 331.0,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Seje od 1. maja do 3(1. septembra 1960"
+    },
+    {
+      "text": "1960",
+      "x": 196.8,
+      "y": 133.48,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1960"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 181.44,
+      "y": 95.08,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "'",
+      "x": 12.96,
+      "y": 521.14,
+      "page": 2,
+      "font_size": 15.0,
+      "line_text": "'Ј,џ**У"
+    },
+    {
       "text": "Ј",
       "x": 18.24,
       "y": 520.65,
@@ -511,6 +580,70 @@
       "line_text": "'Ј,џ**У"
     },
     {
+      "text": "<v*",
+      "x": 309.12,
+      "y": 524.24,
+      "page": 3,
+      "font_size": 45.0,
+      "line_text": "<v*"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 154.08,
+      "y": 495.7,
+      "page": 3,
+      "font_size": 15.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "UIDSKE SKUPŠČINE",
+      "x": 76.32,
+      "y": 438.91,
+      "page": 3,
+      "font_size": 29.0,
+      "line_text": "UIDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LMIDSKli REPDBUKE SLOVENIJI]",
+      "x": 76.8,
+      "y": 416.5,
+      "page": 3,
+      "font_size": 15.0,
+      "line_text": "LMIDSKli REPDBUKE SLOVENIJI]"
+    },
+    {
+      "text": "(telrll sklic)",
+      "x": 164.16,
+      "y": 365.1,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "(telrll sklic)"
+    },
+    {
+      "text": "Seje od I. maja do 30. seplembra 1960",
+      "x": 94.08,
+      "y": 314.94,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "Seje od I. maja do 30. seplembra 1960"
+    },
+    {
+      "text": "196 0",
+      "x": 183.36,
+      "y": 117.66,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "196 0"
+    },
+    {
+      "text": ", j u I) I j a",
+      "x": 169.68,
+      "y": 80.15,
+      "page": 3,
+      "font_size": 10.0,
+      "line_text": ", j u I) I j a M a"
+    },
+    {
       "text": "M",
       "x": 208.8,
       "y": 80.58,
@@ -533,142 +666,6 @@
       "page": 5,
       "font_size": 9.0,
       "line_text": "Pričenjam 13. sejo Republiškega zbora Ljudske skupščine LRS, ki jo je sklical"
-    },
-    {
-      "text": "predsednik Ljudske skupščine LRS. Zapisnik današnje seje bo vodil Drago",
-      "x": 33.36,
-      "y": 374.61,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "predsednik Ljudske skupščine LRS. Zapisnik današnje seje bo vodil Drago"
-    },
-    {
-      "text": "Seliger.",
-      "x": 33.12,
-      "y": 365.97,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "Seliger."
-    },
-    {
-      "text": "in Slavica Zirkelbach so opravičili svojo odsotnost.",
-      "x": 32.88,
-      "y": 341.73,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "in Slavica Zirkelbach so opravičili svojo odsotnost."
-    },
-    {
-      "text": "(Zapisnikar ljudski poslanec Stane Sotlar prečita zapisnik 12. seje.)",
-      "x": 33.12,
-      "y": 320.85,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "(Zapisnikar ljudski poslanec Stane Sotlar prečita zapisnik 12. seje.)"
-    },
-    {
-      "text": "nihče.) Ce nihče, ugotavljam, da je zapisnik odobren in da se ga lahko podpiše.",
-      "x": 32.64,
-      "y": 299.97,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "nihče.) Ce nihče, ugotavljam, da je zapisnik odobren in da se ga lahko podpiše."
-    },
-    {
-      "text": "(Predsednik in zapisnikar podpišeta zapisnik.)",
-      "x": 32.88,
-      "y": 289.89,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "(Predsednik in zapisnikar podpišeta zapisnik.)"
-    },
-    {
-      "text": "ložil poročilo o uvajanju vzpodbudnih oblik razdeljevanja osebnih dohodkov",
-      "x": 31.92,
-      "y": 269.01,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "ložil poročilo o uvajanju vzpodbudnih oblik razdeljevanja osebnih dohodkov"
-    },
-    {
-      "text": "v gospodarskih organizacijah in o strokovnem izobraževanju v zvezi s produk",
-      "x": 31.92,
-      "y": 258.45,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "v gospodarskih organizacijah in o strokovnem izobraževanju v zvezi s produk"
-    },
-    {
-      "text": "tivnostjo dela. Odbori, ki so to poročilo obravnavali pa predlagajo v zvezi z njim",
-      "x": 31.68,
-      "y": 248.37,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "tivnostjo dela. Odbori, ki so to poročilo obravnavali pa predlagajo v zvezi z njim"
-    },
-    {
-      "text": "resolucijo. Odbor za presveto in kulturo je pripravil poročilo o svojem pri",
-      "x": 31.68,
-      "y": 237.81,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "resolucijo. Odbor za presveto in kulturo je pripravil poročilo o svojem pri"
-    },
-    {
-      "text": "poročilu.",
-      "x": 31.44,
-      "y": 228.69,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "poročilu."
-    },
-    {
-      "text": "Izvršni svet predlagam za današnjo sejo naslednji dnevni red:",
-      "x": 30.96,
-      "y": 204.69,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "Izvršni svet predlagam za današnjo sejo naslednji dnevni red:"
-    },
-    {
-      "text": "dohodkov v gospodarskih organizacijah in o strokovnem izobraževanju v zvezi",
-      "x": 30.72,
-      "y": 181.65,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "dohodkov v gospodarskih organizacijah in o strokovnem izobraževanju v zvezi"
-    },
-    {
-      "text": "S Produktivnostjo dela ter obravnava in sklepanje o predlogu resolucije o razvi",
-      "x": 30.48,
-      "y": 171.09,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "S Produktivnostjo dela ter obravnava in sklepanje o predlogu resolucije o razvi"
-    },
-    {
-      "text": "janju vzpodbudnih oblik razdeljevanja osebnih dohodkov v gospodarskih orga",
-      "x": 30.24,
-      "y": 161.01,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "janju vzpodbudnih oblik razdeljevanja osebnih dohodkov v gospodarskih orga"
-    },
-    {
-      "text": "nizacijah;",
-      "x": 30.48,
-      "y": 152.61,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "nizacijah;"
-    },
-    {
-      "text": "norejske proizvodnje;",
-      "x": 30.0,
-      "y": 130.29,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "norejske proizvodnje;"
     }
   ],
   "recovery_counts": {},

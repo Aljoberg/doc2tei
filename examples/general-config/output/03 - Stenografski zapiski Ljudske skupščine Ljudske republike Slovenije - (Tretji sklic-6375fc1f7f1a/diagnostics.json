@@ -2,23 +2,23 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\3. sklic (1953-1957)\\03 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Tretji sklic) - Seje od 1. junija do 31. decembra 1956.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 11140,
-  "unmatched_count": 4706,
+  "unmatched_count": 7707,
   "rule_counts": {
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 6,
-    "CONSUMED_LINE": 60,
+    "CONSUMED_LINE": 58,
     "CONTENTS": 1,
     "FOOTNOTE_CONTINUATION": 2,
     "FOOTNOTE_ENTRY": 3,
-    "GENERIC_NOTE": 20,
-    "HEAD": 14,
-    "PARAGRAPH": 4522,
+    "GENERIC_NOTE": 8,
+    "HEAD": 10,
+    "PARAGRAPH": 1973,
     "SCRIBE": 9,
-    "SEG": 985,
+    "SEG": 557,
     "SOURCE_ARTIFACT": 645,
-    "SPEAKER": 151,
+    "SPEAKER": 147,
     "TIME": 12,
-    "UNMATCHED_LINE": 3
+    "UNSTRUCTURED_START": 1
   },
   "page_counts": {
     "1": 14,
@@ -296,6 +296,110 @@
   },
   "unmatched_samples": [
     {
+      "text": "342.533(497.4)\"1956\"",
+      "x": 5.28,
+      "y": 581.46,
+      "page": 1,
+      "font_size": 8.0,
+      "line_text": "342.533(497.4)\"1956\""
+    },
+    {
+      "text": "019570103",
+      "x": 5.28,
+      "y": 548.39,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "019570103"
+    },
+    {
+      "text": "COBISS O",
+      "x": 128.16,
+      "y": 546.4,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "COBISS O"
+    },
+    {
+      "text": "otcuografski zapiski",
+      "x": 141.12,
+      "y": 530.77,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "otcuografski zapiski"
+    },
+    {
+      "text": "v \\s",
+      "x": 275.04,
+      "y": 499.93,
+      "page": 1,
+      "font_size": 11.0,
+      "line_text": "v \\s"
+    },
+    {
+      "text": "LJUDSKE SKUPSCIM",
+      "x": 77.28,
+      "y": 470.66,
+      "page": 1,
+      "font_size": 32.0,
+      "line_text": "LJUDSKE SKUPSCIM"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 77.52,
+      "y": 446.55,
+      "page": 1,
+      "font_size": 17.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 173.76,
+      "y": 392.94,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od 1. junija do 31. decembra 1956",
+      "x": 95.04,
+      "y": 338.94,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "Seje od 1. junija do 31. decembra 1956"
+    },
+    {
+      "text": "1957",
+      "x": 199.68,
+      "y": 129.42,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "1957"
+    },
+    {
+      "text": "Ljubljani",
+      "x": 181.92,
+      "y": 88.38,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "Ljubljani"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 137.28,
+      "y": 529.59,
+      "page": 3,
+      "font_size": 17.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "ч",
+      "x": 271.2,
+      "y": 498.87,
+      "page": 3,
+      "font_size": 9.0,
+      "line_text": "ч/ ч/"
+    },
+    {
       "text": "/",
       "x": 275.04,
       "y": 499.26,
@@ -320,180 +424,76 @@
       "line_text": "ч/ ч/"
     },
     {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 72.96,
+      "y": 469.43,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 73.2,
+      "y": 446.05,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 169.68,
+      "y": 391.98,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od 1. junija do 31. decembra 1956",
+      "x": 90.48,
+      "y": 337.98,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "Seje od 1. junija do 31. decembra 1956"
+    },
+    {
+      "text": "1957",
+      "x": 195.36,
+      "y": 128.7,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "1957"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 177.84,
+      "y": 87.66,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "997",
+      "x": 214.8,
+      "y": 394.44,
+      "page": 4,
+      "font_size": 26.0,
+      "line_text": "997"
+    },
+    {
+      "text": "-^",
+      "x": 190.56,
+      "y": 311.38,
+      "page": 4,
+      "font_size": 15.0,
+      "line_text": "-^б. У. 1957"
+    },
+    {
       "text": "б",
       "x": 198.72,
       "y": 310.89,
       "page": 4,
       "font_size": 15.0,
       "line_text": "-^б. У. 1957"
-    },
-    {
-      "text": ".",
-      "x": 208.8,
-      "y": 311.38,
-      "page": 4,
-      "font_size": 15.0,
-      "line_text": "-^б. У. 1957"
-    },
-    {
-      "text": "У",
-      "x": 221.04,
-      "y": 310.89,
-      "page": 4,
-      "font_size": 15.0,
-      "line_text": "-^б. У. 1957"
-    },
-    {
-      "text": ". 1957",
-      "x": 229.2,
-      "y": 311.38,
-      "page": 4,
-      "font_size": 15.0,
-      "line_text": "-^б. У. 1957"
-    },
-    {
-      "text": "čenjam 16. sejo Republiškega zbora, ki jo je sklical predsednik Ljudske",
-      "x": 27.84,
-      "y": 417.11,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "čenjam 16. sejo Republiškega zbora, ki jo je sklical predsednik Ljudske"
-    },
-    {
-      "text": "skupščine Ljudske republike Slovenije. Zapisnik današnje seje bo vodil ljudski",
-      "x": 27.6,
-      "y": 406.55,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "skupščine Ljudske republike Slovenije. Zapisnik današnje seje bo vodil ljudski"
-    },
-    {
-      "text": "poslanec Anton Peternelj.",
-      "x": 28.08,
-      "y": 395.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "poslanec Anton Peternelj."
-    },
-    {
-      "text": "Tone Kropušek, dr. Marijan Dermastia, Mihaela Dermastia, Mirko Zlatnar,",
-      "x": 28.08,
-      "y": 374.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Tone Kropušek, dr. Marijan Dermastia, Mihaela Dermastia, Mirko Zlatnar,"
-    },
-    {
-      "text": "Aleksander Pirher, Mirko Remec, Anton Blejc, Franc Krese in Janez Lesjak.",
-      "x": 28.32,
-      "y": 363.59,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Aleksander Pirher, Mirko Remec, Anton Blejc, Franc Krese in Janez Lesjak."
-    },
-    {
-      "text": "Predlagam, da omenjenim poslancem zbor odobri odsotnost. Se zbor strinja s",
-      "x": 27.84,
-      "y": 353.03,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Predlagam, da omenjenim poslancem zbor odobri odsotnost. Se zbor strinja s"
-    },
-    {
-      "text": "predlogom? (Poslanci se strinjajo.) Ugotavljam, da je omenjenim poslancem",
-      "x": 28.08,
-      "y": 342.23,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "predlogom? (Poslanci se strinjajo.) Ugotavljam, da je omenjenim poslancem"
-    },
-    {
-      "text": "odsotnost odobrena.",
-      "x": 28.32,
-      "y": 331.43,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "odsotnost odobrena."
-    },
-    {
-      "text": "zapisnik zadnje seje. (Ker je tovarišica Ančka Globačnik odsotna, prečita za",
-      "x": 28.32,
-      "y": 309.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zapisnik zadnje seje. (Ker je tovarišica Ančka Globačnik odsotna, prečita za"
-    },
-    {
-      "text": "pisnik zadnje seje zapisnikar Anton Peternelj.) Ima kdo od tovarišev poslancev",
-      "x": 28.08,
-      "y": 299.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "pisnik zadnje seje zapisnikar Anton Peternelj.) Ima kdo od tovarišev poslancev"
-    },
-    {
-      "text": "kako pripombo k zapisniku? (Ne javi se nihče.) Ker ni pripomb, ugotavljam,",
-      "x": 28.08,
-      "y": 288.71,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "kako pripombo k zapisniku? (Ne javi se nihče.) Ker ni pripomb, ugotavljam,"
-    },
-    {
-      "text": "da je zapisnik odobren in da se lahko podpiše. (Predsednik in zapisnikar pod",
-      "x": 28.08,
-      "y": 278.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "da je zapisnik odobren in da se lahko podpiše. (Predsednik in zapisnikar pod"
-    },
-    {
-      "text": "pišeta zapisnik.)",
-      "x": 28.08,
-      "y": 267.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "pišeta zapisnik.)"
-    },
-    {
-      "text": "šanje v zvezi z reformo šolstva. Njegovo vprašanje se glasi:",
-      "x": 27.84,
-      "y": 245.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "šanje v zvezi z reformo šolstva. Njegovo vprašanje se glasi:"
-    },
-    {
-      "text": "zakona o pravicah in dolžnostih ljudskih poslancev Ljudske skupščine Ljudske",
-      "x": 27.84,
-      "y": 224.39,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zakona o pravicah in dolžnostih ljudskih poslancev Ljudske skupščine Ljudske"
-    },
-    {
-      "text": "republike Slovenije ter na osnovi 149. člena poslovnika Ljudske skupščine",
-      "x": 28.08,
-      "y": 213.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "republike Slovenije ter na osnovi 149. člena poslovnika Ljudske skupščine"
-    },
-    {
-      "text": "Ljudske republike Slovenije, prosim, naj Republiški zbor Ljudske skupščine",
-      "x": 27.6,
-      "y": 202.79,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ljudske republike Slovenije, prosim, naj Republiški zbor Ljudske skupščine"
-    },
-    {
-      "text": "Ljudske republike Slovenije zaprosi, da predsednik ali sekretar republiškega",
-      "x": 27.84,
-      "y": 191.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ljudske republike Slovenije zaprosi, da predsednik ali sekretar republiškega"
     }
   ],
   "recovery_counts": {},

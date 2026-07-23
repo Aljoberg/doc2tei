@@ -1,13 +1,13 @@
 {
   "source": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\05 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 1. februarja do 31. maja 1962.pdf",
-  "output": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_long-paths\\05 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic-5e5250aaa171",
+  "output": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\tmp\\corpus-exact-current5\\_long-paths\\05 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic-5e5250aaa171",
   "status": "ok",
-  "elapsed_seconds": 104.974,
+  "elapsed_seconds": 266.569,
   "chunk_count": 40152,
   "recovery_count": 0,
   "message": "completed with warnings",
   "warning_count": 1,
-  "completed_at": "2026-07-22T13:07:40+00:00",
+  "completed_at": "2026-07-23T10:05:40+00:00",
   "fingerprint": {
     "source": {
       "path": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\05 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 1. februarja do 31. maja 1962.pdf",
@@ -18,15 +18,15 @@
     "config": {
       "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
       "exists": true,
-      "size": 42702,
-      "modified_ns": 1784724902486837000
+      "size": 60226,
+      "modified_ns": 1784800477485607100
     },
     "implementation": {
       "batch": {
         "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\doc2tei\\batch.py",
         "exists": true,
-        "size": 22969,
-        "modified_ns": 1784724902495187300
+        "size": 22995,
+        "modified_ns": 1784797594822095500
       },
       "engine": {
         "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\engine.py",
@@ -43,14 +43,14 @@
       "helpers": {
         "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\doc2tei\\helpers.py",
         "exists": true,
-        "size": 26916,
-        "modified_ns": 1784721180944091200
+        "size": 29566,
+        "modified_ns": 1784797711093047300
       },
       "parser": {
         "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\doc2tei\\parser.py",
         "exists": true,
-        "size": 30405,
-        "modified_ns": 1784724902486837000
+        "size": 30470,
+        "modified_ns": 1784797594819077700
       },
       "tei_header": {
         "path": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\doc2tei\\tei_header.py",

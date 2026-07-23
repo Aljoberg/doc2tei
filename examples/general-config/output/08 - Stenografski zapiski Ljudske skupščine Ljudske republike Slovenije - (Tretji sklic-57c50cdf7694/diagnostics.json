@@ -2,18 +2,18 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\3. sklic (1953-1957)\\08 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Tretji sklic) - Seje od 1. marca do 31. maja 1954.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 15063,
-  "unmatched_count": 8039,
+  "unmatched_count": 11537,
   "rule_counts": {
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 6,
     "CONSUMED_LINE": 75,
-    "GENERIC_NOTE": 19,
+    "GENERIC_NOTE": 17,
     "HEAD": 9,
-    "PARAGRAPH": 5062,
+    "PARAGRAPH": 1564,
     "SCRIBE": 26,
-    "SEG": 707,
+    "SEG": 711,
     "SOURCE_ARTIFACT": 713,
-    "SPEAKER": 395,
+    "SPEAKER": 393,
     "TIME": 11
   },
   "page_counts": {
@@ -364,12 +364,108 @@
   },
   "unmatched_samples": [
     {
+      "text": "342.533(497.4)\"1954",
+      "x": 16.56,
+      "y": 576.9,
+      "page": 1,
+      "font_size": 8.0,
+      "line_text": "342.533(497.4)\"1954"
+    },
+    {
+      "text": "019540123",
+      "x": 17.28,
+      "y": 543.83,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "019540123"
+    },
+    {
+      "text": "COBISS o",
+      "x": 140.16,
+      "y": 543.11,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "COBISS o iograiski zapiski"
+    },
+    {
       "text": "iograiski zapiski",
       "x": 183.6,
       "y": 531.8,
       "page": 1,
       "font_size": 19.0,
       "line_text": "COBISS o iograiski zapiski"
+    },
+    {
+      "text": "v v",
+      "x": 289.92,
+      "y": 499.56,
+      "page": 1,
+      "font_size": 11.0,
+      "line_text": "v v"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 97.92,
+      "y": 467.99,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 97.92,
+      "y": 437.29,
+      "page": 1,
+      "font_size": 21.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 199.44,
+      "y": 388.12,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od 1. marca do 31. maja 195^",
+      "x": 134.88,
+      "y": 329.6,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "Seje od 1. marca do 31. maja 195^"
+    },
+    {
+      "text": "195^",
+      "x": 217.68,
+      "y": 120.08,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "195^"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 204.0,
+      "y": 81.2,
+      "page": 1,
+      "font_size": 14.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Stenogratski zapiski",
+      "x": 126.96,
+      "y": 532.49,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "Stenogratski zapiski"
+    },
+    {
+      "text": "v",
+      "x": 259.44,
+      "y": 499.24,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "v -sr"
     },
     {
       "text": "-sr",
@@ -380,6 +476,70 @@
       "line_text": "v -sr"
     },
     {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 66.72,
+      "y": 467.99,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 66.72,
+      "y": 437.48,
+      "page": 3,
+      "font_size": 20.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Tretji sklic)",
+      "x": 168.48,
+      "y": 388.36,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Tretji sklic)"
+    },
+    {
+      "text": "Seje od l.raarca do 31. maja IGS^",
+      "x": 103.2,
+      "y": 330.08,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "Seje od l.raarca do 31. maja IGS^"
+    },
+    {
+      "text": "195^",
+      "x": 187.92,
+      "y": 120.32,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "195^"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 174.72,
+      "y": 81.68,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "997",
+      "x": 196.08,
+      "y": 363.96,
+      "page": 4,
+      "font_size": 26.0,
+      "line_text": "997"
+    },
+    {
+      "text": "Ћ",
+      "x": 162.96,
+      "y": 289.98,
+      "page": 4,
+      "font_size": 18.0,
+      "line_text": "Ћ 18. VUVlžtt"
+    },
+    {
       "text": "18. VUVlžtt",
       "x": 178.8,
       "y": 290.57,
@@ -388,180 +548,20 @@
       "line_text": "Ћ 18. VUVlžtt"
     },
     {
+      "text": "121",
+      "x": 266.88,
+      "y": 278.33,
+      "page": 4,
+      "font_size": 18.0,
+      "line_text": "121"
+    },
+    {
       "text": "3. sejo Republiškega zbora Ljudske skupščine LRS, ki jo je po 60. členu ustav",
       "x": 25.44,
       "y": 418.55,
       "page": 5,
       "font_size": 10.0,
       "line_text": "3. sejo Republiškega zbora Ljudske skupščine LRS, ki jo je po 60. členu ustav"
-    },
-    {
-      "text": "nega zakona in po 19. členu poslovnika Republiškega zbora in Zbora proizva",
-      "x": 25.68,
-      "y": 407.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "nega zakona in po 19. členu poslovnika Republiškega zbora in Zbora proizva"
-    },
-    {
-      "text": "jalcev sklical predsednik Ljudske skupščine LRS. Zapisnik današnje seje bo",
-      "x": 25.68,
-      "y": 396.71,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "jalcev sklical predsednik Ljudske skupščine LRS. Zapisnik današnje seje bo"
-    },
-    {
-      "text": "vodil zapisnikar Dušan Bole.",
-      "x": 25.92,
-      "y": 385.91,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "vodil zapisnikar Dušan Bole."
-    },
-    {
-      "text": "Suštoršič, Jože Molek, Nina Pokorn in Alojz Krivec so opravičili svojo od",
-      "x": 24.96,
-      "y": 363.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Suštoršič, Jože Molek, Nina Pokorn in Alojz Krivec so opravičili svojo od"
-    },
-    {
-      "text": "sotnost in predlagam, da jim zbor dopust odobri. Ali se zbor strinja s tem",
-      "x": 26.16,
-      "y": 352.79,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "sotnost in predlagam, da jim zbor dopust odobri. Ali se zbor strinja s tem"
-    },
-    {
-      "text": "predlogom? (Se strinja.)",
-      "x": 26.4,
-      "y": 341.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "predlogom? (Se strinja.)"
-    },
-    {
-      "text": "(Zapisnikar Dušan Bole prečita zapisnik 2. seje Republiškega zbora.)",
-      "x": 26.88,
-      "y": 319.67,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "(Zapisnikar Dušan Bole prečita zapisnik 2. seje Republiškega zbora.)"
-    },
-    {
-      "text": "odobren in da se podpiše. (Predsednik in zapisnikar podpišeta zapisnik.)",
-      "x": 26.64,
-      "y": 297.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "odobren in da se podpiše. (Predsednik in zapisnikar podpišeta zapisnik.)"
-    },
-    {
-      "text": "nje predloge:",
-      "x": 27.12,
-      "y": 275.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "nje predloge:"
-    },
-    {
-      "text": "planu Ljudske republike Slovenije za leto 1954; predlog proračuna LRS za",
-      "x": 27.12,
-      "y": 251.27,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "planu Ljudske republike Slovenije za leto 1954; predlog proračuna LRS za"
-    },
-    {
-      "text": "leto 1954; predlog zakona o potrditvi sklepnega računa LRS za leto 1952;",
-      "x": 27.36,
-      "y": 240.47,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "leto 1954; predlog zakona o potrditvi sklepnega računa LRS za leto 1952;"
-    },
-    {
-      "text": "predlog zakona o dodatnem proračunu za leto 1953; predlog zakona o skladih",
-      "x": 27.36,
-      "y": 229.43,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "predlog zakona o dodatnem proračunu za leto 1953; predlog zakona o skladih"
-    },
-    {
-      "text": "za urejanje voda; predlog zakona o skladih za obnovo, gojitev in varstvo",
-      "x": 27.36,
-      "y": 218.63,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "za urejanje voda; predlog zakona o skladih za obnovo, gojitev in varstvo"
-    },
-    {
-      "text": "gozdov; predlog zakona o spremembi zakona o ljudskih odborih mest in",
-      "x": 27.36,
-      "y": 207.59,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "gozdov; predlog zakona o spremembi zakona o ljudskih odborih mest in"
-    },
-    {
-      "text": "mestnih občin; predlog zakona o spremembi zakona o razdelitvi LRS na mesta,",
-      "x": 27.6,
-      "y": 196.55,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "mestnih občin; predlog zakona o spremembi zakona o razdelitvi LRS na mesta,"
-    },
-    {
-      "text": "okraje in občine; predlog zakona o začasnem okrajnem ljudskem odboru Celje;",
-      "x": 27.6,
-      "y": 185.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "okraje in občine; predlog zakona o začasnem okrajnem ljudskem odboru Celje;"
-    },
-    {
-      "text": "predlog za spremembo 76. člena ustavnega zakona;",
-      "x": 27.84,
-      "y": 174.23,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "predlog za spremembo 76. člena ustavnega zakona;"
-    },
-    {
-      "text": "Ljudske republike Slovenije;",
-      "x": 28.08,
-      "y": 149.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Ljudske republike Slovenije;"
-    },
-    {
-      "text": "o nagradah poslancev;",
-      "x": 28.32,
-      "y": 125.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "o nagradah poslancev;"
-    },
-    {
-      "text": "volitvah.",
-      "x": 28.56,
-      "y": 103.67,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "volitvah."
-    },
-    {
-      "text": "jih vzeli v delo pristojni odbori našega zbora. Naštete zadeve je treba obrav",
-      "x": 28.8,
-      "y": 82.07,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "jih vzeli v delo pristojni odbori našega zbora. Naštete zadeve je treba obrav"
     }
   ],
   "recovery_counts": {},

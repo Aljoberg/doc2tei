@@ -2,18 +2,19 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\06 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 1. septembra 1961 do 31. januarja 1962.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 26332,
-  "unmatched_count": 7964,
+  "unmatched_count": 20569,
   "rule_counts": {
+    "AFTER_GENERIC_NOTE": 2,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 9,
-    "CONSUMED_LINE": 58,
-    "GENERIC_NOTE": 17,
-    "HEAD": 14,
-    "PARAGRAPH": 16275,
+    "CONSUMED_LINE": 115,
+    "GENERIC_NOTE": 15,
+    "HEAD": 13,
+    "PARAGRAPH": 3254,
     "SCRIBE": 11,
     "SEG": 1018,
-    "SOURCE_ARTIFACT": 819,
-    "SPEAKER": 126,
+    "SOURCE_ARTIFACT": 1180,
+    "SPEAKER": 125,
     "TIME": 20
   },
   "page_counts": {
@@ -611,6 +612,158 @@
       "line_text": "'Џ"
     },
     {
+      "text": "997",
+      "x": 43.68,
+      "y": 571.56,
+      "page": 1,
+      "font_size": 26.0,
+      "line_text": "997"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 177.12,
+      "y": 499.81,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "4/ v",
+      "x": 288.96,
+      "y": 469.22,
+      "page": 1,
+      "font_size": 8.0,
+      "line_text": "4/ v"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 99.36,
+      "y": 438.95,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 99.36,
+      "y": 412.93,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 185.28,
+      "y": 358.84,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje od 1. septembra 1961 do 31. januarja 1962",
+      "x": 83.52,
+      "y": 302.53,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Seje od 1. septembra 1961 do 31. januarja 1962"
+    },
+    {
+      "text": "1962",
+      "x": 215.76,
+      "y": 89.8,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1962"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 199.68,
+      "y": 48.76,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 150.96,
+      "y": 505.57,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "\\/ 4/",
+      "x": 262.32,
+      "y": 474.9,
+      "page": 3,
+      "font_size": 8.0,
+      "line_text": "\\/ 4/"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 72.96,
+      "y": 444.71,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 73.44,
+      "y": 418.69,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 159.6,
+      "y": 364.36,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje od L septembra 1961 do 31. januarja 1962",
+      "x": 57.6,
+      "y": 309.01,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Seje od L septembra 1961 do 31. januarja 1962"
+    },
+    {
+      "text": "1962",
+      "x": 191.28,
+      "y": 95.8,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "1962"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 175.2,
+      "y": 55.24,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "997",
+      "x": 206.4,
+      "y": 273.0,
+      "page": 4,
+      "font_size": 26.0,
+      "line_text": "997"
+    },
+    {
+      "text": "/>Z.",
+      "x": 171.36,
+      "y": 171.03,
+      "page": 4,
+      "font_size": 17.0,
+      "line_text": "/>Z. V. 1963"
+    },
+    {
       "text": "V. 1963",
       "x": 210.24,
       "y": 171.03,
@@ -649,158 +802,6 @@
       "page": 5,
       "font_size": 10.0,
       "line_text": "zapisnikarja, da prebere zapisnik zadnje seje. (Zapisnikar Slavica Zirkelbach"
-    },
-    {
-      "text": "prebere zapisnik 20. seje.)",
-      "x": 24.0,
-      "y": 316.31,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "prebere zapisnik 20. seje.)"
-    },
-    {
-      "text": "se nihče.) Ce nihče, ugotavljam, da je zapisnik odobren in da se ga lahko",
-      "x": 24.0,
-      "y": 294.23,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "se nihče.) Ce nihče, ugotavljam, da je zapisnik odobren in da se ga lahko"
-    },
-    {
-      "text": "podpiše. (Predsednik in zapisnikar podpišeta zapisnik.)",
-      "x": 24.48,
-      "y": 283.43,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "podpiše. (Predsednik in zapisnikar podpišeta zapisnik.)"
-    },
-    {
-      "text": "je Ljudski skupščini LRS predložil v obravnavo in sklepanje Izvršni svet. Glede",
-      "x": 24.24,
-      "y": 261.35,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "je Ljudski skupščini LRS predložil v obravnavo in sklepanje Izvršni svet. Glede"
-    },
-    {
-      "text": "na to, da je bila prva točka po predlogu dnevnega reda, ki je bil poslan ljud",
-      "x": 24.48,
-      "y": 250.55,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "na to, da je bila prva točka po predlogu dnevnega reda, ki je bil poslan ljud"
-    },
-    {
-      "text": "skim poslancem, obravnavana že na skupni seji Republiškega zbora in Zbora",
-      "x": 24.48,
-      "y": 239.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "skim poslancem, obravnavana že na skupni seji Republiškega zbora in Zbora"
-    },
-    {
-      "text": "proizvajalcev, in sicer predlog odloka o podaljšanju mandata občinskih in",
-      "x": 24.24,
-      "y": 228.95,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "proizvajalcev, in sicer predlog odloka o podaljšanju mandata občinskih in"
-    },
-    {
-      "text": "okrajnih ljudskih odborov, predlagam za današnjo sejo naslednji dnevni red:",
-      "x": 24.48,
-      "y": 218.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "okrajnih ljudskih odborov, predlagam za današnjo sejo naslednji dnevni red:"
-    },
-    {
-      "text": "za šolstvo za leto 1961;",
-      "x": 24.48,
-      "y": 194.87,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "za šolstvo za leto 1961;"
-    },
-    {
-      "text": "zakona o Prešernovem skladu;",
-      "x": 24.72,
-      "y": 152.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zakona o Prešernovem skladu;"
-    },
-    {
-      "text": "nikov v LR Sloveniji;",
-      "x": 24.96,
-      "y": 130.79,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "nikov v LR Sloveniji;"
-    },
-    {
-      "text": "Univerze v Ljubljani.",
-      "x": 24.72,
-      "y": 109.19,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Univerze v Ljubljani."
-    },
-    {
-      "text": "dopolnilni predlog? (Ne javi se nihče.) Ker ni pripomb, ugotavljam, da je",
-      "x": 24.72,
-      "y": 85.19,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "dopolnilni predlog? (Ne javi se nihče.) Ker ni pripomb, ugotavljam, da je"
-    },
-    {
-      "text": "predlagani dnevni red sprejet.",
-      "x": 24.72,
-      "y": 74.63,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "predlagani dnevni red sprejet."
-    },
-    {
-      "text": "sklepanje o predlogu sklepa o soglasju k finančnemu načrtu Sklada LRS za",
-      "x": 24.72,
-      "y": 52.79,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "sklepanje o predlogu sklepa o soglasju k finančnemu načrtu Sklada LRS za"
-    },
-    {
-      "text": "šolstvo za leto 1961.",
-      "x": 24.72,
-      "y": 42.47,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "šolstvo za leto 1961."
-    },
-    {
-      "text": "odsotnega poročevalca odbora za gospodarstvo Republiškega zbora ljudskega",
-      "x": 30.96,
-      "y": 551.75,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "odsotnega poročevalca odbora za gospodarstvo Republiškega zbora ljudskega"
-    },
-    {
-      "text": "poslanca Matevža Haceta, prebere odborovo poročilo ljudski poslanec inž.",
-      "x": 30.72,
-      "y": 540.95,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "poslanca Matevža Haceta, prebere odborovo poročilo ljudski poslanec inž."
-    },
-    {
-      "text": "Ivo Klemenčič. — Glej priloge.)",
-      "x": 30.72,
-      "y": 530.39,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "Ivo Klemenčič. — Glej priloge.)"
     }
   ],
   "recovery_counts": {},

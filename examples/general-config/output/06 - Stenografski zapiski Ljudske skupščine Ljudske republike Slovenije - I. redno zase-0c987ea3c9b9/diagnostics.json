@@ -2,20 +2,20 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\2. sklic (1951-1953)\\06 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - I. redno zasedanje (Drugi sklic) 10. aprila do 8. junija 1951 in II. redno zasedanje (Drugi sklic) 14.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 11846,
-  "unmatched_count": 5816,
+  "unmatched_count": 9390,
   "rule_counts": {
+    "AFTER_GENERIC_NOTE": 8,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 2,
     "CONSUMED_LINE": 12,
-    "GENERIC_NOTE": 20,
-    "HEAD": 18,
-    "PARAGRAPH": 4971,
+    "GENERIC_NOTE": 16,
+    "HEAD": 16,
+    "PARAGRAPH": 1445,
     "SCRIBE": 19,
-    "SEG": 831,
+    "SEG": 795,
     "SOURCE_ARTIFACT": 17,
-    "SPEAKER": 128,
+    "SPEAKER": 120,
     "TIME": 4,
-    "UNMATCHED_LINE": 6,
     "UNSTRUCTURED_START": 1
   },
   "page_counts": {
@@ -294,6 +294,110 @@
   },
   "unmatched_samples": [
     {
+      "text": "342.533(497.4)\"1951\"",
+      "x": 12.72,
+      "y": 580.26,
+      "page": 1,
+      "font_size": 8.0,
+      "line_text": "342.533(497.4)\"1951\""
+    },
+    {
+      "text": "019520042",
+      "x": 12.96,
+      "y": 546.97,
+      "page": 1,
+      "font_size": 11.0,
+      "line_text": "019520042"
+    },
+    {
+      "text": "C0BISS",
+      "x": 135.36,
+      "y": 546.24,
+      "page": 1,
+      "font_size": 7.15,
+      "line_text": "C0BISS"
+    },
+    {
+      "text": "Steno^rafski zapiski",
+      "x": 142.32,
+      "y": 509.89,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Steno^rafski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 60.96,
+      "y": 448.77,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 60.72,
+      "y": 417.53,
+      "page": 1,
+      "font_size": 18.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "I. redno zasedanje",
+      "x": 138.24,
+      "y": 345.29,
+      "page": 1,
+      "font_size": 18.0,
+      "line_text": "I. redno zasedanje"
+    },
+    {
+      "text": "(Drugi sklic)",
+      "x": 177.6,
+      "y": 331.72,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
+    },
+    {
+      "text": "in",
+      "x": 208.8,
+      "y": 293.32,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "in"
+    },
+    {
+      "text": "II. redno zasedanje",
+      "x": 137.76,
+      "y": 266.81,
+      "page": 1,
+      "font_size": 18.0,
+      "line_text": "II. redno zasedanje"
+    },
+    {
+      "text": "(Drugi sklic)",
+      "x": 179.04,
+      "y": 251.08,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
+    },
+    {
+      "text": "Ш",
+      "x": 192.0,
+      "y": 152.82,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "Ш"
+    },
+    {
+      "text": "■",
+      "x": 197.04,
+      "y": 149.97,
+      "page": 1,
+      "font_size": 3.0,
+      "line_text": "■*•>"
+    },
+    {
       "text": "*•>",
       "x": 197.52,
       "y": 150.1,
@@ -302,196 +406,92 @@
       "line_text": "■*•>"
     },
     {
-      "text": "Ц",
-      "x": 213.6,
-      "y": 286.7,
-      "page": 4,
-      "font_size": 10.0,
-      "line_text": "•Ц^^У"
+      "text": "§SS",
+      "x": 201.36,
+      "y": 149.4,
+      "page": 1,
+      "font_size": 11.0,
+      "line_text": "§SS"
     },
     {
-      "text": "^^",
-      "x": 219.36,
-      "y": 287.13,
-      "page": 4,
-      "font_size": 10.0,
-      "line_text": "•Ц^^У"
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 127.68,
+      "y": 96.28,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
     },
     {
-      "text": "У",
-      "x": 234.0,
-      "y": 286.7,
-      "page": 4,
-      "font_size": 10.0,
-      "line_text": "•Ц^^У"
+      "text": "1952",
+      "x": 196.56,
+      "y": 65.93,
+      "page": 1,
+      "font_size": 18.0,
+      "line_text": "1952"
     },
     {
-      "text": "1. IV, 1952",
-      "x": 199.68,
-      "y": 258.61,
-      "page": 4,
+      "text": "Steno^rafski zapiski",
+      "x": 131.52,
+      "y": 509.65,
+      "page": 3,
       "font_size": 16.0,
-      "line_text": "J) 1. IV, 1952"
+      "line_text": "Steno^rafski zapiski"
     },
     {
-      "text": "■",
-      "x": 147.12,
-      "y": 212.05,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "republike Slovenije izdaja ■ Prezidij Ljudske skupščine Ljudske republike"
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 49.92,
+      "y": 447.59,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
     },
     {
-      "text": "Prezidij Ljudske skupščine Ljudske republike",
-      "x": 150.96,
-      "y": 212.41,
-      "page": 5,
-      "font_size": 11.0,
-      "line_text": "republike Slovenije izdaja ■ Prezidij Ljudske skupščine Ljudske republike"
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 49.44,
+      "y": 415.88,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
     },
     {
-      "text": "фгес",
-      "x": 350.87,
-      "y": 421.81,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "niso izkazali zaupanja samo nam, ki so nas Izvolili, temveč so фгес! vsem"
+      "text": "I. redno zasedanje",
+      "x": 127.2,
+      "y": 344.12,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "I. redno zasedanje"
     },
     {
-      "text": "! vsem",
-      "x": 371.03,
-      "y": 422.17,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "niso izkazali zaupanja samo nam, ki so nas Izvolili, temveč so фгес! vsem"
+      "text": "(Drugi sklic)",
+      "x": 166.56,
+      "y": 329.08,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
     },
     {
-      "text": "ЂогЈп",
-      "x": 345.6,
-      "y": 353.89,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "še v borbi za našo neodvisnost, svobodo in enakopravnost ter v ЂогЈп za mir"
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 112.56,
+      "y": 95.32,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
     },
     {
-      "text": "za mir",
-      "x": 373.68,
-      "y": 354.25,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "še v borbi za našo neodvisnost, svobodo in enakopravnost ter v ЂогЈп za mir"
+      "text": "1952",
+      "x": 181.2,
+      "y": 64.76,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "1952"
     },
     {
-      "text": "i",
-      "x": 320.16,
-      "y": 199.21,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "publika Jugoslavija! Naj živi MP Slovenije in Jugoslavije i maršalom Titom"
-    },
-    {
-      "text": "maršalom Titom",
-      "x": 329.28,
-      "y": 199.21,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "publika Jugoslavija! Naj živi MP Slovenije in Jugoslavije i maršalom Titom"
-    },
-    {
-      "text": "poslance: Ivana Novaka, Franca Primožiča, Mirka Zlatnarja, Jožeta Gričarja,",
-      "x": 18.24,
-      "y": 436.57,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "poslance: Ivana Novaka, Franca Primožiča, Mirka Zlatnarja, Jožeta Gričarja,"
-    },
-    {
-      "text": "Ervina Dolgana, Viktorja Kovača, Jožeta Šemeta, Ivana Štucina, Heleno",
-      "x": 18.24,
-      "y": 425.53,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "Ervina Dolgana, Viktorja Kovača, Jožeta Šemeta, Ivana Štucina, Heleno"
-    },
-    {
-      "text": "Borovšak, Leona Zalaznika in Janeza Žuniča.",
-      "x": 18.48,
-      "y": 414.01,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "Borovšak, Leona Zalaznika in Janeza Žuniča."
-    },
-    {
-      "text": "predlog? (Nihče.) Ker nihče, dajem predlog ljudskega poslanca Matije Male",
-      "x": 18.48,
-      "y": 392.41,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "predlog? (Nihče.) Ker nihče, dajem predlog ljudskega poslanca Matije Male"
-    },
-    {
-      "text": "žiča",
-      "x": 18.72,
-      "y": 381.61,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "žiča пгГglasovanje. Kdor' je za predloženo listo članov vorifikacijskega odbora,"
-    },
-    {
-      "text": "пгГ",
-      "x": 37.91,
-      "y": 381.25,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "žiča пгГglasovanje. Kdor' je za predloženo listo članov vorifikacijskega odbora,"
-    },
-    {
-      "text": "glasovanje. Kdor' je za predloženo listo članov vorifikacijskega odbora,",
-      "x": 50.87,
-      "y": 381.61,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "žiča пгГglasovanje. Kdor' je za predloženo listo članov vorifikacijskega odbora,"
-    },
-    {
-      "text": "naj prosim dvigne roko. (Vsi poslanci dvignejo roko.) Hvala. Je kdo proti?",
-      "x": 18.72,
-      "y": 370.81,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "naj prosim dvigne roko. (Vsi poslanci dvignejo roko.) Hvala. Je kdo proti?"
-    },
-    {
-      "text": "(Nihče.) Ugotavljam, da je predložena lista soglasno sprejeta 'in so za člane",
-      "x": 19.2,
-      "y": 359.53,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "(Nihče.) Ugotavljam, da je predložena lista soglasno sprejeta 'in so za člane"
-    },
-    {
-      "text": "vorifikacijskega odbora izvoljeni naslednji ljudski poslanci: Ivan Novak,",
-      "x": 18.96,
-      "y": 348.49,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "vorifikacijskega odbora izvoljeni naslednji ljudski poslanci: Ivan Novak,"
-    },
-    {
-      "text": "Franc Primožič, Mirko Zlatnar, Jože Gričar, Ervin Dolgan, Viktor Kovač,",
-      "x": 18.72,
-      "y": 337.45,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "Franc Primožič, Mirko Zlatnar, Jože Gričar, Ervin Dolgan, Viktor Kovač,"
-    },
-    {
-      "text": "Jože Seme Ivan Štucin, Helena Borovšak, Leon Zalnznik in Janez Žunič.",
-      "x": 18.24,
-      "y": 326.65,
-      "page": 7,
-      "font_size": 11.0,
-      "line_text": "Jože Seme Ivan Štucin, Helena Borovšak, Leon Zalnznik in Janez Žunič."
+      "text": "997",
+      "x": 202.08,
+      "y": 327.48,
+      "page": 4,
+      "font_size": 26.0,
+      "line_text": "997"
     }
   ],
   "recovery_counts": {},

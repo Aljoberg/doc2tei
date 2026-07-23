@@ -63,12 +63,6 @@
   <person xml:id="StaneRebernak">
     <persName>Stane Rebernak</persName>
   </person>
-  <person xml:id="VilmaPirKovic">
-    <persName>Podpredsednik inž. Vilma Pir kovic</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="PepcaJež">
     <persName>Pepca Jež</persName>
   </person>
@@ -117,32 +111,14 @@
   <person xml:id="JanezKermavner">
     <persName>Janez Kermavner</persName>
   </person>
-  <person xml:id="MiHaMarinko">
-    <persName>Predsednik Mi ha Marinko</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MatevžHace">
     <persName>Matevž Hace</persName>
-  </person>
-  <person xml:id="MihaMarinKo">
-    <persName>Predsednik Miha Marin ko</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="JožeKlanšek">
     <persName>Jože Klanšek</persName>
   </person>
   <person xml:id="FrancMarinko">
     <persName>Franc Marinko</persName>
-  </person>
-  <person xml:id="Mihamarinko">
-    <persName>Predsednik MihaMarinko</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="MarijanDermastia">
     <persName>Dr. Marijan Dermastia</persName>
@@ -227,8 +203,5 @@
   </person>
   <person xml:id="AleksanderPirher">
     <persName>Aleksander Pirher</persName>
-  </person>
-  <person xml:id="JožEPetejan">
-    <persName>Jož e Petejan</persName>
   </person>
 </listPerson>

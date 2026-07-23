@@ -2,20 +2,21 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\2. sklic (1951-1953)\\04 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - III. redno zasedanje (Drugi sklic) 11. aprila - 12.aprila 1952.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 12356,
-  "unmatched_count": 4077,
+  "unmatched_count": 8924,
   "rule_counts": {
-    "APPENDIX_HEAD": 1,
+    "AFTER_GENERIC_NOTE": 1,
+    "APPENDIX_HEAD": 2,
     "CONSUMED_LINE": 8,
     "CONTENTS": 1,
-    "GENERIC_NOTE": 11,
-    "HEAD": 8,
-    "PARAGRAPH": 7890,
+    "GENERIC_NOTE": 6,
+    "HEAD": 4,
+    "PARAGRAPH": 3060,
     "SCRIBE": 7,
-    "SEG": 239,
+    "SEG": 232,
     "SOURCE_ARTIFACT": 9,
-    "SPEAKER": 102,
+    "SPEAKER": 100,
     "TIME": 1,
-    "UNMATCHED_LINE": 2
+    "UNSTRUCTURED_START": 1
   },
   "page_counts": {
     "1": 13,
@@ -233,204 +234,204 @@
   },
   "unmatched_samples": [
     {
-      "text": "ИЈЗЗ",
-      "x": 232.32,
-      "y": 482.3,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ki se je vršila dne 11. aprila ИЈЗЗ v Ljubljani."
+      "text": "342.533(497.1)\"1S52",
+      "x": 12.0,
+      "y": 585.52,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "342.533(497.1)\"1S52"
     },
     {
-      "text": "v Ljubljani.",
-      "x": 255.6,
+      "text": "019520113",
+      "x": 12.0,
+      "y": 553.19,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "019520113"
+    },
+    {
+      "text": "COBISS 0",
+      "x": 133.44,
+      "y": 551.44,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "COBISS 0"
+    },
+    {
+      "text": "Stenoo;rafski zapiski",
+      "x": 147.6,
+      "y": 509.38,
+      "page": 1,
+      "font_size": 15.0,
+      "line_text": "Stenoo;rafski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 72.0,
+      "y": 448.29,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 72.0,
+      "y": 416.84,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "III. redno zasedanje",
+      "x": 139.2,
+      "y": 344.6,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "III. redno zasedanje"
+    },
+    {
+      "text": "(Drugi sklic)",
+      "x": 185.04,
+      "y": 324.52,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
+    },
+    {
+      "text": "11. aprila — 12. aprila 1952",
+      "x": 140.4,
+      "y": 299.08,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "11. aprila — 12. aprila 1952"
+    },
+    {
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 132.0,
+      "y": 80.92,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1952",
+      "x": 204.0,
+      "y": 51.8,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "1952"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 130.08,
+      "y": 518.29,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 53.76,
+      "y": 456.93,
+      "page": 3,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 53.52,
+      "y": 425.45,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "III. redno zasedanje",
+      "x": 120.48,
+      "y": 352.73,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "III. redno zasedanje"
+    },
+    {
+      "text": "(Drugi sklic)",
+      "x": 166.8,
+      "y": 332.44,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
+    },
+    {
+      "text": "11. aprila — 12. aprila 1952",
+      "x": 121.92,
+      "y": 306.76,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "11. aprila — 12. aprila 1952"
+    },
+    {
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 112.8,
+      "y": 89.56,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1952",
+      "x": 184.08,
+      "y": 60.65,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "1952"
+    },
+    {
+      "text": ": : •",
+      "x": 184.8,
+      "y": 377.61,
+      "page": 4,
+      "font_size": 10.0,
+      "line_text": ": : •"
+    },
+    {
+      "text": "/>ii.",
+      "x": 154.08,
+      "y": 304.57,
+      "page": 4,
+      "font_size": 15.0,
+      "line_text": "/>ii."
+    },
+    {
+      "text": "TISK TISKARNE »TONETA TOMŠIČA- V L.IURUANI",
+      "x": 111.36,
+      "y": 74.13,
+      "page": 4,
+      "font_size": 9.0,
+      "line_text": "TISK TISKARNE »TONETA TOMŠIČA- V L.IURUANI"
+    },
+    {
+      "text": "Ljudske skupščine Ljudske republike Slovenije",
+      "x": 21.84,
+      "y": 503.17,
+      "page": 5,
+      "font_size": 16.0,
+      "line_text": "Ljudske skupščine Ljudske republike Slovenije"
+    },
+    {
+      "text": "ki se je vršila dne 11. aprila",
+      "x": 90.24,
       "y": 482.63,
       "page": 5,
       "font_size": 10.0,
       "line_text": "ki se je vršila dne 11. aprila ИЈЗЗ v Ljubljani."
     },
     {
-      "text": "strativnega odbora? (Sprejme.)",
-      "x": 50.16,
-      "y": 278.61,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "strativnega odbora? (Sprejme.)"
-    },
-    {
-      "text": "Rudolf llribernik, Marjan Ahčin, Karel l.evičnik, Josip Vidmar. Albert Ja",
-      "x": 50.4,
-      "y": 257.73,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "Rudolf llribernik, Marjan Ahčin, Karel l.evičnik, Josip Vidmar. Albert Ja"
-    },
-    {
-      "text": "kopič, Nace Majcen, Edvard Kardelj, Boris Kidrič. Jože Brilej in Salko llukič",
-      "x": 50.16,
-      "y": 246.93,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "kopič, Nace Majcen, Edvard Kardelj, Boris Kidrič. Jože Brilej in Salko llukič"
-    },
-    {
-      "text": "so se opravičili, zato predlagam skupščini, da jim zaprošeni dopust odobri.",
-      "x": 49.68,
-      "y": 236.13,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "so se opravičili, zato predlagam skupščini, da jim zaprošeni dopust odobri."
-    },
-    {
-      "text": "Sprejme skupščina ta predlog? (Sprejme.)",
-      "x": 49.92,
-      "y": 225.33,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "Sprejme skupščina ta predlog? (Sprejme.)"
-    },
-    {
-      "text": "skupščini resolucijo s protestnega zborovanja v Žalcu, v kateri zavračajo",
-      "x": 50.16,
-      "y": 203.97,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "skupščini resolucijo s protestnega zborovanja v Žalcu, v kateri zavračajo"
-    },
-    {
-      "text": "in obsojajo zločinske želje in namene italijanskih fašistov ter njihov pohlep",
-      "x": 49.68,
-      "y": 193.65,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "in obsojajo zločinske želje in namene italijanskih fašistov ter njihov pohlep"
-    },
-    {
-      "text": "po svobodnem ozemlju Trsta.",
-      "x": 49.68,
-      "y": 183.33,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "po svobodnem ozemlju Trsta."
-    },
-    {
-      "text": "javko, V kateri se prebivalci vasi Trnovo pri Gorici izražajo zoper ukinitev",
-      "x": 48.72,
-      "y": 161.25,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "javko, V kateri se prebivalci vasi Trnovo pri Gorici izražajo zoper ukinitev"
-    },
-    {
-      "text": "občine. Nadalje je prebivalstvo K TO Renče poslalo protestno spomenico",
-      "x": 48.72,
-      "y": 150.69,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "občine. Nadalje je prebivalstvo K TO Renče poslalo protestno spomenico"
-    },
-    {
-      "text": "zoper priključitev Renč k občini Šempeter, Ce bo skupščina hotela, bom to",
-      "x": 48.96,
-      "y": 140.37,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "zoper priključitev Renč k občini Šempeter, Ce bo skupščina hotela, bom to"
-    },
-    {
-      "text": "Spomenico prebral.",
-      "x": 49.2,
-      "y": 129.13,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "Spomenico prebral."
-    },
-    {
-      "text": "vsako spremembo svojega stanovanja oziroma službe, ker je sicer nemogoče",
-      "x": 49.68,
-      "y": 108.69,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "vsako spremembo svojega stanovanja oziroma službe, ker je sicer nemogoče"
-    },
-    {
-      "text": "redno dostavljati potrebna obvestila. Vračajo se pavšali in pisma ter potem",
-      "x": 49.44,
-      "y": 97.89,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "redno dostavljati potrebna obvestila. Vračajo se pavšali in pisma ter potem"
-    },
-    {
-      "text": "ni jasno, kam je bil kdo premeščen oziroma kje stanuje, da bi se mu mogle te",
-      "x": 49.92,
-      "y": 87.09,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "ni jasno, kam je bil kdo premeščen oziroma kje stanuje, da bi se mu mogle te"
-    },
-    {
-      "text": "stvari poslati. Prosil bi zato, da bi te stvari redno in sproti javljali.",
-      "x": 49.2,
-      "y": 76.53,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "stvari poslati. Prosil bi zato, da bi te stvari redno in sproti javljali."
-    },
-    {
-      "text": "io",
-      "x": 156.96,
-      "y": 607.65,
-      "page": 7,
-      "font_size": 9.0,
-      "line_text": "Prehajam na dnevni red, io je na določitev dnevnega reda. Glede uvo"
-    },
-    {
-      "text": "je na določitev dnevnega reda. Glede uvo",
-      "x": 169.92,
-      "y": 607.65,
-      "page": 7,
-      "font_size": 9.0,
-      "line_text": "Prehajam na dnevni red, io je na določitev dnevnega reda. Glede uvo"
-    },
-    {
-      "text": "doma ohjavljeiuli sporočil in sklepa, ki ga je sprejela ljudska skupščina na",
-      "x": 15.84,
-      "y": 596.85,
-      "page": 7,
-      "font_size": 9.0,
-      "line_text": "doma ohjavljeiuli sporočil in sklepa, ki ga je sprejela ljudska skupščina na"
-    },
-    {
-      "text": "1. seji 1. izrednega zasedanja Ljudske skupščine LRS drugega sklica dne",
-      "x": 16.56,
-      "y": 586.29,
-      "page": 7,
-      "font_size": 9.0,
-      "line_text": "1. seji 1. izrednega zasedanja Ljudske skupščine LRS drugega sklica dne"
-    },
-    {
-      "text": "21. marca 1952 v zvezi s predlogom odbora za gospodarstvo in finance o izvo",
-      "x": 15.84,
-      "y": 575.73,
-      "page": 7,
-      "font_size": 9.0,
-      "line_text": "21. marca 1952 v zvezi s predlogom odbora za gospodarstvo in finance o izvo"
-    },
-    {
-      "text": "litvi posebne komisije za proučitev obrtnega vprašanja v zvezi z družbenim",
-      "x": 16.32,
-      "y": 565.17,
-      "page": 7,
-      "font_size": 9.0,
-      "line_text": "litvi posebne komisije za proučitev obrtnega vprašanja v zvezi z družbenim"
-    },
-    {
-      "text": "planom, da se ta komisija izvoli na prvem piiliodnjem zasedanju ljudske",
-      "x": 16.56,
-      "y": 554.85,
-      "page": 7,
-      "font_size": 9.0,
-      "line_text": "planom, da se ta komisija izvoli na prvem piiliodnjem zasedanju ljudske"
+      "text": "ИЈЗЗ",
+      "x": 232.32,
+      "y": 482.3,
+      "page": 5,
+      "font_size": 10.0,
+      "line_text": "ki se je vršila dne 11. aprila ИЈЗЗ v Ljubljani."
     }
   ],
   "recovery_counts": {},

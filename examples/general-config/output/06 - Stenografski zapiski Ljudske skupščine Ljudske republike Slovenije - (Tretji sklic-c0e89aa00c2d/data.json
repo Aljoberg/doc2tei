@@ -21,7 +21,6 @@
     "#JanezKermavner": "Janez Kermavner:",
     "#MilanZidar": "Milan Zidar:",
     "#MarjanGarzarolli": "Marjan Garzarolli:",
-    "#MaVricijBore": "Predsednik Ma v r i c i j Bore:",
     "#MiranMejak": "Inž. Miran Mejak:",
     "#GregorKlančnik": "Gregor Klančnik:",
     "#KarelGrm": "Karel Grm:",
@@ -29,8 +28,7 @@
     "#JakobMojškerc": "Podpredsednik Jakob Mojškerc:",
     "#MitjaRibičič": "Mitja Ribičič:",
     "#LojzePiškur": "Lojze Piškur:",
-    "#VladoVodopivec": "Vlado Vodopivec:",
-    "#PoročevalecPredsednik": "Poročevalec; Predsednik:"
+    "#VladoVodopivec": "Vlado Vodopivec:"
   },
   "warnings": [
     "20 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."

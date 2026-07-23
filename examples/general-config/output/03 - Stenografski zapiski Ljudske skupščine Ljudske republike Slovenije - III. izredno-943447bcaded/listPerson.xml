@@ -15,25 +15,4 @@
   <person xml:id="PoročevalecJožeGlobačnik">
     <persName>Poročevalec Jože Globačnik</persName>
   </person>
-  <person xml:id="OpravljaTeleZadeve">
-    <persName>Predsednik opravlja tele zadeve</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="SplošneDoločbi">
-    <persName>SPLOŠNE DOLOČBI'</persName>
-  </person>
-  <person xml:id="MaliRošpoh">
-    <persName>Mali Rošpoh</persName>
-  </person>
-  <person xml:id="RošpoliI">
-    <persName>Rošpoli I</persName>
-  </person>
-  <person xml:id="VladeInPredsednik">
-    <persName>Podpredsednik vlade in predsednik gospodarskega svela Ivan Maček</persName>
-    <affiliation role="podpredsednik">
-      <roleName xml:lang="sl">Podpredsednik vlade</roleName>
-    </affiliation>
-  </person>
 </listPerson>

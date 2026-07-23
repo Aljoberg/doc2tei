@@ -21,7 +21,6 @@
     "#NikoŠilih": "Niko Šilih:",
     "#Vi1MaPirkovič": "Podpredsednik i n ž. V i 1 m a Pirkovič:",
     "#IvanCurk": "Ivan Curk:",
-    "#Vi1Mapirkovič": "Podpredsednik i n ž. V i 1 m a P i r k o v i č :",
     "#FeliksRazdrih": "Feliks Razdrih:",
     "#RomanAlbreht": "Predsednik Roman Albreht:",
     "#ŠtefanPavšič": "Štefan Pavšič:",
@@ -45,6 +44,6 @@
     "#IvanNovak": "Ivan Novak:"
   },
   "warnings": [
-    "14 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+    "13 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
   ]
 }

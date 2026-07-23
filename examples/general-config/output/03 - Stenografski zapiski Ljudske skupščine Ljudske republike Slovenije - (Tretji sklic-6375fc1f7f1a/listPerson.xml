@@ -93,12 +93,6 @@
   <person xml:id="MilošVehovar">
     <persName>Inž. Miloš Vehovar</persName>
   </person>
-  <person xml:id="MihaMarjnko">
-    <persName>Predsednik Miha MarJnko</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MiranCvenk">
     <persName>Miran Cvenk</persName>
   </person>
@@ -122,11 +116,5 @@
   </person>
   <person xml:id="FrancKrese">
     <persName>Franc Krese</persName>
-  </person>
-  <person xml:id="PoročevalecPredsednik">
-    <persName>Poročevalec Predsednik</persName>
-  </person>
-  <person xml:id="JožeBaričevič">
-    <persName>Jože Baričevič, dr. Ivan Bele, Jože Cerne, Albin Dobrajc,</persName>
   </person>
 </listPerson>

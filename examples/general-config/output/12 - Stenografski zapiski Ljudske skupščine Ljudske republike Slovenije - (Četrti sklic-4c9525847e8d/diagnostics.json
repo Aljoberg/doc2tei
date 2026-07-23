@@ -2,20 +2,20 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\12 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje od 1. maja do 31.oktobra 1959.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 21970,
-  "unmatched_count": 7214,
+  "unmatched_count": 15480,
   "rule_counts": {
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 10,
-    "CONSUMED_LINE": 89,
-    "GENERIC_NOTE": 15,
-    "HEAD": 24,
-    "PARAGRAPH": 12246,
+    "CONSUMED_LINE": 109,
+    "GENERIC_NOTE": 14,
+    "HEAD": 21,
+    "PARAGRAPH": 4305,
     "SCRIBE": 13,
-    "SEG": 1475,
-    "SOURCE_ARTIFACT": 718,
-    "SPEAKER": 145,
-    "TIME": 19,
-    "UNMATCHED_LINE": 1
+    "SEG": 850,
+    "SOURCE_ARTIFACT": 1004,
+    "SPEAKER": 139,
+    "TIME": 18,
+    "UNSTRUCTURED_START": 6
   },
   "page_counts": {
     "1": 15,
@@ -521,6 +521,30 @@
   },
   "unmatched_samples": [
     {
+      "text": "а",
+      "x": 83.28,
+      "y": 574.02,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "а"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 177.84,
+      "y": 530.29,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "V",
+      "x": 290.64,
+      "y": 499.86,
+      "page": 1,
+      "font_size": 8.0,
+      "line_text": "V ч/"
+    },
+    {
       "text": "ч",
       "x": 307.44,
       "y": 499.6,
@@ -535,6 +559,94 @@
       "page": 1,
       "font_size": 8.0,
       "line_text": "V ч/"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 93.12,
+      "y": 470.39,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 93.6,
+      "y": 446.77,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(fielrli sklic)",
+      "x": 190.8,
+      "y": 393.88,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(fielrli sklic)"
+    },
+    {
+      "text": "Seje od 1. maja do 31. okiolira 1959",
+      "x": 119.04,
+      "y": 340.36,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Seje od 1. maja do 31. okiolira 1959"
+    },
+    {
+      "text": "1959",
+      "x": 216.72,
+      "y": 133.96,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1959"
+    },
+    {
+      "text": "Ljubljana",
+      "x": 198.96,
+      "y": 93.4,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Ljubljana"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 162.0,
+      "y": 540.87,
+      "page": 3,
+      "font_size": 17.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 70.56,
+      "y": 481.19,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 70.8,
+      "y": 457.81,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(telrli sklic)",
+      "x": 167.76,
+      "y": 404.44,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(telrli sklic)"
+    },
+    {
+      "text": "Sejo od 1. maja do",
+      "x": 95.28,
+      "y": 351.16,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Sejo od 1. maja do 'M. oktobra 1959"
     },
     {
       "text": "'M.",
@@ -553,12 +665,44 @@
       "line_text": "Sejo od 1. maja do 'M. oktobra 1959"
     },
     {
+      "text": "f",
+      "x": 190.32,
+      "y": 230.87,
+      "page": 3,
+      "font_size": 7.0,
+      "line_text": "f '"
+    },
+    {
       "text": "'",
       "x": 198.24,
       "y": 230.87,
       "page": 3,
       "font_size": 7.0,
       "line_text": "f '"
+    },
+    {
+      "text": "1959",
+      "x": 189.12,
+      "y": 142.84,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "1959"
+    },
+    {
+      "text": "L j u b i j a n a",
+      "x": 171.6,
+      "y": 102.28,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "L j u b i j a n a"
+    },
+    {
+      "text": "i) a V. 1963/£f/",
+      "x": 150.0,
+      "y": 178.16,
+      "page": 4,
+      "font_size": 17.0,
+      "line_text": "i) a V. 1963/£f/"
     },
     {
       "text": "Pričenjam 7. sejo Republiškega zbora Ljudsko skupščine Ljudske republike",
@@ -575,150 +719,6 @@
       "page": 5,
       "font_size": 9.0,
       "line_text": "Slovenije, ki jo je sklical predsednik Ljudske skupščine Ljudske republike"
-    },
-    {
-      "text": "Slovenije. Zapisnik današnje seje bo vodila tovarišica Slavica Zirkelbach.",
-      "x": 19.92,
-      "y": 402.93,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "Slovenije. Zapisnik današnje seje bo vodila tovarišica Slavica Zirkelbach."
-    },
-    {
-      "text": "Angela Ocepek, Ivan Rančigaj, Ivan Regent, Lojzka Stropnik, Mira Svetina, Jože",
-      "x": 20.16,
-      "y": 381.57,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "Angela Ocepek, Ivan Rančigaj, Ivan Regent, Lojzka Stropnik, Mira Svetina, Jože"
-    },
-    {
-      "text": "Tramšek, Maks Vale in inž. Pavle Zaucer. Ali jim zbor odsotnost opraviči?",
-      "x": 19.92,
-      "y": 370.77,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "Tramšek, Maks Vale in inž. Pavle Zaucer. Ali jim zbor odsotnost opraviči?"
-    },
-    {
-      "text": "(Poslanci se strinjajo.) Ker se zbor strinja, ugotavljarn, da je omenjenim po",
-      "x": 20.64,
-      "y": 360.21,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "(Poslanci se strinjajo.) Ker se zbor strinja, ugotavljarn, da je omenjenim po"
-    },
-    {
-      "text": "slancem odsotnost opravičena.",
-      "x": 19.92,
-      "y": 349.41,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "slancem odsotnost opravičena."
-    },
-    {
-      "text": "pisnik G. seje. (Zapisnikar Drago Seliger prebere zapisnik 6. seje.)",
-      "x": 20.4,
-      "y": 327.81,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "pisnik G. seje. (Zapisnikar Drago Seliger prebere zapisnik 6. seje.)"
-    },
-    {
-      "text": "nihče.) Ker nihče, menim, da je zapisnik odobren in da se lahko podpiše.",
-      "x": 20.88,
-      "y": 305.97,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "nihče.) Ker nihče, menim, da je zapisnik odobren in da se lahko podpiše."
-    },
-    {
-      "text": "(Predsedujoči Milan Apih in zapisnikar Drago Seliger podpišeta zapisnik.)",
-      "x": 20.88,
-      "y": 295.41,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "(Predsedujoči Milan Apih in zapisnikar Drago Seliger podpišeta zapisnik.)"
-    },
-    {
-      "text": "Ljudske republike Slovenije za leto 1959;",
-      "x": 20.64,
-      "y": 248.37,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "Ljudske republike Slovenije za leto 1959;"
-    },
-    {
-      "text": "močjih okrajev in občin v Ljudski republiki Sloveniji;",
-      "x": 20.88,
-      "y": 226.77,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "močjih okrajev in občin v Ljudski republiki Sloveniji;"
-    },
-    {
-      "text": "o izvršitvi proračuna Ljudske republike Slovenije (republiškega proračuna) za",
-      "x": 20.64,
-      "y": 204.93,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "o izvršitvi proračuna Ljudske republike Slovenije (republiškega proračuna) za"
-    },
-    {
-      "text": "leto 1958;",
-      "x": 21.12,
-      "y": 193.41,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "leto 1958;"
-    },
-    {
-      "text": "o agrarni reformi in kolonizaciji v Ljudski republiki Sloveniji;",
-      "x": 20.88,
-      "y": 172.77,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "o agrarni reformi in kolonizaciji v Ljudski republiki Sloveniji;"
-    },
-    {
-      "text": "republiškega investicijskega sklada za leto 1958;",
-      "x": 20.64,
-      "y": 150.93,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "republiškega investicijskega sklada za leto 1958;"
-    },
-    {
-      "text": "nitvi statuta Univerze v Ljubljani;",
-      "x": 20.88,
-      "y": 129.09,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "nitvi statuta Univerze v Ljubljani;"
-    },
-    {
-      "text": "sveta Fakultete za splošno medicine in stomatologijo Univerze v Ljubljani in",
-      "x": 20.4,
-      "y": 106.53,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "sveta Fakultete za splošno medicine in stomatologijo Univerze v Ljubljani in"
-    },
-    {
-      "text": "o izvolitvi novega člana sveta te fakultete;",
-      "x": 20.64,
-      "y": 96.45,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "o izvolitvi novega člana sveta te fakultete;"
-    },
-    {
-      "text": "liškega zbora.",
-      "x": 20.88,
-      "y": 74.37,
-      "page": 5,
-      "font_size": 9.0,
-      "line_text": "liškega zbora."
     }
   ],
   "recovery_counts": {},

@@ -1,19 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <listPerson xmlns="http://www.tei-c.org/ns/1.0">
-  <person xml:id="PavleŽaucer">
-    <persName>Predsednik inž. Pavle Žaucer</persName>
+  <person xml:id="PavleZaucer">
+    <persName>Predsednik inž. Pavle Zaucer</persName>
     <affiliation role="predsednik">
       <roleName xml:lang="sl">Predsednik</roleName>
     </affiliation>
   </person>
   <person xml:id="MiranKošmelj">
     <persName>Miran Košmelj</persName>
-  </person>
-  <person xml:id="PavleZaucer">
-    <persName>Predsednik inž. Pavle Zaucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="NikoŠilih">
     <persName>Niko Šilih</persName>
@@ -24,12 +18,6 @@
   <person xml:id="JožePotrč">
     <persName>Dr. Jože Potrč</persName>
   </person>
-  <person xml:id="Pavle2Aucer">
-    <persName>Predsednik inž. Pavle 2 a u c e r</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="AlojzLibnik">
     <persName>Alojz Libnik</persName>
   </person>
@@ -38,12 +26,6 @@
   </person>
   <person xml:id="MilanKristan">
     <persName>Milan Kristan</persName>
-  </person>
-  <person xml:id="PavelZaucer">
-    <persName>Predsednik inž. Pavel Zaucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="LudvikGabrovšek">
     <persName>Ludvik Gabrovšek</persName>
@@ -71,12 +53,6 @@
   </person>
   <person xml:id="AlbinJensterle">
     <persName>Albin Jensterle</persName>
-  </person>
-  <person xml:id="PavleZaueer">
-    <persName>Predsednik inž. Pavle Zaueer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="FrancPirkovič">
     <persName>Franc Pirkovič</persName>
@@ -107,12 +83,6 @@
   </person>
   <person xml:id="MatijaMaležič">
     <persName>Matija Maležič</persName>
-  </person>
-  <person xml:id="LojzeOČepeK">
-    <persName>Predsednik Lojze O čepe k</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="StaneFele">
     <persName>Stane Fele</persName>
@@ -206,8 +176,5 @@
   </person>
   <person xml:id="AntonPeternelj">
     <persName>Anton Peternelj</persName>
-  </person>
-  <person xml:id="KarelSterban">
-    <persName>Karel Sterban</persName>
   </person>
 </listPerson>

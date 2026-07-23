@@ -2,11 +2,9 @@
   "speakers": {
     "#PavleZaucer": "Predsednik inž. Pavle Zaucer:",
     "#JožeIngolič": "Jože Ingolič:",
-    "#Pavle2Aucer": "Predsednik inž. Pavle 2aucer:",
     "#ToneKropušek": "Tone Kropušek:",
     "#TineLah": "Tine Lah:",
     "#TineRemškar": "Tine Remškar:",
-    "#PavleZauccr": "Predsednik inž. Pavle Zauccr:",
     "#MihaelaDerjnastia": "Predsedujoča Mihaela Derjnastia:",
     "#JakobŽen": "Jakob Žen:",
     "#JožaVilfan": "Dr. Joža Vilfan:",
@@ -14,13 +12,11 @@
     "#IvanPotrč": "Ivan Potrč:",
     "#DavorinFerligoj": "Davorin Ferligoj:",
     "#BorisKocijančič": "Boris Kocijančič:",
-    "#MatijaMaležič": "Matija Maležič:",
     "#MatijaMa1Ežič": "Matija M a 1 e ž i č :",
     "#ŠtefkaLorbek": "Inž. Štefka Lorbek:",
     "#LojzeOcepek": "Predsednik Lojze Ocepek:",
     "#RudoltGanziti": "RudolT Ganziti:",
     "#ToneBole": "Tone Bole:",
-    "#MatijaMaležlc": "Matija Maležlc:",
     "#ŠtefanAntalič": "Štefan Antalič:",
     "#IvanAvsec": "Ivan Avsec:",
     "#HenrikCigoj": "Henrik Cigoj:",
@@ -52,20 +48,17 @@
     "#IvanZmahar": "Ivan Zmahar:",
     "#JožeSlavič": "Jože Slavič:",
     "#MaksVale": "Maks Vale:",
-    "#Mihamarinko": "Predsednik M i h a M a r i n k o :",
     "#IvanVideniČ": "Ivan Videni č:",
     "#MirkoRovšček": "Mirko Rovšček:",
     "#FrancŠebjanič": "Franc Šebjanič:",
     "#StaneKavčič": "Stane Kavčič:",
-    "#RudolfGanziti": "Rudolf Ganziti:",
     "#PredsednikMihaMarinko": "• Predsednik Miha Marinko:",
     "#IvoKlemenčič": "Inž. Ivo Klemenčič:",
     "#RikoJerman": "Riko Jerman:",
-    "#MiHaMarinko": "Predsednik Mi h a Marinko:",
     "#MirkoRemec": "Mirko Remec:",
     "#MirkoZlatnar": "Mirko Zlatnar:"
   },
   "warnings": [
-    "52 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
+    "35 raised numeric run(s) had no matching footnote definition and were preserved as <hi rend='superscript'> instead of dangling references."
   ]
 }

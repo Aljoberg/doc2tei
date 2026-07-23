@@ -2,17 +2,18 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\4. sklic (1958-1963)\\01 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - (Četrti sklic) - Seje 9. aprila 1963 - (Ustavna razprava).pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 12160,
-  "unmatched_count": 2928,
+  "unmatched_count": 8904,
   "rule_counts": {
+    "AFTER_GENERIC_NOTE": 1,
     "APPENDIX_HEAD": 1,
     "CHAIRMAN": 3,
-    "CONSUMED_LINE": 25,
+    "CONSUMED_LINE": 44,
     "GENERIC_NOTE": 10,
-    "HEAD": 8,
-    "PARAGRAPH": 8455,
+    "HEAD": 7,
+    "PARAGRAPH": 2354,
     "SCRIBE": 6,
-    "SEG": 398,
-    "SOURCE_ARTIFACT": 285,
+    "SEG": 397,
+    "SOURCE_ARTIFACT": 392,
     "SPEAKER": 35,
     "TIME": 6
   },
@@ -299,6 +300,22 @@
   },
   "unmatched_samples": [
     {
+      "text": "Sejni zapiski",
+      "x": 181.68,
+      "y": 522.15,
+      "page": 1,
+      "font_size": 17.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "w",
+      "x": 296.4,
+      "y": 491.58,
+      "page": 1,
+      "font_size": 9.0,
+      "line_text": "w ч/"
+    },
+    {
       "text": "ч",
       "x": 312.0,
       "y": 491.19,
@@ -313,6 +330,150 @@
       "page": 1,
       "font_size": 9.0,
       "line_text": "w ч/"
+    },
+    {
+      "text": "LJUDSKE SKEPSCmE",
+      "x": 107.52,
+      "y": 461.32,
+      "page": 1,
+      "font_size": 33.0,
+      "line_text": "LJUDSKE SKEPSCmE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 105.12,
+      "y": 434.05,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 187.2,
+      "y": 380.68,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje 9. aprila 1963",
+      "x": 162.24,
+      "y": 330.15,
+      "page": 1,
+      "font_size": 17.0,
+      "line_text": "Seje 9. aprila 1963"
+    },
+    {
+      "text": "(Ustavna razprava)",
+      "x": 184.56,
+      "y": 311.32,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Ustavna razprava)"
+    },
+    {
+      "text": "1963",
+      "x": 216.48,
+      "y": 108.76,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1963"
+    },
+    {
+      "text": "Ljuhljan:",
+      "x": 200.16,
+      "y": 68.2,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "Ljuhljan:"
+    },
+    {
+      "text": "Sejni zapiski",
+      "x": 152.64,
+      "y": 531.25,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Sejni zapiski"
+    },
+    {
+      "text": "\\s w",
+      "x": 267.84,
+      "y": 499.93,
+      "page": 3,
+      "font_size": 11.0,
+      "line_text": "\\s w"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 78.24,
+      "y": 470.87,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVEMJE",
+      "x": 76.32,
+      "y": 442.93,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVEMJE"
+    },
+    {
+      "text": "(Četrti sklic)",
+      "x": 158.64,
+      "y": 389.32,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Četrti sklic)"
+    },
+    {
+      "text": "Seje 9. aprila 1963",
+      "x": 134.16,
+      "y": 339.01,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Seje 9. aprila 1963"
+    },
+    {
+      "text": "(Ustavna razprava)",
+      "x": 156.72,
+      "y": 319.96,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Ustavna razprava)"
+    },
+    {
+      "text": "1963",
+      "x": 190.8,
+      "y": 117.16,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "1963"
+    },
+    {
+      "text": "i i ubijana",
+      "x": 174.96,
+      "y": 76.36,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "i i ubijana"
+    },
+    {
+      "text": "997'!",
+      "x": 195.84,
+      "y": 319.56,
+      "page": 4,
+      "font_size": 26.0,
+      "line_text": "997'!"
+    },
+    {
+      "text": "o'it. xi.",
+      "x": 161.28,
+      "y": 211.45,
+      "page": 4,
+      "font_size": 22.0,
+      "line_text": "o'it. xi. шА«"
     },
     {
       "text": "шА",
@@ -337,166 +498,6 @@
       "page": 5,
       "font_size": 10.0,
       "line_text": "Začenjam 36. sejo Republiškega zbora Ljudske skupščine Ljudske republike"
-    },
-    {
-      "text": "Slovenije, ki jo je sklical predsednik Ljudske skupščine LRS.",
-      "x": 19.92,
-      "y": 399.59,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Slovenije, ki jo je sklical predsednik Ljudske skupščine LRS."
-    },
-    {
-      "text": "Seliger prebere zapisnik 35. seje.)",
-      "x": 19.92,
-      "y": 355.91,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Seliger prebere zapisnik 35. seje.)"
-    },
-    {
-      "text": "zapisnikar podpišeta zapisnik.)",
-      "x": 19.68,
-      "y": 334.31,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "zapisnikar podpišeta zapisnik.)"
-    },
-    {
-      "text": "venije;",
-      "x": 19.68,
-      "y": 291.11,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "venije;"
-    },
-    {
-      "text": "republike Slovenije;",
-      "x": 19.68,
-      "y": 269.51,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "republike Slovenije;"
-    },
-    {
-      "text": "skih in okrajnih skupščin;",
-      "x": 19.68,
-      "y": 248.15,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "skih in okrajnih skupščin;"
-    },
-    {
-      "text": "ščine Socialistične republike Slovenije;",
-      "x": 19.44,
-      "y": 226.31,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ščine Socialistične republike Slovenije;"
-    },
-    {
-      "text": "sveta Skupščine Socialistične republike Slovenije;",
-      "x": 19.44,
-      "y": 204.71,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "sveta Skupščine Socialistične republike Slovenije;"
-    },
-    {
-      "text": "volitve poslancev Skupščine Socialistične republike Slovenije.",
-      "x": 19.68,
-      "y": 182.63,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "volitve poslancev Skupščine Socialistične republike Slovenije."
-    },
-    {
-      "text": "blike Slovenije na svoji skupni seji dne 28. septembra 1961 soglasno sprejela",
-      "x": 19.92,
-      "y": 147.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "blike Slovenije na svoji skupni seji dne 28. septembra 1961 soglasno sprejela"
-    },
-    {
-      "text": "odlok o ustanovitvi komisije Ljudske skupščine Ljudske republike Slovenije za",
-      "x": 19.68,
-      "y": 137.03,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "odlok o ustanovitvi komisije Ljudske skupščine Ljudske republike Slovenije za"
-    },
-    {
-      "text": "pripravo republiške ustave in v ta namen izvolila posebno 31 člansko komisijo",
-      "x": 19.68,
-      "y": 126.23,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "pripravo republiške ustave in v ta namen izvolila posebno 31 člansko komisijo"
-    },
-    {
-      "text": "poročilo komisije in sprejela sklep, da se da osnutek ustave Socialistične repu",
-      "x": 19.44,
-      "y": 103.91,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "poročilo komisije in sprejela sklep, da se da osnutek ustave Socialistične repu"
-    },
-    {
-      "text": "blike Slovenije v javno razpravo ter naročila komisiji naj spremlja javno",
-      "x": 19.44,
-      "y": 93.11,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "blike Slovenije v javno razpravo ter naročila komisiji naj spremlja javno"
-    },
-    {
-      "text": "razipravo ter nadaljuje z delom za sestavo dokončnega besedila predloga ustave",
-      "x": 19.44,
-      "y": 81.83,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "razipravo ter nadaljuje z delom za sestavo dokončnega besedila predloga ustave"
-    },
-    {
-      "text": "Socialistične republike Slovenije, ki naj se predloži skupščini v dokončno ob",
-      "x": 19.44,
-      "y": 71.03,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Socialistične republike Slovenije, ki naj se predloži skupščini v dokončno ob"
-    },
-    {
-      "text": "ravnavo in sklepanje",
-      "x": 19.92,
-      "y": 59.75,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "ravnavo in sklepanje"
-    },
-    {
-      "text": "obravnavi, ki je trajala nad dva meseca, sestavila predlog ustave Socialistične",
-      "x": 53.76,
-      "y": 582.47,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "obravnavi, ki je trajala nad dva meseca, sestavila predlog ustave Socialistične"
-    },
-    {
-      "text": "republike Slovenije in ga s svojim poročilom ter z vsemi potrebnimi predlogi",
-      "x": 54.0,
-      "y": 571.67,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "republike Slovenije in ga s svojim poročilom ter z vsemi potrebnimi predlogi"
-    },
-    {
-      "text": "spremljajočih zakonov in drugih aktov predložila Ljudski skupščini Slovenije,",
-      "x": 53.52,
-      "y": 560.87,
-      "page": 6,
-      "font_size": 10.0,
-      "line_text": "spremljajočih zakonov in drugih aktov predložila Ljudski skupščini Slovenije,"
     }
   ],
   "recovery_counts": {},

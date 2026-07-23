@@ -2,21 +2,21 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\1. sklic (1947-1950)\\01 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - II. redno zasedanje 15.decembra 1947 do 18.maja 1948 - III.redno zasedanje 19.maja 1948 - IV.redno zas.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 30569,
-  "unmatched_count": 12235,
+  "unmatched_count": 23105,
   "rule_counts": {
+    "AFTER_GENERIC_NOTE": 10,
     "APPENDIX_HEAD": 3,
     "CONSUMED_LINE": 101,
     "CONTENTS": 41,
-    "GENERIC_NOTE": 31,
-    "HEAD": 16,
-    "PARAGRAPH": 16161,
+    "GENERIC_NOTE": 16,
+    "HEAD": 13,
+    "PARAGRAPH": 5559,
     "SCRIBE": 37,
-    "SEG": 1479,
+    "SEG": 1258,
     "SOURCE_ARTIFACT": 200,
-    "SPEAKER": 251,
-    "TIME": 8,
-    "UNMATCHED_LINE": 3,
-    "UNSTRUCTURED_START": 3
+    "SPEAKER": 216,
+    "TIME": 5,
+    "UNSTRUCTURED_START": 5
   },
   "page_counts": {
     "1": 12,
@@ -533,204 +533,204 @@
   },
   "unmatched_samples": [
     {
-      "text": "je na svoji seji dne 10. decembra 1947 pregledal potrdila poslancev, vse",
-      "x": 30.48,
-      "y": 216.95,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "je na svoji seji dne 10. decembra 1947 pregledal potrdila poslancev, vse"
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 67.2,
+      "y": 455.73,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
     },
     {
-      "text": "volilne spise in poročilo Republiške volilne komisije Ljudske republike Slo",
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 66.72,
+      "y": 424.28,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "II. redno zasedanje",
+      "x": 138.96,
+      "y": 364.52,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "II. redno zasedanje"
+    },
+    {
+      "text": "15. decembra 1947 do 18. maja 1948",
+      "x": 111.12,
+      "y": 344.94,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "15. decembra 1947 do 18. maja 1948"
+    },
+    {
+      "text": "III. redno zasedanje",
+      "x": 134.88,
+      "y": 299.24,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "III. redno zasedanje"
+    },
+    {
+      "text": "19. maja 1948",
+      "x": 176.4,
+      "y": 279.9,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "19. maja 1948"
+    },
+    {
+      "text": "ч",
+      "x": 134.64,
+      "y": 269.69,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "ч"
+    },
+    {
+      "text": "IV. redno zasedanje",
+      "x": 134.64,
+      "y": 234.2,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "IV. redno zasedanje"
+    },
+    {
+      "text": "14. decembra 1948",
+      "x": 162.48,
+      "y": 214.14,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "14. decembra 1948"
+    },
+    {
+      "text": "Izdala Ljudska skup&Sina LRS",
+      "x": 126.0,
+      "y": 86.7,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "Izdala Ljudska skup&Sina LRS"
+    },
+    {
+      "text": "1953",
+      "x": 203.04,
+      "y": 61.74,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "1953"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 148.56,
+      "y": 513.01,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 69.84,
+      "y": 451.65,
+      "page": 3,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 69.6,
+      "y": 419.72,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "II. redno zasedanje",
+      "x": 141.84,
+      "y": 346.28,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "II. redno zasedanje"
+    },
+    {
+      "text": "15. decembra 1947 do 18. maja 1948",
+      "x": 114.96,
+      "y": 319.5,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "15. decembra 1947 do 18. maja 1948"
+    },
+    {
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 128.64,
+      "y": 82.81,
+      "page": 3,
+      "font_size": 11.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1953",
+      "x": 205.44,
+      "y": 56.94,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "1953"
+    },
+    {
+      "text": "997",
+      "x": 192.48,
+      "y": 331.3,
+      "page": 4,
+      "font_size": 25.0,
+      "line_text": "997"
+    },
+    {
+      "text": "2i. vii. ^l'",
+      "x": 180.48,
+      "y": 253.41,
+      "page": 4,
+      "font_size": 21.0,
+      "line_text": "2i. vii. ^l'"
+    },
+    {
+      "text": "'M",
+      "x": 270.24,
+      "y": 234.79,
+      "page": 4,
+      "font_size": 24.0,
+      "line_text": "'M"
+    },
+    {
+      "text": "TISK TISKARNE »TONETA TOMŠIČA« V LJUBLJANI",
+      "x": 100.08,
+      "y": 57.11,
+      "page": 4,
+      "font_size": 10.0,
+      "line_text": "TISK TISKARNE »TONETA TOMŠIČA« V LJUBLJANI"
+    },
+    {
+      "text": "Ljudske skupščine Ljudske republike Slovenije",
       "x": 29.76,
-      "y": 206.15,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "volilne spise in poročilo Republiške volilne komisije Ljudske republike Slo"
+      "y": 522.39,
+      "page": 5,
+      "font_size": 17.0,
+      "line_text": "Ljudske skupščine Ljudske republike Slovenije"
     },
     {
-      "text": "venije z dne 8. decembra 1947, št. 73/1-47 ter daje Ljudski skupščini LRS",
-      "x": 30.24,
-      "y": 195.35,
-      "page": 9,
+      "text": "ki je bila dne 15. decembra 1947 v Ljubljani.",
+      "x": 100.08,
+      "y": 504.95,
+      "page": 5,
       "font_size": 10.0,
-      "line_text": "venije z dne 8. decembra 1947, št. 73/1-47 ter daje Ljudski skupščini LRS"
+      "line_text": "ki je bila dne 15. decembra 1947 v Ljubljani."
     },
     {
-      "text": "naslednje poročilo",
-      "x": 30.24,
-      "y": 180.71,
-      "page": 9,
+      "text": "Kozak z ostalimi člani predsedstva skupščine ter člani vlade LRS s pred",
+      "x": 29.04,
+      "y": 246.95,
+      "page": 5,
       "font_size": 10.0,
-      "line_text": "naslednje poročilo"
-    },
-    {
-      "text": "volitvah v Ljudsko skupščino LRS na ozemlju, ki je bilo priključeno na",
-      "x": 30.0,
-      "y": 149.75,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "volitvah v Ljudsko skupščino LRS na ozemlju, ki je bilo priključeno na"
-    },
-    {
-      "text": "podlagi določil mirovne pogodbe z Italijo k Federativni ljudski republiki",
-      "x": 30.0,
-      "y": 139.19,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "podlagi določil mirovne pogodbe z Italijo k Federativni ljudski republiki"
-    },
-    {
-      "text": "Jugoslaviji oziroma k * Ljudski republiki Sloveniji, dne 30. novembra 1947",
-      "x": 31.2,
-      "y": 128.63,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "Jugoslaviji oziroma k * Ljudski republiki Sloveniji, dne 30. novembra 1947"
-    },
-    {
-      "text": "izvoljeni naslednji ljudski poslanci:",
-      "x": 29.52,
-      "y": 117.35,
-      "page": 9,
-      "font_size": 10.0,
-      "line_text": "izvoljeni naslednji ljudski poslanci:"
-    },
-    {
-      "text": "volilna enota okraja Gorica",
-      "x": 220.8,
-      "y": 598.07,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "6. Mirka Mozetič VI. volilna enota okraja Gorica"
-    },
-    {
-      "text": "volilna enota okraja Ilirska Bistrica",
-      "x": 219.36,
-      "y": 490.07,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "16. Anton Dolgan III. volilna enota okraja Ilirska Bistrica"
-    },
-    {
-      "text": "I. volilna enota okraja Sežana",
-      "x": 207.84,
-      "y": 456.47,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "19. Rudi Lenardič I. volilna enota okraja Sežana"
-    },
-    {
-      "text": "III. volilna enota okraja Sežana",
-      "x": 198.72,
-      "y": 435.11,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "21. Rudi Kodrič III. volilna enota okraja Sežana"
-    },
-    {
-      "text": "Danilo Petrinja IV. volilna enota okraja Sežana",
-      "x": 79.68,
-      "y": 424.79,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "22. Danilo Petrinja IV. volilna enota okraja Sežana"
-    },
-    {
-      "text": "I. volilna enota okraja Tolmin",
-      "x": 207.12,
-      "y": 413.75,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "23. Ivan Regent I. volilna enota okraja Tolmin"
-    },
-    {
-      "text": "II. volilna enota okraja Tolmin",
-      "x": 202.8,
-      "y": 403.43,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "24. Vladimir Pavšič II. volilna enota okraja Tolmin"
-    },
-    {
-      "text": "Mirko Brovč III. volilna enota okraja Tolmin",
-      "x": 79.2,
-      "y": 393.11,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "25. Mirko Brovč III. volilna enota okraja Tolmin"
-    },
-    {
-      "text": "popolnoma ujema s podatki volilnih spisov in ker poleg tega ni bila vložena",
-      "x": 42.96,
-      "y": 360.71,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "popolnoma ujema s podatki volilnih spisov in ker poleg tega ni bila vložena"
-    },
-    {
-      "text": "nobena pritožba po 66. členu zakona o volitvah ljudskih poslancev v Ljudsko",
-      "x": 42.72,
-      "y": 350.15,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "nobena pritožba po 66. členu zakona o volitvah ljudskih poslancev v Ljudsko"
-    },
-    {
-      "text": "skupščino LRS, predlaga mandatno-iniunitetni odbor Ljudske skupščine LRS.",
-      "x": 42.48,
-      "y": 339.35,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "skupščino LRS, predlaga mandatno-iniunitetni odbor Ljudske skupščine LRS."
-    },
-    {
-      "text": "rla se izvolitev navedenih poslancev potrdi. Za poročevalca je odbor določil",
-      "x": 42.72,
-      "y": 328.79,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "rla se izvolitev navedenih poslancev potrdi. Za poročevalca je odbor določil"
-    },
-    {
-      "text": "Vlada Kozaka. Predsednik mandatno-imunitetnega odbora dr. Jože Potrč",
-      "x": 42.72,
-      "y": 317.99,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "Vlada Kozaka. Predsednik mandatno-imunitetnega odbora dr. Jože Potrč"
-    },
-    {
-      "text": "in člani odbora.",
-      "x": 42.72,
-      "y": 307.43,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "in člani odbora."
-    },
-    {
-      "text": "soglasno verificirala mandate naslednjih tovarišev ljudskih poslancev:",
-      "x": 42.24,
-      "y": 279.59,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "soglasno verificirala mandate naslednjih tovarišev ljudskih poslancev:"
-    },
-    {
-      "text": "Franceta Bevka, Štefana Humarja, Alberta Jakopiča, Slavka Furlana, Borisa",
-      "x": 42.0,
-      "y": 268.55,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "Franceta Bevka, Štefana Humarja, Alberta Jakopiča, Slavka Furlana, Borisa"
-    },
-    {
-      "text": "Kalina, Mirke Mozetič, Albina Dujca, dr. Bogdana Breclja, Davorina Ferli",
-      "x": 41.76,
-      "y": 257.75,
-      "page": 10,
-      "font_size": 10.0,
-      "line_text": "Kalina, Mirke Mozetič, Albina Dujca, dr. Bogdana Breclja, Davorina Ferli"
+      "line_text": "Kozak z ostalimi člani predsedstva skupščine ter člani vlade LRS s pred"
     }
   ],
   "recovery_counts": {},

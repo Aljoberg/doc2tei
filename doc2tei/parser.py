@@ -200,11 +200,14 @@ class ParseResult:
         Path(path).write_text(
             json.dumps(self.diagnostics.as_dict(), ensure_ascii=False, indent=2),
             encoding="utf-8",
+            newline="\n",
         )
 
     def write_data(self, path: str | Path) -> None:
         Path(path).write_text(
-            json.dumps(self.data, ensure_ascii=False, indent=2), encoding="utf-8"
+            json.dumps(self.data, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+            newline="\n",
         )
 
     def write_list_person(

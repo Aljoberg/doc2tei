@@ -33,12 +33,6 @@
   <person xml:id="LojzePiškur">
     <persName>Lojze Piškur</persName>
   </person>
-  <person xml:id="PavleZaucor">
-    <persName>Predsednik inž. Pavle Z a u c o r</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="BenoZupančič">
     <persName>Beno Zupančič</persName>
   </person>
@@ -90,20 +84,8 @@
   <person xml:id="IvanRos">
     <persName>Ivan Ros</persName>
   </person>
-  <person xml:id="Pavle2Aucer">
-    <persName>Predsednik inž. Pavle 2 a u c e r</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MatevžHace">
     <persName>Matevž Hace</persName>
-  </person>
-  <person xml:id="PavleZauccr">
-    <persName>Predsednik inž. Pavle Zauccr</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="RužaSegedin">
     <persName>Dr. Ruža Segedin</persName>
@@ -120,20 +102,8 @@
   <person xml:id="JožeTramšek">
     <persName>Jože Tramšek</persName>
   </person>
-  <person xml:id="PaV1E2Aucer">
-    <persName>Predsednik inž. Pa v 1 e 2 a u c e r</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="S1AvicaZirkelbach">
     <persName>S 1 a v i c a Zirkelbach</persName>
-  </person>
-  <person xml:id="speaker">
-    <persName>Predsednik inž, Pavle Zaucer</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="MarijaZupančič">
     <persName>Marija Zupančič</persName>
@@ -150,8 +120,8 @@
   <person xml:id="JožeBergant">
     <persName>Jože Bergant</persName>
   </person>
-  <person xml:id="IvanVideniČ">
-    <persName>Ivan Videni č</persName>
+  <person xml:id="IvanVidenič">
+    <persName>Ivan Videnič</persName>
   </person>
   <person xml:id="ToneBole">
     <persName>Tone Bole</persName>
@@ -159,20 +129,8 @@
   <person xml:id="StaneRobcrnik">
     <persName>Stane Robcrnik</persName>
   </person>
-  <person xml:id="ViktorKotnIk">
-    <persName>Inž. Viktor K o t n ik</persName>
-  </person>
-  <person xml:id="LojzeOČepek">
-    <persName>Predsednik Lojze O čepek</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="JožeKnez">
     <persName>Jože Knez</persName>
-  </person>
-  <person xml:id="IvanVidenič">
-    <persName>Ivan Videnič</persName>
   </person>
   <person xml:id="AntonHafner">
     <persName>Anton Hafner</persName>
@@ -189,12 +147,6 @@
   <person xml:id="FrancPerše">
     <persName>Franc Perše</persName>
   </person>
-  <person xml:id="LojzeOcepck">
-    <persName>Predsednik Lojze Ocepck</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="JanezKermavner">
     <persName>Janez Kermavner</persName>
   </person>
@@ -206,12 +158,6 @@
   </person>
   <person xml:id="SlavkoKobal">
     <persName>Slavko Kobal</persName>
-  </person>
-  <person xml:id="LojzeOČepeK">
-    <persName>Predsednik Lojze O čepe k</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="StaneRebernik">
     <persName>Stane Rebernik</persName>
@@ -237,9 +183,6 @@
   <person xml:id="BojanPolak">
     <persName>Bojan Polak</persName>
   </person>
-  <person xml:id="IvanKovačič">
-    <persName>Ivan Kovačič</persName>
-  </person>
   <person xml:id="MiranKošmelj">
     <persName>Miran Košmelj</persName>
   </person>
@@ -257,9 +200,6 @@
   </person>
   <person xml:id="ŠtefanGyofi">
     <persName>Štefan Gyofi</persName>
-  </person>
-  <person xml:id="BojanPo1Ak">
-    <persName>Bojan P o 1 a k</persName>
   </person>
   <person xml:id="ViktorAvbelj">
     <persName>Viktor Avbelj</persName>

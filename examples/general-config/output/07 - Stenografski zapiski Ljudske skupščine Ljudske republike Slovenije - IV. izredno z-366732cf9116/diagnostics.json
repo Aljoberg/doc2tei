@@ -2,22 +2,19 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\2. sklic (1951-1953)\\07 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - IV. izredno zasedanje 12. januarja - 13.januarja 1951.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 10040,
-  "unmatched_count": 7483,
+  "unmatched_count": 8582,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 1,
+    "AFTER_GENERIC_NOTE": 2,
     "APPENDIX_HEAD": 1,
-    "CONSUMED_LINE": 9,
+    "CONSUMED_LINE": 7,
     "CONTENTS": 65,
-    "FOOTNOTE_CONTINUATION": 3,
-    "FOOTNOTE_ENTRY": 1,
-    "GENERIC_NOTE": 8,
-    "HEAD": 4,
-    "PARAGRAPH": 1361,
+    "GENERIC_NOTE": 6,
+    "HEAD": 2,
+    "PARAGRAPH": 363,
     "SCRIBE": 7,
-    "SEG": 1037,
+    "SEG": 952,
     "SOURCE_ARTIFACT": 7,
-    "SPEAKER": 51,
-    "UNMATCHED_LINE": 2
+    "SPEAKER": 46
   },
   "page_counts": {
     "1": 7,
@@ -334,6 +331,118 @@
   },
   "unmatched_samples": [
     {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 77.52,
+      "y": 433.43,
+      "page": 1,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 77.76,
+      "y": 401.96,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "IV. izredno zasedanje",
+      "x": 141.84,
+      "y": 329.72,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "IV. izredno zasedanje"
+    },
+    {
+      "text": "12. januarja — 13. januarja 1951",
+      "x": 138.24,
+      "y": 309.42,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "12. januarja — 13. januarja 1951"
+    },
+    {
+      "text": "* Izdala Ljudska skupščina LRS",
+      "x": 119.28,
+      "y": 90.3,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "* Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1951",
+      "x": 214.8,
+      "y": 59.96,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "1951"
+    },
+    {
+      "text": "Steno^rafski zapiski",
+      "x": 115.44,
+      "y": 514.69,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Steno^rafski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 34.08,
+      "y": 452.61,
+      "page": 3,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 34.08,
+      "y": 421.13,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "IV. izredno zasedanje",
+      "x": 98.88,
+      "y": 348.17,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "IV. izredno zasedanje"
+    },
+    {
+      "text": "12. januarja — 13. januarja 1951",
+      "x": 95.04,
+      "y": 327.88,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "12. januarja — 13. januarja 1951"
+    },
+    {
+      "text": "1951",
+      "x": 172.8,
+      "y": 77.45,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "1951"
+    },
+    {
+      "text": "997",
+      "x": 204.48,
+      "y": 373.77,
+      "page": 4,
+      "font_size": 25.0,
+      "line_text": "997"
+    },
+    {
+      "text": "/>",
+      "x": 170.4,
+      "y": 309.75,
+      "page": 4,
+      "font_size": 17.0,
+      "line_text": "/> 2 2, XII. 1951 /"
+    },
+    {
       "text": "2",
       "x": 189.6,
       "y": 318.74,
@@ -366,6 +475,30 @@
       "line_text": "/> 2 2, XII. 1951 /"
     },
     {
+      "text": "Ljudske skupščine Ljudske republike Sloveuije",
+      "x": 12.0,
+      "y": 441.97,
+      "page": 5,
+      "font_size": 16.0,
+      "line_text": "Ljudske skupščine Ljudske republike Sloveuije"
+    },
+    {
+      "text": "ki se je vršila dne 12. januarja 1S51 v Ljubljani.",
+      "x": 75.36,
+      "y": 416.41,
+      "page": 5,
+      "font_size": 11.0,
+      "line_text": "ki se je vršila dne 12. januarja 1S51 v Ljubljani."
+    },
+    {
+      "text": "Predsednik: dr. Ferdo Kozak.",
+      "x": 12.48,
+      "y": 394.33,
+      "page": 5,
+      "font_size": 11.0,
+      "line_text": "Predsednik: dr. Ferdo Kozak."
+    },
+    {
       "text": "zakonodajo in izgradnjo ljudske oblasti;",
       "x": 12.96,
       "y": 298.33,
@@ -396,142 +529,6 @@
       "page": 6,
       "font_size": 11.0,
       "line_text": "pričel I. sejo IV. izrednega zasedanja Ljudske skupščine LRS s čitanjem"
-    },
-    {
-      "text": "ukaza Prezidija Ljudske skupščine LRS o sklicanju Ljudske skupščine k",
-      "x": 49.44,
-      "y": 498.01,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "ukaza Prezidija Ljudske skupščine LRS o sklicanju Ljudske skupščine k"
-    },
-    {
-      "text": "IV. izrednemu zasedanju. Ukaz se glasi:",
-      "x": 50.16,
-      "y": 486.97,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "IV. izrednemu zasedanju. Ukaz se glasi:"
-    },
-    {
-      "text": "ščine LRS",
-      "x": 49.68,
-      "y": 462.73,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "ščine LRS"
-    },
-    {
-      "text": "ukaz",
-      "x": 214.8,
-      "y": 445.45,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "ukaz"
-    },
-    {
-      "text": "k IV. izrednemu zasedanju.",
-      "x": 165.6,
-      "y": 414.97,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "k IV. izrednemu zasedanju."
-    },
-    {
-      "text": "nemu zasedanju na dan 12. januarja 1951 ob 10. uri.",
-      "x": 49.44,
-      "y": 377.77,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "nemu zasedanju na dan 12. januarja 1951 ob 10. uri."
-    },
-    {
-      "text": "Fr a ne e Lub e j, 1. r. J o s i p V i d m a r , 1. r.",
-      "x": 50.16,
-      "y": 305.77,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "Fr a ne e Lub e j, 1. r. J o s i p V i d m a r , 1. r."
-    },
-    {
-      "text": "zasedanja Ljudske skupščine LRS. Zapisnik današnje seje bo vodil tajnik",
-      "x": 49.68,
-      "y": 272.65,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "zasedanja Ljudske skupščine LRS. Zapisnik današnje seje bo vodil tajnik"
-    },
-    {
-      "text": "Jože J u r a č.",
-      "x": 49.68,
-      "y": 261.37,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "Jože J u r a č."
-    },
-    {
-      "text": "LRS v razpravo in sklepanje:",
-      "x": 50.16,
-      "y": 220.09,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "LRS v razpravo in sklepanje:"
-    },
-    {
-      "text": "venije za leto 1949.",
-      "x": 49.92,
-      "y": 184.57,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "venije za leto 1949."
-    },
-    {
-      "text": "odboru za gospodarski načrt in finance. Odbor je o obeh zakonskih pred",
-      "x": 50.4,
-      "y": 158.65,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "odboru za gospodarski načrt in finance. Odbor je o obeh zakonskih pred"
-    },
-    {
-      "text": "logih sklepal, jih v celoti sprejel ter predložil skupščini svoji poročili. Zakon",
-      "x": 50.4,
-      "y": 147.37,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "logih sklepal, jih v celoti sprejel ter predložil skupščini svoji poročili. Zakon"
-    },
-    {
-      "text": "ska predloga sta bila s poročili razmnožena in razdeljena ljudskim",
-      "x": 50.64,
-      "y": 136.57,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "ska predloga sta bila s poročili razmnožena in razdeljena ljudskim"
-    },
-    {
-      "text": "poslancem.",
-      "x": 50.64,
-      "y": 125.77,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "poslancem."
-    },
-    {
-      "text": "sklepanje:",
-      "x": 50.4,
-      "y": 99.61,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "sklepanje:"
-    },
-    {
-      "text": "ski republiki Sloveniji in",
-      "x": 50.4,
-      "y": 73.21,
-      "page": 6,
-      "font_size": 11.0,
-      "line_text": "ski republiki Sloveniji in"
     }
   ],
   "recovery_counts": {},

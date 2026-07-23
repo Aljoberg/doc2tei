@@ -1,8 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <listPerson xmlns="http://www.tei-c.org/ns/1.0">
-  <person xml:id="Prisotni">
-    <persName>PRISOTNI ČLANI VLADE</persName>
-  </person>
   <person xml:id="FerdoKozak">
     <persName>Predsednik dr. Ferdo Kozak</persName>
     <affiliation role="predsednik">
@@ -30,12 +27,6 @@
   <person xml:id="JakaAvšič">
     <persName>Jaka Avšič</persName>
   </person>
-  <person xml:id="FerdoKozaK">
-    <persName>Predsednik dr. Ferdo Koza'k</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="AntonKorošak">
     <persName>Anton Korošak</persName>
   </person>
@@ -48,20 +39,8 @@
   <person xml:id="HeliModic">
     <persName>Dr. Heli Modic</persName>
   </person>
-  <person xml:id="FcrdoKozak">
-    <persName>Predsednik d r. F c r d o Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
   <person xml:id="MiranKošmelj">
     <persName>Miran Košmelj</persName>
-  </person>
-  <person xml:id="Ferdokozak">
-    <persName>Predsednik dr. FerdoKozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
   </person>
   <person xml:id="ToneFajfar">
     <persName>Tone Fajfar</persName>
@@ -81,9 +60,6 @@
   <person xml:id="MarijAnHrece1J">
     <persName>Dr. Marij a n H r e c e 1 j</persName>
   </person>
-  <person xml:id="MIhaPotočnik">
-    <persName>Dr. M'iha Potočnik</persName>
-  </person>
   <person xml:id="IvanTrojar">
     <persName>Ivan Trojar</persName>
   </person>
@@ -93,76 +69,7 @@
   <person xml:id="FrancKimovec">
     <persName>Franc Kimovec</persName>
   </person>
-  <person xml:id="FranceKimovec">
-    <persName>France Kimovec</persName>
-  </person>
   <person xml:id="MatijaMa1Ežič">
     <persName>Matija M a 1 e ž i č</persName>
-  </person>
-  <person xml:id="Ferdokožak">
-    <persName>Predsednik dr. F e r d o K o ž a k</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="ViktorAvbe1J">
-    <persName>Viktor A v b e 1 j, minister, predsednik sveta za blagovni promet</persName>
-    <affiliation role="minister">
-      <roleName xml:lang="sl">minister, predsednik sveta za blagovni promet</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="FranceBevk">
-    <persName>France Bevk</persName>
-  </person>
-  <person xml:id="AlojzCoLarič">
-    <persName>Alojz Co'larič</persName>
-  </person>
-  <person xml:id="MarijanBrecelj">
-    <persName>Dr. Marijan Brecelj</persName>
-  </person>
-  <person xml:id="P1ErdQKozak">
-    <persName>Predsednik dr. P1 e r d Q Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="PerdoKozak">
-    <persName>Predsednik dr. Perdo Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="Ierd0Kozak">
-    <persName>Predsednik d r. I"" e r d 0 K o z a k</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="DfJbžePotrč">
-    <persName>Df. JbŽe Potrč</persName>
-  </person>
-  <person xml:id="MilošLedinek">
-    <persName>Miloš Ledinek</persName>
-  </person>
-  <person xml:id="ГErdoKozak">
-    <persName>Predsednik dr. Г e r d o Kozak</persName>
-    <affiliation role="predsednik">
-      <roleName xml:lang="sl">Predsednik</roleName>
-    </affiliation>
-  </person>
-  <person xml:id="LeopoldMaček">
-    <persName>Leopold Maček</persName>
-  </person>
-  <person xml:id="KarelŠterban">
-    <persName>Karel Šterban</persName>
-  </person>
-  <person xml:id="AlojzVrhovec">
-    <persName>Alojz Vrhovec</persName>
-  </person>
-  <person xml:id="JožePoKorn">
-    <persName>Dr. Jože Po"korn</persName>
-  </person>
-  <person xml:id="AKomisija">
-    <persName>A. Komisija, za preiskavo načina in stanja preskrbe</persName>
   </person>
 </listPerson>

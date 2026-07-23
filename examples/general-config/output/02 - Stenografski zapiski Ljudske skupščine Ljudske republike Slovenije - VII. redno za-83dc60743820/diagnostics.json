@@ -2,22 +2,21 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\1. sklic (1947-1950)\\02 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - VII. redno zasedanje 13.-14. junija.1950 - VIII. redno zasedanje 14.decembra 1950.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 14731,
-  "unmatched_count": 5956,
+  "unmatched_count": 11297,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 2,
-    "APPENDIX_HEAD": 1,
-    "CONSUMED_LINE": 16,
+    "AFTER_GENERIC_NOTE": 1,
+    "APPENDIX_HEAD": 2,
+    "CONSUMED_LINE": 7,
     "CONTENTS": 109,
-    "FOOTNOTE_CONTINUATION": 9,
-    "FOOTNOTE_ENTRY": 2,
-    "GENERIC_NOTE": 10,
-    "HEAD": 7,
-    "PARAGRAPH": 7291,
+    "GENERIC_NOTE": 4,
+    "HEAD": 4,
+    "PARAGRAPH": 2498,
     "SCRIBE": 20,
-    "SEG": 1081,
+    "SEG": 609,
     "SOURCE_ARTIFACT": 105,
-    "SPEAKER": 115,
-    "TIME": 7
+    "SPEAKER": 67,
+    "TIME": 6,
+    "UNSTRUCTURED_START": 2
   },
   "page_counts": {
     "1": 16,
@@ -372,6 +371,46 @@
   },
   "unmatched_samples": [
     {
+      "text": "342.533(497.4)\"1950\"",
+      "x": 20.16,
+      "y": 578.82,
+      "page": 1,
+      "font_size": 8.0,
+      "line_text": "342.533(497.4)\"1950\""
+    },
+    {
+      "text": "019510254 coBiss o grafski zapiski",
+      "x": 20.88,
+      "y": 542.94,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "019510254 coBiss o grafski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 63.6,
+      "y": 481.17,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 63.6,
+      "y": 449.0,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "VII. red",
+      "x": 135.6,
+      "y": 369.56,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "VII. red D o zasedanje"
+    },
+    {
       "text": "D",
       "x": 200.88,
       "y": 370.38,
@@ -388,188 +427,148 @@
       "line_text": "VII. red D o zasedanje"
     },
     {
+      "text": "m",
+      "x": 216.72,
+      "y": 323.82,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "m"
+    },
+    {
+      "text": "VIII. redno zasedanje",
+      "x": 134.64,
+      "y": 289.4,
+      "page": 1,
+      "font_size": 19.0,
+      "line_text": "VIII. redno zasedanje"
+    },
+    {
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 137.52,
+      "y": 79.74,
+      "page": 1,
+      "font_size": 13.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1951",
+      "x": 199.68,
+      "y": 55.9,
+      "page": 1,
+      "font_size": 20.0,
+      "line_text": "1951"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 122.4,
+      "y": 546.61,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 36.96,
+      "y": 486.47,
+      "page": 3,
+      "font_size": 31.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 36.96,
+      "y": 454.52,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "VII. redno zasedanje",
+      "x": 110.88,
+      "y": 355.16,
+      "page": 3,
+      "font_size": 19.0,
+      "line_text": "VII. redno zasedanje"
+    },
+    {
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 110.88,
+      "y": 88.14,
+      "page": 3,
+      "font_size": 13.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1951",
+      "x": 173.28,
+      "y": 64.06,
+      "page": 3,
+      "font_size": 20.0,
+      "line_text": "1951"
+    },
+    {
+      "text": "997",
+      "x": 188.16,
+      "y": 357.45,
+      "page": 4,
+      "font_size": 25.0,
+      "line_text": "997"
+    },
+    {
+      "text": "2 2. XI/. 1951",
+      "x": 177.12,
+      "y": 288.46,
+      "page": 4,
+      "font_size": 14.0,
+      "line_text": "2 2. XI/. 1951"
+    },
+    {
+      "text": "Tisk liskiiiiiii' »Toneta Tomilia« v LJubljani",
+      "x": 134.16,
+      "y": 88.77,
+      "page": 4,
+      "font_size": 9.0,
+      "line_text": "Tisk liskiiiiiii' »Toneta Tomilia« v LJubljani"
+    },
+    {
+      "text": "Ljudske skupščine Ljudske republike Slovenije",
+      "x": 29.04,
+      "y": 472.21,
+      "page": 5,
+      "font_size": 16.0,
+      "line_text": "Ljudske skupščine Ljudske republike Slovenije"
+    },
+    {
+      "text": "ki se je vršila dne 13. junija 1950 v Ljubljani",
+      "x": 93.84,
+      "y": 445.0,
+      "page": 5,
+      "font_size": 12.0,
+      "line_text": "ki se je vršila dne 13. junija 1950 v Ljubljani"
+    },
+    {
+      "text": "Predsednik: dr. Ferdo Kozak.",
+      "x": 30.72,
+      "y": 421.0,
+      "page": 5,
+      "font_size": 12.0,
+      "line_text": "Predsednik: dr. Ferdo Kozak."
+    },
+    {
+      "text": ":",
+      "x": 276.6,
+      "y": 382.19,
+      "page": 5,
+      "font_size": 15.0,
+      "line_text": "PRISOTNI ČLANI VLADE:"
+    },
+    {
       "text": "komiteja za zakonodajo in izgradnjo ljudske oblasti;",
       "x": 30.96,
       "y": 337.0,
       "page": 5,
       "font_size": 12.0,
       "line_text": "komiteja za zakonodajo in izgradnjo ljudske oblasti;"
-    },
-    {
-      "text": "zdarstvo;",
-      "x": 31.68,
-      "y": 145.48,
-      "page": 5,
-      "font_size": 12.0,
-      "line_text": "zdarstvo;"
-    },
-    {
-      "text": "darstvo;",
-      "x": 31.92,
-      "y": 122.92,
-      "page": 5,
-      "font_size": 12.0,
-      "line_text": "darstvo;"
-    },
-    {
-      "text": "strijo;",
-      "x": 31.92,
-      "y": 89.32,
-      "page": 5,
-      "font_size": 12.0,
-      "line_text": "strijo;"
-    },
-    {
-      "text": "delovalno In elektroindustrijo;",
-      "x": 32.64,
-      "y": 67.72,
-      "page": 5,
-      "font_size": 12.0,
-      "line_text": "delovalno In elektroindustrijo;"
-    },
-    {
-      "text": "dr. Ferdo Kozak z ostalimi člani predsedstva skupščine, ter člani vlade",
-      "x": 44.88,
-      "y": 595.24,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "dr. Ferdo Kozak z ostalimi člani predsedstva skupščine, ter člani vlade"
-    },
-    {
-      "text": "LRS s predsednikom Miho Marinkom na čelu, ki jih ljudski poslanci",
-      "x": 44.88,
-      "y": 584.44,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "LRS s predsednikom Miho Marinkom na čelu, ki jih ljudski poslanci"
-    },
-    {
-      "text": "pozdravijo z dolgotrajnim ploskanjem.",
-      "x": 44.4,
-      "y": 573.4,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "pozdravijo z dolgotrajnim ploskanjem."
-    },
-    {
-      "text": "Ljudske skupščine LRS k VII. rednemu zasedanju, ki se glasi:",
-      "x": 44.64,
-      "y": 549.16,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "Ljudske skupščine LRS k VII. rednemu zasedanju, ki se glasi:"
-    },
-    {
-      "text": "skupščine LRS",
-      "x": 44.64,
-      "y": 524.92,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "skupščine LRS"
-    },
-    {
-      "text": "ukaz",
-      "x": 207.36,
-      "y": 514.36,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "ukaz"
-    },
-    {
-      "text": "zasedanja Ljudske skupščine LRS. 'Zapisnik današnje seje bo vodila",
-      "x": 45.36,
-      "y": 296.68,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "zasedanja Ljudske skupščine LRS. 'Zapisnik današnje seje bo vodila"
-    },
-    {
-      "text": "tajnica Mira Tomšičeva.",
-      "x": 45.12,
-      "y": 285.88,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "tajnica Mira Tomšičeva."
-    },
-    {
-      "text": "in sklepanje:",
-      "x": 44.88,
-      "y": 241.48,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "in sklepanje:"
-    },
-    {
-      "text": "razdelitvi Ljudske republike Slovenije;",
-      "x": 44.88,
-      "y": 162.28,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "razdelitvi Ljudske republike Slovenije;"
-    },
-    {
-      "text": "naselij in o označbi trgov, ulic in hiš;",
-      "x": 44.64,
-      "y": 138.04,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "naselij in o označbi trgov, ulic in hiš;"
-    },
-    {
-      "text": "nošenju orožja.",
-      "x": 44.64,
-      "y": 114.04,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "nošenju orožja."
-    },
-    {
-      "text": "zakonodajnemu odboru. Odbor je o zakonskih predlogih sklepal, jih v",
-      "x": 44.64,
-      "y": 90.04,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "zakonodajnemu odboru. Odbor je o zakonskih predlogih sklepal, jih v"
-    },
-    {
-      "text": "celoti sprejel ter predložil skupščini svoja poročila. Vsi ti zakonski pred'",
-      "x": 44.64,
-      "y": 79.0,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "celoti sprejel ter predložil skupščini svoja poročila. Vsi ti zakonski pred'"
-    },
-    {
-      "text": "logi so bili",
-      "x": 44.64,
-      "y": 68.2,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "logi so bili z obrazložitvami in poročili razmnoženi in razdeljeni ljudskim"
-    },
-    {
-      "text": "z",
-      "x": 99.6,
-      "y": 68.2,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "logi so bili z obrazložitvami in poročili razmnoženi in razdeljeni ljudskim"
-    },
-    {
-      "text": "obrazložitvami in poročili razmnoženi in razdeljeni ljudskim",
-      "x": 109.2,
-      "y": 68.2,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "logi so bili z obrazložitvami in poročili razmnoženi in razdeljeni ljudskim"
-    },
-    {
-      "text": "poslancem.",
-      "x": 44.88,
-      "y": 57.88,
-      "page": 6,
-      "font_size": 12.0,
-      "line_text": "poslancem."
     }
   ],
   "recovery_counts": {},

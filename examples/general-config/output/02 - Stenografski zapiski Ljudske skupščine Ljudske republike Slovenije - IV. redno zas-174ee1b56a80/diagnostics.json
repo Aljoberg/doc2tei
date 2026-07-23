@@ -2,23 +2,21 @@
   "input": "\\\\?\\C:\\Users\\cmptruse\\Downloads\\doc2tei\\out\\sistory-test\\_sistory-downloads\\1-7-397-407-499cd4d8\\Ljudska skupščina Ljudske republike Slovenije (1947-1963)\\2. sklic (1951-1953)\\02 - Stenografski zapiski Ljudske skupščine Ljudske republike Slovenije - IV. redno zasedanje (Drugi sklic) 28. januarja do 30. junarja 1953.pdf",
   "config": "C:\\Users\\cmptruse\\Downloads\\doc2tei\\examples\\general-config\\config.py",
   "chunk_count": 11118,
-  "unmatched_count": 6370,
+  "unmatched_count": 9412,
   "rule_counts": {
-    "AFTER_FOOTNOTE": 1,
+    "AFTER_GENERIC_NOTE": 3,
     "APPENDIX_HEAD": 1,
-    "CONSUMED_LINE": 9,
+    "CONSUMED_LINE": 8,
     "CONTENTS": 4,
-    "FOOTNOTE_CONTINUATION": 5,
-    "FOOTNOTE_ENTRY": 1,
-    "GENERIC_NOTE": 18,
-    "HEAD": 7,
-    "PARAGRAPH": 4010,
+    "GENERIC_NOTE": 8,
+    "HEAD": 6,
+    "PARAGRAPH": 973,
     "SCRIBE": 9,
-    "SEG": 569,
+    "SEG": 580,
     "SOURCE_ARTIFACT": 7,
-    "SPEAKER": 105,
+    "SPEAKER": 103,
     "TIME": 1,
-    "UNSTRUCTURED_START": 1
+    "UNSTRUCTURED_START": 3
   },
   "page_counts": {
     "1": 14,
@@ -297,204 +295,204 @@
   },
   "unmatched_samples": [
     {
-      "text": "C",
-      "x": 214.08,
-      "y": 498.72,
-      "page": 5,
-      "font_size": 6.5,
-      "line_text": "ki je bila dne 28. januarja 1CJ53 v Ljubljani."
+      "text": "342.533(497.4)\"1953\"",
+      "x": 10.8,
+      "y": 590.08,
+      "page": 1,
+      "font_size": 7.0,
+      "line_text": "342.533(497.4)\"1953\""
     },
     {
-      "text": "J53 v Ljubljani.",
-      "x": 218.16,
+      "text": "019530074",
+      "x": 10.32,
+      "y": 557.51,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "019530074"
+    },
+    {
+      "text": "COBISS O",
+      "x": 131.52,
+      "y": 556.04,
+      "page": 1,
+      "font_size": 6.0,
+      "line_text": "COBISS O"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 128.88,
+      "y": 498.61,
+      "page": 1,
+      "font_size": 16.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 52.56,
+      "y": 437.49,
+      "page": 1,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 52.32,
+      "y": 406.49,
+      "page": 1,
+      "font_size": 18.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "IV. redno zasedanje",
+      "x": 120.24,
+      "y": 340.97,
+      "page": 1,
+      "font_size": 18.0,
+      "line_text": "IV. redno zasedanje"
+    },
+    {
+      "text": "(Drugi sklic)",
+      "x": 164.16,
+      "y": 321.4,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
+    },
+    {
+      "text": "28. januarja do 30. januarja 1953",
+      "x": 106.08,
+      "y": 295.48,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "28. januarja do 30. januarja 1953"
+    },
+    {
+      "text": "Izdala Ljudska skupsčiua LRS",
+      "x": 109.68,
+      "y": 68.39,
+      "page": 1,
+      "font_size": 10.0,
+      "line_text": "Izdala Ljudska skupsčiua LRS"
+    },
+    {
+      "text": "1953",
+      "x": 184.8,
+      "y": 42.76,
+      "page": 1,
+      "font_size": 12.0,
+      "line_text": "1953"
+    },
+    {
+      "text": "Stenografski zapiski",
+      "x": 132.72,
+      "y": 518.05,
+      "page": 3,
+      "font_size": 16.0,
+      "line_text": "Stenografski zapiski"
+    },
+    {
+      "text": "LJUDSKE SKUPŠČINE",
+      "x": 55.44,
+      "y": 456.93,
+      "page": 3,
+      "font_size": 30.0,
+      "line_text": "LJUDSKE SKUPŠČINE"
+    },
+    {
+      "text": "LJUDSKE REPUBLIKE SLOVENIJE",
+      "x": 55.44,
+      "y": 426.41,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "LJUDSKE REPUBLIKE SLOVENIJE"
+    },
+    {
+      "text": "IV. redno zasedanje",
+      "x": 123.12,
+      "y": 360.89,
+      "page": 3,
+      "font_size": 18.0,
+      "line_text": "IV. redno zasedanje"
+    },
+    {
+      "text": "(Drugi sklic)",
+      "x": 168.24,
+      "y": 341.56,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "(Drugi sklic)"
+    },
+    {
+      "text": "28. januarja do 30. januarja 1953",
+      "x": 109.92,
+      "y": 315.4,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "28. januarja do 30. januarja 1953"
+    },
+    {
+      "text": "Izdala Ljudska skupščina LRS",
+      "x": 113.52,
+      "y": 86.44,
+      "page": 3,
+      "font_size": 12.0,
+      "line_text": "Izdala Ljudska skupščina LRS"
+    },
+    {
+      "text": "1953",
+      "x": 188.64,
+      "y": 60.8,
+      "page": 3,
+      "font_size": 14.0,
+      "line_text": "1953"
+    },
+    {
+      "text": "997",
+      "x": 202.56,
+      "y": 362.71,
+      "page": 4,
+      "font_size": 24.0,
+      "line_text": "997"
+    },
+    {
+      "text": "^21. VII.-^",
+      "x": 170.88,
+      "y": 288.97,
+      "page": 4,
+      "font_size": 15.0,
+      "line_text": "^21. VII.-^"
+    },
+    {
+      "text": "^",
+      "x": 291.36,
+      "y": 267.93,
+      "page": 4,
+      "font_size": 10.0,
+      "line_text": "^"
+    },
+    {
+      "text": "TISK TISKARNE >TONETA TOMŠICAt V LJDBUAN1",
+      "x": 110.4,
+      "y": 73.41,
+      "page": 4,
+      "font_size": 9.0,
+      "line_text": "TISK TISKARNE >TONETA TOMŠICAt V LJDBUAN1"
+    },
+    {
+      "text": "Ljudske skupščine Ljudske republike Slovenije",
+      "x": 8.16,
+      "y": 513.25,
+      "page": 5,
+      "font_size": 16.0,
+      "line_text": "Ljudske skupščine Ljudske republike Slovenije"
+    },
+    {
+      "text": "ki je bila dne 28. januarja 1",
+      "x": 84.48,
       "y": 493.43,
       "page": 5,
       "font_size": 10.0,
       "line_text": "ki je bila dne 28. januarja 1CJ53 v Ljubljani."
-    },
-    {
-      "text": "v",
-      "x": 113.76,
-      "y": 473.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Predsednik: d r. F v r d o K o z a k,"
-    },
-    {
-      "text": "r d o K o z a k,",
-      "x": 121.2,
-      "y": 473.99,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "Predsednik: d r. F v r d o K o z a k,"
-    },
-    {
-      "text": "<",
-      "x": 32.88,
-      "y": 161.76,
-      "page": 5,
-      "font_size": 6.5,
-      "line_text": "leto 1<)53 z dokumentacijo ter vladne spremembe in dopolnitve k temu zakon"
-    },
-    {
-      "text": ")53 z dokumentacijo ter vladne spremembe in dopolnitve k temu zakon",
-      "x": 36.24,
-      "y": 156.47,
-      "page": 5,
-      "font_size": 10.0,
-      "line_text": "leto 1<)53 z dokumentacijo ter vladne spremembe in dopolnitve k temu zakon"
-    },
-    {
-      "text": "januarja 1953 razpravljal 0 naslednjih predlogih:",
-      "x": 42.72,
-      "y": 377.25,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "januarja 1953 razpravljal 0 naslednjih predlogih:"
-    },
-    {
-      "text": "št. 1/10326/4-52 z dne 30. maja 1",
-      "x": 43.68,
-      "y": 354.21,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "št. 1/10326/4-52 z dne 30. maja 1('32, s katero je bila dana odobritev za uvedbo"
-    },
-    {
-      "text": "(",
-      "x": 184.56,
-      "y": 358.97,
-      "page": 6,
-      "font_size": 5.85,
-      "line_text": "št. 1/10326/4-52 z dne 30. maja 1('32, s katero je bila dana odobritev za uvedbo"
-    },
-    {
-      "text": "'32, s katero je bila dana odobritev za uvedbo",
-      "x": 188.16,
-      "y": 354.21,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "št. 1/10326/4-52 z dne 30. maja 1('32, s katero je bila dana odobritev za uvedbo"
-    },
-    {
-      "text": "kazenskega postopka proti ljudskemu poslancu Karlu Notarju zaradi",
-      "x": 43.68,
-      "y": 343.41,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "kazenskega postopka proti ljudskemu poslancu Karlu Notarju zaradi"
-    },
-    {
-      "text": "kaznivega dejanja po členu 150 in 141 k. z.;",
-      "x": 44.16,
-      "y": 332.13,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "kaznivega dejanja po členu 150 in 141 k. z.;"
-    },
-    {
-      "text": "št. 1/101306/1-53 z dne 12. decembra 1952, s katero je bila dana odobritev za",
-      "x": 43.68,
-      "y": 309.57,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "št. 1/101306/1-53 z dne 12. decembra 1952, s katero je bila dana odobritev za"
-    },
-    {
-      "text": "uvedbo kazenskega postopka proti ljudskemu poslancu Cirilu M a jen u",
-      "x": 44.4,
-      "y": 299.01,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "uvedbo kazenskega postopka proti ljudskemu poslancu Cirilu M a jen u"
-    },
-    {
-      "text": "zaradi kaznivega dejanja pa členu 226/1 k. z.;",
-      "x": 44.16,
-      "y": 287.73,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "zaradi kaznivega dejanja pa členu 226/1 k. z.;"
-    },
-    {
-      "text": "št. 1/101292/2-32 z. dne 23. januarja 1953, s katero je bila dana odobritev za",
-      "x": 43.92,
-      "y": 265.41,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "št. 1/101292/2-32 z. dne 23. januarja 1953, s katero je bila dana odobritev za"
-    },
-    {
-      "text": "uvedbo kazenskega postopka proti ljudskemu poslancu lleliodorju Grud \" u",
-      "x": 44.4,
-      "y": 254.85,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "uvedbo kazenskega postopka proti ljudskemu poslancu lleliodorju Grud \" u"
-    },
-    {
-      "text": "zaradi kaznivega dejanja po členu 317/1, 258, 226/1 ali 253/1 in po 249 ali",
-      "x": 43.92,
-      "y": 244.53,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "zaradi kaznivega dejanja po členu 317/1, 258, 226/1 ali 253/1 in po 249 ali"
-    },
-    {
-      "text": "250 k. z.;",
-      "x": 43.68,
-      "y": 232.29,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "250 k. z.;"
-    },
-    {
-      "text": "o smrti ljudskega poslanca Antona Ravšcrja, ki je umrl dne 10. IX. 1952.",
-      "x": 43.68,
-      "y": 210.21,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "o smrti ljudskega poslanca Antona Ravšcrja, ki je umrl dne 10. IX. 1952."
-    },
-    {
-      "text": "odbor ljudski skupščini naslednje predloge:",
-      "x": 43.44,
-      "y": 186.69,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "odbor ljudski skupščini naslednje predloge:"
-    },
-    {
-      "text": "bila izdana odobritev za uvedbo kazenskega postopka proti ljudskemu po",
-      "x": 43.92,
-      "y": 163.41,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "bila izdana odobritev za uvedbo kazenskega postopka proti ljudskemu po"
-    },
-    {
-      "text": "slancu Karlu Notarju.",
-      "x": 44.16,
-      "y": 152.37,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "slancu Karlu Notarju."
-    },
-    {
-      "text": "bilo poslano ljudski skupščini dne II. oktobra 1952, da je bil imenovani",
-      "x": 44.4,
-      "y": 131.73,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "bilo poslano ljudski skupščini dne II. oktobra 1952, da je bil imenovani"
-    },
-    {
-      "text": "poslanec obsojen na 2 meseca zapora, odbor ne predlaga odvzema mandala.",
-      "x": 44.4,
-      "y": 121.17,
-      "page": 6,
-      "font_size": 9.0,
-      "line_text": "poslanec obsojen na 2 meseca zapora, odbor ne predlaga odvzema mandala."
     }
   ],
   "recovery_counts": {},
