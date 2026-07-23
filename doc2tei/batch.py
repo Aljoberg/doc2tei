@@ -38,6 +38,11 @@ BATCH_MANIFEST_NAME = "batch-manifest.json"
 BUNDLE_STATUS_NAME = "status.json"
 MAX_BUNDLE_PATH_LENGTH = 240
 MAX_BUNDLE_COMPONENT_LENGTH = 100
+# ``_atomic_path`` writes each output to a sibling temp file first. That temp
+# name is longer than the final one, so every path budget reserves this many
+# characters to keep the *transient* path within MAX_BUNDLE_PATH_LENGTH too --
+# otherwise a bundle that just fits still fails when its temp file is created.
+_ATOMIC_TEMP_RESERVE = 16
 WINDOWS_RESERVED_NAMES = frozenset(
     {"CON", "PRN", "AUX", "NUL"}
     | {f"COM{number}" for number in range(1, 10)}
@@ -173,8 +178,14 @@ def _safe_title(name: str, group_dir: Path, source: Path, used: set[str]) -> str
 
     base = _safe_bundle_component(name or "document")
     # The "x" placeholder stands in for the (not yet known) title; removing its
-    # single character leaves the fixed overhead of the longest child path.
-    overhead = len(str(group_dir / "metadata" / "x" / "diagnostics.json")) - 1
+    # single character leaves the fixed overhead of the longest child path. The
+    # temp reserve keeps the transient ``.diagnostics.json.<token>.tmp`` write
+    # -- not just the final file -- within the limit.
+    overhead = (
+        len(str(group_dir / "metadata" / "x" / "diagnostics.json"))
+        - 1
+        + _ATOMIC_TEMP_RESERVE
+    )
     available = max(8, MAX_BUNDLE_PATH_LENGTH - overhead)
     # Reserve a little room for a "-2"/"-3" collision suffix appended below.
     budget = max(8, available - 4)
@@ -197,7 +208,8 @@ def _safe_relative_group(relative: Path, output: Path) -> Path:
     if not relative.parts:
         return Path()
     safe = Path(*(_safe_bundle_component(part) for part in relative.parts))
-    if len(str(output / safe / "listPerson.xml")) <= MAX_BUNDLE_PATH_LENGTH:
+    fit = MAX_BUNDLE_PATH_LENGTH - _ATOMIC_TEMP_RESERVE
+    if len(str(output / safe / "listPerson.xml")) <= fit:
         return safe
     digest = hashlib.sha1(relative.as_posix().encode("utf-8")).hexdigest()[:12]
     name = _safe_bundle_component(relative.name or "folder")
@@ -303,7 +315,10 @@ def automatic_document_workers(document_count: int) -> int:
 
 
 def _atomic_path(path: Path) -> Path:
-    return path.with_name(f".{path.name}.{os.getpid()}.{time.time_ns()}.tmp")
+    # A short random token keeps the temp name (and thus the total path) close
+    # to the final one; see _ATOMIC_TEMP_RESERVE. os.urandom is enough to avoid
+    # clashes between concurrent writers and stale temps from a crashed run.
+    return path.with_name(f".{path.name}.{os.urandom(4).hex()}.tmp")
 
 
 def _atomic_json(path: Path, value: object) -> None:
@@ -565,10 +580,11 @@ def _corpus_path(group: Path) -> Path:
 
     name = _safe_bundle_component(group.name or "corpus")
     destination = group / f"{name}.xml"
-    if len(str(destination)) <= MAX_BUNDLE_PATH_LENGTH:
+    fit = MAX_BUNDLE_PATH_LENGTH - _ATOMIC_TEMP_RESERVE
+    if len(str(destination)) <= fit:
         return destination
     digest = hashlib.sha1(str(group).encode("utf-8")).hexdigest()[:10]
-    available = MAX_BUNDLE_PATH_LENGTH - len(str(group / ".xml")) - len(digest) - 1
+    available = fit - len(str(group / ".xml")) - len(digest) - 1
     name = f"{name[: max(1, available)].rstrip(' .-')}-{digest}"
     return group / f"{name}.xml"
 

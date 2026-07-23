@@ -279,6 +279,12 @@ def test_batch_shortens_unsafe_and_excessively_long_output_paths(tmp_path):
     assert "_long-paths" not in title
     assert "_long-paths" not in str(batch_module.document_path(BatchJob("", "", title)))
     assert len(str(group_dir / "metadata" / title / "diagnostics.json")) <= 240
+    # The transient ``_atomic_path`` temp file -- not just the final file -- must
+    # stay within the budget; it is longer and is what actually gets created.
+    job = BatchJob("source.pdf", str(group_dir), title)
+    longest_final = group_dir / "metadata" / title / "diagnostics.json"
+    assert len(str(batch_module._atomic_path(longest_final))) <= 240
+    assert len(str(batch_module._atomic_path(batch_module.document_path(job)))) <= 240
     # A second document with the same name still gets a distinct title.
     assert duplicate != title
 
