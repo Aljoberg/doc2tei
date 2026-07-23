@@ -71,8 +71,8 @@ for deterministic, offline output.
 ## Batch processing
 
 `batch_parse.py` recursively converts every PDF and DOCX below one or more
-inputs. It uses the general config by default and creates an independent output
-bundle for every source document:
+inputs. It uses the general config by default and mirrors each source folder as
+a nested output folder:
 
 ```powershell
 python .\batch_parse.py "D:\documents" `
@@ -81,9 +81,13 @@ python .\batch_parse.py "D:\documents" `
   --xml-declaration
 ```
 
-Each bundle contains `document.xml`, `data.json`, `diagnostics.json`, and
-`status.json`. By default it also contains its own `listPerson.xml`. Choose a
-different aggregation level with:
+Within each folder, the TEI transcriptions are collected under `documents/`
+(one `<name>.xml` per source document, named after the source file), and the
+per-document `data.json`, `diagnostics.json`, and `status.json` sidecars live
+under `metadata/<name>/`. By default each document also gets its own
+`documents/<name>.listPerson.xml`. Long names are shortened in place (with a
+hash) so the layout stays nested and within the Windows path limit. Choose a
+different `listPerson` aggregation level with:
 
 ```powershell
 # One list beside all document bundles downloaded into the same source folder

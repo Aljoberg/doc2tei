@@ -51,8 +51,31 @@ def utc_now() -> str:
 @dataclass(frozen=True)
 class BatchJob:
     source: str
-    bundle: str
-    group: str | None = None
+    # The nested output folder shared by every document in a source directory;
+    # this is where the folder-scoped listPerson.xml is written.
+    group: str
+    # Unique, path-safe leaf identifying this document within its group. The
+    # TEI transcription is written to ``<group>/documents/<title>.xml`` and the
+    # JSON sidecars to ``<group>/metadata/<title>/``.
+    title: str
+
+
+def document_path(job: BatchJob) -> Path:
+    """TEI transcription output for a job."""
+
+    return Path(job.group) / "documents" / f"{job.title}.xml"
+
+
+def metadata_dir(job: BatchJob) -> Path:
+    """Folder holding a job's data/diagnostics/status JSON sidecars."""
+
+    return Path(job.group) / "metadata" / job.title
+
+
+def document_list_person_path(job: BatchJob) -> Path:
+    """Per-document listPerson output (only written for ``document`` scope)."""
+
+    return Path(job.group) / "documents" / f"{job.title}.listPerson.xml"
 
 
 @dataclass(frozen=True)
@@ -135,18 +158,34 @@ def _safe_bundle_component(value: str) -> str:
     return f"{cleaned[:prefix_length].rstrip(' .-')}-{digest}"
 
 
-def _safe_relative_bundle(relative: Path, source: Path, output: Path) -> Path:
-    safe = Path(*(_safe_bundle_component(part) for part in relative.parts))
-    longest_output = output / safe / "diagnostics.json"
-    if len(str(longest_output)) <= MAX_BUNDLE_PATH_LENGTH:
-        return safe
-    digest = hashlib.sha1(str(source).encode("utf-8")).hexdigest()[:12]
-    stem = _safe_bundle_component(source.stem)
-    suffix = f"-{digest}"
-    fixed = output / "_long-paths" / suffix / "diagnostics.json"
-    available = MAX_BUNDLE_PATH_LENGTH - len(str(fixed))
-    maximum_stem = max(8, min(available, MAX_BUNDLE_COMPONENT_LENGTH - len(suffix)))
-    return Path("_long-paths") / f"{stem[:maximum_stem].rstrip(' .-')}-{digest}"
+def _safe_title(name: str, group_dir: Path, source: Path, used: set[str]) -> str:
+    """Pick a Windows-path-safe, per-group-unique document title.
+
+    Every sidecar lives under ``<group>/metadata/<title>/`` and the longest of
+    those (``diagnostics.json``) governs the length budget. When the natural
+    name would overflow ``MAX_BUNDLE_PATH_LENGTH`` the title is truncated and a
+    source-derived hash keeps it unique -- the whole bundle stays nested inside
+    its group instead of being relocated to a flat sibling folder.
+    """
+
+    base = _safe_bundle_component(name or "document")
+    # The "x" placeholder stands in for the (not yet known) title; removing its
+    # single character leaves the fixed overhead of the longest child path.
+    overhead = len(str(group_dir / "metadata" / "x" / "diagnostics.json")) - 1
+    available = max(8, MAX_BUNDLE_PATH_LENGTH - overhead)
+    # Reserve a little room for a "-2"/"-3" collision suffix appended below.
+    budget = max(8, available - 4)
+    if len(base) > budget:
+        digest = hashlib.sha1(str(source).encode("utf-8")).hexdigest()[:10]
+        prefix = base[: max(1, budget - len(digest) - 1)].rstrip(" .-")
+        base = f"{prefix}-{digest}"
+    candidate = base
+    number = 2
+    while candidate.casefold() in used:
+        candidate = f"{base}-{number}"
+        number += 1
+    used.add(candidate.casefold())
+    return candidate
 
 
 def _safe_relative_group(relative: Path, output: Path) -> Path:
@@ -216,9 +255,9 @@ def discover_batch_jobs(
 
     jobs: list[BatchJob] = []
     seen_sources: set[str] = set()
-    used_bundles: set[str] = set()
     used_groups: set[str] = set()
     group_paths: dict[str, Path] = {}
+    used_titles: dict[str, set[str]] = {}
     for source, relative in sorted(
         candidates,
         key=lambda item: (item[1].as_posix().casefold(), str(item[0]).casefold()),
@@ -244,23 +283,10 @@ def discover_batch_jobs(
                 group_suffix,
             )
             group_paths[group_key] = unique_group
-        safe_relative = _safe_relative_bundle(
-            unique_group / (relative.name or "document"),
-            source,
-            output,
-        )
-        unique_relative = _unique_bundle_path(
-            safe_relative,
-            used_bundles,
-            source.suffix.removeprefix(".").casefold() or "document",
-        )
-        jobs.append(
-            BatchJob(
-                str(source),
-                str(output / unique_relative),
-                str(output / unique_group),
-            )
-        )
+        group_dir = output / unique_group
+        titles = used_titles.setdefault(unique_group.as_posix().casefold(), set())
+        title = _safe_title(relative.name or "document", group_dir, source, titles)
+        jobs.append(BatchJob(str(source), str(group_dir), title))
     return jobs, warnings
 
 
@@ -345,25 +371,26 @@ def _job_fingerprint(job: BatchJob, options: BatchOptions) -> dict[str, object]:
     }
 
 
-def _required_outputs(bundle: Path) -> list[Path]:
+def _required_outputs(job: BatchJob) -> list[Path]:
     # listPerson scope is a cheap post-processing choice over data.json. It is
     # deliberately not part of completion so changing scopes never reparses a
     # PDF; write_batch_list_person_outputs repairs the selected sidecars.
+    meta = metadata_dir(job)
     return [
-        bundle / "document.xml",
-        bundle / "diagnostics.json",
-        bundle / "data.json",
+        document_path(job),
+        meta / "diagnostics.json",
+        meta / "data.json",
     ]
 
 
 def _completed_status(
-    bundle: Path,
+    job: BatchJob,
     fingerprint: dict[str, object],
     options: BatchOptions,
 ) -> dict[str, object] | None:
     if options.overwrite:
         return None
-    status_path = bundle / BUNDLE_STATUS_NAME
+    status_path = metadata_dir(job) / BUNDLE_STATUS_NAME
     try:
         status = json.loads(status_path.read_text(encoding="utf-8"))
     except (OSError, ValueError, TypeError):
@@ -374,7 +401,7 @@ def _completed_status(
         return None
     if status.get("fingerprint") != fingerprint:
         return None
-    complete = all(path.is_file() for path in _required_outputs(bundle))
+    complete = all(path.is_file() for path in _required_outputs(job))
     return status if complete else None
 
 
@@ -401,22 +428,27 @@ def _result_warning_count(result: ParseResult) -> int:
 
 def _write_result_bundle(
     result: ParseResult,
-    bundle: Path,
+    job: BatchJob,
     options: BatchOptions,
 ) -> None:
+    meta = metadata_dir(job)
+    meta.mkdir(parents=True, exist_ok=True)
+    document = document_path(job)
+    document.parent.mkdir(parents=True, exist_ok=True)
     _atomic_result_write(
-        bundle / "document.xml",
+        document,
         lambda path: result.write_xml(
             path,
             xml_declaration=options.xml_declaration,
             pretty=options.pretty,
         ),
     )
-    _atomic_result_write(bundle / "diagnostics.json", result.write_diagnostics)
-    _atomic_result_write(bundle / "data.json", result.write_data)
+    _atomic_result_write(meta / "diagnostics.json", result.write_diagnostics)
+    _atomic_result_write(meta / "data.json", result.write_data)
+    list_person = document_list_person_path(job)
     if options.write_list_person and options.list_person_scope == "document":
         _atomic_result_write(
-            bundle / "listPerson.xml",
+            list_person,
             lambda path: result.write_list_person(
                 path,
                 xml_declaration=options.xml_declaration,
@@ -429,12 +461,12 @@ def _write_result_bundle(
             ),
         )
     else:
-        (bundle / "listPerson.xml").unlink(missing_ok=True)
+        list_person.unlink(missing_ok=True)
 
 
 def _bundle_speaker_mapping(job: BatchJob) -> Mapping[str, str]:
     try:
-        data = json.loads((Path(job.bundle) / "data.json").read_text(encoding="utf-8"))
+        data = json.loads((metadata_dir(job) / "data.json").read_text(encoding="utf-8"))
     except (OSError, ValueError, TypeError):
         return {}
     mapping = data.get("speakers") if isinstance(data, dict) else None
@@ -481,11 +513,8 @@ def write_batch_list_person_outputs(
     """Write the selected listPerson layout and remove stale alternative scopes."""
 
     root = Path(output_root).expanduser().resolve()
-    document_paths = {Path(job.bundle) / "listPerson.xml": job for job in jobs}
-    folder_paths = {
-        (Path(job.group) if job.group else Path(job.bundle).parent) / "listPerson.xml"
-        for job in jobs
-    }
+    document_paths = {document_list_person_path(job): job for job in jobs}
+    folder_paths = {Path(job.group) / "listPerson.xml" for job in jobs}
     grouped: dict[Path, list[BatchJob]] = {}
     if options.write_list_person:
         if options.list_person_scope == "document":
@@ -494,7 +523,7 @@ def write_batch_list_person_outputs(
             }
         elif options.list_person_scope == "folder":
             for job in jobs:
-                group = Path(job.group) if job.group else Path(job.bundle).parent
+                group = Path(job.group)
                 grouped.setdefault(group / "listPerson.xml", []).append(job)
         elif options.list_person_scope == "corpus":
             grouped[root / "listPerson.xml"] = list(jobs)
@@ -586,23 +615,26 @@ def _write_status(
             "fingerprint": fingerprint,
         }
     )
-    _atomic_json(Path(job.bundle) / BUNDLE_STATUS_NAME, status)
+    meta = metadata_dir(job)
+    meta.mkdir(parents=True, exist_ok=True)
+    _atomic_json(meta / BUNDLE_STATUS_NAME, status)
 
 
 def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
     """Convert one job; always attempt a reviewable bundle on parser failure."""
 
     started = time.perf_counter()
-    bundle = Path(job.bundle)
+    output = document_path(job)
+    meta = metadata_dir(job)
     source = Path(job.source)
     config = Path(options.config)
-    bundle.mkdir(parents=True, exist_ok=True)
+    meta.mkdir(parents=True, exist_ok=True)
     fingerprint = _job_fingerprint(job, options)
-    previous = _completed_status(bundle, fingerprint, options)
+    previous = _completed_status(job, fingerprint, options)
     if previous is not None:
         return BatchItemResult(
             source=str(source),
-            output=str(bundle),
+            output=str(output),
             status="skipped",
             elapsed_seconds=time.perf_counter() - started,
             chunk_count=int(previous.get("chunk_count", 0)),
@@ -611,7 +643,7 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
             warning_count=int(previous.get("warning_count", 0)),
         )
 
-    debug_temporary = _atomic_path(bundle / "debug.log")
+    debug_temporary = _atomic_path(meta / "debug.log")
     final_result: BatchItemResult
     try:
         with debug_temporary.open("w", encoding="utf-8") as debug_stream:
@@ -620,13 +652,13 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
                 _configure_page_workers(loaded, options.page_workers)
                 with redirect_stdout(debug_stream), redirect_stderr(debug_stream):
                     parsed = parse_document(source, config=loaded)
-                    _write_result_bundle(parsed, bundle, options)
+                    _write_result_bundle(parsed, job, options)
                 recoveries = _result_recovery_count(parsed)
                 warnings = _result_warning_count(parsed)
                 status: BatchStatus = "recovered" if recoveries else "ok"
                 final_result = BatchItemResult(
                     source=str(source),
-                    output=str(bundle),
+                    output=str(output),
                     status=status,
                     elapsed_seconds=time.perf_counter() - started,
                     chunk_count=parsed.diagnostics.chunk_count,
@@ -641,17 +673,17 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
             except Exception as error:
                 traceback.print_exc(file=debug_stream)
                 fallback = _failure_parse_result(source, config, error)
-                _write_result_bundle(fallback, bundle, options)
+                _write_result_bundle(fallback, job, options)
                 final_result = BatchItemResult(
                     source=str(source),
-                    output=str(bundle),
+                    output=str(output),
                     status="recovered",
                     elapsed_seconds=time.perf_counter() - started,
                     recovery_count=_result_recovery_count(fallback),
                     message=f"{type(error).__name__}: {error}"[:500],
                 )
 
-        debug_path = bundle / "debug.log"
+        debug_path = meta / "debug.log"
         if debug_temporary.stat().st_size:
             os.replace(debug_temporary, debug_path)
         else:
@@ -663,7 +695,7 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
         debug_temporary.unlink(missing_ok=True)
         failed = BatchItemResult(
             source=str(source),
-            output=str(bundle),
+            output=str(output),
             status="failed",
             elapsed_seconds=time.perf_counter() - started,
             message=f"{type(error).__name__}: {error}"[:500],
@@ -683,20 +715,20 @@ def _recover_worker_failure(
     """Create a fallback bundle if a worker process itself terminates."""
 
     started = time.perf_counter()
-    bundle = Path(job.bundle)
+    output = document_path(job)
     source = Path(job.source)
     config = Path(options.config)
     try:
-        bundle.mkdir(parents=True, exist_ok=True)
+        metadata_dir(job).mkdir(parents=True, exist_ok=True)
         fallback = _failure_parse_result(
             source,
             config,
             f"worker process failed: {type(error).__name__}: {error}",
         )
-        _write_result_bundle(fallback, bundle, options)
+        _write_result_bundle(fallback, job, options)
         result = BatchItemResult(
             source=str(source),
-            output=str(bundle),
+            output=str(output),
             status="recovered",
             elapsed_seconds=time.perf_counter() - started,
             recovery_count=_result_recovery_count(fallback),
@@ -707,7 +739,7 @@ def _recover_worker_failure(
     except Exception as fallback_error:
         return BatchItemResult(
             source=str(source),
-            output=str(bundle),
+            output=str(output),
             status="failed",
             elapsed_seconds=time.perf_counter() - started,
             message=(

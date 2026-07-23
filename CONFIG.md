@@ -1227,15 +1227,18 @@ For collections, use the dedicated runner instead of starting many independent
 python batch_parse.py path/to/documents --output-dir out/batch
 ```
 
-It recursively discovers PDF and DOCX inputs, preserves their relative
-directory layout, writes one output bundle per document, and maintains
+It recursively discovers PDF and DOCX inputs and mirrors their relative
+directory layout under the output root. Inside each mirrored folder the TEI
+transcriptions are collected under `documents/<name>.xml` (named after the
+source file) and the per-document `data.json`, `diagnostics.json`, and
+`status.json` sidecars under `metadata/<name>/`. It maintains
 `batch-manifest.json`. The default config is
 `examples/general-config/config.py`; select another with `--config`.
 
 Speaker lists support three scopes:
 
 ```bash
-# Default: OUTPUT/.../document/listPerson.xml
+# Default: OUTPUT/.../documents/<name>.listPerson.xml, one per document
 python batch_parse.py documents -o out --list-person-scope document
 
 # One OUTPUT/.../source-folder/listPerson.xml for each input folder
@@ -1245,7 +1248,9 @@ python batch_parse.py documents -o out --list-person-scope folder
 python batch_parse.py documents -o out --list-person-scope corpus
 ```
 
-Folder identity is retained even when long document paths have to be shortened.
+Folder identity is retained, and long document names are shortened in place
+(with a hash suffix) so the bundle stays nested inside its folder and within the
+Windows path limit rather than being relocated to a flat sibling directory.
 Combined lists deduplicate exact speaker IDs without fuzzily merging different
 IDs, so existing document `who` references remain valid. `--include-wikidata`
 enriches the resulting combined list rather than repeating lookups for every

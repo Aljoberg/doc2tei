@@ -158,8 +158,8 @@ def test_batch_cli_downloads_a_sistory_menu_then_parses_the_cache(
     assert manifest["counts"]["recovered"] == 1
     assert manifest["list_person"]["scope"] == "folder"
     assert len(manifest["list_person"]["outputs"]) == 1
-    bundle = output / "Downloaded menu" / "01 - publication"
-    assert (bundle / "document.xml").is_file()
-    assert (bundle / "diagnostics.json").is_file()
-    assert not (bundle / "listPerson.xml").exists()
-    assert (output / "Downloaded menu" / "listPerson.xml").is_file()
+    group = output / "Downloaded menu"
+    assert (group / "documents" / "01 - publication.xml").is_file()
+    assert (group / "metadata" / "01 - publication" / "diagnostics.json").is_file()
+    assert not (group / "documents" / "01 - publication.listPerson.xml").exists()
+    assert (group / "listPerson.xml").is_file()
