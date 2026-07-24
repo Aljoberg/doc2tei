@@ -1240,8 +1240,9 @@ manifest and log; and keeps uploaded sources and UI logs in the separate audit
 tree. It is designed for trusted local use, not direct exposure to untrusted
 networks.
 
-It recursively discovers PDF and DOCX inputs and mirrors a serialised version
-of their relative directory layout. Leading catalogue indices move to the end:
+It recursively discovers PDF and DOCX inputs, retaining each supplied source
+folder beneath a neutral output container, and mirrors a serialised version of
+its relative directory layout. Leading catalogue indices move to the end:
 `1. sklic (1947-1950)` becomes `sklic-01`. TEI components live directly inside
 that folder and use ParlaMint-style names such as
 `ParlaMint-SI_1947-12-15-sklic-01-01.xml`; JSON sidecars live in a mirrored
@@ -1273,10 +1274,12 @@ document. Changing only `--list-person-scope` rebuilds the inexpensive XML
 sidecars from existing `data.json` files and does not reparse the source PDFs.
 Use `--no-list-person` to suppress all three forms.
 
-`--emit-corpus-xml` emits a standalone `<teiCorpus>` for every folder level.
-Documents stay directly inside the subcorpus directory, while that subcorpus's
-root, `listPerson`, and `listOrg` are placed one level outside in its parent.
-For example, the parent of `sklic-01/` owns:
+`--emit-corpus-xml` emits a standalone `<teiCorpus>` for every corpus folder
+level. Each top-level source folder is an independent root corpus; the output
+directory is only a container and does not receive a generic
+`ParlaMint-SI.xml`. Documents stay directly inside the subcorpus directory,
+while that subcorpus's root, `listPerson`, and `listOrg` are placed one level
+outside in its parent. For example, the parent of `sklic-01/` owns:
 
 - `ParlaMint-SI-sklic-01.xml`
 - `ParlaMint-SI-sklic-01-listPerson.xml`
@@ -1331,6 +1334,12 @@ Bare menu paths and full SIstory menu URLs are accepted. Repeat
 below `METADATA_DIR/_sistory-downloads`; the downloader's existing-file skip and
 the parser's output fingerprints make the complete operation resumable.
 `--sistory-download-dir` moves that cache elsewhere.
+
+Hash-named cache directories remain private audit details. The actual
+menu-title directory created by `sistory-dl` becomes the top-level corpus
+folder below `OUTPUT_DIR`. Multiple menu arguments therefore create multiple
+sibling corpus folders and independent root XML/list files, never an aggregate
+corpus for the output container.
 
 SIstory acquisition results are embedded in
 `METADATA_DIR/batch-manifest.json`. Files already downloaded remain eligible

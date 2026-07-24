@@ -101,8 +101,8 @@ and an appropriate filesystem/process sandbox.
 ## Batch processing
 
 `batch_parse.py` recursively converts every PDF and DOCX below one or more
-inputs. It uses the general config by default and mirrors each source folder as
-a nested output folder:
+inputs. It uses the general config by default and preserves each supplied
+source folder as a top-level folder beneath a neutral output container:
 
 ```powershell
 python .\batch_parse.py "D:\documents" `
@@ -115,7 +115,8 @@ Output folder and component names follow the ParlaMint conventions. Catalogue
 indices are moved out of the leading position (`1. sklic (1947-1950)` becomes
 `sklic-01`), and document components use names such as
 `ParlaMint-SI_1947-12-15-sklic-01-01.xml`. Components live directly in their
-subcorpus folder. Human-review artifacts do not: by default, `tei-output` is
+subcorpus folder. The output container is not implicitly another corpus.
+Human-review artifacts do not live in it either: by default, `tei-output` is
 paired with a sibling `tei-output-metadata` tree containing
 `<subcorpus>/<component>/data.json`, `diagnostics.json`, `status.json`, and any
 `debug.log`. The batch manifest and default SIstory source cache are kept there
@@ -149,6 +150,9 @@ suppress lists.
 Add `--emit-corpus-xml` to build a corpus for every recursive folder level.
 Each corpus is a standalone view of its complete subtree:
 
+- Every top-level source folder is an independent root corpus. The output
+  directory merely contains those folders and their parent-owned corpus files;
+  no generic `ParlaMint-SI.xml` is generated for the output directory itself.
 - Documents remain directly inside their subcorpus directory.
 - A subcorpus root and its `listPerson`/`listOrg` are written one level outside,
   in the parent corpus directory. For example, `sklic-01/` holds the components
@@ -207,6 +211,12 @@ A complete URL such as
 `sistory-dl` skips existing PDFs and doc2tei skips unchanged conversions, so the
 whole download-and-parse command is resumable. Change the source cache with
 `--sistory-download-dir`.
+
+The private hash-named cache folders are not copied into the corpus layout.
+Instead, each actual menu-title folder downloaded by `sistory-dl` becomes a
+top-level folder inside `OUTPUT_DIR`. Repeating `--sistory-menu` produces
+multiple sibling folders and independent root corpus XML/list files; it does
+not create an aggregate corpus for `OUTPUT_DIR`.
 
 Download statistics and failures are stored in
 `METADATA_DIR/batch-manifest.json`. A partial menu download does not prevent

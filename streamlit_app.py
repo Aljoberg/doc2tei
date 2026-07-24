@@ -108,7 +108,7 @@ with st.form("pipeline_form", border=True):
     destination_columns = st.columns(2)
     with destination_columns[0]:
         output_text = st.text_input(
-            "Corpus output directory",
+            "Output container directory",
             value=str(DEFAULT_OUTPUT),
             key="output_root",
             disabled=is_running,

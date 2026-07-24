@@ -470,19 +470,42 @@ def _safe_relative_group(
     output: Path,
     metadata_root: Path | None = None,
 ) -> Path:
-    """Serialize corpus folders and keep them inside the Windows path budget."""
+    """Serialize corpus folders while preserving their top-level source root."""
 
     if not relative.parts:
         return Path()
-    safe = Path(
-        *(
-            _safe_bundle_component(_serialized_folder_component(part))
-            for part in relative.parts
-        )
-    )
     fit = MAX_BUNDLE_PATH_LENGTH - _ATOMIC_TEMP_RESERVE
     audit_root = metadata_root or default_metadata_root(output)
     title_placeholder = "x" * DESIRED_COMPONENT_TITLE_BUDGET
+    first_name = _safe_bundle_component(_serialized_folder_component(relative.parts[0]))
+    # Reserve one compact descendant component. This makes the serialized
+    # top-level source folder stable whether it contains direct documents,
+    # nested folders, or both.
+    root_placeholders = (
+        output / "x" / ("y" * 8) / f"{title_placeholder}-listPerson.xml",
+        output / "x" / ("y" * 8) / f"{title_placeholder}.xml",
+        audit_root / "x" / ("y" * 8) / title_placeholder / "diagnostics.json",
+    )
+    root_available = max(
+        8,
+        min(fit - len(str(path)) + 1 for path in root_placeholders),
+    )
+    root_maximum = min(MAX_BUNDLE_COMPONENT_LENGTH, root_available)
+    if len(first_name) > root_maximum:
+        root_digest = hashlib.sha1(relative.parts[0].encode("utf-8")).hexdigest()[:12]
+        if root_maximum <= len(root_digest):
+            first_name = root_digest[:root_maximum]
+        else:
+            prefix = first_name[: root_maximum - len(root_digest) - 1].rstrip(" .-")
+            first_name = f"{prefix}-{root_digest}" if prefix else root_digest
+
+    safe = Path(
+        first_name,
+        *(
+            _safe_bundle_component(_serialized_folder_component(part))
+            for part in relative.parts[1:]
+        ),
+    )
     minimum_bundles = (
         output / safe / f"{title_placeholder}-listPerson.xml",
         output / safe / f"{title_placeholder}.xml",
@@ -490,14 +513,17 @@ def _safe_relative_group(
     )
     if all(len(str(path)) <= fit for path in minimum_bundles):
         return safe
+    if len(relative.parts) == 1:
+        return Path(first_name)
+
     digest = hashlib.sha1(relative.as_posix().encode("utf-8")).hexdigest()[:12]
     name = _safe_bundle_component(
         _serialized_folder_component(relative.name or "folder")
     )
     placeholders = (
-        output / "x" / f"{title_placeholder}-listPerson.xml",
-        output / "x" / f"{title_placeholder}.xml",
-        audit_root / "x" / title_placeholder / "diagnostics.json",
+        output / first_name / "x" / f"{title_placeholder}-listPerson.xml",
+        output / first_name / "x" / f"{title_placeholder}.xml",
+        audit_root / first_name / "x" / title_placeholder / "diagnostics.json",
     )
     available = max(
         8,
@@ -509,7 +535,7 @@ def _safe_relative_group(
     else:
         prefix = name[: maximum - len(digest) - 1].rstrip(" .-")
         leaf = f"{prefix}-{digest}" if prefix else digest
-    return Path(leaf)
+    return Path(first_name, leaf)
 
 
 def discover_batch_jobs(
@@ -521,7 +547,12 @@ def discover_batch_jobs(
     extensions: Iterable[str] | None = None,
     corpus_code: str = DEFAULT_CORPUS_CODE,
 ) -> tuple[list[BatchJob], list[str]]:
-    """Discover supported documents and assign collision-free output bundles."""
+    """Discover documents and assign collision-free bundles below source roots.
+
+    Every supplied directory is retained as a top-level output folder. This
+    makes ``output_root`` a neutral container rather than silently turning it
+    into a corpus of its own.
+    """
 
     output = Path(output_root).expanduser().resolve()
     metadata_output = (
@@ -540,8 +571,34 @@ def discover_batch_jobs(
                 force=ordinary.is_dir(),
             )
         )
-    multiple_inputs = len(specifications) > 1
-    candidates: list[tuple[Path, Path]] = []
+
+    physical_roots: dict[str, Path] = {}
+    for specification in specifications:
+        root = specification.parent if specification.is_file() else specification
+        physical_roots.setdefault(os.path.normcase(str(root)), root)
+    root_prefixes: dict[str, Path] = {}
+    used_prefixes: set[str] = set()
+    for root_key, root in sorted(
+        physical_roots.items(),
+        key=lambda item: str(item[1]).casefold(),
+    ):
+        base_name = root.name or "input"
+        prefix = Path(base_name)
+        serialized_key = _serialized_folder_component(base_name).casefold()
+        if serialized_key in used_prefixes:
+            digest = hashlib.sha1(str(root).encode("utf-8")).hexdigest()[:8]
+            prefix = Path(f"{base_name}-{digest}")
+            serialized_key = _serialized_folder_component(prefix.name).casefold()
+        number = 2
+        candidate = prefix
+        while serialized_key in used_prefixes:
+            candidate = Path(f"{prefix.name}-{number}")
+            serialized_key = _serialized_folder_component(candidate.name).casefold()
+            number += 1
+        used_prefixes.add(serialized_key)
+        root_prefixes[root_key] = candidate
+
+    candidates: list[tuple[Path, Path, tuple[str, ...]]] = []
     warnings: list[str] = []
 
     for specification in specifications:
@@ -552,12 +609,15 @@ def discover_batch_jobs(
             if specification.suffix.casefold() not in allowed:
                 warnings.append(f"unsupported input type: {specification}")
                 continue
-            relative = (
-                Path(specification.parent.name) / specification.stem
-                if multiple_inputs
-                else Path(specification.stem)
+            parent_key = os.path.normcase(str(specification.parent))
+            relative = root_prefixes[parent_key] / specification.stem
+            candidates.append(
+                (
+                    specification,
+                    relative,
+                    (specification.parent.name or "input",),
+                )
             )
-            candidates.append((specification, relative))
             continue
         if not specification.is_dir():
             warnings.append(
@@ -566,7 +626,8 @@ def discover_batch_jobs(
             continue
 
         iterator = specification.rglob("*") if recursive else specification.glob("*")
-        prefix = Path(specification.name) if multiple_inputs else Path()
+        specification_key = os.path.normcase(str(specification))
+        prefix = root_prefixes[specification_key]
         excluded_roots = []
         for excluded in (output, metadata_output):
             filesystem_root = _filesystem_path(excluded, force=True)
@@ -582,15 +643,20 @@ def discover_batch_jobs(
                 or any(_is_within(resolved, root) for root in excluded_roots)
             ):
                 continue
-            relative = prefix / source.relative_to(specification).with_suffix("")
-            candidates.append((resolved, relative))
+            source_relative = source.relative_to(specification).with_suffix("")
+            relative = prefix / source_relative
+            labels = (
+                specification.name or "input",
+                *source_relative.parent.parts,
+            )
+            candidates.append((resolved, relative, labels))
 
     jobs: list[BatchJob] = []
     seen_sources: set[str] = set()
     used_groups: set[str] = set()
     group_paths: dict[str, Path] = {}
     used_titles: dict[str, set[str]] = {}
-    for source, relative in sorted(
+    for source, relative, labels in sorted(
         candidates,
         key=lambda item: (item[1].as_posix().casefold(), str(item[0]).casefold()),
     ):
@@ -622,7 +688,7 @@ def discover_batch_jobs(
         group_dir = output / unique_group
         metadata_group = metadata_output / unique_group
         titles = used_titles.setdefault(unique_group.as_posix().casefold(), set())
-        group_labels = tuple(group_relative.parts)
+        group_labels = labels
         natural_title = _component_stem(source, group_labels, code)
         title = _safe_title(
             natural_title,
@@ -1139,6 +1205,8 @@ def _build_corpus_tree(
                 directory /= part
                 labels.setdefault(directory, label)
         elif job.group_labels:
+            if relative_parts:
+                labels.setdefault(root / relative_parts[0], job.group_labels[0])
             labels.setdefault(group, job.group_labels[-1])
 
     directories: set[Path] = {root}
@@ -1163,12 +1231,7 @@ def _build_corpus_tree(
             parent.children.append(node)
     for node in nodes.values():
         node.children.sort(key=lambda child: child.directory.name.casefold())
-    root_node = nodes[root]
-    if not root_node.documents and len(root_node.children) == 1:
-        # The output directory is often just a technical destination ("out").
-        # A single discovered top-level corpus provides a better root title.
-        root_node.label = root_node.children[0].label
-    return root_node
+    return nodes[root]
 
 
 def _write_tei_xml(path: Path, *, root: ET.Element, options: BatchOptions) -> None:
@@ -1388,39 +1451,61 @@ def write_batch_corpus_outputs(
     output_root: str | Path,
     options: BatchOptions,
 ) -> tuple[list[Path], list[Path], list[Path]]:
-    """Emit standalone corpora for every recursive folder level.
+    """Emit a forest of standalone corpora below a neutral output container.
 
-    A subcorpus keeps its document components directly inside its directory,
-    while its corpus root and ParlaMint-named metadata files are owned by the
-    parent directory. Every corpus directly XIncludes all document components
-    in its subtree; corpus roots and metadata lists never XInclude child corpus
-    artifacts. Nothing is produced unless ``options.emit_corpus`` is set. Returns
-    ``(corpus_files, list_person_files, list_org_files)``.
+    Every top-level source folder is an independent root corpus; ``output_root``
+    itself is only their container. A subcorpus keeps its document components
+    directly inside its directory, while its corpus root and ParlaMint-named
+    metadata files are owned by the parent directory. Every corpus directly
+    XIncludes all document components in its subtree; corpus roots and metadata
+    lists never XInclude child corpus artifacts. Nothing is produced unless
+    ``options.emit_corpus`` is set. Returns ``(corpus_files,
+    list_person_files, list_org_files)``.
     """
 
     if not options.emit_corpus or not jobs:
         return [], [], []
-    root_node = _build_corpus_tree(jobs, output_root)
-    root = root_node.directory
+    container = _build_corpus_tree(jobs, output_root)
+    root = container.directory
     counts = {document_path(job): _document_counts(document_path(job)) for job in jobs}
     corpus_files: list[Path] = []
     list_person_files: list[Path] = []
     list_org_files: list[Path] = []
-    _emit_corpus_node(
-        root_node,
-        root,
-        options,
-        counts,
-        corpus_files,
-        list_person_files,
-        list_org_files,
-    )
+    for corpus_root in container.children:
+        _emit_corpus_node(
+            corpus_root,
+            root,
+            options,
+            counts,
+            corpus_files,
+            list_person_files,
+            list_org_files,
+        )
+
+    if container.documents:
+        # Public discovery preserves input roots, so normal batches never put
+        # documents directly in the neutral container. Keep a lossless fallback
+        # for manually constructed jobs and third-party library integrations.
+        loose_documents = _CorpusNode(
+            directory=container.directory,
+            label=container.label,
+            documents=container.documents,
+        )
+        _emit_corpus_node(
+            loose_documents,
+            root,
+            options,
+            counts,
+            corpus_files,
+            list_person_files,
+            list_org_files,
+        )
 
     # Reconcile exact files owned by the corpus generator. This removes stale
-    # generic names from the previous layout and removes metadata lists when
-    # --no-list-person is selected, without deleting source or document files.
+    # generic artifacts and metadata lists disabled with --no-list-person,
+    # without deleting source or document files.
     nodes: list[_CorpusNode] = []
-    pending = [root_node]
+    pending = [container]
     while pending:
         node = pending.pop()
         nodes.append(node)
@@ -1437,6 +1522,11 @@ def write_batch_corpus_outputs(
                 node.directory / "listOrg.xml",
                 node.directory
                 / f"{_safe_bundle_component(node.directory.name or 'corpus')}.xml",
+                _corpus_artifact_path(
+                    node.directory,
+                    root,
+                    options,
+                ),
                 _corpus_artifact_path(
                     node.directory,
                     root,

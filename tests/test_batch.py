@@ -120,17 +120,17 @@ def test_batch_discovery_is_recursive_collision_safe_and_excludes_output(tmp_pat
         "other.PDF",
     }
     documents = {document_path(job).relative_to(output).as_posix() for job in jobs}
-    assert "nested/ParlaMint-SI_undated-nested-other.xml" in documents
+    assert "inputs/nested/ParlaMint-SI_undated-nested-other.xml" in documents
     assert len(documents) == 3
-    titles = {job.title for job in jobs if Path(job.group) == output}
+    titles = {job.title for job in jobs if Path(job.group) == output / "inputs"}
     # The two "same"-stemmed files in the same group get a collision suffix.
-    assert "ParlaMint-SI_undated-same" in titles
-    assert "ParlaMint-SI_undated-same-2" in titles
+    assert "ParlaMint-SI_undated-inputs-same" in titles
+    assert "ParlaMint-SI_undated-inputs-same-2" in titles
     assert all(not Path(path).name[0].isdigit() for path in documents)
     groups = {Path(job.source).name: Path(job.group) for job in jobs}
-    assert groups["other.PDF"] == output / "nested"
-    assert groups["same.pdf"] == output
-    assert groups["same.docx"] == output
+    assert groups["other.PDF"] == output / "inputs" / "nested"
+    assert groups["same.pdf"] == output / "inputs"
+    assert groups["same.docx"] == output / "inputs"
     assert all(metadata_dir(job).is_relative_to(metadata_root) for job in jobs)
     assert all(not metadata_dir(job).is_relative_to(output) for job in jobs)
 
@@ -149,13 +149,27 @@ def test_batch_keeps_same_named_source_folders_as_separate_groups(tmp_path):
     second.mkdir(parents=True)
     (first / "minutes.pdf").touch()
     (second / "minutes.pdf").touch()
+    (first / "sessions").mkdir()
+    (second / "sessions").mkdir()
+    (first / "sessions" / "day-1.pdf").touch()
+    (second / "sessions" / "day-1.pdf").touch()
 
     jobs, warnings = discover_batch_jobs([first, second], output)
 
     assert warnings == []
-    assert len(jobs) == 2
-    assert len({job.group for job in jobs}) == 2
+    assert len(jobs) == 4
     assert all(document_path(job).parent == Path(job.group) for job in jobs)
+    output_roots: set[str] = set()
+    for source_root in (first, second):
+        filesystem_root = batch_module._filesystem_path(source_root, force=True)
+        source_output_roots = {
+            document_path(job).relative_to(output).parts[0]
+            for job in jobs
+            if Path(job.source).is_relative_to(filesystem_root)
+        }
+        assert len(source_output_roots) == 1
+        output_roots.update(source_output_roots)
+    assert len(output_roots) == 2
 
 
 def test_batch_serializes_term_folder_and_parlamint_component_name(tmp_path):
@@ -171,11 +185,11 @@ def test_batch_serializes_term_folder_and_parlamint_component_name(tmp_path):
     assert warnings == []
     assert len(jobs) == 1
     job = jobs[0]
-    assert Path(job.group) == output / "sklic-01"
-    assert job.group_labels == ("1. sklic (1947-1950)",)
+    assert Path(job.group) == output / "downloads" / "sklic-01"
+    assert job.group_labels == ("downloads", "1. sklic (1947-1950)")
     assert job.title == "ParlaMint-SI_1947-12-15-sklic-01-01"
     assert document_path(job) == (
-        output / "sklic-01" / "ParlaMint-SI_1947-12-15-sklic-01-01.xml"
+        output / "downloads" / "sklic-01" / "ParlaMint-SI_1947-12-15-sklic-01-01.xml"
     )
 
 
@@ -731,6 +745,12 @@ def _nested_corpus_jobs(tmp_path):
 
 def test_write_batch_corpus_emits_recursive_tree(tmp_path):
     output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
+    for stale_name in (
+        "ParlaMint-SI.xml",
+        "ParlaMint-SI-listPerson.xml",
+        "ParlaMint-SI-listOrg.xml",
+    ):
+        (output / stale_name).write_text("<stale/>", encoding="utf-8")
 
     corpus_files, list_person_files, list_org_files = write_batch_corpus_outputs(
         jobs, output, _corpus_options(tmp_path)
@@ -739,19 +759,16 @@ def test_write_batch_corpus_emits_recursive_tree(tmp_path):
     # Each subcorpus keeps documents in its directory but its corpus root and
     # metadata are owned by its parent directory.
     assert set(corpus_files) == {
-        output / "ParlaMint-SI.xml",
         output / "ParlaMint-SI-mandate.xml",
         mandate / "ParlaMint-SI-sub1.xml",
         mandate / "ParlaMint-SI-sub2.xml",
     }
     assert set(list_person_files) == {
-        output / "ParlaMint-SI-listPerson.xml",
         output / "ParlaMint-SI-mandate-listPerson.xml",
         mandate / "ParlaMint-SI-sub1-listPerson.xml",
         mandate / "ParlaMint-SI-sub2-listPerson.xml",
     }
     assert set(list_org_files) == {
-        output / "ParlaMint-SI-listOrg.xml",
         output / "ParlaMint-SI-mandate-listOrg.xml",
         mandate / "ParlaMint-SI-sub1-listOrg.xml",
         mandate / "ParlaMint-SI-sub2-listOrg.xml",
@@ -778,11 +795,10 @@ def test_write_batch_corpus_emits_recursive_tree(tmp_path):
     assert 'href="Sub1/b.xml"' in sub1_xml
     assert 'unit="texts" quantity="2"' in sub1_xml
 
-    # The root corpus also references every component directly.
-    root_xml = (output / "ParlaMint-SI.xml").read_text(encoding="utf-8")
-    assert 'href="Mandate/Sub1/a.xml"' in root_xml
-    assert "ParlaMint-SI-mandate.xml" not in root_xml
-    assert 'unit="texts" quantity="4"' in root_xml
+    # The output directory is a neutral container, not another aggregate corpus.
+    assert not (output / "ParlaMint-SI.xml").exists()
+    assert not (output / "ParlaMint-SI-listPerson.xml").exists()
+    assert not (output / "ParlaMint-SI-listOrg.xml").exists()
 
 
 def test_write_batch_corpus_list_person_is_flat_and_aggregated(tmp_path):
@@ -796,7 +812,7 @@ def test_write_batch_corpus_list_person_is_flat_and_aggregated(tmp_path):
     # Its affiliations point at the sibling listOrg by id.
     assert 'ref="#org.SDS"' in sub1_lp
 
-    # Parent and root lists are flat subtree aggregates, not recursive lists.
+    # The root list is a flat subtree aggregate, not a recursive list.
     mandate_lp = (output / "ParlaMint-SI-mandate-listPerson.xml").read_text(
         encoding="utf-8"
     )
@@ -805,11 +821,8 @@ def test_write_batch_corpus_list_person_is_flat_and_aggregated(tmp_path):
         for name in ("AnaKovac", "JanezNovak", "MajaZupan", "MihaKovac")
     )
     assert "xi:include" not in mandate_lp
-
-    root_lp = (output / "ParlaMint-SI-listPerson.xml").read_text(encoding="utf-8")
-    assert "JanezNovak" in root_lp
-    assert "xi:include" not in root_lp
-    assert "UnknownSpeaker" not in root_lp
+    assert "UnknownSpeaker" not in mandate_lp
+    assert not (output / "ParlaMint-SI-listPerson.xml").exists()
 
 
 def test_write_batch_corpus_list_org_is_flat_and_deduplicated(tmp_path):
@@ -836,7 +849,7 @@ def test_write_batch_corpus_resolves_end_to_end(tmp_path):
     output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
     write_batch_corpus_outputs(jobs, output, _corpus_options(tmp_path))
 
-    root = _resolve_xincludes(output / "ParlaMint-SI.xml")
+    root = _resolve_xincludes(output / "ParlaMint-SI-mandate.xml")
     tei = "{http://www.tei-c.org/ns/1.0}"
     xml_id = "{http://www.w3.org/XML/1998/namespace}id"
     documents = list(root.iter(f"{tei}TEI"))
@@ -856,6 +869,42 @@ def test_write_batch_corpus_resolves_end_to_end(tmp_path):
     assert {ref.removeprefix("#") for ref in affiliation_refs} <= org_ids
     all_ids = [element.get(xml_id) for element in root.iter() if element.get(xml_id)]
     assert len(all_ids) == len(set(all_ids))
+
+
+def test_write_batch_corpus_emits_independent_top_level_roots(tmp_path):
+    output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
+    assembly = output / "Assembly"
+    jobs.append(
+        _corpus_job(
+            tmp_path,
+            assembly,
+            "e",
+            {"#TinaKos": "Tina Kos (Independent):"},
+            speeches=7,
+            words=70,
+        )
+    )
+
+    corpus_files, list_person_files, list_org_files = write_batch_corpus_outputs(
+        jobs, output, _corpus_options(tmp_path)
+    )
+
+    assert output / "ParlaMint-SI-mandate.xml" in corpus_files
+    assert output / "ParlaMint-SI-assembly.xml" in corpus_files
+    assert output / "ParlaMint-SI.xml" not in corpus_files
+    assert output / "ParlaMint-SI-mandate-listPerson.xml" in list_person_files
+    assert output / "ParlaMint-SI-assembly-listPerson.xml" in list_person_files
+    assert output / "ParlaMint-SI-mandate-listOrg.xml" in list_org_files
+    assert output / "ParlaMint-SI-assembly-listOrg.xml" in list_org_files
+
+    mandate_xml = (output / "ParlaMint-SI-mandate.xml").read_text(encoding="utf-8")
+    assembly_xml = (output / "ParlaMint-SI-assembly.xml").read_text(encoding="utf-8")
+    assert 'href="Mandate/Sub1/a.xml"' in mandate_xml
+    assert "Assembly/e.xml" not in mandate_xml
+    assert 'unit="texts" quantity="4"' in mandate_xml
+    assert 'href="Assembly/e.xml"' in assembly_xml
+    assert "Mandate/" not in assembly_xml
+    assert 'unit="texts" quantity="1"' in assembly_xml
 
 
 def test_write_batch_corpus_without_list_person(tmp_path):

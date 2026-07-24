@@ -175,3 +175,76 @@ def test_batch_cli_downloads_a_sistory_menu_then_parses_the_cache(
     assert not (group / "metadata").exists()
     assert not (group / f"{component}-listPerson.xml").exists()
     assert (output / "ParlaMint-SI-downloaded-menu-listPerson.xml").is_file()
+
+
+def test_batch_cli_emits_multiple_sistory_menus_as_sibling_corpora(
+    tmp_path, monkeypatch
+):
+    output = tmp_path / "output"
+    metadata = tmp_path / "review-files"
+    folder_names = {
+        "1/7/397/407": "Menu one",
+        "1/7/397/408": "Menu two",
+    }
+
+    def fake_download(menu_path, download_directory, **_kwargs):
+        source_folder = Path(download_directory) / folder_names[menu_path]
+        source_folder.mkdir(parents=True)
+        (source_folder / "01 - publication.pdf").write_bytes(b"not a real PDF")
+        return SIstoryDownloadResult(
+            menu_path=menu_path,
+            output=str(download_directory),
+            status="ok",
+            stats={
+                "folders": 1,
+                "publications": 1,
+                "files_found": 1,
+                "downloaded": 1,
+                "renamed": 0,
+                "skipped": 0,
+                "failed": 0,
+            },
+        )
+
+    monkeypatch.setattr(batch_parse, "download_sistory_menu", fake_download)
+
+    assert (
+        batch_parse.main(
+            [
+                "--sistory-menu",
+                "1/7/397/407",
+                "--sistory-menu",
+                "1/7/397/408",
+                "--output-dir",
+                str(output),
+                "--metadata-dir",
+                str(metadata),
+                "--emit-corpus-xml",
+                "--no-list-person",
+                "--workers",
+                "1",
+                "--quiet",
+            ]
+        )
+        == 0
+    )
+
+    first = output / "menu-one"
+    second = output / "menu-two"
+    assert first.is_dir()
+    assert second.is_dir()
+    assert (output / "ParlaMint-SI-menu-one.xml").is_file()
+    assert (output / "ParlaMint-SI-menu-two.xml").is_file()
+    assert not (output / "ParlaMint-SI.xml").exists()
+
+    first_xml = (output / "ParlaMint-SI-menu-one.xml").read_text(encoding="utf-8")
+    second_xml = (output / "ParlaMint-SI-menu-two.xml").read_text(encoding="utf-8")
+    assert 'href="menu-one/' in first_xml
+    assert "menu-two/" not in first_xml
+    assert 'href="menu-two/' in second_xml
+    assert "menu-one/" not in second_xml
+
+    manifest = json.loads(
+        (metadata / "batch-manifest.json").read_text(encoding="utf-8")
+    )
+    assert len(manifest["corpus"]["outputs"]) == 2

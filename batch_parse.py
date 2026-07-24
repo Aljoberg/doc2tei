@@ -73,7 +73,7 @@ def build_parser() -> argparse.ArgumentParser:
         "-o",
         "--output-dir",
         required=True,
-        help="root corpus directory for TEI XML deliverables",
+        help="neutral container for one or more TEI corpus folders",
     )
     parser.add_argument(
         "--metadata-dir",
@@ -153,8 +153,8 @@ def build_parser() -> argparse.ArgumentParser:
         "--emit-corpus-xml",
         action="store_true",
         help=(
-            "emit a teiCorpus for every recursive folder level; each corpus "
-            "directly XIncludes all document components in its subtree"
+            "emit independent top-level corpora and a teiCorpus for every "
+            "recursive folder level; each directly XIncludes its documents"
         ),
     )
     parser.add_argument(
@@ -222,6 +222,48 @@ def _sistory_cache_directory(base: Path, normalized_menu_path: str) -> Path:
     return base / f"{readable}-{digest}"
 
 
+def _contains_supported_document(directory: Path) -> bool:
+    try:
+        return any(
+            descendant.is_file() and descendant.suffix.casefold() in {".pdf", ".docx"}
+            for descendant in directory.rglob("*")
+        )
+    except OSError:
+        return False
+
+
+def _sistory_source_roots(cache: Path, downloader_directory: Path) -> list[Path]:
+    """Expose downloaded menu-title folders instead of the private cache path."""
+
+    filesystem_cache = sistory_filesystem_path(
+        cache,
+        downloader_directory=downloader_directory,
+    )
+    try:
+        children = list(filesystem_cache.iterdir())
+    except OSError:
+        return [filesystem_cache]
+
+    if any(
+        child.is_file() and child.suffix.casefold() in {".pdf", ".docx"}
+        for child in children
+    ):
+        # Recovery for a legacy or partially rearranged cache: retain all its
+        # contents even though its private cache name is less descriptive than
+        # a downloaded menu title.
+        return [filesystem_cache]
+
+    downloaded_roots = sorted(
+        (
+            child
+            for child in children
+            if child.is_dir() and _contains_supported_document(child)
+        ),
+        key=lambda path: path.name.casefold(),
+    )
+    return downloaded_roots or [filesystem_cache]
+
+
 def _download_sistory_inputs(
     menu_paths: list[str],
     download_base: Path,
@@ -254,12 +296,7 @@ def _download_sistory_inputs(
             # A failed refresh can still leave a useful prior cache. Discovery
             # below will parse any complete files already present there.
             if cache.is_dir():
-                roots.append(
-                    sistory_filesystem_path(
-                        cache,
-                        downloader_directory=downloader_directory,
-                    )
-                )
+                roots.extend(_sistory_source_roots(cache, downloader_directory))
         results.append(result)
         if result.status != "ok":
             print(
