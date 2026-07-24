@@ -17,6 +17,7 @@ from doc2tei.batch import (
     automatic_document_workers,
     batch_counts,
     discover_batch_jobs,
+    normalize_corpus_code,
     run_batch,
     utc_now,
     write_batch_corpus_outputs,
@@ -46,6 +47,13 @@ def positive_float(value: str) -> float:
     if number <= 0:
         raise argparse.ArgumentTypeError("must be greater than zero")
     return number
+
+
+def corpus_code(value: str) -> str:
+    try:
+        return normalize_corpus_code(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError(str(error)) from error
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -137,15 +145,20 @@ def build_parser() -> argparse.ArgumentParser:
         "--emit-corpus-xml",
         action="store_true",
         help=(
-            "emit a recursive teiCorpus tree: every output folder holding "
-            "documents (directly or below) gets a teiCorpus XML and a "
-            "listPerson.xml that XInclude their members, modelled on siParl"
+            "emit a teiCorpus for every recursive folder level; each corpus "
+            "directly XIncludes all document components in its subtree"
         ),
     )
     parser.add_argument(
         "--corpus-lang",
         default="sl",
         help="xml:lang for the emitted corpus headers (default: sl)",
+    )
+    parser.add_argument(
+        "--corpus-code",
+        type=corpus_code,
+        default="SI",
+        help="ISO country/region code used in ParlaMint filenames (default: SI)",
     )
     parser.add_argument(
         "--include-wikidata",
@@ -287,6 +300,7 @@ def main(argv: list[str] | None = None) -> int:
         },
         "corpus": {
             "enabled": args.emit_corpus_xml,
+            "code": args.corpus_code,
             "outputs": [],
         },
         "items": [],
@@ -325,6 +339,7 @@ def main(argv: list[str] | None = None) -> int:
             local_output,
             recursive=args.recursive,
             extensions=args.extension,
+            corpus_code=args.corpus_code,
         )
         jobs.extend(local_jobs)
         warnings.extend(local_warnings)
@@ -335,6 +350,7 @@ def main(argv: list[str] | None = None) -> int:
             sistory_output,
             recursive=True,
             extensions=args.extension,
+            corpus_code=args.corpus_code,
         )
         jobs.extend(downloaded_jobs)
         warnings.extend(downloaded_warnings)
@@ -377,6 +393,7 @@ def main(argv: list[str] | None = None) -> int:
         overwrite=args.overwrite,
         emit_corpus=args.emit_corpus_xml,
         corpus_language=args.corpus_lang,
+        corpus_code=args.corpus_code,
     )
     manifest.update(
         status="running",
@@ -384,6 +401,7 @@ def main(argv: list[str] | None = None) -> int:
         page_workers="config" if page_workers is None else page_workers,
         document_count=len(jobs),
         list_person_scope=args.list_person_scope,
+        corpus_code=args.corpus_code,
         discovery_warnings=warnings,
     )
     write_batch_manifest(manifest_path, manifest)
@@ -415,9 +433,8 @@ def main(argv: list[str] | None = None) -> int:
         write_batch_manifest(manifest_path, manifest)
         return 130
 
-    # With --emit-corpus-xml the recursive corpus tree owns listPerson: each
-    # folder's listPerson.xml XIncludes its children, so the flat scoped layout
-    # is skipped to avoid two files claiming the same path.
+    # With --emit-corpus-xml each standalone corpus owns flat listPerson/listOrg
+    # aggregates for its subtree, so the alternative scoped layout is skipped.
     list_person_paths: list[Path] = []
     list_person_error = ""
     list_org_paths: list[Path] = []
@@ -486,6 +503,7 @@ def main(argv: list[str] | None = None) -> int:
         },
         corpus={
             "enabled": args.emit_corpus_xml,
+            "code": args.corpus_code,
             "outputs": [str(path) for path in corpus_paths],
             **({"error": corpus_error} if corpus_error else {}),
         },

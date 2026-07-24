@@ -1227,30 +1227,32 @@ For collections, use the dedicated runner instead of starting many independent
 python batch_parse.py path/to/documents --output-dir out/batch
 ```
 
-It recursively discovers PDF and DOCX inputs and mirrors their relative
-directory layout under the output root. Inside each mirrored folder the TEI
-transcriptions are collected under `documents/<name>.xml` (named after the
-source file) and the per-document `data.json`, `diagnostics.json`, and
-`status.json` sidecars under `metadata/<name>/`. It maintains
-`batch-manifest.json`. The default config is
-`examples/general-config/config.py`; select another with `--config`.
+It recursively discovers PDF and DOCX inputs and mirrors a serialised version
+of their relative directory layout. Leading catalogue indices move to the end:
+`1. sklic (1947-1950)` becomes `sklic-01`. TEI components live directly inside
+that folder and use ParlaMint-style names such as
+`ParlaMint-SI_1947-12-15-sklic-01-01.xml`; JSON sidecars live under
+`metadata/<component>/`. `--corpus-code` changes the default `SI` country or
+region code. If no trustworthy transcript date is found, `undated` is used
+rather than a fabricated date.
+
+The source filename remains the main title in the document header. When
+available, the source folder/term and filename date are also added as a
+subordinate title, `<meeting>`, source date, and setting date.
 
 Speaker lists support three scopes:
 
 ```bash
-# Default: OUTPUT/.../documents/<name>.listPerson.xml, one per document
+# Default: OUTPUT/.../<component>-listPerson.xml, one per document
 python batch_parse.py documents -o out --list-person-scope document
 
-# One OUTPUT/.../source-folder/listPerson.xml for each input folder
+# One parent-owned ParlaMint-...-listPerson.xml for each input folder
 python batch_parse.py documents -o out --list-person-scope folder
 
-# One OUTPUT/listPerson.xml for the complete discovered corpus
+# One OUTPUT/ParlaMint-SI-listPerson.xml for the discovered corpus
 python batch_parse.py documents -o out --list-person-scope corpus
 ```
 
-Folder identity is retained, and long document names are shortened in place
-(with a hash suffix) so the bundle stays nested inside its folder and within the
-Windows path limit rather than being relocated to a flat sibling directory.
 Combined lists deduplicate exact speaker IDs without fuzzily merging different
 IDs, so existing document `who` references remain valid. `--include-wikidata`
 enriches the resulting combined list rather than repeating lookups for every
@@ -1258,35 +1260,25 @@ document. Changing only `--list-person-scope` rebuilds the inexpensive XML
 sidecars from existing `data.json` files and does not reparse the source PDFs.
 Use `--no-list-person` to suppress all three forms.
 
-`--emit-corpus-xml` additionally builds a recursive `<teiCorpus>` tree that
-mirrors the output folders, modelled on siParl (e.g. `siParl.xml` over its
-`SDT2.xml` mandate). Every folder holding documents -- directly or in a
-sub-folder -- becomes a corpus, so a folder of sub-folders is itself a corpus
-whose members are the sub-folder corpora, and a folder can carry both loose
-documents and child corpora. Each corpus folder gets three files:
+`--emit-corpus-xml` emits a standalone `<teiCorpus>` for every folder level.
+Documents stay directly inside the subcorpus directory, while that subcorpus's
+root, `listPerson`, and `listOrg` are placed one level outside in its parent.
+For example, the parent of `sklic-01/` owns:
 
-- `<foldername>.xml`: a `<teiCorpus>` with a generated `teiHeader` (titled after
-  the folder, with the whole subtree's document/speech/word counts summed into
-  `<extent>`) that XIncludes each document held directly in the folder and each
-  child corpus file, and references its `listPerson.xml` and `listOrg.xml` from
-  `particDesc`.
-- `listPerson.xml`: the speakers merged from the folder's own documents,
-  followed by an `<xi:include>` of each child folder's `listPerson.xml`. The
-  tree therefore resolves to one nested speaker list at the root.
-- `listOrg.xml`: the organizations named in those speakers' labels (the
-  parenthesised affiliation), each with a stable `xml:id`, plus an `<xi:include>`
-  of each child folder's `listOrg.xml`. Each `<affiliation>` in `listPerson`
-  carries `ref="#org.…"` matching an org id, so the reference closes once both
-  lists are XIncluded into a corpus. (Wikidata-derived parties keep their own
-  Wikidata `@ref` on the `orgName` and are not added to `listOrg`.)
+- `ParlaMint-SI-sklic-01.xml`
+- `ParlaMint-SI-sklic-01-listPerson.xml`
+- `ParlaMint-SI-sklic-01-listOrg.xml`
 
-Because the corpus feature emits the lists at every level, it takes over from the
-flat `--list-person-scope` layout while active (the manifest reports the scope as
-`recursive`); `--no-list-person` still suppresses every list (persons and orgs).
-`--corpus-lang` sets the corpus headers' `xml:lang` (default `sl`). Generation
-is a post-processing pass over the written outputs, so it does not reparse the
-source PDFs, and because every href is relative the tree XIncludes correctly
-wherever a folder is moved, as long as its members move with it.
+Every corpus XIncludes all document components in its complete subtree
+directly. It never includes a child corpus XML. The person and organisation
+lists are likewise flat, deduplicated subtree aggregates rather than recursive
+lists, preventing duplicate `xml:id` definitions. Corpus extent counts cover
+the same subtree.
+
+Corpus generation takes over from `--list-person-scope` while active (the
+manifest reports `recursive`). `--no-list-person` suppresses persons and
+organisations; `--corpus-lang` sets corpus header `xml:lang` (default `sl`).
+Generation is post-processing over existing outputs and never reparses a PDF.
 
 `--workers 0` (the default) uses up to four document processes. Multiple
 document workers automatically imply `page_workers=1`, avoiding nested process

@@ -1181,11 +1181,11 @@ def _head_kind(text: str) -> tuple[str, str]:
     if AGENDA_HEAD_RE.search(text):
         return "agendaItem", "agendaSection"
     if _session_number_match(text):
-        return "sessionNumber", "session"
+        return "sessionNumber", "debateSection"
     if SESSION_CAPS_RE.search(text):
-        return "session", "session"
+        return "session", "debateSection"
     if CHAMBER_HEAD_RE.search(text):
-        return "chamber", "session"
+        return "chamber", "debateSection"
     if ROMAN_HEADING_RE.fullmatch(text.strip()):
         return "sectionNumber", "section"
     return "section", "section"
@@ -1237,9 +1237,9 @@ def head_action(chunk: PDFChunk):
         not isinstance(child, str) and child.tag != "head" for child in current.children
     )
     current_type = current.element.attrib.get("type")
-    if div_type == "session":
-        if current_type != "session" or has_body:
-            open_root_division("session")
+    if div_type == "debateSection":
+        if current_type != "debateSection" or has_body:
+            open_root_division("debateSection")
     else:
         if current_type == div_type and has_body:
             engine.pop()

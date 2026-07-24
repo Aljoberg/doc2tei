@@ -14,18 +14,18 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import sys
 import time
 import traceback
 from typing import cast
+import unicodedata
 import xml.etree.ElementTree as ET
 
 import engine
 from type_decs import BatchStatus, ListPersonScope
 
 from .helpers import (
-    TEI_NAMESPACE,
-    XINCLUDE_NAMESPACE,
     build_list_org,
     build_list_person,
     build_tei_corpus,
@@ -38,13 +38,15 @@ from .parser import (
     load_config,
     parse_document,
 )
-from .tei_header import Measure, SourceBibl, TEIHeader
+from .tei_header import Measure, Meeting, SourceBibl, TEIHeader
 
 SUPPORTED_EXTENSIONS = frozenset({".pdf", ".docx"})
 BATCH_MANIFEST_NAME = "batch-manifest.json"
 BUNDLE_STATUS_NAME = "status.json"
 MAX_BUNDLE_PATH_LENGTH = 240
 MAX_BUNDLE_COMPONENT_LENGTH = 100
+DESIRED_COMPONENT_TITLE_BUDGET = 64
+DEFAULT_CORPUS_CODE = "SI"
 # ``_atomic_path`` writes each output to a sibling temp file first. That temp
 # name is longer than the final one, so every path budget reserves this many
 # characters to keep the *transient* path within MAX_BUNDLE_PATH_LENGTH too --
@@ -55,28 +57,243 @@ WINDOWS_RESERVED_NAMES = frozenset(
     | {f"COM{number}" for number in range(1, 10)}
     | {f"LPT{number}" for number in range(1, 10)}
 )
+_CORPUS_CODE_RE = re.compile(r"[A-Za-z]{2}(?:-[A-Za-z0-9]+)*\Z")
+_LEADING_INDEX_RE = re.compile(r"^\s*0*(\d+)\s*(?:[.)]\s*|-\s+)")
+_INDEXED_FOLDER_RE = re.compile(r"^\s*0*(\d+)\s*(?:[.)]\s*|-\s+)(.+?)\s*$")
+_YEAR_RANGE_RE = re.compile(
+    r"\s*\(\s*(?:18|19|20)\d{2}\s*[-–—]\s*(?:18|19|20)\d{2}\s*\)\s*$"
+)
+_MONTH_NUMBERS = {
+    "januar": 1,
+    "januarja": 1,
+    "januara": 1,
+    "sijecnja": 1,
+    "january": 1,
+    "februar": 2,
+    "februarja": 2,
+    "februara": 2,
+    "veljace": 2,
+    "february": 2,
+    "marec": 3,
+    "marca": 3,
+    "marta": 3,
+    "ozujka": 3,
+    "march": 3,
+    "april": 4,
+    "aprila": 4,
+    "travnja": 4,
+    "maj": 5,
+    "maja": 5,
+    "svibnja": 5,
+    "may": 5,
+    "junij": 6,
+    "junija": 6,
+    "juna": 6,
+    "lipnja": 6,
+    "june": 6,
+    "julij": 7,
+    "julija": 7,
+    "jula": 7,
+    "srpnja": 7,
+    "july": 7,
+    "avgust": 8,
+    "avgusta": 8,
+    "kolovoza": 8,
+    "august": 8,
+    "september": 9,
+    "septembra": 9,
+    "rujna": 9,
+    "oktober": 10,
+    "oktobra": 10,
+    "listopada": 10,
+    "october": 10,
+    "november": 11,
+    "novembra": 11,
+    "studenoga": 11,
+    "december": 12,
+    "decembra": 12,
+    "prosinca": 12,
+}
+_TEXTUAL_DATE_RE = re.compile(
+    r"(?<!\d)(?P<day>\d{1,2})\s*\.?\s*"
+    r"(?:[-–—]\s*\d{1,2}\s*\.\s*)?"
+    r"(?P<month>[^\W\d_]+)\.?\s*"
+    r"(?P<year>(?:18|19|20)\d{2})?",
+    re.IGNORECASE,
+)
+_ISO_DATE_RE = re.compile(
+    r"(?<!\d)((?:18|19|20)\d{2})[-./](0?[1-9]|1[0-2])[-./]"
+    r"(0?[1-9]|[12]\d|3[01])(?!\d)"
+)
+_DMY_DATE_RE = re.compile(
+    r"(?<!\d)(0?[1-9]|[12]\d|3[01])[.](0?[1-9]|1[0-2])[.]" r"((?:18|19|20)\d{2})(?!\d)"
+)
 
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
+def normalize_corpus_code(value: str) -> str:
+    """Return a ParlaMint-compatible upper-case country/region code."""
+
+    code = value.strip().upper()
+    if not _CORPUS_CODE_RE.fullmatch(code):
+        raise ValueError("corpus code must be an ISO-style code such as SI or ES-CT")
+    return code
+
+
+def _corpus_prefix(code: str) -> str:
+    return f"ParlaMint-{normalize_corpus_code(code)}"
+
+
+def _ascii_slug(value: str, *, fallback: str = "corpus") -> str:
+    """Convert free text to the ASCII letters/numbers/hyphens file subset."""
+
+    replacements = str.maketrans(
+        {
+            "đ": "d",
+            "Đ": "D",
+            "ð": "d",
+            "Ð": "D",
+            "ł": "l",
+            "Ł": "L",
+        }
+    )
+    decomposed = unicodedata.normalize("NFKD", value.translate(replacements))
+    ascii_text = decomposed.encode("ascii", "ignore").decode("ascii")
+    slug = re.sub(r"[^A-Za-z0-9]+", "-", ascii_text).strip("-").lower()
+    return slug or fallback
+
+
+def _serialized_folder_component(value: str) -> str:
+    """Serialize ``1. sklic (1947-1950)`` as ``sklic-01``.
+
+    Other leading catalogue numbers are moved to the end as well, so mirrored
+    corpus directories never begin with a source-system ordering index.
+    """
+
+    indexed = _INDEXED_FOLDER_RE.match(value)
+    if indexed:
+        number = int(indexed.group(1))
+        label = _YEAR_RANGE_RE.sub("", indexed.group(2)).strip()
+        return f"{_ascii_slug(label, fallback='corpus')}-{number:02d}"
+    return _ascii_slug(value)
+
+
+def _month_key(value: str) -> str:
+    return _ascii_slug(value, fallback="").replace("-", "")
+
+
+def _extract_iso_date(value: str) -> str | None:
+    """Best-effort first transcript date from a source title or header text."""
+
+    candidates: list[tuple[int, str]] = []
+    for iso in _ISO_DATE_RE.finditer(value):
+        try:
+            parsed = (
+                datetime(int(iso.group(1)), int(iso.group(2)), int(iso.group(3)))
+                .date()
+                .isoformat()
+            )
+            candidates.append((iso.start(), parsed))
+        except ValueError:
+            continue
+
+    for numeric in _DMY_DATE_RE.finditer(value):
+        try:
+            parsed = (
+                datetime(
+                    int(numeric.group(3)),
+                    int(numeric.group(2)),
+                    int(numeric.group(1)),
+                )
+                .date()
+                .isoformat()
+            )
+            candidates.append((numeric.start(), parsed))
+        except ValueError:
+            continue
+
+    for match in _TEXTUAL_DATE_RE.finditer(value):
+        month = _MONTH_NUMBERS.get(_month_key(match.group("month")))
+        if month is None:
+            continue
+        year_text = match.group("year")
+        if not year_text:
+            # Ranges often repeat the month but put the year only after the
+            # second date: "14. februarja - 16. februarja 1949".
+            nearby = re.search(
+                r"(?:18|19|20)\d{2}", value[match.end() : match.end() + 64]
+            )
+            year_text = nearby.group(0) if nearby else None
+        if not year_text:
+            continue
+        try:
+            parsed = (
+                datetime(int(year_text), month, int(match.group("day")))
+                .date()
+                .isoformat()
+            )
+            candidates.append((match.start(), parsed))
+        except ValueError:
+            continue
+    if not candidates:
+        return None
+    return min(candidates, key=lambda item: item[0])[1]
+
+
+def _short_source_slug(value: str, maximum: int = 28) -> str:
+    cleaned = _LEADING_INDEX_RE.sub("", value, count=1)
+    slug = _ascii_slug(cleaned, fallback="document")
+    if len(slug) <= maximum:
+        return slug
+    digest = hashlib.sha1(value.encode("utf-8")).hexdigest()[:8]
+    return f"{slug[: maximum - len(digest) - 1].rstrip('-')}-{digest}"
+
+
+def _short_folder_slug(value: str, maximum: int = 28) -> str:
+    slug = _serialized_folder_component(value)
+    if len(slug) <= maximum:
+        return slug
+    digest = hashlib.sha1(value.encode("utf-8")).hexdigest()[:8]
+    return f"{slug[: maximum - len(digest) - 1].rstrip('-')}-{digest}"
+
+
+def _component_stem(source: Path, group_labels: Sequence[str], code: str) -> str:
+    """Build a ParlaMint-style component stem without changing header titles."""
+
+    date = _extract_iso_date(source.stem) or "undated"
+    suffixes: list[str] = []
+    if group_labels:
+        suffixes.append(_short_folder_slug(group_labels[-1]))
+    source_index = _LEADING_INDEX_RE.match(source.stem)
+    if source_index:
+        suffixes.append(f"{int(source_index.group(1)):02d}")
+    else:
+        suffixes.append(_short_source_slug(source.stem))
+    suffix = f"-{'-'.join(suffixes)}" if suffixes else ""
+    return f"{_corpus_prefix(code)}_{date}{suffix}"
+
+
 @dataclass(frozen=True)
 class BatchJob:
     source: str
     # The nested output folder shared by every document in a source directory;
-    # this is where the folder-scoped listPerson.xml is written.
+    # this is where the document component itself is written.
     group: str
-    # Unique, path-safe leaf identifying this document within its group. The
-    # TEI transcription is written to ``<group>/documents/<title>.xml`` and the
-    # JSON sidecars to ``<group>/metadata/<title>/``.
+    # Unique ParlaMint-style leaf identifying this document within its group.
+    # The original source title remains unchanged in the document teiHeader.
     title: str
+    # Original source-folder labels, retained after their filesystem-safe
+    # serialisation so corpus and component headers can describe their term.
+    group_labels: tuple[str, ...] = ()
 
 
 def document_path(job: BatchJob) -> Path:
     """TEI transcription output for a job."""
 
-    return Path(job.group) / "documents" / f"{job.title}.xml"
+    return Path(job.group) / f"{job.title}.xml"
 
 
 def metadata_dir(job: BatchJob) -> Path:
@@ -88,7 +305,7 @@ def metadata_dir(job: BatchJob) -> Path:
 def document_list_person_path(job: BatchJob) -> Path:
     """Per-document listPerson output (only written for ``document`` scope)."""
 
-    return Path(job.group) / "documents" / f"{job.title}.listPerson.xml"
+    return Path(job.group) / f"{job.title}-listPerson.xml"
 
 
 @dataclass(frozen=True)
@@ -104,6 +321,7 @@ class BatchOptions:
     overwrite: bool = False
     emit_corpus: bool = False
     corpus_language: str = "sl"
+    corpus_code: str = DEFAULT_CORPUS_CODE
 
 
 @dataclass(frozen=True)
@@ -142,6 +360,20 @@ def _is_within(path: Path, directory: Path) -> bool:
         return False
 
 
+def _filesystem_path(path: str | Path, *, force: bool = False) -> Path:
+    """Use the Win32 extended prefix when a path exceeds legacy MAX_PATH."""
+
+    value = Path(path).expanduser().absolute()
+    if os.name != "nt":
+        return value
+    raw = str(value)
+    if raw.startswith("\\\\?\\") or (len(raw) < 248 and not force):
+        return value
+    if raw.startswith("\\\\"):
+        return Path(f"\\\\?\\UNC\\{raw[2:]}")
+    return Path(f"\\\\?\\{raw}")
+
+
 def _unique_bundle_path(relative: Path, used: set[str], suffix: str) -> Path:
     candidate = relative
     key = candidate.as_posix().casefold()
@@ -176,11 +408,9 @@ def _safe_bundle_component(value: str) -> str:
 def _safe_title(name: str, group_dir: Path, source: Path, used: set[str]) -> str:
     """Pick a Windows-path-safe, per-group-unique document title.
 
-    Every sidecar lives under ``<group>/metadata/<title>/`` and the longest of
-    those (``diagnostics.json``) governs the length budget. When the natural
-    name would overflow ``MAX_BUNDLE_PATH_LENGTH`` the title is truncated and a
-    source-derived hash keeps it unique -- the whole bundle stays nested inside
-    its group instead of being relocated to a flat sibling folder.
+    Components live directly under ``<group>`` while JSON sidecars live under
+    ``<group>/metadata/<title>/``. The latter's ``diagnostics.json`` governs the
+    length budget. A source-derived hash keeps a truncated title unique.
     """
 
     base = _safe_bundle_component(name or "document")
@@ -210,18 +440,45 @@ def _safe_title(name: str, group_dir: Path, source: Path, used: set[str]) -> str
 
 
 def _safe_relative_group(relative: Path, output: Path) -> Path:
-    """Keep source-folder grouping even when document bundles need flattening."""
+    """Serialize corpus folders and keep them inside the Windows path budget."""
 
     if not relative.parts:
         return Path()
-    safe = Path(*(_safe_bundle_component(part) for part in relative.parts))
+    safe = Path(
+        *(
+            _safe_bundle_component(_serialized_folder_component(part))
+            for part in relative.parts
+        )
+    )
     fit = MAX_BUNDLE_PATH_LENGTH - _ATOMIC_TEMP_RESERVE
-    if len(str(output / safe / "listPerson.xml")) <= fit:
+    minimum_bundle = (
+        output
+        / safe
+        / "metadata"
+        / ("x" * DESIRED_COMPONENT_TITLE_BUDGET)
+        / "diagnostics.json"
+    )
+    if len(str(minimum_bundle)) <= fit:
         return safe
     digest = hashlib.sha1(relative.as_posix().encode("utf-8")).hexdigest()[:12]
-    name = _safe_bundle_component(relative.name or "folder")
-    maximum = MAX_BUNDLE_COMPONENT_LENGTH - len(digest) - 1
-    return Path("_groups") / f"{name[:maximum].rstrip(' .-')}-{digest}"
+    name = _safe_bundle_component(
+        _serialized_folder_component(relative.name or "folder")
+    )
+    placeholder = (
+        output
+        / "x"
+        / "metadata"
+        / ("x" * DESIRED_COMPONENT_TITLE_BUDGET)
+        / "diagnostics.json"
+    )
+    available = max(8, fit - len(str(placeholder)) + 1)
+    maximum = min(MAX_BUNDLE_COMPONENT_LENGTH, available)
+    if maximum <= len(digest):
+        leaf = digest[:maximum]
+    else:
+        prefix = name[: maximum - len(digest) - 1].rstrip(" .-")
+        leaf = f"{prefix}-{digest}" if prefix else digest
+    return Path(leaf)
 
 
 def discover_batch_jobs(
@@ -230,12 +487,22 @@ def discover_batch_jobs(
     *,
     recursive: bool = True,
     extensions: Iterable[str] | None = None,
+    corpus_code: str = DEFAULT_CORPUS_CODE,
 ) -> tuple[list[BatchJob], list[str]]:
     """Discover supported documents and assign collision-free output bundles."""
 
     output = Path(output_root).expanduser().resolve()
+    code = normalize_corpus_code(corpus_code)
     allowed = normalize_extensions(extensions)
-    specifications = [Path(value).expanduser().resolve() for value in inputs]
+    specifications: list[Path] = []
+    for value in inputs:
+        ordinary = Path(value).expanduser().absolute()
+        specifications.append(
+            _filesystem_path(
+                ordinary,
+                force=ordinary.is_dir(),
+            )
+        )
     multiple_inputs = len(specifications) > 1
     candidates: list[tuple[Path, Path]] = []
     warnings: list[str] = []
@@ -263,13 +530,22 @@ def discover_batch_jobs(
 
         iterator = specification.rglob("*") if recursive else specification.glob("*")
         prefix = Path(specification.name) if multiple_inputs else Path()
-        output_is_nested = output != specification and _is_within(output, specification)
+        output_filesystem = _filesystem_path(output, force=True)
+        output_is_nested = output_filesystem != specification and _is_within(
+            output_filesystem, specification
+        )
         for source in iterator:
-            resolved = source.resolve()
+            resolved = _filesystem_path(source)
             if (
-                not source.is_file()
+                not resolved.is_file()
                 or source.suffix.casefold() not in allowed
-                or (output_is_nested and _is_within(resolved, output))
+                or (
+                    output_is_nested
+                    and _is_within(
+                        resolved,
+                        output_filesystem,
+                    )
+                )
             ):
                 continue
             relative = prefix / source.relative_to(specification).with_suffix("")
@@ -307,8 +583,10 @@ def discover_batch_jobs(
             group_paths[group_key] = unique_group
         group_dir = output / unique_group
         titles = used_titles.setdefault(unique_group.as_posix().casefold(), set())
-        title = _safe_title(relative.name or "document", group_dir, source, titles)
-        jobs.append(BatchJob(str(source), str(group_dir), title))
+        group_labels = tuple(group_relative.parts)
+        natural_title = _component_stem(source, group_labels, code)
+        title = _safe_title(natural_title, group_dir, source, titles)
+        jobs.append(BatchJob(str(source), str(group_dir), title, group_labels))
     return jobs, warnings
 
 
@@ -392,6 +670,7 @@ def _job_fingerprint(job: BatchJob, options: BatchOptions) -> dict[str, object]:
             "include_wikidata": options.include_wikidata,
             "wikidata_timeout": options.wikidata_timeout,
             "page_workers": options.page_workers,
+            "corpus_language": options.corpus_language,
         },
     }
 
@@ -451,11 +730,101 @@ def _result_warning_count(result: ParseResult) -> int:
     return len(exported) if isinstance(exported, list) else 0
 
 
+def _enrich_document_header(
+    root: ET.Element,
+    job: BatchJob,
+    options: BatchOptions,
+) -> None:
+    """Add safely inferred corpus/date metadata without replacing source titles."""
+
+    root.set("xml:id", job.title)
+    if options.corpus_language and not root.get("xml:lang"):
+        root.set("xml:lang", options.corpus_language)
+    header = root.find("teiHeader")
+    if header is None:
+        return
+
+    title_stmt = header.find("fileDesc/titleStmt")
+    labels = [label.strip() for label in job.group_labels if label.strip()]
+    if title_stmt is not None and labels:
+        # The config deliberately preserves the complete source filename as the
+        # main title. Reuse its normally empty subordinate title for corpus
+        # context instead of changing that established title.
+        subtitle = next(
+            (
+                title
+                for title in title_stmt.findall("title")
+                if title.get("type") == "sub" and not (title.text or "").strip()
+            ),
+            None,
+        )
+        if subtitle is not None:
+            subtitle.text = " / ".join(labels)
+
+        meeting_label = next(
+            (
+                label
+                for label in reversed(labels)
+                if re.search(
+                    r"\b(?:sklic|mandat|zasedanje|seja|sednica|session)\b",
+                    label,
+                    re.IGNORECASE,
+                )
+            ),
+            None,
+        )
+        existing = {
+            (meeting.text or "").strip() for meeting in title_stmt.findall("meeting")
+        }
+        if meeting_label and meeting_label not in existing:
+            attrs: dict[str, str] = {}
+            number = re.match(r"\s*0*(\d+)", meeting_label)
+            if number:
+                attrs["n"] = str(int(number.group(1)))
+            if re.search(r"\b(?:sklic|mandat)\b", meeting_label, re.IGNORECASE):
+                attrs["ana"] = "#parla.term"
+            elif re.search(
+                r"\b(?:zasedanje|seja|sednica|session)\b",
+                meeting_label,
+                re.IGNORECASE,
+            ):
+                attrs["ana"] = "#parla.meeting"
+            meeting = ET.Element("meeting", attrs)
+            meeting.text = meeting_label
+            insert_at = len(title_stmt)
+            for index, child in enumerate(title_stmt):
+                if child.tag not in {"title", "meeting"}:
+                    insert_at = index
+                    break
+            title_stmt.insert(insert_at, meeting)
+
+    date = _extract_iso_date(Path(job.source).stem)
+    if not date:
+        for time_element in root.findall(".//time[@type='date']"):
+            date = _extract_iso_date(" ".join(time_element.itertext()))
+            if date:
+                break
+    if not date:
+        return
+    date_paths = (
+        "fileDesc/sourceDesc/bibl/date",
+        "profileDesc/settingDesc/setting/date",
+    )
+    for path in date_paths:
+        element = header.find(path)
+        if element is None or element.get("when"):
+            continue
+        element.set("when", date)
+        if not (element.text or "").strip():
+            element.text = date
+
+
 def _write_result_bundle(
     result: ParseResult,
     job: BatchJob,
     options: BatchOptions,
 ) -> None:
+    _enrich_document_header(result.root, job, options)
     meta = metadata_dir(job)
     meta.mkdir(parents=True, exist_ok=True)
     document = document_path(job)
@@ -530,6 +899,14 @@ def _write_list_person_mapping(
     _atomic_result_write(destination, writer)
 
 
+def _folder_list_person_path(
+    group: Path,
+    root: Path,
+    options: BatchOptions,
+) -> Path:
+    return _corpus_artifact_path(group, root, options, "-listPerson")
+
+
 def write_batch_list_person_outputs(
     jobs: Sequence[BatchJob],
     output_root: str | Path,
@@ -539,7 +916,9 @@ def write_batch_list_person_outputs(
 
     root = Path(output_root).expanduser().resolve()
     document_paths = {document_list_person_path(job): job for job in jobs}
-    folder_paths = {Path(job.group) / "listPerson.xml" for job in jobs}
+    folder_paths = {
+        _folder_list_person_path(Path(job.group), root, options) for job in jobs
+    }
     grouped: dict[Path, list[BatchJob]] = {}
     if options.write_list_person:
         if options.list_person_scope == "document":
@@ -549,9 +928,12 @@ def write_batch_list_person_outputs(
         elif options.list_person_scope == "folder":
             for job in jobs:
                 group = Path(job.group)
-                grouped.setdefault(group / "listPerson.xml", []).append(job)
+                destination = _folder_list_person_path(group, root, options)
+                grouped.setdefault(destination, []).append(job)
         elif options.list_person_scope == "corpus":
-            grouped[root / "listPerson.xml"] = list(jobs)
+            grouped[_corpus_artifact_path(root, root, options, "-listPerson")] = list(
+                jobs
+            )
         else:
             raise ValueError(
                 f"unsupported listPerson scope: {options.list_person_scope}"
@@ -573,31 +955,74 @@ def write_batch_list_person_outputs(
         _write_list_person_mapping(destination, mapping, options)
 
     desired = {path.resolve() for path in grouped}
-    candidates = {root / "listPerson.xml"}
+    candidates = {
+        root / "listPerson.xml",
+        _corpus_artifact_path(root, root, options, "-listPerson"),
+    }
     candidates.update(document_paths)
     candidates.update(folder_paths)
+    candidates.update(Path(job.group) / "listPerson.xml" for job in jobs)
     for candidate in candidates:
         if candidate.resolve() not in desired:
             candidate.unlink(missing_ok=True)
     return sorted(desired, key=lambda path: str(path).casefold())
 
 
-def _corpus_path(directory: Path) -> Path:
-    """Where a folder's ``teiCorpus`` file is written, named after the folder."""
+def _corpus_owner(directory: Path, root: Path) -> Path:
+    """Directory that owns a corpus's root and metadata files."""
 
-    name = _safe_bundle_component(directory.name or "corpus")
-    destination = directory / f"{name}.xml"
+    return root if directory == root else directory.parent
+
+
+def _corpus_stem(
+    directory: Path,
+    root: Path,
+    options: BatchOptions,
+) -> str:
+    prefix = _corpus_prefix(options.corpus_code)
+    if directory == root:
+        return prefix
+    return f"{prefix}-{_serialized_folder_component(directory.name)}"
+
+
+def _corpus_artifact_path(
+    directory: Path,
+    root: Path,
+    options: BatchOptions,
+    suffix: str = "",
+) -> Path:
+    """Path for a corpus root or one of its ParlaMint metadata files."""
+
+    owner = _corpus_owner(directory, root)
+    stem = _safe_bundle_component(_corpus_stem(directory, root, options))
+    destination = owner / f"{stem}{suffix}.xml"
     fit = MAX_BUNDLE_PATH_LENGTH - _ATOMIC_TEMP_RESERVE
     if len(str(destination)) <= fit:
         return destination
     digest = hashlib.sha1(str(directory).encode("utf-8")).hexdigest()[:10]
-    available = fit - len(str(directory / ".xml")) - len(digest) - 1
-    name = f"{name[: max(1, available)].rstrip(' .-')}-{digest}"
-    return directory / f"{name}.xml"
+    fixed = len(str(owner / f"-{digest}{suffix}.xml"))
+    available = max(8, min(MAX_BUNDLE_COMPONENT_LENGTH, fit - fixed))
+    shortened = f"{stem[:available].rstrip(' .-')}-{digest}"
+    return owner / f"{shortened}{suffix}.xml"
 
 
-def _corpus_id(directory: Path) -> str:
-    return engine.sanitize_xml_id(directory.name or "corpus", prefix="corpus")
+def _corpus_path(
+    directory: Path,
+    root: Path,
+    options: BatchOptions,
+) -> Path:
+    return _corpus_artifact_path(directory, root, options)
+
+
+def _corpus_id(
+    directory: Path,
+    root: Path,
+    options: BatchOptions,
+) -> str:
+    return engine.sanitize_xml_id(
+        _corpus_stem(directory, root, options),
+        prefix="corpus",
+    )
 
 
 def _document_counts(document_file: Path) -> dict[str, int]:
@@ -624,6 +1049,7 @@ class _CorpusNode:
     """One folder in the recursive corpus tree."""
 
     directory: Path
+    label: str
     documents: list[BatchJob] = field(default_factory=list)
     children: list["_CorpusNode"] = field(default_factory=list)
 
@@ -641,8 +1067,21 @@ def _build_corpus_tree(
 
     root = Path(output_root).expanduser().resolve()
     direct: dict[Path, list[BatchJob]] = {}
+    labels: dict[Path, str] = {root: root.name or "Corpus"}
     for job in jobs:
-        direct.setdefault(Path(job.group), []).append(job)
+        group = Path(job.group).resolve()
+        direct.setdefault(group, []).append(job)
+        try:
+            relative_parts = group.relative_to(root).parts
+        except ValueError:
+            relative_parts = ()
+        if len(relative_parts) == len(job.group_labels):
+            directory = root
+            for part, label in zip(relative_parts, job.group_labels):
+                directory /= part
+                labels.setdefault(directory, label)
+        elif job.group_labels:
+            labels.setdefault(group, job.group_labels[-1])
 
     directories: set[Path] = {root}
     for group in direct:
@@ -655,6 +1094,7 @@ def _build_corpus_tree(
     nodes = {
         directory: _CorpusNode(
             directory,
+            labels.get(directory, directory.name or "Corpus"),
             sorted(direct.get(directory, []), key=lambda job: job.title.casefold()),
         )
         for directory in directories
@@ -665,7 +1105,12 @@ def _build_corpus_tree(
             parent.children.append(node)
     for node in nodes.values():
         node.children.sort(key=lambda child: child.directory.name.casefold())
-    return nodes[root]
+    root_node = nodes[root]
+    if not root_node.documents and len(root_node.children) == 1:
+        # The output directory is often just a technical destination ("out").
+        # A single discovered top-level corpus provides a better root title.
+        root_node.label = root_node.children[0].label
+    return root_node
 
 
 def _write_tei_xml(path: Path, *, root: ET.Element, options: BatchOptions) -> None:
@@ -678,7 +1123,10 @@ def _write_tei_xml(path: Path, *, root: ET.Element, options: BatchOptions) -> No
 
 
 def _corpus_header(
-    node: _CorpusNode, options: BatchOptions, subtree: Mapping[str, int]
+    node: _CorpusNode,
+    root: Path,
+    options: BatchOptions,
+    subtree: Mapping[str, int],
 ) -> ET.Element:
     """A skeleton corpus ``teiHeader`` titled after the folder, with aggregates.
 
@@ -702,75 +1150,103 @@ def _corpus_header(
                 )
             )
     language = options.corpus_language
-    title = node.directory.name or "Corpus"
+    title = node.label or "Corpus"
+    meetings: list[Meeting] = []
+    if re.search(
+        r"\b(?:sklic|mandat|zasedanje|seja|sednica|session)\b",
+        title,
+        re.IGNORECASE,
+    ):
+        number = re.match(r"\s*0*(\d+)", title)
+        term = bool(re.search(r"\b(?:sklic|mandat)\b", title, re.IGNORECASE))
+        meetings.append(
+            Meeting(
+                text=title,
+                n=str(int(number.group(1))) if number else "",
+                ana="#parla.term" if term else "#parla.meeting",
+            )
+        )
     return TEIHeader(
-        tei_id=_corpus_id(node.directory),
+        tei_id=_corpus_id(node.directory, root, options),
         language=language,
         main_titles={language: title},
+        meetings=meetings,
         measures=measures,
     ).build()
 
 
 def _build_corpus_element(
-    node: _CorpusNode, options: BatchOptions, subtree: Mapping[str, int]
+    node: _CorpusNode,
+    root: Path,
+    options: BatchOptions,
+    subtree: Mapping[str, int],
+    documents: Sequence[BatchJob],
 ) -> ET.Element:
+    owner = _corpus_owner(node.directory, root)
     document_hrefs = [
-        document_path(job).relative_to(node.directory).as_posix()
-        for job in node.documents
+        document_path(job).relative_to(owner).as_posix() for job in documents
     ]
-    child_hrefs = [
-        _corpus_path(child.directory).relative_to(node.directory).as_posix()
-        for child in node.children
-    ]
-    lists = ["listPerson.xml"] if options.write_list_person else []
-    orgs = ["listOrg.xml"] if options.write_list_person else []
+    lists = (
+        [
+            _corpus_artifact_path(
+                node.directory,
+                root,
+                options,
+                "-listPerson",
+            )
+            .relative_to(owner)
+            .as_posix()
+        ]
+        if options.write_list_person
+        else []
+    )
+    orgs = (
+        [
+            _corpus_artifact_path(
+                node.directory,
+                root,
+                options,
+                "-listOrg",
+            )
+            .relative_to(owner)
+            .as_posix()
+        ]
+        if options.write_list_person
+        else []
+    )
     return build_tei_corpus(
-        document_hrefs + child_hrefs,
-        header=_corpus_header(node, options, subtree),
+        document_hrefs,
+        header=_corpus_header(node, root, options, subtree),
         list_person_hrefs=lists,
         list_org_hrefs=orgs,
-        corpus_id=_corpus_id(node.directory),
+        corpus_id=_corpus_id(node.directory, root, options),
         language=options.corpus_language,
     )
 
 
-def _write_recursive_particdesc_list(
+def _write_particdesc_list(
     destination: Path,
-    node: _CorpusNode,
     options: BatchOptions,
     *,
-    filename: str,
     build_root: Callable[[], ET.Element],
 ) -> None:
-    """Write one recursive particDesc list (``listPerson``/``listOrg``).
-
-    ``build_root`` returns this folder's own list element (its merged content);
-    an ``xi:include`` of each child folder's same-named file is appended, so the
-    root file resolves to one nested list for the whole subtree.
-    """
+    """Write one flat, deduplicated ``listPerson`` or ``listOrg``."""
 
     def writer(path: Path) -> None:
-        root = build_root()
-        if node.children:
-            root.set("xmlns:xi", XINCLUDE_NAMESPACE)
-            for child in node.children:
-                href = (
-                    (child.directory / filename).relative_to(node.directory).as_posix()
-                )
-                ET.SubElement(root, "xi:include", {"href": href})
-        _write_tei_xml(path, root=root, options=options)
+        _write_tei_xml(path, root=build_root(), options=options)
 
     _atomic_result_write(destination, writer)
 
 
 def _emit_corpus_node(
     node: _CorpusNode,
+    root: Path,
     options: BatchOptions,
     counts: Mapping[Path, Mapping[str, int]],
     corpus_files: list[Path],
     list_person_files: list[Path],
     list_org_files: list[Path],
-) -> Counter[str]:
+) -> tuple[Counter[str], dict[str, str], list[BatchJob]]:
     """Emit the lists and ``teiCorpus`` for ``node`` and its descendants.
 
     Children are emitted first so the returned subtree totals (texts, speeches,
@@ -778,67 +1254,75 @@ def _emit_corpus_node(
     """
 
     subtree: Counter[str] = Counter()
+    mappings: list[Mapping[str, str]] = [
+        _bundle_speaker_mapping(job) for job in node.documents
+    ]
+    documents = list(node.documents)
     subtree["texts"] += len(node.documents)
     for job in node.documents:
         subtree.update(counts.get(document_path(job), {}))
     for child in node.children:
-        subtree.update(
-            _emit_corpus_node(
-                child,
-                options,
-                counts,
-                corpus_files,
-                list_person_files,
-                list_org_files,
-            )
+        child_counts, child_mapping, child_documents = _emit_corpus_node(
+            child,
+            root,
+            options,
+            counts,
+            corpus_files,
+            list_person_files,
+            list_org_files,
         )
+        subtree.update(child_counts)
+        mappings.append(child_mapping)
+        documents.extend(child_documents)
+
+    merged = merge_speaker_mappings(mappings)
 
     if options.write_list_person:
-        node.directory.mkdir(parents=True, exist_ok=True)
-        # One read of each document's speakers feeds both the listPerson (whose
-        # affiliations point at orgs) and the listOrg (which defines them).
-        direct = merge_speaker_mappings(
-            _bundle_speaker_mapping(job) for job in node.documents
-        )
+        owner = _corpus_owner(node.directory, root)
+        owner.mkdir(parents=True, exist_ok=True)
 
-        def build_person(direct: Mapping[str, str] = direct) -> ET.Element:
-            if direct or not node.children:
-                return build_list_person(
-                    direct,
-                    include_wikidata=options.include_wikidata,
-                    wikidata_workers=4,
-                    wikidata_timeout=options.wikidata_timeout,
-                )
-            return ET.Element("listPerson", {"xmlns": TEI_NAMESPACE})
+        def build_person(merged: Mapping[str, str] = merged) -> ET.Element:
+            return build_list_person(
+                merged,
+                include_wikidata=options.include_wikidata,
+                wikidata_workers=4,
+                wikidata_timeout=options.wikidata_timeout,
+            )
 
-        list_person = node.directory / "listPerson.xml"
-        _write_recursive_particdesc_list(
-            list_person,
-            node,
+        list_person = _corpus_artifact_path(
+            node.directory,
+            root,
             options,
-            filename="listPerson.xml",
+            "-listPerson",
+        )
+        _write_particdesc_list(
+            list_person,
+            options,
             build_root=build_person,
         )
         list_person_files.append(list_person)
 
-        list_org = node.directory / "listOrg.xml"
-        _write_recursive_particdesc_list(
-            list_org,
-            node,
+        list_org = _corpus_artifact_path(
+            node.directory,
+            root,
             options,
-            filename="listOrg.xml",
-            build_root=lambda direct=direct: build_list_org(direct),
+            "-listOrg",
+        )
+        _write_particdesc_list(
+            list_org,
+            options,
+            build_root=lambda merged=merged: build_list_org(merged),
         )
         list_org_files.append(list_org)
 
-    corpus = _build_corpus_element(node, options, subtree)
-    destination = _corpus_path(node.directory)
+    corpus = _build_corpus_element(node, root, options, subtree, documents)
+    destination = _corpus_path(node.directory, root, options)
     destination.parent.mkdir(parents=True, exist_ok=True)
     _atomic_result_write(
         destination, partial(_write_tei_xml, root=corpus, options=options)
     )
     corpus_files.append(destination)
-    return subtree
+    return subtree, merged, documents
 
 
 def write_batch_corpus_outputs(
@@ -846,28 +1330,73 @@ def write_batch_corpus_outputs(
     output_root: str | Path,
     options: BatchOptions,
 ) -> tuple[list[Path], list[Path], list[Path]]:
-    """Emit a recursive ``teiCorpus`` tree mirroring the output folders.
+    """Emit standalone corpora for every recursive folder level.
 
-    Every folder holding documents (directly or in a sub-folder) gets a
-    ``teiCorpus`` XML named after it that XIncludes its own documents and each
-    child corpus, plus a recursive ``listPerson.xml`` and ``listOrg.xml`` (each
-    the folder's own merged content followed by an XInclude of the child files).
-    A person's affiliation and the org it names share an ``xml:id``, so the
-    reference resolves once both lists are in scope. Nothing is produced unless
-    ``options.emit_corpus`` is set. Returns
+    A subcorpus keeps its document components directly inside its directory,
+    while its corpus root and ParlaMint-named metadata files are owned by the
+    parent directory. Every corpus directly XIncludes all document components
+    in its subtree; corpus roots and metadata lists never XInclude child corpus
+    artifacts. Nothing is produced unless ``options.emit_corpus`` is set. Returns
     ``(corpus_files, list_person_files, list_org_files)``.
     """
 
     if not options.emit_corpus or not jobs:
         return [], [], []
     root_node = _build_corpus_tree(jobs, output_root)
+    root = root_node.directory
     counts = {document_path(job): _document_counts(document_path(job)) for job in jobs}
     corpus_files: list[Path] = []
     list_person_files: list[Path] = []
     list_org_files: list[Path] = []
     _emit_corpus_node(
-        root_node, options, counts, corpus_files, list_person_files, list_org_files
+        root_node,
+        root,
+        options,
+        counts,
+        corpus_files,
+        list_person_files,
+        list_org_files,
     )
+
+    # Reconcile exact files owned by the corpus generator. This removes stale
+    # generic names from the previous layout and removes metadata lists when
+    # --no-list-person is selected, without deleting source or document files.
+    nodes: list[_CorpusNode] = []
+    pending = [root_node]
+    while pending:
+        node = pending.pop()
+        nodes.append(node)
+        pending.extend(node.children)
+    desired = {
+        path.resolve() for path in (*corpus_files, *list_person_files, *list_org_files)
+    }
+    protected = {document_path(job).resolve() for job in jobs}
+    candidates: set[Path] = set()
+    for node in nodes:
+        candidates.update(
+            {
+                node.directory / "listPerson.xml",
+                node.directory / "listOrg.xml",
+                node.directory
+                / f"{_safe_bundle_component(node.directory.name or 'corpus')}.xml",
+                _corpus_artifact_path(
+                    node.directory,
+                    root,
+                    options,
+                    "-listPerson",
+                ),
+                _corpus_artifact_path(
+                    node.directory,
+                    root,
+                    options,
+                    "-listOrg",
+                ),
+            }
+        )
+    for candidate in candidates:
+        resolved = candidate.resolve()
+        if resolved not in desired and resolved not in protected:
+            candidate.unlink(missing_ok=True)
 
     def by_path(path: Path) -> str:
         return str(path).casefold()

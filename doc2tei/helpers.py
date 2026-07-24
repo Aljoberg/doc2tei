@@ -881,6 +881,8 @@ def build_list_org(mapping: Mapping[str, str]) -> ET.Element:
         organization = _speaker_details(reference, label).organization
         if organization:
             organizations.setdefault(_org_id(organization), organization)
+    if not organizations:
+        organizations["org.UnknownOrganization"] = "Unknown organization"
     for org_id, name in sorted(organizations.items()):
         org = ET.SubElement(list_org, "org", {"xml:id": org_id})
         ET.SubElement(org, "orgName").text = xml_safe_text(name)

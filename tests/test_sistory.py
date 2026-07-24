@@ -158,8 +158,9 @@ def test_batch_cli_downloads_a_sistory_menu_then_parses_the_cache(
     assert manifest["counts"]["recovered"] == 1
     assert manifest["list_person"]["scope"] == "folder"
     assert len(manifest["list_person"]["outputs"]) == 1
-    group = output / "Downloaded menu"
-    assert (group / "documents" / "01 - publication.xml").is_file()
-    assert (group / "metadata" / "01 - publication" / "diagnostics.json").is_file()
-    assert not (group / "documents" / "01 - publication.listPerson.xml").exists()
-    assert (group / "listPerson.xml").is_file()
+    group = output / "downloaded-menu"
+    component = "ParlaMint-SI_undated-downloaded-menu-01"
+    assert (group / f"{component}.xml").is_file()
+    assert (group / "metadata" / component / "diagnostics.json").is_file()
+    assert not (group / f"{component}-listPerson.xml").exists()
+    assert (output / "ParlaMint-SI-downloaded-menu-listPerson.xml").is_file()

@@ -382,6 +382,33 @@ def test_later_heading_opens_a_new_division(tmp_path):
     assert children[0].attrib["type"] == "agendaItem"
 
 
+def test_second_session_heading_opens_a_new_debate_section(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    result = parse_document(
+        source,
+        config=CONFIG_PATH,
+        chunks=[
+            pdf_line("12. SEJA", size=13.0),
+            pdf_line("Boris Prešern: Prva seja.", y=480.0),
+            pdf_line("13. SEJA", y=460.0, size=13.0),
+            pdf_line("Boris Prešern: Druga seja.", y=440.0),
+        ],
+    )
+
+    sessions = [
+        division
+        for division in result.root.findall(".//div[@type='debateSection']")
+        if division.find("head[@type='sessionNumber']") is not None
+    ]
+    assert len(sessions) == 2
+    assert ["".join(division.find("head").itertext()) for division in sessions] == [
+        "12. SEJA",
+        "13. SEJA",
+    ]
+    assert all(division.find("u") is not None for division in sessions)
+
+
 def test_non_session_heading_uses_a_generic_section_division(tmp_path):
     source = tmp_path / "sample.pdf"
     source.touch()
@@ -1071,6 +1098,15 @@ def test_list_org_collects_and_ids_affiliation_organizations():
     # The listOrg id is exactly what the listPerson affiliation references.
     person = build_list_person({"#MihaKovac": "Miha Kovač (SDS):"}).find("person")
     assert person.find("affiliation").attrib["ref"] == "#org.SDS"
+
+
+def test_empty_list_org_uses_a_schema_safe_placeholder():
+    root = build_list_org({})
+    organization = root.find("org")
+
+    assert organization is not None
+    assert organization.attrib["xml:id"] == "org.UnknownOrganization"
+    assert organization.findtext("orgName") == "Unknown organization"
 
 
 def test_wikidata_list_person_is_enriched_and_remains_fail_soft():
