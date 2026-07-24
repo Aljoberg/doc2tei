@@ -26,6 +26,7 @@ from type_decs import BatchStatus, ListPersonScope
 from .helpers import (
     TEI_NAMESPACE,
     XINCLUDE_NAMESPACE,
+    build_list_org,
     build_list_person,
     build_tei_corpus,
     merge_speaker_mappings,
@@ -721,47 +722,40 @@ def _build_corpus_element(
         _corpus_path(child.directory).relative_to(node.directory).as_posix()
         for child in node.children
     ]
-    list_person_hrefs = ["listPerson.xml"] if options.write_list_person else []
+    lists = ["listPerson.xml"] if options.write_list_person else []
+    orgs = ["listOrg.xml"] if options.write_list_person else []
     return build_tei_corpus(
         document_hrefs + child_hrefs,
         header=_corpus_header(node, options, subtree),
-        list_person_hrefs=list_person_hrefs,
+        list_person_hrefs=lists,
+        list_org_hrefs=orgs,
         corpus_id=_corpus_id(node.directory),
         language=options.corpus_language,
     )
 
 
-def _write_corpus_list_person(
-    destination: Path, node: _CorpusNode, options: BatchOptions
+def _write_recursive_particdesc_list(
+    destination: Path,
+    node: _CorpusNode,
+    options: BatchOptions,
+    *,
+    filename: str,
+    build_root: Callable[[], ET.Element],
 ) -> None:
-    """A recursive ``listPerson``: this folder's speakers plus child lists.
+    """Write one recursive particDesc list (``listPerson``/``listOrg``).
 
-    Speakers merged from documents held directly in this folder are inlined;
-    each child corpus contributes its own ``listPerson.xml`` by XInclude, so the
-    whole tree resolves to one nested speaker list.
+    ``build_root`` returns this folder's own list element (its merged content);
+    an ``xi:include`` of each child folder's same-named file is appended, so the
+    root file resolves to one nested list for the whole subtree.
     """
 
-    direct = merge_speaker_mappings(
-        _bundle_speaker_mapping(job) for job in node.documents
-    )
-
     def writer(path: Path) -> None:
-        if direct or not node.children:
-            root = build_list_person(
-                direct,
-                include_wikidata=options.include_wikidata,
-                wikidata_workers=4,
-                wikidata_timeout=options.wikidata_timeout,
-            )
-        else:
-            root = ET.Element("listPerson", {"xmlns": TEI_NAMESPACE})
+        root = build_root()
         if node.children:
             root.set("xmlns:xi", XINCLUDE_NAMESPACE)
             for child in node.children:
                 href = (
-                    (child.directory / "listPerson.xml")
-                    .relative_to(node.directory)
-                    .as_posix()
+                    (child.directory / filename).relative_to(node.directory).as_posix()
                 )
                 ET.SubElement(root, "xi:include", {"href": href})
         _write_tei_xml(path, root=root, options=options)
@@ -775,8 +769,9 @@ def _emit_corpus_node(
     counts: Mapping[Path, Mapping[str, int]],
     corpus_files: list[Path],
     list_person_files: list[Path],
+    list_org_files: list[Path],
 ) -> Counter[str]:
-    """Emit ``listPerson`` and ``teiCorpus`` for ``node`` and its descendants.
+    """Emit the lists and ``teiCorpus`` for ``node`` and its descendants.
 
     Children are emitted first so the returned subtree totals (texts, speeches,
     words) are available for this node's aggregated ``<extent>``.
@@ -788,14 +783,53 @@ def _emit_corpus_node(
         subtree.update(counts.get(document_path(job), {}))
     for child in node.children:
         subtree.update(
-            _emit_corpus_node(child, options, counts, corpus_files, list_person_files)
+            _emit_corpus_node(
+                child,
+                options,
+                counts,
+                corpus_files,
+                list_person_files,
+                list_org_files,
+            )
         )
 
     if options.write_list_person:
+        node.directory.mkdir(parents=True, exist_ok=True)
+        # One read of each document's speakers feeds both the listPerson (whose
+        # affiliations point at orgs) and the listOrg (which defines them).
+        direct = merge_speaker_mappings(
+            _bundle_speaker_mapping(job) for job in node.documents
+        )
+
+        def build_person(direct: Mapping[str, str] = direct) -> ET.Element:
+            if direct or not node.children:
+                return build_list_person(
+                    direct,
+                    include_wikidata=options.include_wikidata,
+                    wikidata_workers=4,
+                    wikidata_timeout=options.wikidata_timeout,
+                )
+            return ET.Element("listPerson", {"xmlns": TEI_NAMESPACE})
+
         list_person = node.directory / "listPerson.xml"
-        list_person.parent.mkdir(parents=True, exist_ok=True)
-        _write_corpus_list_person(list_person, node, options)
+        _write_recursive_particdesc_list(
+            list_person,
+            node,
+            options,
+            filename="listPerson.xml",
+            build_root=build_person,
+        )
         list_person_files.append(list_person)
+
+        list_org = node.directory / "listOrg.xml"
+        _write_recursive_particdesc_list(
+            list_org,
+            node,
+            options,
+            filename="listOrg.xml",
+            build_root=lambda direct=direct: build_list_org(direct),
+        )
+        list_org_files.append(list_org)
 
     corpus = _build_corpus_element(node, options, subtree)
     destination = _corpus_path(node.directory)
@@ -811,29 +845,38 @@ def write_batch_corpus_outputs(
     jobs: Sequence[BatchJob],
     output_root: str | Path,
     options: BatchOptions,
-) -> tuple[list[Path], list[Path]]:
+) -> tuple[list[Path], list[Path], list[Path]]:
     """Emit a recursive ``teiCorpus`` tree mirroring the output folders.
 
     Every folder holding documents (directly or in a sub-folder) gets a
     ``teiCorpus`` XML named after it that XIncludes its own documents and each
-    child corpus, plus a recursive ``listPerson.xml`` (this folder's merged
-    speakers followed by an XInclude of each child list). Nothing is produced
-    unless ``options.emit_corpus`` is set. Returns
-    ``(corpus_files, list_person_files)``.
+    child corpus, plus a recursive ``listPerson.xml`` and ``listOrg.xml`` (each
+    the folder's own merged content followed by an XInclude of the child files).
+    A person's affiliation and the org it names share an ``xml:id``, so the
+    reference resolves once both lists are in scope. Nothing is produced unless
+    ``options.emit_corpus`` is set. Returns
+    ``(corpus_files, list_person_files, list_org_files)``.
     """
 
     if not options.emit_corpus or not jobs:
-        return [], []
+        return [], [], []
     root_node = _build_corpus_tree(jobs, output_root)
     counts = {document_path(job): _document_counts(document_path(job)) for job in jobs}
     corpus_files: list[Path] = []
     list_person_files: list[Path] = []
-    _emit_corpus_node(root_node, options, counts, corpus_files, list_person_files)
+    list_org_files: list[Path] = []
+    _emit_corpus_node(
+        root_node, options, counts, corpus_files, list_person_files, list_org_files
+    )
 
     def by_path(path: Path) -> str:
         return str(path).casefold()
 
-    return sorted(corpus_files, key=by_path), sorted(list_person_files, key=by_path)
+    return (
+        sorted(corpus_files, key=by_path),
+        sorted(list_person_files, key=by_path),
+        sorted(list_org_files, key=by_path),
+    )
 
 
 def _failure_parse_result(

@@ -11,6 +11,7 @@ from .extractors import (
 from .helpers import (
     FootnoteLinker,
     SpeakerUtteranceHook,
+    build_list_org,
     build_list_person,
     build_tei_corpus,
     merge_speaker_mappings,
@@ -88,6 +89,7 @@ __all__ = [
     "TEIHeader",
     "Text",
     "WordPDFExtractor",
+    "build_list_org",
     "build_list_person",
     "build_tei_corpus",
     "merge_speaker_mappings",

@@ -1263,19 +1263,26 @@ mirrors the output folders, modelled on siParl (e.g. `siParl.xml` over its
 `SDT2.xml` mandate). Every folder holding documents -- directly or in a
 sub-folder -- becomes a corpus, so a folder of sub-folders is itself a corpus
 whose members are the sub-folder corpora, and a folder can carry both loose
-documents and child corpora. Each corpus folder gets two files:
+documents and child corpora. Each corpus folder gets three files:
 
 - `<foldername>.xml`: a `<teiCorpus>` with a generated `teiHeader` (titled after
   the folder, with the whole subtree's document/speech/word counts summed into
   `<extent>`) that XIncludes each document held directly in the folder and each
-  child corpus file.
+  child corpus file, and references its `listPerson.xml` and `listOrg.xml` from
+  `particDesc`.
 - `listPerson.xml`: the speakers merged from the folder's own documents,
   followed by an `<xi:include>` of each child folder's `listPerson.xml`. The
   tree therefore resolves to one nested speaker list at the root.
+- `listOrg.xml`: the organizations named in those speakers' labels (the
+  parenthesised affiliation), each with a stable `xml:id`, plus an `<xi:include>`
+  of each child folder's `listOrg.xml`. Each `<affiliation>` in `listPerson`
+  carries `ref="#org.…"` matching an org id, so the reference closes once both
+  lists are XIncluded into a corpus. (Wikidata-derived parties keep their own
+  Wikidata `@ref` on the `orgName` and are not added to `listOrg`.)
 
-Because the corpus feature emits `listPerson.xml` at every level, it takes over
-from the flat `--list-person-scope` layout while active (the manifest reports
-the scope as `recursive`); `--no-list-person` still suppresses every list.
+Because the corpus feature emits the lists at every level, it takes over from the
+flat `--list-person-scope` layout while active (the manifest reports the scope as
+`recursive`); `--no-list-person` still suppresses every list (persons and orgs).
 `--corpus-lang` sets the corpus headers' `xml:lang` (default `sl`). Generation
 is a post-processing pass over the written outputs, so it does not reparse the
 source PDFs, and because every href is relative the tree XIncludes correctly

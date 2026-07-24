@@ -662,23 +662,40 @@ def _role_value(role: str | None) -> str:
     )
 
 
+def _org_id(organization: str) -> str:
+    """Stable ``xml:id`` for an organization named in a speaker label.
+
+    The matching ``listOrg`` (:func:`build_list_org`) and the ``affiliation``
+    ``@ref`` in ``listPerson`` both derive their id from this, so a person's
+    affiliation resolves to the org once both lists are in scope.
+    """
+
+    return f"org.{sanitize_xml_id(organization, prefix='org')}"
+
+
 def _append_affiliation(
     person: ET.Element,
     *,
     role: str | None = None,
     organization: str | None = None,
     organization_ref: str | None = None,
+    local_org_ref: str | None = None,
 ) -> None:
     if not role and not organization:
         return
-    affiliation = ET.SubElement(person, "affiliation", role=_role_value(role))
+    attributes = {"role": _role_value(role)}
+    # A local pointer (``#org.<slug>``) links the affiliation to the sibling
+    # listOrg entry; the inline orgName stays for readability and its own ref.
+    if local_org_ref:
+        attributes["ref"] = local_org_ref
+    affiliation = ET.SubElement(person, "affiliation", attributes)
     if role:
         ET.SubElement(affiliation, "roleName", {"xml:lang": "sl"}).text = xml_safe_text(
             role
         )
     if organization:
-        attributes = {"ref": organization_ref} if organization_ref else {}
-        ET.SubElement(affiliation, "orgName", attributes).text = xml_safe_text(
+        org_attributes = {"ref": organization_ref} if organization_ref else {}
+        ET.SubElement(affiliation, "orgName", org_attributes).text = xml_safe_text(
             organization
         )
 
@@ -840,15 +857,47 @@ def build_list_person(
             person,
             role=details.role,
             organization=details.organization,
+            local_org_ref=(
+                f"#{_org_id(details.organization)}" if details.organization else None
+            ),
         )
     return list_person
 
 
-def _attach_list_person_includes(header: ET.Element, hrefs: Sequence[str]) -> None:
-    """Reference speaker lists from ``profileDesc/particDesc`` via XInclude.
+def build_list_org(mapping: Mapping[str, str]) -> ET.Element:
+    """Build a TEI ``listOrg`` from the organizations named in speaker labels.
+
+    Each distinct affiliation organization recovered from a speaker label
+    (:func:`_speaker_details`) becomes one ``<org>`` with the same stable
+    ``xml:id`` (:func:`_org_id`) that the corresponding ``listPerson``
+    affiliations point at, so the reference graph closes once both lists are
+    XIncluded into a corpus. Wikidata-derived parties are intentionally left to
+    the ``listPerson`` (they already carry their own Wikidata ``@ref``).
+    """
+
+    list_org = ET.Element("listOrg", {"xmlns": TEI_NAMESPACE})
+    organizations: dict[str, str] = {}
+    for reference, label in mapping.items():
+        organization = _speaker_details(reference, label).organization
+        if organization:
+            organizations.setdefault(_org_id(organization), organization)
+    for org_id, name in sorted(organizations.items()):
+        org = ET.SubElement(list_org, "org", {"xml:id": org_id})
+        ET.SubElement(org, "orgName").text = xml_safe_text(name)
+    return list_org
+
+
+def _attach_particdesc_includes(
+    header: ET.Element,
+    org_hrefs: Sequence[str],
+    person_hrefs: Sequence[str],
+) -> None:
+    """Reference the org and speaker lists from ``profileDesc/particDesc``.
 
     Any existing ``profileDesc``/``particDesc`` is reused so the ``settingDesc``
     a generated header already carries is preserved rather than duplicated.
+    ``listOrg`` is referenced before ``listPerson`` (the ParlaMint order, since
+    affiliations point at the orgs).
     """
 
     profile = header.find("profileDesc")
@@ -857,7 +906,7 @@ def _attach_list_person_includes(header: ET.Element, hrefs: Sequence[str]) -> No
     particdesc = profile.find("particDesc")
     if particdesc is None:
         particdesc = ET.SubElement(profile, "particDesc")
-    for href in hrefs:
+    for href in (*org_hrefs, *person_hrefs):
         ET.SubElement(particdesc, "xi:include", {"href": href})
 
 
@@ -866,17 +915,18 @@ def build_tei_corpus(
     *,
     header: ET.Element | None = None,
     list_person_hrefs: Sequence[str] = (),
+    list_org_hrefs: Sequence[str] = (),
     corpus_id: str = "",
     language: str = "",
 ) -> ET.Element:
     """Assemble a ``<teiCorpus>`` that XIncludes its constituent files.
 
     Modelled on the siParl mandate corpora (e.g. ``SDT2.xml``): a corpus-level
-    ``teiHeader`` followed by one ``<xi:include>`` per component document. Speaker
-    lists are referenced from ``teiHeader/profileDesc/particDesc`` via
-    ``list_person_hrefs`` -- one entry for a folder-wide list, or several for
-    per-document lists -- rather than inlined. Every href is written verbatim, so
-    callers pass paths already relative to the corpus file's own location.
+    ``teiHeader`` followed by one ``<xi:include>`` per component document. The
+    speaker (``list_person_hrefs``) and organization (``list_org_hrefs``) lists
+    are referenced from ``teiHeader/profileDesc/particDesc`` rather than inlined.
+    Every href is written verbatim, so callers pass paths already relative to the
+    corpus file's own location.
     """
 
     attributes = {"xmlns": TEI_NAMESPACE, "xmlns:xi": XINCLUDE_NAMESPACE}
@@ -887,8 +937,8 @@ def build_tei_corpus(
     corpus = ET.Element("teiCorpus", attributes)
 
     if header is not None:
-        if list_person_hrefs:
-            _attach_list_person_includes(header, list_person_hrefs)
+        if list_person_hrefs or list_org_hrefs:
+            _attach_particdesc_includes(header, list_org_hrefs, list_person_hrefs)
         corpus.append(header)
 
     for href in document_hrefs:

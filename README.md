@@ -115,14 +115,20 @@ gets:
 
 - `<foldername>.xml` — a `<teiCorpus>` (titled after the folder, with its whole
   subtree's document/speech/word counts summed into `<extent>`) that XIncludes
-  each document held directly in the folder *and* each child corpus file.
+  each document held directly in the folder *and* each child corpus file, and
+  references its `listPerson.xml` and `listOrg.xml` from `particDesc`.
 - `listPerson.xml` — the speakers merged from the folder's own documents,
   followed by an `<xi:include>` of every child folder's `listPerson.xml`, so the
   root list resolves to one nested speaker list for the whole corpus.
+- `listOrg.xml` — the organizations named in those speakers' labels (the `(…)`
+  affiliation), each given a stable `xml:id`; the same recursion XIncludes the
+  child folders' `listOrg.xml`. Every speaker `<affiliation>` in `listPerson`
+  points at its org with `ref="#org.…"`, so the reference resolves once both
+  lists are in scope.
 
 This replaces the flat `--list-person-scope` layout while emitting (it owns
-`listPerson.xml`); `--no-list-person` still suppresses all lists, and
-`--corpus-lang` sets the corpus headers' `xml:lang` (default `sl`).
+`listPerson.xml`); `--no-list-person` suppresses all lists (persons and orgs),
+and `--corpus-lang` sets the corpus headers' `xml:lang` (default `sl`).
 
 By default, the runner uses up to four document processes. When multiple
 documents run together, it forces each document's page extractor to one worker,

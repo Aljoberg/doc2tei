@@ -557,16 +557,37 @@ def _nested_corpus_jobs(tmp_path):
     sub2 = mandate / "Sub2"
     jobs = [
         _corpus_job(
-            tmp_path, sub1, "a", {"#JanezNovak": "Janez Novak:"}, speeches=3, words=100
+            tmp_path,
+            sub1,
+            "a",
+            {"#JanezNovak": "Janez Novak (SDS):"},
+            speeches=3,
+            words=100,
         ),
         _corpus_job(
-            tmp_path, sub1, "b", {"#MajaZupan": "Maja Zupan:"}, speeches=5, words=200
+            tmp_path,
+            sub1,
+            "b",
+            {"#MajaZupan": "Maja Zupan (LDS):"},
+            speeches=5,
+            words=200,
+        ),
+        # SDS recurs in a second sub-folder, so the parent listOrg has it twice.
+        _corpus_job(
+            tmp_path,
+            sub2,
+            "c",
+            {"#MihaKovac": "Miha Kovac (SDS):"},
+            speeches=2,
+            words=50,
         ),
         _corpus_job(
-            tmp_path, sub2, "c", {"#MihaKovac": "Miha Kovac:"}, speeches=2, words=50
-        ),
-        _corpus_job(
-            tmp_path, mandate, "d", {"#AnaKovac": "Ana Kovac:"}, speeches=1, words=10
+            tmp_path,
+            mandate,
+            "d",
+            {"#AnaKovac": "Ana Kovac (Vlada):"},
+            speeches=1,
+            words=10,
         ),
     ]
     return output, mandate, sub1, sub2, jobs
@@ -575,11 +596,11 @@ def _nested_corpus_jobs(tmp_path):
 def test_write_batch_corpus_emits_recursive_tree(tmp_path):
     output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
 
-    corpus_files, list_person_files = write_batch_corpus_outputs(
+    corpus_files, list_person_files, list_org_files = write_batch_corpus_outputs(
         jobs, output, _corpus_options(tmp_path)
     )
 
-    # A corpus and a listPerson at every folder level, including the root.
+    # A corpus, a listPerson and a listOrg at every folder level, root included.
     assert set(corpus_files) == {
         output / "output.xml",
         mandate / "Mandate.xml",
@@ -592,13 +613,20 @@ def test_write_batch_corpus_emits_recursive_tree(tmp_path):
         sub1 / "listPerson.xml",
         sub2 / "listPerson.xml",
     }
+    assert set(list_org_files) == {
+        output / "listOrg.xml",
+        mandate / "listOrg.xml",
+        sub1 / "listOrg.xml",
+        sub2 / "listOrg.xml",
+    }
 
     mandate_xml = (mandate / "Mandate.xml").read_text(encoding="utf-8")
-    # The loose document, both child corpora, and its own listPerson.
+    # The loose document, both child corpora, and its own particDesc lists.
     assert 'href="documents/d.xml"' in mandate_xml
     assert 'href="Sub1/Sub1.xml"' in mandate_xml
     assert 'href="Sub2/Sub2.xml"' in mandate_xml
     assert 'href="listPerson.xml"' in mandate_xml
+    assert 'href="listOrg.xml"' in mandate_xml
     # Extent is summed over the whole subtree (d + a + b + c).
     assert 'unit="texts" quantity="4"' in mandate_xml
     assert 'unit="speeches" quantity="11"' in mandate_xml
@@ -624,6 +652,8 @@ def test_write_batch_corpus_list_person_is_recursive(tmp_path):
     sub1_lp = (sub1 / "listPerson.xml").read_text(encoding="utf-8")
     assert "JanezNovak" in sub1_lp and "MajaZupan" in sub1_lp
     assert "xi:include" not in sub1_lp
+    # Its affiliations point at the sibling listOrg by id.
+    assert 'ref="#org.SDS"' in sub1_lp
 
     # A folder with both a loose doc and children inlines the doc's speakers and
     # XIncludes each child list.
@@ -638,6 +668,23 @@ def test_write_batch_corpus_list_person_is_recursive(tmp_path):
     assert "UnknownSpeaker" not in root_lp
 
 
+def test_write_batch_corpus_list_org_is_recursive(tmp_path):
+    output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
+    write_batch_corpus_outputs(jobs, output, _corpus_options(tmp_path))
+
+    # A leaf listOrg defines its own documents' orgs and includes nothing.
+    sub1_org = (sub1 / "listOrg.xml").read_text(encoding="utf-8")
+    assert '<org xml:id="org.SDS"' in sub1_org
+    assert '<org xml:id="org.LDS"' in sub1_org
+    assert "xi:include" not in sub1_org
+
+    # A parent inlines its loose doc's org and XIncludes each child listOrg.
+    mandate_org = (mandate / "listOrg.xml").read_text(encoding="utf-8")
+    assert '<org xml:id="org.Vlada"' in mandate_org
+    assert 'href="Sub1/listOrg.xml"' in mandate_org
+    assert 'href="Sub2/listOrg.xml"' in mandate_org
+
+
 def test_write_batch_corpus_resolves_end_to_end(tmp_path):
     output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
     write_batch_corpus_outputs(jobs, output, _corpus_options(tmp_path))
@@ -647,21 +694,32 @@ def test_write_batch_corpus_resolves_end_to_end(tmp_path):
     xml_id = "{http://www.w3.org/XML/1998/namespace}id"
     documents = list(root.iter(f"{tei}TEI"))
     person_ids = {person.get(xml_id) for person in root.iter(f"{tei}person")}
+    org_ids = {org.get(xml_id) for org in root.iter(f"{tei}org")}
+    affiliation_refs = {
+        affiliation.get("ref")
+        for affiliation in root.iter(f"{tei}affiliation")
+        if affiliation.get("ref")
+    }
 
     # Every leaf document resolves in exactly once through its own corpus.
     assert len(documents) == 4
     assert {"JanezNovak", "MajaZupan", "MihaKovac", "AnaKovac"} <= person_ids
+    # Every org an affiliation points at is defined by the resolved listOrg.
+    assert {"org.SDS", "org.LDS", "org.Vlada"} <= org_ids
+    assert {ref.removeprefix("#") for ref in affiliation_refs} <= org_ids
 
 
 def test_write_batch_corpus_without_list_person(tmp_path):
     output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
 
-    corpus_files, list_person_files = write_batch_corpus_outputs(
+    corpus_files, list_person_files, list_org_files = write_batch_corpus_outputs(
         jobs, output, _corpus_options(tmp_path, write_list_person=False)
     )
 
     assert list_person_files == []
+    assert list_org_files == []
     assert not (mandate / "listPerson.xml").exists()
+    assert not (mandate / "listOrg.xml").exists()
     assert "particDesc" not in (mandate / "Mandate.xml").read_text(encoding="utf-8")
 
 
@@ -669,5 +727,5 @@ def test_write_batch_corpus_disabled_emits_nothing(tmp_path):
     output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
     disabled = BatchOptions(config=str(tmp_path / "config.py"), emit_corpus=False)
 
-    assert write_batch_corpus_outputs(jobs, output, disabled) == ([], [])
+    assert write_batch_corpus_outputs(jobs, output, disabled) == ([], [], [])
     assert not (output / "output.xml").exists()

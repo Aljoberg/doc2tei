@@ -18,7 +18,7 @@ from doc2tei.extractors import (
     RunRecord,
     WordPDFExtractor,
 )
-from doc2tei.helpers import build_list_person
+from doc2tei.helpers import build_list_org, build_list_person
 from engine import PDFPageContext, make_chunk
 
 CONFIG_PATH = Path(__file__).parents[1] / "examples" / "general-config" / "config.py"
@@ -1040,6 +1040,8 @@ def test_list_person_recovers_roles_and_affiliations_from_labels():
     assert first_affiliation.attrib["role"] == "predsednik"
     assert first_affiliation.findtext("roleName") == "PREDSEDNIK"
     assert first_affiliation.findtext("orgName") == "SR Slovenija"
+    # The affiliation points at the matching listOrg entry by a stable id.
+    assert first_affiliation.attrib["ref"] == "#org.SR-Slovenija"
 
     second_affiliation = people[1].find("affiliation")
     assert second_affiliation is not None
@@ -1051,6 +1053,24 @@ def test_list_person_recovers_roles_and_affiliations_from_labels():
     assert people[2].findtext("affiliation/roleName") == "Predsednik"
     assert people[3].find("affiliation").attrib["role"] == "sekretar"
     assert people[4].find("affiliation") is None
+
+
+def test_list_org_collects_and_ids_affiliation_organizations():
+    mapping = {
+        "#ZoranPolic": "PREDSEDNIK ZORAN POLIČ (SR Slovenija):",
+        "#AnaNovak": "Ana Novak (SR Slovenija):",  # same org, deduplicated
+        "#ImerPulja": "IMER PULJA, zvezni sekretar za trg:",  # no organization
+        "#MihaKovac": "Miha Kovač (SDS):",
+    }
+    root = build_list_org(mapping)
+
+    orgs = root.findall("org")
+    assert {org.attrib["xml:id"] for org in orgs} == {"org.SR-Slovenija", "org.SDS"}
+    assert {org.findtext("orgName") for org in orgs} == {"SR Slovenija", "SDS"}
+
+    # The listOrg id is exactly what the listPerson affiliation references.
+    person = build_list_person({"#MihaKovac": "Miha Kovač (SDS):"}).find("person")
+    assert person.find("affiliation").attrib["ref"] == "#org.SDS"
 
 
 def test_wikidata_list_person_is_enriched_and_remains_fail_soft():

@@ -281,6 +281,10 @@ def main(argv: list[str] | None = None) -> int:
             "scope": args.list_person_scope,
             "outputs": [],
         },
+        "list_org": {
+            "enabled": args.emit_corpus_xml and not args.no_list_person,
+            "outputs": [],
+        },
         "corpus": {
             "enabled": args.emit_corpus_xml,
             "outputs": [],
@@ -416,6 +420,7 @@ def main(argv: list[str] | None = None) -> int:
     # is skipped to avoid two files claiming the same path.
     list_person_paths: list[Path] = []
     list_person_error = ""
+    list_org_paths: list[Path] = []
     corpus_paths: list[Path] = []
     corpus_error = ""
     list_person_scope = "recursive" if args.emit_corpus_xml else args.list_person_scope
@@ -424,10 +429,12 @@ def main(argv: list[str] | None = None) -> int:
         try:
             if not args.quiet:
                 print("Building recursive corpus output(s)", flush=True)
-            corpus_paths, list_person_paths = write_batch_corpus_outputs(
-                jobs,
-                output_root,
-                options,
+            corpus_paths, list_person_paths, list_org_paths = (
+                write_batch_corpus_outputs(
+                    jobs,
+                    output_root,
+                    options,
+                )
             )
         except Exception as error:
             corpus_error = f"{type(error).__name__}: {error}"[:500]
@@ -473,6 +480,10 @@ def main(argv: list[str] | None = None) -> int:
             "outputs": [str(path) for path in list_person_paths],
             **({"error": list_person_error} if list_person_error else {}),
         },
+        list_org={
+            "enabled": args.emit_corpus_xml and not args.no_list_person,
+            "outputs": [str(path) for path in list_org_paths],
+        },
         corpus={
             "enabled": args.emit_corpus_xml,
             "outputs": [str(path) for path in corpus_paths],
@@ -496,6 +507,8 @@ def main(argv: list[str] | None = None) -> int:
                 f"files={len(list_person_paths)}",
                 flush=True,
             )
+        if list_org_paths:
+            print(f"listOrg: files={len(list_org_paths)}", flush=True)
         if corpus_paths:
             print(f"corpus: files={len(corpus_paths)}", flush=True)
         print(f"Manifest: {manifest_path}", flush=True)
