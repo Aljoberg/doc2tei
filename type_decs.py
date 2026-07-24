@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
+from dataclasses import dataclass
+from pathlib import Path
+import subprocess
 from typing import (
     Callable,
     Literal,
@@ -87,6 +90,48 @@ WikidataValue = TypedDict(
 
 WikidataBinding: TypeAlias = dict[str, WikidataValue]
 WikidataFetcher: TypeAlias = Callable[[str], list[WikidataBinding]]
+
+
+@dataclass(frozen=True)
+class UploadedDocument:
+    name: str
+    data: bytes
+
+
+@dataclass(frozen=True)
+class PipelineRequest:
+    output_root: Path
+    metadata_root: Path
+    config: Path
+    local_inputs: tuple[Path, ...] = ()
+    uploads: tuple[UploadedDocument, ...] = ()
+    sistory_menus: tuple[str, ...] = ()
+    sistory_download_root: Path | None = None
+    workers: int = 0
+    page_workers: int | None = None
+    recursive: bool = True
+    write_list_person: bool = True
+    list_person_scope: ListPersonScope = "document"
+    emit_corpus: bool = True
+    corpus_language: str = "sl"
+    corpus_code: str = "SI"
+    include_wikidata: bool = False
+    pretty: bool = True
+    xml_declaration: bool = True
+    overwrite: bool = False
+    reuse_workers: bool = False
+
+
+@dataclass
+class PipelineRun:
+    run_id: str
+    process: subprocess.Popen[bytes]
+    command: tuple[str, ...]
+    output_root: Path
+    metadata_root: Path
+    manifest_path: Path
+    log_path: Path
+    started_at_ns: int
 
 
 class ExtractedWord(TypedDict):

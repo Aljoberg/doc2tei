@@ -1227,6 +1227,19 @@ For collections, use the dedicated runner instead of starting many independent
 python batch_parse.py path/to/documents --output-dir out/batch
 ```
 
+The same batch workflow is available through a local web interface:
+
+```bash
+python -m pip install -r requirements.txt
+python -m streamlit run streamlit_app.py
+```
+
+The Streamlit app launches `batch_parse.py` rather than reimplementing its
+behavior. It accepts local paths, uploads, and SIstory menus; monitors the batch
+manifest and log; and keeps uploaded sources and UI logs in the separate audit
+tree. It is designed for trusted local use, not direct exposure to untrusted
+networks.
+
 It recursively discovers PDF and DOCX inputs and mirrors a serialised version
 of their relative directory layout. Leading catalogue indices move to the end:
 `1. sklic (1947-1950)` becomes `sklic-01`. TEI components live directly inside

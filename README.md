@@ -18,6 +18,12 @@ You can check out the example configs in the [examples](examples/) directory.
 
 ## Running
 
+Install the project dependencies:
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
 Run `parse.py` with an input, an output, and an explicit config selected from
 the `examples/` directory. The root `config.py` is intentionally not runnable.
 
@@ -67,6 +73,30 @@ python parse.py input.pdf --config examples/general-config/config.py \
 The old `make_list_person.py data.json -o listPerson.xml` command remains as a
 compatibility wrapper around the same implementation. Omit `--include-wikidata`
 for deterministic, offline output.
+
+## Web interface
+
+Start the local Streamlit control panel from the repository root:
+
+```powershell
+python -m streamlit run streamlit_app.py
+```
+
+The UI accepts local files/directories, browser uploads, SIstory menu paths, or
+a combination of them. It exposes the corpus, list, recovery, Wikidata, and
+parallelism options from `batch_parse.py`, then runs that same CLI in an
+isolated background process. The page updates from the real batch manifest,
+shows a bounded live log, permits stopping the process tree, and offers the
+manifest and generated XML files for download.
+
+The default destinations are `out/web-corpus` and its sibling
+`out/web-corpus-metadata`. Uploaded source files and UI run logs are retained
+under the audit tree, never inside the corpus.
+
+This interface is intended for trusted local use: it can read user-supplied
+filesystem paths and start parser processes. Streamlit binds locally by
+default; do not expose it to untrusted networks without adding authentication
+and an appropriate filesystem/process sandbox.
 
 ## Batch processing
 

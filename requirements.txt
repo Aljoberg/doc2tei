@@ -1,0 +1,5 @@
+pdfminer.six>=20250506
+pdfplumber>=0.11
+python-docx>=1.2
+requests>=2.32
+streamlit>=1.60.0,<2
