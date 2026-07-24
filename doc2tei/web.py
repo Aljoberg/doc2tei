@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from datetime import datetime
+from io import BytesIO
 import json
 import os
 from pathlib import Path
@@ -13,6 +14,7 @@ import subprocess
 import sys
 import time
 from typing import cast
+from zipfile import ZIP_DEFLATED, ZipFile
 
 from type_decs import PipelineRequest, PipelineRun, UploadedDocument
 
@@ -326,6 +328,52 @@ def manifest_artifacts(manifest: Mapping[str, object] | None) -> list[Path]:
             seen.add(key)
             artifacts.append(path)
     return artifacts
+
+
+def build_corpus_archive(
+    output_root: Path,
+    artifacts: Sequence[Path],
+) -> bytes:
+    """Build a Streamlit-compatible ZIP of generated XML below ``output_root``."""
+
+    root = output_root.resolve()
+    members: list[tuple[Path, Path]] = []
+    seen: set[str] = set()
+    for artifact in artifacts:
+        try:
+            resolved = artifact.resolve(strict=True)
+            relative = resolved.relative_to(root)
+        except (OSError, ValueError):
+            continue
+        key = os.path.normcase(str(resolved))
+        if (
+            key not in seen
+            and resolved.is_file()
+            and resolved.suffix.casefold() == ".xml"
+        ):
+            seen.add(key)
+            members.append((relative, resolved))
+    members.sort(key=lambda item: item[0].as_posix().casefold())
+    if not members:
+        raise ValueError("No generated corpus XML files are available to archive.")
+
+    archive = BytesIO()
+    archive_root = root.name or "tei-corpus"
+    try:
+        with ZipFile(
+            archive,
+            mode="w",
+            compression=ZIP_DEFLATED,
+            compresslevel=6,
+            allowZip64=True,
+            strict_timestamps=False,
+        ) as bundle:
+            for relative, source in members:
+                archive_name = "/".join((archive_root, *relative.parts))
+                bundle.write(source, arcname=archive_name)
+        return archive.getvalue()
+    finally:
+        archive.close()
 
 
 def log_tail(path: Path, max_bytes: int = 64_000) -> str:

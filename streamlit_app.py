@@ -8,6 +8,7 @@ import streamlit as st
 
 from doc2tei.batch import DEFAULT_CORPUS_PREFIX, default_metadata_root
 from doc2tei.web import (
+    build_corpus_archive,
     command_display,
     launch_pipeline,
     log_tail,
@@ -423,6 +424,25 @@ def pipeline_monitor() -> None:
         st.subheader("Outputs", anchor=False)
         st.code(str(current.output_root), language=None)
         artifacts = manifest_artifacts(manifest)
+        if artifacts:
+            archive_name = f"{current.output_root.name or 'tei-corpus'}.zip"
+            st.download_button(
+                "Download output ZIP",
+                data=lambda: build_corpus_archive(
+                    current.output_root,
+                    tuple(artifacts),
+                ),
+                file_name=archive_name,
+                mime="application/zip",
+                icon=":material/folder_zip:",
+                type="primary",
+                on_click="ignore",
+                key=f"archive-{current.run_id}",
+            )
+            st.caption(
+                f"Contains {len(artifacts)} generated XML file(s) with their "
+                "corpus folders. Audit metadata and source downloads are excluded."
+            )
         with st.container(horizontal=True, vertical_alignment="bottom"):
             if manifest is not None:
                 manifest_text = (

@@ -87,7 +87,13 @@ a combination of them. It exposes the corpus, list, recovery, Wikidata, and
 parallelism options from `batch_parse.py`, then runs that same CLI in an
 isolated background process. The page updates from the real batch manifest,
 shows a bounded live log, permits stopping the process tree, and offers the
-manifest and generated XML files for download.
+manifest and generated XML files for download. After a run, **Download output
+ZIP** packages every generated XML file while preserving the corpus directory
+layout; source downloads and the separate diagnostics/audit tree are excluded.
+The archive is generated only when clicked. Streamlit buffers the finished ZIP
+in memory while serving the download, so downloading a very large corpus can
+temporarily require approximately the compressed archive size in additional
+RAM.
 
 The default destinations are `out/web-corpus` and its sibling
 `out/web-corpus-metadata`. Uploaded source files and UI run logs are retained

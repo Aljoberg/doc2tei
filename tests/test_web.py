@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+from io import BytesIO
 from pathlib import Path
+from zipfile import ZipFile
 
 from streamlit.testing.v1 import AppTest
+from streamlit.runtime.download_data_util import (
+    convert_data_to_bytes_and_infer_mime,
+)
 
 from doc2tei.web import (
+    build_corpus_archive,
     build_batch_command,
     log_tail,
     manifest_artifacts,
@@ -141,6 +147,39 @@ def test_web_manifest_helpers_only_expose_existing_xml(tmp_path):
 
     assert manifest_counts(manifest) == {"ok": 1, "failed": 0}
     assert manifest_artifacts(manifest) == [document, corpus]
+
+
+def test_web_archive_contains_only_generated_xml_below_output_root(tmp_path):
+    output = tmp_path / "tei-output"
+    nested = output / "corpus-a" / "session"
+    nested.mkdir(parents=True)
+    first = output / "corpus-a.xml"
+    second = nested / "document.xml"
+    ignored_text = output / "notes.txt"
+    external = tmp_path / "external.xml"
+    first.write_text("<teiCorpus/>", encoding="utf-8")
+    second.write_text("<TEI/>", encoding="utf-8")
+    ignored_text.write_text("not a deliverable", encoding="utf-8")
+    external.write_text("<outside/>", encoding="utf-8")
+
+    archive = build_corpus_archive(
+        output,
+        (second, ignored_text, external, first, second),
+    )
+    assert isinstance(archive, bytes)
+    converted, inferred_mime = convert_data_to_bytes_and_infer_mime(
+        archive,
+        unsupported_error=AssertionError("Streamlit rejected the archive"),
+    )
+    assert converted == archive
+    assert inferred_mime == "application/octet-stream"
+    with ZipFile(BytesIO(archive)) as bundle:
+        assert bundle.namelist() == [
+            "tei-output/corpus-a.xml",
+            "tei-output/corpus-a/session/document.xml",
+        ]
+        assert bundle.read("tei-output/corpus-a.xml") == b"<teiCorpus/>"
+        assert bundle.read("tei-output/corpus-a/session/document.xml") == b"<TEI/>"
 
 
 def test_web_text_and_log_helpers_are_bounded(tmp_path):
