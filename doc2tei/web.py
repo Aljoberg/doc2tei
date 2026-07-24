@@ -16,7 +16,11 @@ from typing import cast
 
 from type_decs import PipelineRequest, PipelineRun, UploadedDocument
 
-from .batch import BATCH_MANIFEST_NAME, normalize_corpus_code
+from .batch import (
+    BATCH_MANIFEST_NAME,
+    normalize_corpus_code,
+    normalize_corpus_prefix,
+)
 from .sistory import normalize_sistory_menu_path
 
 SUPPORTED_UPLOAD_SUFFIXES = frozenset({".pdf", ".docx"})
@@ -65,6 +69,10 @@ def validate_pipeline_request(request: PipelineRequest) -> list[str]:
         errors.append("Wikidata enrichment requires person-list generation.")
     if request.include_root_corpus and not request.emit_corpus:
         errors.append("An aggregate root corpus requires recursive corpus XML.")
+    try:
+        normalize_corpus_prefix(request.corpus_prefix)
+    except ValueError as error:
+        errors.append(str(error))
     try:
         normalize_corpus_code(request.corpus_code)
     except ValueError as error:
@@ -146,6 +154,8 @@ def build_batch_command(
         request.list_person_scope,
         "--corpus-lang",
         request.corpus_language,
+        "--corpus-prefix",
+        normalize_corpus_prefix(request.corpus_prefix),
         "--corpus-code",
         normalize_corpus_code(request.corpus_code),
     ]

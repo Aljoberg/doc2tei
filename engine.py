@@ -127,7 +127,7 @@ filename: str
 # generated xml:id on structural (non-cosmetic) elements that don't have one
 auto_xml_ids = False
 id_counters = defaultdict(int)
-# Batch parsing supplies the final ParlaMint component stem before any rule
+# Batch parsing supplies the final corpus component stem before any rule
 # pushes an element. Standalone parsing leaves this unset and keeps using the
 # extensionless source filename.
 id_prefix: str | None = None

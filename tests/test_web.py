@@ -34,6 +34,8 @@ def test_web_request_builds_the_canonical_batch_command(tmp_path):
         list_person_scope="folder",
         emit_corpus=True,
         include_root_corpus=True,
+        corpus_prefix="Debates",
+        corpus_code="GB",
         include_wikidata=True,
         overwrite=True,
     )
@@ -51,6 +53,8 @@ def test_web_request_builds_the_canonical_batch_command(tmp_path):
     assert command[command.index("--workers") + 1] == "3"
     assert command[command.index("--page-workers") + 1] == "1"
     assert command[command.index("--sistory-menu") + 1] == "1/7/397/407"
+    assert command[command.index("--corpus-prefix") + 1] == "Debates"
+    assert command[command.index("--corpus-code") + 1] == "GB"
     assert "--emit-corpus-xml" in command
     assert "--include-root-corpus" in command
     assert "--include-wikidata" in command
@@ -84,6 +88,18 @@ def test_web_request_rejects_nested_audit_and_missing_inputs(tmp_path):
     assert any(
         "aggregate root corpus requires" in error.casefold()
         for error in validate_pipeline_request(incompatible)
+    )
+
+    invalid_prefix = PipelineRequest(
+        output_root=output,
+        metadata_root=tmp_path / "audit",
+        config=config,
+        local_inputs=(tmp_path,),
+        corpus_prefix="../unsafe",
+    )
+    assert any(
+        "corpus prefix" in error.casefold()
+        for error in validate_pipeline_request(invalid_prefix)
     )
 
 
@@ -144,4 +160,8 @@ def test_streamlit_app_loads_without_exceptions():
 
     assert list(app.exception) == []
     assert [title.value for title in app.title] == ["Build a TEI corpus"]
+    corpus_prefix = next(
+        widget for widget in app.text_input if widget.label == "Corpus prefix"
+    )
+    assert corpus_prefix.value == "ParlaMint"
     assert "Start pipeline" in [button.label for button in app.button]

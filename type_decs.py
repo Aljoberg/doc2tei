@@ -115,6 +115,7 @@ class PipelineRequest:
     emit_corpus: bool = True
     include_root_corpus: bool = False
     corpus_language: str = "sl"
+    corpus_prefix: str = "ParlaMint"
     corpus_code: str = "SI"
     include_wikidata: bool = False
     pretty: bool = True

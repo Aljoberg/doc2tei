@@ -11,6 +11,8 @@ import sys
 
 from doc2tei.batch import (
     BATCH_MANIFEST_NAME,
+    DEFAULT_CORPUS_CODE,
+    DEFAULT_CORPUS_PREFIX,
     BatchItemResult,
     BatchJob,
     BatchOptions,
@@ -19,6 +21,7 @@ from doc2tei.batch import (
     default_metadata_root,
     discover_batch_jobs,
     normalize_corpus_code,
+    normalize_corpus_prefix,
     run_batch,
     utc_now,
     write_batch_corpus_outputs,
@@ -53,6 +56,13 @@ def positive_float(value: str) -> float:
 def corpus_code(value: str) -> str:
     try:
         return normalize_corpus_code(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError(str(error)) from error
+
+
+def corpus_prefix(value: str) -> str:
+    try:
+        return normalize_corpus_prefix(value)
     except ValueError as error:
         raise argparse.ArgumentTypeError(str(error)) from error
 
@@ -171,10 +181,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="xml:lang for the emitted corpus headers (default: sl)",
     )
     parser.add_argument(
+        "--corpus-prefix",
+        type=corpus_prefix,
+        default=DEFAULT_CORPUS_PREFIX,
+        help="corpus-family prefix used in filenames and IDs (default: ParlaMint)",
+    )
+    parser.add_argument(
         "--corpus-code",
         type=corpus_code,
-        default="SI",
-        help="ISO country/region code used in ParlaMint filenames (default: SI)",
+        default=DEFAULT_CORPUS_CODE,
+        help="ISO country/region code used in corpus filenames (default: SI)",
     )
     parser.add_argument(
         "--include-wikidata",
@@ -363,6 +379,7 @@ def main(argv: list[str] | None = None) -> int:
         "corpus": {
             "enabled": args.emit_corpus_xml,
             "include_root": args.include_root_corpus,
+            "prefix": args.corpus_prefix,
             "code": args.corpus_code,
             "outputs": [],
         },
@@ -404,6 +421,7 @@ def main(argv: list[str] | None = None) -> int:
             metadata_root=local_metadata,
             recursive=args.recursive,
             extensions=args.extension,
+            corpus_prefix=args.corpus_prefix,
             corpus_code=args.corpus_code,
         )
         jobs.extend(local_jobs)
@@ -417,6 +435,7 @@ def main(argv: list[str] | None = None) -> int:
             metadata_root=sistory_metadata,
             recursive=True,
             extensions=args.extension,
+            corpus_prefix=args.corpus_prefix,
             corpus_code=args.corpus_code,
         )
         jobs.extend(downloaded_jobs)
@@ -461,6 +480,7 @@ def main(argv: list[str] | None = None) -> int:
         emit_corpus=args.emit_corpus_xml,
         include_root_corpus=args.include_root_corpus,
         corpus_language=args.corpus_lang,
+        corpus_prefix=args.corpus_prefix,
         corpus_code=args.corpus_code,
     )
     manifest.update(
@@ -469,6 +489,7 @@ def main(argv: list[str] | None = None) -> int:
         page_workers="config" if page_workers is None else page_workers,
         document_count=len(jobs),
         list_person_scope=args.list_person_scope,
+        corpus_prefix=args.corpus_prefix,
         corpus_code=args.corpus_code,
         discovery_warnings=warnings,
     )
@@ -572,6 +593,7 @@ def main(argv: list[str] | None = None) -> int:
         corpus={
             "enabled": args.emit_corpus_xml,
             "include_root": args.include_root_corpus,
+            "prefix": args.corpus_prefix,
             "code": args.corpus_code,
             "outputs": [str(path) for path in corpus_paths],
             **({"error": corpus_error} if corpus_error else {}),

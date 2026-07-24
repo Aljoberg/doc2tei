@@ -124,12 +124,15 @@ too. Use `--metadata-dir D:\review-files` to choose another audit location.
 The original source filename is still the document's main TEI title. Reliably
 inferred folder/term and date metadata are added as a subordinate title,
 `<meeting>`, and header dates. Automatically generated structural `xml:id`
-values use the final ParlaMint component stem rather than the old source
+values use the final corpus component stem rather than the old source
 filename.
 
-`--corpus-code` controls the ISO country/region part of the filename (default
-`SI`; for example, `--corpus-code ES-CT`). When no defensible transcript date
-can be extracted, the component uses `undated` instead of inventing one.
+`--corpus-prefix` controls the corpus-family part of filenames and generated
+IDs (default `ParlaMint`), while `--corpus-code` controls the ISO
+country/region part (default `SI`). For example,
+`--corpus-prefix Debates --corpus-code GB` produces names beginning
+`Debates-GB`. When no defensible transcript date can be extracted, the
+component uses `undated` instead of inventing one.
 
 Choose the `listPerson` aggregation level with:
 
@@ -154,13 +157,14 @@ Each corpus is a standalone view of its complete subtree:
 
 - Every top-level source folder is an independent root corpus. The output
   directory merely contains those folders and their parent-owned corpus files;
-  no generic `ParlaMint-SI.xml` is generated for the output directory itself.
+  no aggregate `<PREFIX>-<CODE>.xml` is generated for the output directory
+  itself.
 - Documents remain directly inside their subcorpus directory.
 - A subcorpus root and its `listPerson`/`listOrg` are written one level outside,
   in the parent corpus directory. For example, `sklic-01/` holds the components
-  while its parent holds `ParlaMint-SI-sklic-01.xml`,
-  `ParlaMint-SI-sklic-01-listPerson.xml`, and
-  `ParlaMint-SI-sklic-01-listOrg.xml`.
+  while its parent holds `<PREFIX>-<CODE>-sklic-01.xml`,
+  `<PREFIX>-<CODE>-sklic-01-listPerson.xml`, and
+  `<PREFIX>-<CODE>-sklic-01-listOrg.xml`.
 - Every corpus XIncludes all descendant document components directly. It never
   XIncludes another corpus XML.
 - Every person and organisation list is a flat, deduplicated aggregate for that
@@ -168,11 +172,11 @@ Each corpus is a standalone view of its complete subtree:
   `xml:id` values.
 - Corpus `<extent>` counts cover the same complete subtree.
 
-Add `--include-root-corpus` to also forge `OUTPUT_DIR/ParlaMint-SI.xml`
-(plus its aggregate lists when enabled) over every document in all top-level
-corpora. The root directly XIncludes documents, never the independent child
-corpus XML files. This flag requires `--emit-corpus-xml` and is disabled by
-default.
+Add `--include-root-corpus` to also forge
+`OUTPUT_DIR/<PREFIX>-<CODE>.xml` (plus its aggregate lists when enabled) over
+every document in all top-level corpora. The root directly XIncludes
+documents, never the independent child corpus XML files. This flag requires
+`--emit-corpus-xml` and is disabled by default.
 
 Corpus generation replaces the flat list scope for that run.
 `--no-list-person` suppresses both person and organisation lists, and

@@ -6,7 +6,7 @@ from typing import cast
 
 import streamlit as st
 
-from doc2tei.batch import default_metadata_root
+from doc2tei.batch import DEFAULT_CORPUS_PREFIX, default_metadata_root
 from doc2tei.web import (
     command_display,
     launch_pipeline,
@@ -44,7 +44,7 @@ with st.sidebar:
     st.caption("Local TEI conversion control panel")
     st.markdown(
         "- General, recovery-oriented parsing\n"
-        "- Recursive ParlaMint corpus output\n"
+        "- Recursive TEI corpus output\n"
         "- Separate human-review audit tree"
     )
     st.caption(f"Project: `{PROJECT_ROOT}`")
@@ -139,8 +139,8 @@ with st.form("pipeline_form", border=True):
             "Include aggregate root corpus",
             value=False,
             help=(
-                "Forge an additional ParlaMint-SI.xml covering every document "
-                "in all top-level corpora."
+                "Forge an additional aggregate corpus XML covering every "
+                "document in all top-level corpora."
             ),
             disabled=is_running,
         )
@@ -215,23 +215,28 @@ with st.form("pipeline_form", border=True):
 
         identity_columns = st.columns(3)
         with identity_columns[0]:
+            corpus_prefix = st.text_input(
+                "Corpus prefix",
+                value=DEFAULT_CORPUS_PREFIX,
+                disabled=is_running,
+            )
+        with identity_columns[1]:
             corpus_code = st.text_input(
                 "Corpus code",
                 value="SI",
                 disabled=is_running,
             )
-        with identity_columns[1]:
+        with identity_columns[2]:
             corpus_language = st.text_input(
                 "Corpus language",
                 value="sl",
                 disabled=is_running,
             )
-        with identity_columns[2]:
-            include_wikidata = st.checkbox(
-                "Include Wikidata enrichment",
-                value=False,
-                disabled=is_running,
-            )
+        include_wikidata = st.checkbox(
+            "Include Wikidata enrichment",
+            value=False,
+            disabled=is_running,
+        )
         sistory_download_text = st.text_input(
             "Custom SIstory download cache",
             placeholder="Optional; defaults below the audit directory",
@@ -283,6 +288,7 @@ if submitted:
         emit_corpus=emit_corpus,
         include_root_corpus=include_root_corpus,
         corpus_language=corpus_language.strip(),
+        corpus_prefix=corpus_prefix.strip(),
         corpus_code=corpus_code.strip(),
         include_wikidata=include_wikidata,
         pretty=pretty,

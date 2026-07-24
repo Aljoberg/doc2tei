@@ -47,6 +47,7 @@ MAX_BUNDLE_PATH_LENGTH = 240
 MAX_BUNDLE_COMPONENT_LENGTH = 100
 DESIRED_COMPONENT_TITLE_BUDGET = 64
 DEFAULT_CORPUS_CODE = "SI"
+DEFAULT_CORPUS_PREFIX = "ParlaMint"
 # ``_atomic_path`` writes each output to a sibling temp file first. That temp
 # name is longer than the final one, so every path budget reserves this many
 # characters to keep the *transient* path within MAX_BUNDLE_PATH_LENGTH too --
@@ -58,6 +59,7 @@ WINDOWS_RESERVED_NAMES = frozenset(
     | {f"LPT{number}" for number in range(1, 10)}
 )
 _CORPUS_CODE_RE = re.compile(r"[A-Za-z]{2}(?:-[A-Za-z0-9]+)*\Z")
+_CORPUS_PREFIX_RE = re.compile(r"[A-Za-z][A-Za-z0-9]*(?:[._-][A-Za-z0-9]+)*\Z")
 _LEADING_INDEX_RE = re.compile(r"^\s*0*(\d+)\s*(?:[.)]\s*|-\s+)")
 _INDEXED_FOLDER_RE = re.compile(r"^\s*0*(\d+)\s*(?:[.)]\s*|-\s+)(.+?)\s*$")
 _YEAR_RANGE_RE = re.compile(
@@ -135,7 +137,7 @@ def utc_now() -> str:
 
 
 def normalize_corpus_code(value: str) -> str:
-    """Return a ParlaMint-compatible upper-case country/region code."""
+    """Return an ISO-style upper-case country/region code."""
 
     code = value.strip().upper()
     if not _CORPUS_CODE_RE.fullmatch(code):
@@ -143,8 +145,22 @@ def normalize_corpus_code(value: str) -> str:
     return code
 
 
-def _corpus_prefix(code: str) -> str:
-    return f"ParlaMint-{normalize_corpus_code(code)}"
+def normalize_corpus_prefix(value: str) -> str:
+    """Return a portable corpus-family prefix suitable for names and IDs."""
+
+    prefix = value.strip()
+    if not _CORPUS_PREFIX_RE.fullmatch(prefix):
+        raise ValueError(
+            "corpus prefix must start with an ASCII letter and continue with "
+            "letters or numbers separated by single dots, underscores, or hyphens"
+        )
+    return prefix
+
+
+def _corpus_name(prefix: str, code: str) -> str:
+    normalized_prefix = normalize_corpus_prefix(prefix)
+    normalized_code = normalize_corpus_code(code)
+    return f"{normalized_prefix}-{normalized_code}"
 
 
 def _ascii_slug(value: str, *, fallback: str = "corpus") -> str:
@@ -260,8 +276,13 @@ def _short_folder_slug(value: str, maximum: int = 28) -> str:
     return f"{slug[: maximum - len(digest) - 1].rstrip('-')}-{digest}"
 
 
-def _component_stem(source: Path, group_labels: Sequence[str], code: str) -> str:
-    """Build a ParlaMint-style component stem without changing header titles."""
+def _component_stem(
+    source: Path,
+    group_labels: Sequence[str],
+    prefix: str,
+    code: str,
+) -> str:
+    """Build a corpus-style component stem without changing header titles."""
 
     date = _extract_iso_date(source.stem) or "undated"
     suffixes: list[str] = []
@@ -273,7 +294,7 @@ def _component_stem(source: Path, group_labels: Sequence[str], code: str) -> str
     else:
         suffixes.append(_short_source_slug(source.stem))
     suffix = f"-{'-'.join(suffixes)}" if suffixes else ""
-    return f"{_corpus_prefix(code)}_{date}{suffix}"
+    return f"{_corpus_name(prefix, code)}_{date}{suffix}"
 
 
 @dataclass(frozen=True)
@@ -282,7 +303,7 @@ class BatchJob:
     # The nested output folder shared by every document in a source directory;
     # this is where the document component itself is written.
     group: str
-    # Unique ParlaMint-style leaf identifying this document within its group.
+    # Unique corpus-style leaf identifying this document within its group.
     # The original source title remains unchanged in the document teiHeader.
     title: str
     # Original source-folder labels, retained after their filesystem-safe
@@ -337,6 +358,7 @@ class BatchOptions:
     emit_corpus: bool = False
     include_root_corpus: bool = False
     corpus_language: str = "sl"
+    corpus_prefix: str = DEFAULT_CORPUS_PREFIX
     corpus_code: str = DEFAULT_CORPUS_CODE
 
 
@@ -546,6 +568,7 @@ def discover_batch_jobs(
     metadata_root: str | Path | None = None,
     recursive: bool = True,
     extensions: Iterable[str] | None = None,
+    corpus_prefix: str = DEFAULT_CORPUS_PREFIX,
     corpus_code: str = DEFAULT_CORPUS_CODE,
 ) -> tuple[list[BatchJob], list[str]]:
     """Discover documents and assign collision-free bundles below source roots.
@@ -561,6 +584,7 @@ def discover_batch_jobs(
         if metadata_root is not None
         else default_metadata_root(output)
     )
+    name_prefix = normalize_corpus_prefix(corpus_prefix)
     code = normalize_corpus_code(corpus_code)
     allowed = normalize_extensions(extensions)
     specifications: list[Path] = []
@@ -690,7 +714,7 @@ def discover_batch_jobs(
         metadata_group = metadata_output / unique_group
         titles = used_titles.setdefault(unique_group.as_posix().casefold(), set())
         group_labels = labels
-        natural_title = _component_stem(source, group_labels, code)
+        natural_title = _component_stem(source, group_labels, name_prefix, code)
         title = _safe_title(
             natural_title,
             group_dir,
@@ -1104,7 +1128,7 @@ def _corpus_stem(
     root: Path,
     options: BatchOptions,
 ) -> str:
-    prefix = _corpus_prefix(options.corpus_code)
+    prefix = _corpus_name(options.corpus_prefix, options.corpus_code)
     if directory == root:
         return prefix
     return f"{prefix}-{_serialized_folder_component(directory.name)}"
@@ -1116,7 +1140,7 @@ def _corpus_artifact_path(
     options: BatchOptions,
     suffix: str = "",
 ) -> Path:
-    """Path for a corpus root or one of its ParlaMint metadata files."""
+    """Path for a corpus root or one of its named metadata files."""
 
     owner = _corpus_owner(directory, root)
     stem = _safe_bundle_component(_corpus_stem(directory, root, options))
@@ -1458,7 +1482,7 @@ def write_batch_corpus_outputs(
     is only their container unless ``options.include_root_corpus`` requests an
     additional aggregate corpus for the complete batch. A subcorpus keeps its
     document components directly inside its directory, while its corpus root
-    and ParlaMint-named metadata files are owned by the parent directory. Every
+    and corpus-named metadata files are owned by the parent directory. Every
     corpus directly XIncludes all document components in its subtree; corpus
     roots and metadata lists never XInclude child corpus artifacts. Nothing is
     produced unless ``options.emit_corpus`` is set. Returns ``(corpus_files,

@@ -1249,9 +1249,12 @@ its relative directory layout. Leading catalogue indices move to the end:
 `1. sklic (1947-1950)` becomes `sklic-01`. TEI components live directly inside
 that folder and use ParlaMint-style names such as
 `ParlaMint-SI_1947-12-15-sklic-01-01.xml`; JSON sidecars live in a mirrored
-sibling audit tree, outside the corpus. `--corpus-code` changes the default
-`SI` country or region code. If no trustworthy transcript date is found,
-`undated` is used rather than a fabricated date.
+sibling audit tree, outside the corpus. `--corpus-prefix` changes the default
+`ParlaMint` corpus-family prefix and `--corpus-code` changes the default `SI`
+country or region code. For example,
+`--corpus-prefix Debates --corpus-code GB` yields a `Debates-GB` name prefix.
+If no trustworthy transcript date is found, `undated` is used rather than a
+fabricated date.
 
 The source filename remains the main title in the document header. When
 available, the source folder/term and filename date are also added as a
@@ -1280,13 +1283,13 @@ Use `--no-list-person` to suppress all three forms.
 `--emit-corpus-xml` emits a standalone `<teiCorpus>` for every corpus folder
 level. Each top-level source folder is an independent root corpus; the output
 directory is only a container and does not receive a generic
-`ParlaMint-SI.xml`. Documents stay directly inside the subcorpus directory,
+`<PREFIX>-<CODE>.xml`. Documents stay directly inside the subcorpus directory,
 while that subcorpus's root, `listPerson`, and `listOrg` are placed one level
 outside in its parent. For example, the parent of `sklic-01/` owns:
 
-- `ParlaMint-SI-sklic-01.xml`
-- `ParlaMint-SI-sklic-01-listPerson.xml`
-- `ParlaMint-SI-sklic-01-listOrg.xml`
+- `<PREFIX>-<CODE>-sklic-01.xml`
+- `<PREFIX>-<CODE>-sklic-01-listPerson.xml`
+- `<PREFIX>-<CODE>-sklic-01-listOrg.xml`
 
 Every corpus XIncludes all document components in its complete subtree
 directly. It never includes a child corpus XML. The person and organisation
@@ -1295,9 +1298,9 @@ lists, preventing duplicate `xml:id` definitions. Corpus extent counts cover
 the same subtree.
 
 `--include-root-corpus` optionally forges an additional
-`OUTPUT_DIR/ParlaMint-SI.xml`, `listPerson`, and `listOrg` for the complete
-batch. Like every other corpus level, it directly includes descendant document
-components rather than child corpus XML files. It requires
+`OUTPUT_DIR/<PREFIX>-<CODE>.xml`, `listPerson`, and `listOrg` for the
+complete batch. Like every other corpus level, it directly includes descendant
+document components rather than child corpus XML files. It requires
 `--emit-corpus-xml` and is disabled by default.
 
 Corpus generation takes over from `--list-person-scope` while active (the

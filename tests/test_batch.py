@@ -5,6 +5,7 @@ from pathlib import Path
 from types import ModuleType
 import xml.etree.ElementTree as ET
 
+import batch_parse
 import engine
 import doc2tei.batch as batch_module
 from doc2tei.batch import (
@@ -16,6 +17,7 @@ from doc2tei.batch import (
     document_list_person_path,
     document_path,
     metadata_dir,
+    normalize_corpus_prefix,
     process_batch_job,
     write_batch_corpus_outputs,
     write_batch_list_person_outputs,
@@ -191,6 +193,54 @@ def test_batch_serializes_term_folder_and_parlamint_component_name(tmp_path):
     assert document_path(job) == (
         output / "downloads" / "sklic-01" / "ParlaMint-SI_1947-12-15-sklic-01-01.xml"
     )
+
+
+def test_batch_applies_a_custom_corpus_prefix_to_component_names(tmp_path):
+    source_root = tmp_path / "downloads"
+    source_root.mkdir()
+    (source_root / "Meeting 21.10.1949.pdf").touch()
+
+    jobs, warnings = discover_batch_jobs(
+        [source_root],
+        tmp_path / "output",
+        corpus_prefix="Debates",
+        corpus_code="GB",
+    )
+
+    assert warnings == []
+    assert len(jobs) == 1
+    assert jobs[0].title.startswith("Debates-GB_1949-10-21-")
+
+
+def test_corpus_prefix_validation_preserves_valid_spelling():
+    assert normalize_corpus_prefix("  MyCorpus.v2  ") == "MyCorpus.v2"
+    for invalid in ("", "1Corpus", "My Corpus", "../Corpus", "Corpus--v2"):
+        try:
+            normalize_corpus_prefix(invalid)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError(f"{invalid!r} should not be a valid corpus prefix")
+
+
+def test_batch_cli_accepts_custom_corpus_prefix_and_keeps_default(tmp_path):
+    parser = batch_parse.build_parser()
+
+    defaults = parser.parse_args(["--output-dir", str(tmp_path / "default")])
+    custom = parser.parse_args(
+        [
+            "--output-dir",
+            str(tmp_path / "custom"),
+            "--corpus-prefix",
+            "Debates",
+            "--corpus-code",
+            "gb",
+        ]
+    )
+
+    assert defaults.corpus_prefix == "ParlaMint"
+    assert custom.corpus_prefix == "Debates"
+    assert custom.corpus_code == "GB"
 
 
 def test_batch_date_inference_handles_ranges_and_numeric_dates():
@@ -947,6 +997,36 @@ def test_write_batch_corpus_can_forge_an_aggregate_root(tmp_path):
     resolved = _resolve_xincludes(root_path)
     tei = "{http://www.tei-c.org/ns/1.0}"
     assert len(list(resolved.iter(f"{tei}TEI"))) == 5
+
+
+def test_write_batch_corpus_uses_custom_prefix_for_all_artifacts_and_ids(tmp_path):
+    output, mandate, _sub1, _sub2, jobs = _nested_corpus_jobs(tmp_path)
+    options = _corpus_options(
+        tmp_path,
+        include_root_corpus=True,
+        corpus_prefix="Debates",
+        corpus_code="GB",
+    )
+
+    corpus_files, list_person_files, list_org_files = write_batch_corpus_outputs(
+        jobs,
+        output,
+        options,
+    )
+
+    root_path = output / "Debates-GB.xml"
+    assert root_path in corpus_files
+    assert output / "Debates-GB-mandate.xml" in corpus_files
+    assert output / "Debates-GB-listPerson.xml" in list_person_files
+    assert output / "Debates-GB-listOrg.xml" in list_org_files
+    root = ET.parse(root_path).getroot()
+    assert root.get("{http://www.w3.org/XML/1998/namespace}id") == "Debates-GB"
+    mandate_root = ET.parse(output / "Debates-GB-mandate.xml").getroot()
+    assert (
+        mandate_root.get("{http://www.w3.org/XML/1998/namespace}id")
+        == "Debates-GB-mandate"
+    )
+    assert not (output / "ParlaMint-GB.xml").exists()
 
 
 def test_write_batch_corpus_without_list_person(tmp_path):

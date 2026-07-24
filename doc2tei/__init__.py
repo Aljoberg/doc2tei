@@ -24,6 +24,8 @@ from .parser import (
     parse_document,
 )
 from .batch import (
+    DEFAULT_CORPUS_CODE,
+    DEFAULT_CORPUS_PREFIX,
     BatchItemResult,
     BatchJob,
     BatchOptions,
@@ -35,6 +37,7 @@ from .batch import (
     document_path,
     metadata_dir,
     normalize_corpus_code,
+    normalize_corpus_prefix,
     run_batch,
     write_batch_corpus_outputs,
     write_batch_list_person_outputs,
@@ -63,6 +66,8 @@ __all__ = [
     "AnyOf",
     "Attribute",
     "Between",
+    "DEFAULT_CORPUS_CODE",
+    "DEFAULT_CORPUS_PREFIX",
     "BatchItemResult",
     "BatchJob",
     "BatchOptions",
@@ -105,6 +110,7 @@ __all__ = [
     "fill_counts",
     "metadata_dir",
     "normalize_corpus_code",
+    "normalize_corpus_prefix",
     "load_config",
     "parse_document",
     "normalize_sistory_menu_path",
