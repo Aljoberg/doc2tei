@@ -85,10 +85,17 @@ Output folder and component names follow the ParlaMint conventions. Catalogue
 indices are moved out of the leading position (`1. sklic (1947-1950)` becomes
 `sklic-01`), and document components use names such as
 `ParlaMint-SI_1947-12-15-sklic-01-01.xml`. Components live directly in their
-subcorpus folder; their `data.json`, `diagnostics.json`, and `status.json`
-sidecars remain under `metadata/<component>/`. The original source filename is
-still the document's main TEI title. Reliably inferred folder/term and date
-metadata are added as a subordinate title, `<meeting>`, and header dates.
+subcorpus folder. Human-review artifacts do not: by default, `tei-output` is
+paired with a sibling `tei-output-metadata` tree containing
+`<subcorpus>/<component>/data.json`, `diagnostics.json`, `status.json`, and any
+`debug.log`. The batch manifest and default SIstory source cache are kept there
+too. Use `--metadata-dir D:\review-files` to choose another audit location.
+On the first rerun after upgrading, recognized sidecars, the old manifest, and
+the old default SIstory cache are relocated from the corpus on a best-effort
+basis without discarding name conflicts.
+The original source filename is still the document's main TEI title. Reliably
+inferred folder/term and date metadata are added as a subordinate title,
+`<meeting>`, and header dates.
 
 `--corpus-code` controls the ISO country/region part of the filename (default
 `SI`; for example, `--corpus-code ES-CT`). When no defensible transcript date
@@ -169,17 +176,18 @@ python .\batch_parse.py `
 A complete URL such as
 `https://sistory.si/slv/menu/1/7/397/407` also works, and
 `--sistory-menu` can be repeated. Sources are retained under
-`OUTPUT_DIR/_sistory-downloads` in a stable per-menu cache. On later runs,
+`METADATA_DIR/_sistory-downloads` in a stable per-menu cache. On later runs,
 `sistory-dl` skips existing PDFs and doc2tei skips unchanged conversions, so the
 whole download-and-parse command is resumable. Change the source cache with
 `--sistory-download-dir`.
 
-Download statistics and failures are stored in `batch-manifest.json`. A partial
-menu download does not prevent successfully downloaded or previously cached
-documents from being parsed, but the final command status remains nonzero so an
-incomplete acquisition is not silently reported as complete. When local inputs
-and SIstory menus are supplied together, their parsed bundles are separated
-under `local/` and `sistory/`.
+Download statistics and failures are stored in
+`METADATA_DIR/batch-manifest.json`. A partial menu download does not prevent
+successfully downloaded or previously cached documents from being parsed, but
+the final command status remains nonzero so an incomplete acquisition is not
+silently reported as complete. When local inputs and SIstory menus are supplied
+together, both the corpus and audit trees are separated under `local/` and
+`sistory/`.
 
 Initialize the downloader after cloning with:
 

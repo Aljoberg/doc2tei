@@ -113,6 +113,11 @@ def test_batch_cli_downloads_a_sistory_menu_then_parses_the_cache(
     manifest_status,
 ):
     output = tmp_path / "output"
+    metadata = tmp_path / "review-files"
+    legacy_cache = output / "_sistory-downloads"
+    legacy_cache.mkdir(parents=True)
+    (legacy_cache / "retained.txt").write_text("cached", encoding="utf-8")
+    (output / "batch-manifest.json").write_text("{}", encoding="utf-8")
 
     def fake_download(menu_path, download_directory, **_kwargs):
         source_folder = Path(download_directory) / "Downloaded menu"
@@ -143,6 +148,8 @@ def test_batch_cli_downloads_a_sistory_menu_then_parses_the_cache(
                 "1/7/397/407",
                 "--output-dir",
                 str(output),
+                "--metadata-dir",
+                str(metadata),
                 "--list-person-scope",
                 "folder",
                 "--quiet",
@@ -151,8 +158,12 @@ def test_batch_cli_downloads_a_sistory_menu_then_parses_the_cache(
         == expected_exit
     )
 
-    manifest = json.loads((output / "batch-manifest.json").read_text(encoding="utf-8"))
+    manifest = json.loads(
+        (metadata / "batch-manifest.json").read_text(encoding="utf-8")
+    )
     assert manifest["status"] == manifest_status
+    assert manifest["output"] == str(output)
+    assert manifest["metadata_output"] == str(metadata)
     assert manifest["document_count"] == 1
     assert manifest["sistory_downloads"][0]["menu_path"] == "1/7/397/407"
     assert manifest["counts"]["recovered"] == 1
@@ -161,6 +172,13 @@ def test_batch_cli_downloads_a_sistory_menu_then_parses_the_cache(
     group = output / "downloaded-menu"
     component = "ParlaMint-SI_undated-downloaded-menu-01"
     assert (group / f"{component}.xml").is_file()
-    assert (group / "metadata" / component / "diagnostics.json").is_file()
+    assert (metadata / "downloaded-menu" / component / "diagnostics.json").is_file()
+    assert (metadata / "_sistory-downloads").is_dir()
+    assert (metadata / "_sistory-downloads" / "retained.txt").read_text(
+        encoding="utf-8"
+    ) == "cached"
+    assert not (output / "batch-manifest.json").exists()
+    assert not (output / "_sistory-downloads").exists()
+    assert not (group / "metadata").exists()
     assert not (group / f"{component}-listPerson.xml").exists()
     assert (output / "ParlaMint-SI-downloaded-menu-listPerson.xml").is_file()

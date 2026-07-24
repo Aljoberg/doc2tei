@@ -15,6 +15,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import sys
 import time
 import traceback
@@ -288,6 +289,9 @@ class BatchJob:
     # Original source-folder labels, retained after their filesystem-safe
     # serialisation so corpus and component headers can describe their term.
     group_labels: tuple[str, ...] = ()
+    # Mirrored audit folder outside the corpus tree. ``None`` retains the
+    # historical in-group location for manually constructed BatchJob objects.
+    metadata_group: str | None = None
 
 
 def document_path(job: BatchJob) -> Path:
@@ -299,7 +303,60 @@ def document_path(job: BatchJob) -> Path:
 def metadata_dir(job: BatchJob) -> Path:
     """Folder holding a job's data/diagnostics/status JSON sidecars."""
 
-    return Path(job.group) / "metadata" / job.title
+    parent = (
+        Path(job.metadata_group)
+        if job.metadata_group is not None
+        else Path(job.group) / "metadata"
+    )
+    return parent / job.title
+
+
+def default_metadata_root(output_root: str | Path) -> Path:
+    """Return the sibling audit root used for a corpus output by default."""
+
+    output = Path(output_root).expanduser().resolve()
+    return output.parent / f"{output.name or 'output'}-metadata"
+
+
+def _migrate_legacy_metadata(job: BatchJob) -> None:
+    """Best-effort relocation of sidecars made by the old in-corpus layout."""
+
+    if job.metadata_group is None:
+        return
+    legacy = Path(job.group) / "metadata" / job.title
+    destination = metadata_dir(job)
+    if os.path.normcase(str(legacy.absolute())) == os.path.normcase(
+        str(destination.absolute())
+    ):
+        return
+    try:
+        if not legacy.is_dir():
+            return
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        if not destination.exists():
+            shutil.move(str(legacy), str(destination))
+        else:
+            for child in legacy.iterdir():
+                target = destination / child.name
+                if target.exists():
+                    stem, suffix = (
+                        (child.stem, child.suffix)
+                        if child.is_file()
+                        else (child.name, "")
+                    )
+                    number = 1
+                    while target.exists():
+                        marker = "legacy" if number == 1 else f"legacy-{number}"
+                        target = destination / f"{stem}-{marker}{suffix}"
+                        number += 1
+                shutil.move(str(child), str(target))
+            legacy.rmdir()
+        # Concurrent jobs can race here; a non-empty/already-removed parent is
+        # harmless and must never turn an otherwise valid conversion into an
+        # error.
+        legacy.parent.rmdir()
+    except OSError:
+        pass
 
 
 def document_list_person_path(job: BatchJob) -> Path:
@@ -405,12 +462,19 @@ def _safe_bundle_component(value: str) -> str:
     return f"{cleaned[:prefix_length].rstrip(' .-')}-{digest}"
 
 
-def _safe_title(name: str, group_dir: Path, source: Path, used: set[str]) -> str:
+def _safe_title(
+    name: str,
+    group_dir: Path,
+    source: Path,
+    used: set[str],
+    metadata_group: Path | None = None,
+) -> str:
     """Pick a Windows-path-safe, per-group-unique document title.
 
-    Components live directly under ``<group>`` while JSON sidecars live under
-    ``<group>/metadata/<title>/``. The latter's ``diagnostics.json`` governs the
-    length budget. A source-derived hash keeps a truncated title unique.
+    Components live directly under ``<group>`` while JSON sidecars live in a
+    separate mirrored audit tree when ``metadata_group`` is supplied. The
+    longest possible output governs the budget. A source-derived hash keeps a
+    truncated title unique.
     """
 
     base = _safe_bundle_component(name or "document")
@@ -418,9 +482,13 @@ def _safe_title(name: str, group_dir: Path, source: Path, used: set[str]) -> str
     # single character leaves the fixed overhead of the longest child path. The
     # temp reserve keeps the transient ``.diagnostics.json.<token>.tmp`` write
     # -- not just the final file -- within the limit.
+    audit_group = metadata_group or group_dir / "metadata"
     overhead = (
-        len(str(group_dir / "metadata" / "x" / "diagnostics.json"))
-        - 1
+        max(
+            len(str(group_dir / "x-listPerson.xml")) - 1,
+            len(str(group_dir / "x.xml")) - 1,
+            len(str(audit_group / "x" / "diagnostics.json")) - 1,
+        )
         + _ATOMIC_TEMP_RESERVE
     )
     available = max(8, MAX_BUNDLE_PATH_LENGTH - overhead)
@@ -439,7 +507,11 @@ def _safe_title(name: str, group_dir: Path, source: Path, used: set[str]) -> str
     return candidate
 
 
-def _safe_relative_group(relative: Path, output: Path) -> Path:
+def _safe_relative_group(
+    relative: Path,
+    output: Path,
+    metadata_root: Path | None = None,
+) -> Path:
     """Serialize corpus folders and keep them inside the Windows path budget."""
 
     if not relative.parts:
@@ -451,27 +523,28 @@ def _safe_relative_group(relative: Path, output: Path) -> Path:
         )
     )
     fit = MAX_BUNDLE_PATH_LENGTH - _ATOMIC_TEMP_RESERVE
-    minimum_bundle = (
-        output
-        / safe
-        / "metadata"
-        / ("x" * DESIRED_COMPONENT_TITLE_BUDGET)
-        / "diagnostics.json"
+    audit_root = metadata_root or default_metadata_root(output)
+    title_placeholder = "x" * DESIRED_COMPONENT_TITLE_BUDGET
+    minimum_bundles = (
+        output / safe / f"{title_placeholder}-listPerson.xml",
+        output / safe / f"{title_placeholder}.xml",
+        audit_root / safe / title_placeholder / "diagnostics.json",
     )
-    if len(str(minimum_bundle)) <= fit:
+    if all(len(str(path)) <= fit for path in minimum_bundles):
         return safe
     digest = hashlib.sha1(relative.as_posix().encode("utf-8")).hexdigest()[:12]
     name = _safe_bundle_component(
         _serialized_folder_component(relative.name or "folder")
     )
-    placeholder = (
-        output
-        / "x"
-        / "metadata"
-        / ("x" * DESIRED_COMPONENT_TITLE_BUDGET)
-        / "diagnostics.json"
+    placeholders = (
+        output / "x" / f"{title_placeholder}-listPerson.xml",
+        output / "x" / f"{title_placeholder}.xml",
+        audit_root / "x" / title_placeholder / "diagnostics.json",
     )
-    available = max(8, fit - len(str(placeholder)) + 1)
+    available = max(
+        8,
+        min(fit - len(str(path)) + 1 for path in placeholders),
+    )
     maximum = min(MAX_BUNDLE_COMPONENT_LENGTH, available)
     if maximum <= len(digest):
         leaf = digest[:maximum]
@@ -485,6 +558,7 @@ def discover_batch_jobs(
     inputs: Sequence[str | Path],
     output_root: str | Path,
     *,
+    metadata_root: str | Path | None = None,
     recursive: bool = True,
     extensions: Iterable[str] | None = None,
     corpus_code: str = DEFAULT_CORPUS_CODE,
@@ -492,6 +566,11 @@ def discover_batch_jobs(
     """Discover supported documents and assign collision-free output bundles."""
 
     output = Path(output_root).expanduser().resolve()
+    metadata_output = (
+        Path(metadata_root).expanduser().resolve()
+        if metadata_root is not None
+        else default_metadata_root(output)
+    )
     code = normalize_corpus_code(corpus_code)
     allowed = normalize_extensions(extensions)
     specifications: list[Path] = []
@@ -530,22 +609,19 @@ def discover_batch_jobs(
 
         iterator = specification.rglob("*") if recursive else specification.glob("*")
         prefix = Path(specification.name) if multiple_inputs else Path()
-        output_filesystem = _filesystem_path(output, force=True)
-        output_is_nested = output_filesystem != specification and _is_within(
-            output_filesystem, specification
-        )
+        excluded_roots = []
+        for excluded in (output, metadata_output):
+            filesystem_root = _filesystem_path(excluded, force=True)
+            if filesystem_root != specification and _is_within(
+                filesystem_root, specification
+            ):
+                excluded_roots.append(filesystem_root)
         for source in iterator:
             resolved = _filesystem_path(source)
             if (
                 not resolved.is_file()
                 or source.suffix.casefold() not in allowed
-                or (
-                    output_is_nested
-                    and _is_within(
-                        resolved,
-                        output_filesystem,
-                    )
-                )
+                or any(_is_within(resolved, root) for root in excluded_roots)
             ):
                 continue
             relative = prefix / source.relative_to(specification).with_suffix("")
@@ -571,7 +647,11 @@ def discover_batch_jobs(
         group_key = os.path.normcase(str(source.parent))
         unique_group = group_paths.get(group_key)
         if unique_group is None:
-            safe_group = _safe_relative_group(group_relative, output)
+            safe_group = _safe_relative_group(
+                group_relative,
+                output,
+                metadata_output,
+            )
             group_suffix = hashlib.sha1(
                 group_relative.as_posix().encode("utf-8")
             ).hexdigest()[:10]
@@ -582,11 +662,26 @@ def discover_batch_jobs(
             )
             group_paths[group_key] = unique_group
         group_dir = output / unique_group
+        metadata_group = metadata_output / unique_group
         titles = used_titles.setdefault(unique_group.as_posix().casefold(), set())
         group_labels = tuple(group_relative.parts)
         natural_title = _component_stem(source, group_labels, code)
-        title = _safe_title(natural_title, group_dir, source, titles)
-        jobs.append(BatchJob(str(source), str(group_dir), title, group_labels))
+        title = _safe_title(
+            natural_title,
+            group_dir,
+            source,
+            titles,
+            metadata_group,
+        )
+        jobs.append(
+            BatchJob(
+                source=str(source),
+                group=str(group_dir),
+                title=title,
+                group_labels=group_labels,
+                metadata_group=str(metadata_group),
+            )
+        )
     return jobs, warnings
 
 
@@ -1479,6 +1574,7 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
     meta = metadata_dir(job)
     source = Path(job.source)
     config = Path(options.config)
+    _migrate_legacy_metadata(job)
     meta.mkdir(parents=True, exist_ok=True)
     fingerprint = _job_fingerprint(job, options)
     previous = _completed_status(job, fingerprint, options)
@@ -1570,6 +1666,7 @@ def _recover_worker_failure(
     source = Path(job.source)
     config = Path(options.config)
     try:
+        _migrate_legacy_metadata(job)
         metadata_dir(job).mkdir(parents=True, exist_ok=True)
         fallback = _failure_parse_result(
             source,

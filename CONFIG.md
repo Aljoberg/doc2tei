@@ -1231,10 +1231,10 @@ It recursively discovers PDF and DOCX inputs and mirrors a serialised version
 of their relative directory layout. Leading catalogue indices move to the end:
 `1. sklic (1947-1950)` becomes `sklic-01`. TEI components live directly inside
 that folder and use ParlaMint-style names such as
-`ParlaMint-SI_1947-12-15-sklic-01-01.xml`; JSON sidecars live under
-`metadata/<component>/`. `--corpus-code` changes the default `SI` country or
-region code. If no trustworthy transcript date is found, `undated` is used
-rather than a fabricated date.
+`ParlaMint-SI_1947-12-15-sklic-01-01.xml`; JSON sidecars live in a mirrored
+sibling audit tree, outside the corpus. `--corpus-code` changes the default
+`SI` country or region code. If no trustworthy transcript date is found,
+`undated` is used rather than a fabricated date.
 
 The source filename remains the main title in the document header. When
 available, the source folder/term and filename date are also added as a
@@ -1291,6 +1291,15 @@ source, config, parser implementation, and output options, so unchanged
 documents are skipped and changed documents or code are rebuilt. `--overwrite`
 disables this check.
 
+The corpus output contains only XML deliverables. Audit artifacts are mirrored
+outside it by default: `OUTPUT_DIR-metadata/<folder>/<component>/` contains
+`data.json`, `diagnostics.json`, `status.json`, and any `debug.log`, while the
+audit root itself owns `batch-manifest.json` and the default SIstory cache.
+Choose an explicit location with `--metadata-dir REVIEW_DIR`.
+Legacy in-corpus sidecars and default batch artifacts are moved to that audit
+tree on a best-effort basis during the first rerun; conflicting files are
+retained with a `-legacy` suffix.
+
 Hard per-document failures are converted into reviewable fallback bundles and
 reported as `recovered`; they do not stop other documents or make the batch
 command fail. A `failed` status is reserved for cases where output files cannot
@@ -1309,12 +1318,13 @@ python batch_parse.py --sistory-menu 1/7/397/407 --output-dir out/sistory
 
 Bare menu paths and full SIstory menu URLs are accepted. Repeat
 `--sistory-menu` to crawl multiple roots. Each root receives a stable cache
-below `OUTPUT_DIR/_sistory-downloads`; the downloader's existing-file skip and
+below `METADATA_DIR/_sistory-downloads`; the downloader's existing-file skip and
 the parser's output fingerprints make the complete operation resumable.
 `--sistory-download-dir` moves that cache elsewhere.
 
-SIstory acquisition results are embedded in `batch-manifest.json`. Files
-already downloaded remain eligible for parsing even when a later menu refresh
-partially fails. Such a run finishes as `incomplete` and returns a nonzero exit
-status, while all available documents continue through the batch. Run
-`git submodule update --init sistory-dl` if the checkout is missing.
+SIstory acquisition results are embedded in
+`METADATA_DIR/batch-manifest.json`. Files already downloaded remain eligible
+for parsing even when a later menu refresh partially fails. Such a run finishes
+as `incomplete` and returns a nonzero exit status, while all available documents
+continue through the batch. Run `git submodule update --init sistory-dl` if the
+checkout is missing.

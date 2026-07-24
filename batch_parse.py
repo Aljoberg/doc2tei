@@ -7,6 +7,7 @@ import hashlib
 import os
 from pathlib import Path
 import re
+import shutil
 import sys
 
 from doc2tei.batch import (
@@ -16,6 +17,7 @@ from doc2tei.batch import (
     BatchOptions,
     automatic_document_workers,
     batch_counts,
+    default_metadata_root,
     discover_batch_jobs,
     normalize_corpus_code,
     run_batch,
@@ -72,7 +74,14 @@ def build_parser() -> argparse.ArgumentParser:
         "-o",
         "--output-dir",
         required=True,
-        help="root directory for per-document output bundles",
+        help="root corpus directory for TEI XML deliverables",
+    )
+    parser.add_argument(
+        "--metadata-dir",
+        help=(
+            "audit root for diagnostics, data, status, debug logs, manifest, and "
+            "the default SIstory cache (default: sibling OUTPUT_DIR-metadata)"
+        ),
     )
     parser.add_argument(
         "-c",
@@ -93,7 +102,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--sistory-download-dir",
         help=(
             "persistent SIstory download cache (default: "
-            "OUTPUT_DIR/_sistory-downloads)"
+            "METADATA_DIR/_sistory-downloads)"
         ),
     )
     parser.add_argument(
@@ -269,6 +278,34 @@ def _deduplicate_jobs(jobs: list[BatchJob]) -> list[BatchJob]:
     return list(unique.values())
 
 
+def _migrate_legacy_artifact(source: Path, destination: Path) -> None:
+    """Move an old in-corpus audit artifact without risking the batch run."""
+
+    try:
+        if os.path.normcase(str(source.absolute())) == os.path.normcase(
+            str(destination.absolute())
+        ):
+            return
+        if not source.exists():
+            return
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        target = destination
+        if target.exists():
+            stem, suffix = (
+                (target.stem, target.suffix) if source.is_file() else (target.name, "")
+            )
+            number = 1
+            while target.exists():
+                marker = "legacy" if number == 1 else f"legacy-{number}"
+                target = destination.with_name(f"{stem}-{marker}{suffix}")
+                number += 1
+        shutil.move(str(source), str(target))
+    except OSError:
+        # Audit migration is housekeeping. New output still belongs at the
+        # destination even if an old file is locked or otherwise immovable.
+        pass
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -282,13 +319,24 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(f"config file does not exist: {config}")
     output_root = Path(args.output_dir).expanduser().resolve()
     output_root.mkdir(parents=True, exist_ok=True)
-    manifest_path = output_root / BATCH_MANIFEST_NAME
+    metadata_root = (
+        Path(args.metadata_dir).expanduser().resolve()
+        if args.metadata_dir
+        else default_metadata_root(output_root)
+    )
+    metadata_root.mkdir(parents=True, exist_ok=True)
+    manifest_path = metadata_root / BATCH_MANIFEST_NAME
+    _migrate_legacy_artifact(
+        output_root / BATCH_MANIFEST_NAME,
+        manifest_path,
+    )
     started_at = utc_now()
     manifest: dict[str, object] = {
         "status": "acquiring",
         "started_at": started_at,
         "config": str(config),
         "output": str(output_root),
+        "metadata_output": str(metadata_root),
         "list_person": {
             "enabled": not args.no_list_person,
             "scope": args.list_person_scope,
@@ -313,8 +361,13 @@ def main(argv: list[str] | None = None) -> int:
         download_base = (
             Path(args.sistory_download_dir).expanduser().resolve()
             if args.sistory_download_dir
-            else output_root / "_sistory-downloads"
+            else metadata_root / "_sistory-downloads"
         )
+        if not args.sistory_download_dir:
+            _migrate_legacy_artifact(
+                output_root / "_sistory-downloads",
+                download_base,
+            )
         downloader_directory = Path(args.sistory_dl_path).expanduser().resolve()
         try:
             sistory_roots, sistory_results = _download_sistory_inputs(
@@ -334,9 +387,11 @@ def main(argv: list[str] | None = None) -> int:
     warnings: list[str] = []
     if args.inputs:
         local_output = output_root / "local" if sistory_roots else output_root
+        local_metadata = metadata_root / "local" if sistory_roots else metadata_root
         local_jobs, local_warnings = discover_batch_jobs(
             args.inputs,
             local_output,
+            metadata_root=local_metadata,
             recursive=args.recursive,
             extensions=args.extension,
             corpus_code=args.corpus_code,
@@ -345,9 +400,11 @@ def main(argv: list[str] | None = None) -> int:
         warnings.extend(local_warnings)
     if sistory_roots:
         sistory_output = output_root / "sistory" if args.inputs else output_root
+        sistory_metadata = metadata_root / "sistory" if args.inputs else metadata_root
         downloaded_jobs, downloaded_warnings = discover_batch_jobs(
             sistory_roots,
             sistory_output,
+            metadata_root=sistory_metadata,
             recursive=True,
             extensions=args.extension,
             corpus_code=args.corpus_code,

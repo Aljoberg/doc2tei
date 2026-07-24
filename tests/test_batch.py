@@ -11,6 +11,7 @@ from doc2tei.batch import (
     BatchJob,
     BatchOptions,
     automatic_document_workers,
+    default_metadata_root,
     discover_batch_jobs,
     document_list_person_path,
     document_path,
@@ -100,6 +101,9 @@ def test_batch_discovery_is_recursive_collision_safe_and_excludes_output(tmp_pat
     (nested / "other.PDF").touch()
     (nested / "ignore.txt").touch()
     (output / "old.pdf").touch()
+    metadata_root = default_metadata_root(output)
+    metadata_root.mkdir()
+    (metadata_root / "cached-source.pdf").touch()
 
     jobs, warnings = discover_batch_jobs([inputs], output)
 
@@ -121,6 +125,8 @@ def test_batch_discovery_is_recursive_collision_safe_and_excludes_output(tmp_pat
     assert groups["other.PDF"] == output / "nested"
     assert groups["same.pdf"] == output
     assert groups["same.docx"] == output
+    assert all(metadata_dir(job).is_relative_to(metadata_root) for job in jobs)
+    assert all(not metadata_dir(job).is_relative_to(output) for job in jobs)
 
     same_root_jobs, _ = discover_batch_jobs([inputs], inputs, recursive=False)
     assert {Path(job.source).name for job in same_root_jobs} == {
@@ -369,20 +375,38 @@ def test_automatic_batch_workers_leave_capacity_and_cap_memory_pressure(monkeypa
 def test_batch_shortens_unsafe_and_excessively_long_output_paths(tmp_path):
     source = tmp_path / "source.pdf"
     group_dir = tmp_path / ("g" * 80)
+    metadata_group = tmp_path / "audit" / ("g" * 80)
     used: set[str] = set()
 
-    title = batch_module._safe_title("a" * 180, group_dir, source, used)
-    duplicate = batch_module._safe_title("a" * 180, group_dir, source, used)
+    title = batch_module._safe_title(
+        "a" * 180,
+        group_dir,
+        source,
+        used,
+        metadata_group,
+    )
+    duplicate = batch_module._safe_title(
+        "a" * 180,
+        group_dir,
+        source,
+        used,
+        metadata_group,
+    )
 
     # Long titles are shortened in place so the whole bundle stays nested
     # inside its group rather than being relocated to a flat sibling folder.
     assert "_long-paths" not in title
     assert "_long-paths" not in str(batch_module.document_path(BatchJob("", "", title)))
-    assert len(str(group_dir / "metadata" / title / "diagnostics.json")) <= 240
+    assert len(str(metadata_group / title / "diagnostics.json")) <= 240
     # The transient ``_atomic_path`` temp file -- not just the final file -- must
     # stay within the budget; it is longer and is what actually gets created.
-    job = BatchJob("source.pdf", str(group_dir), title)
-    longest_final = group_dir / "metadata" / title / "diagnostics.json"
+    job = BatchJob(
+        "source.pdf",
+        str(group_dir),
+        title,
+        metadata_group=str(metadata_group),
+    )
+    longest_final = metadata_group / title / "diagnostics.json"
     assert len(str(batch_module._atomic_path(longest_final))) <= 240
     assert len(str(batch_module._atomic_path(batch_module.document_path(job)))) <= 240
     # A second document with the same name still gets a distinct title.
@@ -392,9 +416,46 @@ def test_batch_shortens_unsafe_and_excessively_long_output_paths(tmp_path):
     assert batch_module._safe_bundle_component("CON") not in {"CON", "con"}
 
     long_group = Path("a" * 100) / ("b" * 100) / ("c" * 100)
-    safe_group = batch_module._safe_relative_group(long_group, tmp_path)
+    audit_root = tmp_path / "audit"
+    safe_group = batch_module._safe_relative_group(long_group, tmp_path, audit_root)
     assert all(len(part) <= 100 for part in safe_group.parts)
     assert len(str(tmp_path / safe_group / "listPerson.xml")) <= 240
+    assert (
+        len(
+            str(
+                audit_root
+                / safe_group
+                / ("x" * batch_module.DESIRED_COMPONENT_TITLE_BUDGET)
+                / "diagnostics.json"
+            )
+        )
+        <= 240
+    )
+
+
+def test_batch_migrates_legacy_in_corpus_metadata_without_data_loss(tmp_path):
+    group = tmp_path / "corpus" / "conference"
+    external_group = tmp_path / "audit" / "conference"
+    legacy = group / "metadata" / "component"
+    destination = external_group / "component"
+    legacy.mkdir(parents=True)
+    destination.mkdir(parents=True)
+    (legacy / "data.json").write_text("old", encoding="utf-8")
+    (legacy / "status.json").write_text("status", encoding="utf-8")
+    (destination / "data.json").write_text("current", encoding="utf-8")
+    job = BatchJob(
+        "source.pdf",
+        str(group),
+        "component",
+        metadata_group=str(external_group),
+    )
+
+    batch_module._migrate_legacy_metadata(job)
+
+    assert (destination / "data.json").read_text(encoding="utf-8") == "current"
+    assert (destination / "data-legacy.json").read_text(encoding="utf-8") == "old"
+    assert (destination / "status.json").read_text(encoding="utf-8") == "status"
+    assert not (group / "metadata").exists()
 
 
 def test_batch_discovers_long_local_source_paths(tmp_path):
