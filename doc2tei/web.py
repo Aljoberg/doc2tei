@@ -27,6 +27,12 @@ from .sistory import normalize_sistory_menu_path
 
 SUPPORTED_UPLOAD_SUFFIXES = frozenset({".pdf", ".docx"})
 _UNSAFE_FILENAME_RE = re.compile(r'[<>:"/\\|?*\x00-\x1f]+')
+_DOCUMENT_AUDIT_FILENAMES = (
+    "data.json",
+    "diagnostics.json",
+    "status.json",
+    "debug.log",
+)
 
 
 def parse_lines(value: str) -> tuple[str, ...]:
@@ -330,35 +336,114 @@ def manifest_artifacts(manifest: Mapping[str, object] | None) -> list[Path]:
     return artifacts
 
 
-def build_corpus_archive(
+def manifest_metadata_artifacts(
+    manifest: Mapping[str, object] | None,
     output_root: Path,
-    artifacts: Sequence[Path],
-) -> bytes:
-    """Build a Streamlit-compatible ZIP of generated XML below ``output_root``."""
+    metadata_root: Path,
+    *,
+    manifest_path: Path | None = None,
+    log_path: Path | None = None,
+) -> list[Path]:
+    """Return current-run audit files without including source caches/uploads."""
 
-    root = output_root.resolve()
+    output = output_root.resolve()
+    metadata = metadata_root.resolve()
+    candidates = [
+        manifest_path or metadata_root / BATCH_MANIFEST_NAME,
+        *([log_path] if log_path is not None else []),
+    ]
+    for item in manifest_items(manifest):
+        value = item.get("output")
+        if not isinstance(value, str):
+            continue
+        try:
+            relative = Path(value).resolve().relative_to(output)
+        except (OSError, ValueError):
+            continue
+        document_metadata = metadata_root / relative.parent / relative.stem
+        candidates.extend(
+            document_metadata / filename for filename in _DOCUMENT_AUDIT_FILENAMES
+        )
+
+    artifacts: list[Path] = []
+    seen: set[str] = set()
+    for candidate in candidates:
+        try:
+            resolved = candidate.resolve(strict=True)
+            resolved.relative_to(metadata)
+        except (OSError, ValueError):
+            continue
+        key = os.path.normcase(str(resolved))
+        if key not in seen and resolved.is_file():
+            seen.add(key)
+            artifacts.append(resolved)
+    return sorted(
+        artifacts,
+        key=lambda path: path.relative_to(metadata).as_posix().casefold(),
+    )
+
+
+def _archive_members(
+    root: Path,
+    artifacts: Sequence[Path],
+    *,
+    xml_only: bool,
+) -> list[tuple[Path, Path]]:
+    resolved_root = root.resolve()
     members: list[tuple[Path, Path]] = []
     seen: set[str] = set()
     for artifact in artifacts:
         try:
             resolved = artifact.resolve(strict=True)
-            relative = resolved.relative_to(root)
+            relative = resolved.relative_to(resolved_root)
         except (OSError, ValueError):
             continue
         key = os.path.normcase(str(resolved))
         if (
             key not in seen
             and resolved.is_file()
-            and resolved.suffix.casefold() == ".xml"
+            and (not xml_only or resolved.suffix.casefold() == ".xml")
         ):
             seen.add(key)
             members.append((relative, resolved))
-    members.sort(key=lambda item: item[0].as_posix().casefold())
-    if not members:
+    return members
+
+
+def build_corpus_archive(
+    output_root: Path,
+    artifacts: Sequence[Path],
+    *,
+    metadata_root: Path | None = None,
+    metadata_artifacts: Sequence[Path] = (),
+) -> bytes:
+    """Build a Streamlit-compatible ZIP of corpus XML and optional audit files."""
+
+    root = output_root.resolve()
+    output_members = _archive_members(root, artifacts, xml_only=True)
+    metadata_members = (
+        _archive_members(metadata_root, metadata_artifacts, xml_only=False)
+        if metadata_root is not None
+        else []
+    )
+    if not output_members and not metadata_members:
         raise ValueError("No generated corpus XML files are available to archive.")
 
     archive = BytesIO()
-    archive_root = root.name or "tei-corpus"
+    output_label = root.name or "tei-corpus"
+    metadata_label = ""
+    if metadata_root is not None and metadata_members:
+        metadata_label = metadata_root.resolve().name or f"{output_label}-metadata"
+        if metadata_label.casefold() == output_label.casefold():
+            metadata_label = f"{metadata_label}-metadata"
+    entries = [
+        ("/".join((output_label, *relative.parts)), source)
+        for relative, source in output_members
+    ]
+    entries.extend(
+        ("/".join((metadata_label, *relative.parts)), source)
+        for relative, source in metadata_members
+    )
+    entries.sort(key=lambda item: item[0].casefold())
     try:
         with ZipFile(
             archive,
@@ -368,8 +453,7 @@ def build_corpus_archive(
             allowZip64=True,
             strict_timestamps=False,
         ) as bundle:
-            for relative, source in members:
-                archive_name = "/".join((archive_root, *relative.parts))
+            for archive_name, source in entries:
                 bundle.write(source, arcname=archive_name)
         return archive.getvalue()
     finally:

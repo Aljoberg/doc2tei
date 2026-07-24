@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import partial
 import json
 from pathlib import Path
 from typing import cast
@@ -15,6 +16,7 @@ from doc2tei.web import (
     manifest_artifacts,
     manifest_counts,
     manifest_items,
+    manifest_metadata_artifacts,
     parse_lines,
     read_manifest,
     stop_pipeline,
@@ -425,23 +427,60 @@ def pipeline_monitor() -> None:
         st.code(str(current.output_root), language=None)
         artifacts = manifest_artifacts(manifest)
         if artifacts:
-            archive_name = f"{current.output_root.name or 'tei-corpus'}.zip"
-            st.download_button(
-                "Download output ZIP",
-                data=lambda: build_corpus_archive(
+            metadata_artifacts = manifest_metadata_artifacts(
+                manifest,
+                current.output_root,
+                current.metadata_root,
+                manifest_path=current.manifest_path,
+                log_path=current.log_path,
+            )
+            with st.container(horizontal=True, vertical_alignment="center"):
+                include_metadata = st.checkbox(
+                    "Include audit metadata",
+                    value=bool(metadata_artifacts),
+                    disabled=not metadata_artifacts,
+                    help=(
+                        "Adds the manifest, pipeline log, and per-document "
+                        "data, diagnostics, status, and debug files. Cached "
+                        "source documents and uploads stay excluded."
+                    ),
+                    key=f"archive-metadata-{current.run_id}",
+                )
+                packaged_metadata = (
+                    tuple(metadata_artifacts) if include_metadata else ()
+                )
+                archive_name = (
+                    f"{current.output_root.name or 'tei-corpus'}"
+                    f"{'-package' if packaged_metadata else ''}.zip"
+                )
+                archive_builder = partial(
+                    build_corpus_archive,
                     current.output_root,
                     tuple(artifacts),
-                ),
-                file_name=archive_name,
-                mime="application/zip",
-                icon=":material/folder_zip:",
-                type="primary",
-                on_click="ignore",
-                key=f"archive-{current.run_id}",
-            )
+                    metadata_root=(
+                        current.metadata_root if packaged_metadata else None
+                    ),
+                    metadata_artifacts=packaged_metadata,
+                )
+                st.download_button(
+                    "Download package ZIP",
+                    data=archive_builder,
+                    file_name=archive_name,
+                    mime="application/zip",
+                    icon=":material/folder_zip:",
+                    type="primary",
+                    on_click="ignore",
+                    key=f"archive-{current.run_id}",
+                )
             st.caption(
-                f"Contains {len(artifacts)} generated XML file(s) with their "
-                "corpus folders. Audit metadata and source downloads are excluded."
+                f"Contains {len(artifacts)} generated XML file(s)"
+                + (
+                    f" and {len(packaged_metadata)} audit file(s) in separate "
+                    "preserved folder trees."
+                    if packaged_metadata
+                    else " with its corpus folder tree."
+                )
+                + " Source downloads and uploaded originals are excluded."
             )
         with st.container(horizontal=True, vertical_alignment="bottom"):
             if manifest is not None:

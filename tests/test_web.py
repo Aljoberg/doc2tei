@@ -15,6 +15,7 @@ from doc2tei.web import (
     log_tail,
     manifest_artifacts,
     manifest_counts,
+    manifest_metadata_artifacts,
     parse_lines,
     validate_pipeline_request,
     write_uploads,
@@ -180,6 +181,68 @@ def test_web_archive_contains_only_generated_xml_below_output_root(tmp_path):
         ]
         assert bundle.read("tei-output/corpus-a.xml") == b"<teiCorpus/>"
         assert bundle.read("tei-output/corpus-a/session/document.xml") == b"<TEI/>"
+
+
+def test_web_archive_can_include_only_current_run_audit_metadata(tmp_path):
+    output = tmp_path / "tei-output"
+    metadata = tmp_path / "tei-output-metadata"
+    document = output / "corpus-a" / "document.xml"
+    document.parent.mkdir(parents=True)
+    document.write_text("<TEI/>", encoding="utf-8")
+
+    document_metadata = metadata / "corpus-a" / "document"
+    document_metadata.mkdir(parents=True)
+    for filename in ("data.json", "diagnostics.json", "status.json", "debug.log"):
+        (document_metadata / filename).write_text(filename, encoding="utf-8")
+    manifest_path = metadata / "batch-manifest.json"
+    manifest_path.write_text("{}", encoding="utf-8")
+    log_path = metadata / "_ui" / "current-run" / "pipeline.log"
+    log_path.parent.mkdir(parents=True)
+    log_path.write_text("complete", encoding="utf-8")
+
+    cached_source = metadata / "_sistory-downloads" / "source.pdf"
+    cached_source.parent.mkdir()
+    cached_source.write_bytes(b"PDF")
+    old_log = metadata / "_ui" / "old-run" / "pipeline.log"
+    old_log.parent.mkdir(parents=True)
+    old_log.write_text("old", encoding="utf-8")
+    unrelated = metadata / "unrelated.json"
+    unrelated.write_text("{}", encoding="utf-8")
+
+    manifest: dict[str, object] = {
+        "items": [{"output": str(document), "status": "ok"}],
+    }
+    audit_files = manifest_metadata_artifacts(
+        manifest,
+        output,
+        metadata,
+        manifest_path=manifest_path,
+        log_path=log_path,
+    )
+
+    assert {path.relative_to(metadata).as_posix() for path in audit_files} == {
+        "_ui/current-run/pipeline.log",
+        "batch-manifest.json",
+        "corpus-a/document/data.json",
+        "corpus-a/document/debug.log",
+        "corpus-a/document/diagnostics.json",
+        "corpus-a/document/status.json",
+    }
+
+    archive = build_corpus_archive(
+        output,
+        (document,),
+        metadata_root=metadata,
+        metadata_artifacts=audit_files,
+    )
+    with ZipFile(BytesIO(archive)) as bundle:
+        names = set(bundle.namelist())
+        assert "tei-output/corpus-a/document.xml" in names
+        assert "tei-output-metadata/batch-manifest.json" in names
+        assert "tei-output-metadata/corpus-a/document/diagnostics.json" in names
+        assert all("_sistory-downloads" not in name for name in names)
+        assert all("old-run" not in name for name in names)
+        assert all("unrelated.json" not in name for name in names)
 
 
 def test_web_text_and_log_helpers_are_bounded(tmp_path):

@@ -87,9 +87,12 @@ a combination of them. It exposes the corpus, list, recovery, Wikidata, and
 parallelism options from `batch_parse.py`, then runs that same CLI in an
 isolated background process. The page updates from the real batch manifest,
 shows a bounded live log, permits stopping the process tree, and offers the
-manifest and generated XML files for download. After a run, **Download output
+manifest and generated XML files for download. After a run, **Download package
 ZIP** packages every generated XML file while preserving the corpus directory
-layout; source downloads and the separate diagnostics/audit tree are excluded.
+layout. The enabled-by-default **Include audit metadata** option adds a second
+preserved tree containing the batch manifest, pipeline log, and current
+documents' `data.json`, `diagnostics.json`, `status.json`, and `debug.log`
+files. Cached source downloads and uploaded originals remain excluded.
 The archive is generated only when clicked. Streamlit buffers the finished ZIP
 in memory while serving the download, so downloading a very large corpus can
 temporarily require approximately the compressed archive size in additional
