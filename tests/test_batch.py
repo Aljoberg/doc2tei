@@ -16,7 +16,7 @@ from doc2tei.batch import (
     document_path,
     metadata_dir,
     process_batch_job,
-    write_batch_subcorpus_outputs,
+    write_batch_corpus_outputs,
     write_batch_list_person_outputs,
 )
 from doc2tei.helpers import build_tei_corpus
@@ -47,6 +47,32 @@ def _fake_document(speeches: int, words: int) -> str:
         f'<measure unit="words" quantity="{words}">{words} words</measure>'
         "</extent></fileDesc></teiHeader><text/></TEI>"
     )
+
+
+def _resolve_xincludes(path: Path) -> ET.Element:
+    """Recursively splice every xi:include, tracking each file's own base dir."""
+
+    root = ET.parse(path).getroot()
+    _splice_xincludes(root, path.parent)
+    return root
+
+
+def _splice_xincludes(element: ET.Element, base: Path) -> None:
+    include_tag = "{http://www.w3.org/2001/XInclude}include"
+    resolved = []
+    for child in list(element):
+        if child.tag == include_tag:
+            target = base / child.get("href")
+            included = ET.parse(target).getroot()
+            _splice_xincludes(included, target.parent)
+            resolved.append(included)
+        else:
+            _splice_xincludes(child, base)
+            resolved.append(child)
+    for child in list(element):
+        element.remove(child)
+    for child in resolved:
+        element.append(child)
 
 
 def _loaded_config(path: Path) -> LoadedConfig:
@@ -503,81 +529,145 @@ def test_build_tei_corpus_without_list_person_has_no_particdesc():
     assert _include_hrefs(corpus) == ["documents/a.xml"]
 
 
-def _subcorpus_jobs_with_documents(tmp_path):
-    output = tmp_path / "output"
-    group = output / "mandate"
-    jobs = [
-        _job(tmp_path / "a.pdf", group, "a"),
-        _job(tmp_path / "b.pdf", group, "b"),
-    ]
-    for job, speeches, words in ((jobs[0], 3, 100), (jobs[1], 5, 200)):
-        document = document_path(job)
-        document.parent.mkdir(parents=True, exist_ok=True)
-        document.write_text(_fake_document(speeches, words), encoding="utf-8")
-    return output, group, jobs
+def _corpus_job(tmp_path, group, title, speakers, *, speeches=1, words=10):
+    job = _job(tmp_path / f"{title}.pdf", group, title)
+    document = document_path(job)
+    document.parent.mkdir(parents=True, exist_ok=True)
+    document.write_text(_fake_document(speeches, words), encoding="utf-8")
+    meta = metadata_dir(job)
+    meta.mkdir(parents=True, exist_ok=True)
+    (meta / "data.json").write_text(
+        json.dumps({"speakers": speakers}, ensure_ascii=False), encoding="utf-8"
+    )
+    return job
 
 
-def _subcorpus_options(tmp_path, **overrides):
+def _corpus_options(tmp_path, **overrides):
     return BatchOptions(
-        config=str(tmp_path / "config.py"),
-        emit_subcorpus=True,
-        pretty=True,
-        **overrides,
+        config=str(tmp_path / "config.py"), emit_corpus=True, pretty=True, **overrides
     )
 
 
-def test_write_batch_subcorpus_folder_scope_aggregates_and_includes_one_list(tmp_path):
-    output, group, jobs = _subcorpus_jobs_with_documents(tmp_path)
-    (group / "listPerson.xml").write_text("<listPerson/>", encoding="utf-8")
+def _nested_corpus_jobs(tmp_path):
+    """A two-level tree: Mandate holds a loose doc plus two sub-folders."""
 
-    outputs = write_batch_subcorpus_outputs(
-        jobs, output, _subcorpus_options(tmp_path, list_person_scope="folder")
+    output = tmp_path / "output"
+    mandate = output / "Mandate"
+    sub1 = mandate / "Sub1"
+    sub2 = mandate / "Sub2"
+    jobs = [
+        _corpus_job(
+            tmp_path, sub1, "a", {"#JanezNovak": "Janez Novak:"}, speeches=3, words=100
+        ),
+        _corpus_job(
+            tmp_path, sub1, "b", {"#MajaZupan": "Maja Zupan:"}, speeches=5, words=200
+        ),
+        _corpus_job(
+            tmp_path, sub2, "c", {"#MihaKovac": "Miha Kovac:"}, speeches=2, words=50
+        ),
+        _corpus_job(
+            tmp_path, mandate, "d", {"#AnaKovac": "Ana Kovac:"}, speeches=1, words=10
+        ),
+    ]
+    return output, mandate, sub1, sub2, jobs
+
+
+def test_write_batch_corpus_emits_recursive_tree(tmp_path):
+    output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
+
+    corpus_files, list_person_files = write_batch_corpus_outputs(
+        jobs, output, _corpus_options(tmp_path)
     )
 
-    assert outputs == [group / "mandate.xml"]
-    text = (group / "mandate.xml").read_text(encoding="utf-8")
-    assert "<teiCorpus" in text
-    assert 'href="documents/a.xml"' in text
-    assert 'href="documents/b.xml"' in text
-    assert 'href="listPerson.xml"' in text
-    # Extents are summed across the group's documents.
-    assert 'unit="texts" quantity="2"' in text
-    assert 'unit="speeches" quantity="8"' in text
-    assert 'unit="words" quantity="300"' in text
-    # The group folder name titles the subcorpus.
-    assert '<title type="main" xml:lang="sl">mandate</title>' in text
+    # A corpus and a listPerson at every folder level, including the root.
+    assert set(corpus_files) == {
+        output / "output.xml",
+        mandate / "Mandate.xml",
+        sub1 / "Sub1.xml",
+        sub2 / "Sub2.xml",
+    }
+    assert set(list_person_files) == {
+        output / "listPerson.xml",
+        mandate / "listPerson.xml",
+        sub1 / "listPerson.xml",
+        sub2 / "listPerson.xml",
+    }
+
+    mandate_xml = (mandate / "Mandate.xml").read_text(encoding="utf-8")
+    # The loose document, both child corpora, and its own listPerson.
+    assert 'href="documents/d.xml"' in mandate_xml
+    assert 'href="Sub1/Sub1.xml"' in mandate_xml
+    assert 'href="Sub2/Sub2.xml"' in mandate_xml
+    assert 'href="listPerson.xml"' in mandate_xml
+    # Extent is summed over the whole subtree (d + a + b + c).
+    assert 'unit="texts" quantity="4"' in mandate_xml
+    assert 'unit="speeches" quantity="11"' in mandate_xml
+    assert 'unit="words" quantity="360"' in mandate_xml
+
+    # A leaf corpus references only its own documents.
+    sub1_xml = (sub1 / "Sub1.xml").read_text(encoding="utf-8")
+    assert 'href="documents/a.xml"' in sub1_xml
+    assert 'href="documents/b.xml"' in sub1_xml
+    assert 'unit="texts" quantity="2"' in sub1_xml
+
+    # The root corpus includes the Mandate corpus and aggregates everything.
+    root_xml = (output / "output.xml").read_text(encoding="utf-8")
+    assert 'href="Mandate/Mandate.xml"' in root_xml
+    assert 'unit="texts" quantity="4"' in root_xml
 
 
-def test_write_batch_subcorpus_document_scope_includes_each_existing_list(tmp_path):
-    output, group, jobs = _subcorpus_jobs_with_documents(tmp_path)
-    # Only the first document has a per-document list on disk.
-    document_list_person_path(jobs[0]).write_text("<listPerson/>", encoding="utf-8")
+def test_write_batch_corpus_list_person_is_recursive(tmp_path):
+    output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
+    write_batch_corpus_outputs(jobs, output, _corpus_options(tmp_path))
 
-    write_batch_subcorpus_outputs(
-        jobs, output, _subcorpus_options(tmp_path, list_person_scope="document")
+    # A leaf list holds its own merged speakers and includes nothing.
+    sub1_lp = (sub1 / "listPerson.xml").read_text(encoding="utf-8")
+    assert "JanezNovak" in sub1_lp and "MajaZupan" in sub1_lp
+    assert "xi:include" not in sub1_lp
+
+    # A folder with both a loose doc and children inlines the doc's speakers and
+    # XIncludes each child list.
+    mandate_lp = (mandate / "listPerson.xml").read_text(encoding="utf-8")
+    assert "AnaKovac" in mandate_lp
+    assert 'href="Sub1/listPerson.xml"' in mandate_lp
+    assert 'href="Sub2/listPerson.xml"' in mandate_lp
+
+    # The root has no loose documents: only child includes, no placeholder.
+    root_lp = (output / "listPerson.xml").read_text(encoding="utf-8")
+    assert 'href="Mandate/listPerson.xml"' in root_lp
+    assert "UnknownSpeaker" not in root_lp
+
+
+def test_write_batch_corpus_resolves_end_to_end(tmp_path):
+    output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
+    write_batch_corpus_outputs(jobs, output, _corpus_options(tmp_path))
+
+    root = _resolve_xincludes(output / "output.xml")
+    tei = "{http://www.tei-c.org/ns/1.0}"
+    xml_id = "{http://www.w3.org/XML/1998/namespace}id"
+    documents = list(root.iter(f"{tei}TEI"))
+    person_ids = {person.get(xml_id) for person in root.iter(f"{tei}person")}
+
+    # Every leaf document resolves in exactly once through its own corpus.
+    assert len(documents) == 4
+    assert {"JanezNovak", "MajaZupan", "MihaKovac", "AnaKovac"} <= person_ids
+
+
+def test_write_batch_corpus_without_list_person(tmp_path):
+    output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
+
+    corpus_files, list_person_files = write_batch_corpus_outputs(
+        jobs, output, _corpus_options(tmp_path, write_list_person=False)
     )
 
-    text = (group / "mandate.xml").read_text(encoding="utf-8")
-    assert 'href="documents/a.listPerson.xml"' in text
-    assert "b.listPerson.xml" not in text
+    assert list_person_files == []
+    assert not (mandate / "listPerson.xml").exists()
+    assert "particDesc" not in (mandate / "Mandate.xml").read_text(encoding="utf-8")
 
 
-def test_write_batch_subcorpus_corpus_scope_omits_list_person(tmp_path):
-    output, group, jobs = _subcorpus_jobs_with_documents(tmp_path)
-    (output / "listPerson.xml").write_text("<listPerson/>", encoding="utf-8")
+def test_write_batch_corpus_disabled_emits_nothing(tmp_path):
+    output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
+    disabled = BatchOptions(config=str(tmp_path / "config.py"), emit_corpus=False)
 
-    write_batch_subcorpus_outputs(
-        jobs, output, _subcorpus_options(tmp_path, list_person_scope="corpus")
-    )
-
-    text = (group / "mandate.xml").read_text(encoding="utf-8")
-    assert "listPerson" not in text
-    assert "particDesc" not in text
-
-
-def test_write_batch_subcorpus_disabled_emits_nothing(tmp_path):
-    output, group, jobs = _subcorpus_jobs_with_documents(tmp_path)
-    disabled = BatchOptions(config=str(tmp_path / "config.py"), emit_subcorpus=False)
-
-    assert write_batch_subcorpus_outputs(jobs, output, disabled) == []
-    assert not (group / "mandate.xml").exists()
+    assert write_batch_corpus_outputs(jobs, output, disabled) == ([], [])
+    assert not (output / "output.xml").exists()

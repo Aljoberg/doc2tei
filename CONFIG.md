@@ -1258,20 +1258,28 @@ document. Changing only `--list-person-scope` rebuilds the inexpensive XML
 sidecars from existing `data.json` files and does not reparse the source PDFs.
 Use `--no-list-person` to suppress all three forms.
 
-`--subcorpus` additionally emits one per-group subcorpus (`<teiCorpus>`) per
-source folder, modelled on the siParl mandate corpora (e.g. `SDT2.xml`). Each is
-named after its folder, sits beside that folder's `documents/`, and pairs a
-generated `teiHeader` (titled after the folder, with the constituent documents'
-speech and word counts summed into `<extent>`) with an `<xi:include>` per
-document. These are the per-group members of an eventual top-level corpus, not
-the corpus itself. Speaker lists are referenced, not inlined: one
-`listPerson.xml` under `particDesc` at `folder` scope, each per-document list at
-`document` scope, and none at `corpus` scope (that single list stays at the
-output root). `--subcorpus-lang` sets the header's `xml:lang` (default `sl`).
-Subcorpus generation is a post-processing pass over the written outputs, so it
-does not reparse the source PDFs. Because the component paths are relative, the
-file XIncludes correctly wherever the folder is moved, as long as `documents/`
-and the listPerson file move with it.
+`--emit-corpus-xml` additionally builds a recursive `<teiCorpus>` tree that
+mirrors the output folders, modelled on siParl (e.g. `siParl.xml` over its
+`SDT2.xml` mandate). Every folder holding documents -- directly or in a
+sub-folder -- becomes a corpus, so a folder of sub-folders is itself a corpus
+whose members are the sub-folder corpora, and a folder can carry both loose
+documents and child corpora. Each corpus folder gets two files:
+
+- `<foldername>.xml`: a `<teiCorpus>` with a generated `teiHeader` (titled after
+  the folder, with the whole subtree's document/speech/word counts summed into
+  `<extent>`) that XIncludes each document held directly in the folder and each
+  child corpus file.
+- `listPerson.xml`: the speakers merged from the folder's own documents,
+  followed by an `<xi:include>` of each child folder's `listPerson.xml`. The
+  tree therefore resolves to one nested speaker list at the root.
+
+Because the corpus feature emits `listPerson.xml` at every level, it takes over
+from the flat `--list-person-scope` layout while active (the manifest reports
+the scope as `recursive`); `--no-list-person` still suppresses every list.
+`--corpus-lang` sets the corpus headers' `xml:lang` (default `sl`). Generation
+is a post-processing pass over the written outputs, so it does not reparse the
+source PDFs, and because every href is relative the tree XIncludes correctly
+wherever a folder is moved, as long as its members move with it.
 
 `--workers 0` (the default) uses up to four document processes. Multiple
 document workers automatically imply `page_workers=1`, avoiding nested process

@@ -7,7 +7,7 @@ from collections import Counter
 from collections.abc import Callable, Iterable, Mapping, MutableMapping, Sequence
 from concurrent.futures import FIRST_COMPLETED, Future, ProcessPoolExecutor, wait
 from contextlib import redirect_stderr, redirect_stdout
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from functools import lru_cache, partial
 import hashlib
@@ -23,7 +23,13 @@ import xml.etree.ElementTree as ET
 import engine
 from type_decs import BatchStatus, ListPersonScope
 
-from .helpers import build_list_person, build_tei_corpus, merge_speaker_mappings
+from .helpers import (
+    TEI_NAMESPACE,
+    XINCLUDE_NAMESPACE,
+    build_list_person,
+    build_tei_corpus,
+    merge_speaker_mappings,
+)
 from .parser import (
     LoadedConfig,
     ParseDiagnostics,
@@ -95,8 +101,8 @@ class BatchOptions:
     wikidata_timeout: float = 20.0
     page_workers: int | None = None
     overwrite: bool = False
-    emit_subcorpus: bool = False
-    subcorpus_language: str = "sl"
+    emit_corpus: bool = False
+    corpus_language: str = "sl"
 
 
 @dataclass(frozen=True)
@@ -575,21 +581,25 @@ def write_batch_list_person_outputs(
     return sorted(desired, key=lambda path: str(path).casefold())
 
 
-def _subcorpus_path(group: Path) -> Path:
-    """Where a group's ``teiCorpus`` file is written, named after the group."""
+def _corpus_path(directory: Path) -> Path:
+    """Where a folder's ``teiCorpus`` file is written, named after the folder."""
 
-    name = _safe_bundle_component(group.name or "subcorpus")
-    destination = group / f"{name}.xml"
+    name = _safe_bundle_component(directory.name or "corpus")
+    destination = directory / f"{name}.xml"
     fit = MAX_BUNDLE_PATH_LENGTH - _ATOMIC_TEMP_RESERVE
     if len(str(destination)) <= fit:
         return destination
-    digest = hashlib.sha1(str(group).encode("utf-8")).hexdigest()[:10]
-    available = fit - len(str(group / ".xml")) - len(digest) - 1
+    digest = hashlib.sha1(str(directory).encode("utf-8")).hexdigest()[:10]
+    available = fit - len(str(directory / ".xml")) - len(digest) - 1
     name = f"{name[: max(1, available)].rstrip(' .-')}-{digest}"
-    return group / f"{name}.xml"
+    return directory / f"{name}.xml"
 
 
-def _subcorpus_document_counts(document_file: Path) -> dict[str, int]:
+def _corpus_id(directory: Path) -> str:
+    return engine.sanitize_xml_id(directory.name or "corpus", prefix="corpus")
+
+
+def _document_counts(document_file: Path) -> dict[str, int]:
     """Best-effort speech/word counts read from a written document's extent."""
 
     try:
@@ -608,72 +618,56 @@ def _subcorpus_document_counts(document_file: Path) -> dict[str, int]:
     return counts
 
 
-def _subcorpus_header(
-    group: Path, jobs: Sequence[BatchJob], options: BatchOptions
-) -> ET.Element:
-    """A skeleton subcorpus ``teiHeader`` titled after the group, with aggregates.
+@dataclass
+class _CorpusNode:
+    """One folder in the recursive corpus tree."""
 
-    The parser fills each document's own header; here we only sum the already
-    computed speech/word counts and title the subcorpus after its folder so the
-    result is a valid, reviewable header ready to be enriched by hand.
+    directory: Path
+    documents: list[BatchJob] = field(default_factory=list)
+    children: list["_CorpusNode"] = field(default_factory=list)
+
+
+def _build_corpus_tree(
+    jobs: Sequence[BatchJob], output_root: str | Path
+) -> _CorpusNode:
+    """Assemble the folder tree of corpora rooted at ``output_root``.
+
+    Every folder that holds documents -- directly or somewhere below it --
+    becomes a corpus node, so a folder of sub-folders is itself a corpus whose
+    members are the sub-folder corpora. A folder with both loose documents and
+    sub-folders carries both.
     """
 
-    totals: Counter[str] = Counter()
+    root = Path(output_root).expanduser().resolve()
+    direct: dict[Path, list[BatchJob]] = {}
     for job in jobs:
-        for unit, value in _subcorpus_document_counts(document_path(job)).items():
-            totals[unit] += value
-    measures = [
-        Measure(unit="texts", quantity=str(len(jobs)), texts={"": f"{len(jobs)} texts"})
-    ]
-    for unit in ("speeches", "words"):
-        if totals.get(unit):
-            measures.append(
-                Measure(
-                    unit=unit,
-                    quantity=str(totals[unit]),
-                    texts={"": f"{totals[unit]} {unit}"},
-                )
-            )
-    language = options.subcorpus_language
-    title = group.name or "Subcorpus"
-    return TEIHeader(
-        tei_id=_subcorpus_id(group),
-        language=language,
-        main_titles={language: title},
-        measures=measures,
-    ).build()
+        direct.setdefault(Path(job.group), []).append(job)
+
+    directories: set[Path] = {root}
+    for group in direct:
+        directory = group
+        directories.add(directory)
+        while directory != root and root in directory.parents:
+            directory = directory.parent
+            directories.add(directory)
+
+    nodes = {
+        directory: _CorpusNode(
+            directory,
+            sorted(direct.get(directory, []), key=lambda job: job.title.casefold()),
+        )
+        for directory in directories
+    }
+    for directory, node in nodes.items():
+        parent = nodes.get(directory.parent)
+        if parent is not None and directory != root:
+            parent.children.append(node)
+    for node in nodes.values():
+        node.children.sort(key=lambda child: child.directory.name.casefold())
+    return nodes[root]
 
 
-def _subcorpus_id(group: Path) -> str:
-    return engine.sanitize_xml_id(group.name or "subcorpus", prefix="subcorpus")
-
-
-def _subcorpus_list_person_hrefs(
-    group: Path, jobs: Sequence[BatchJob], options: BatchOptions
-) -> list[str]:
-    """XInclude targets for speaker lists, matching the active scope.
-
-    ``document`` references every per-document list that exists, ``folder`` the
-    single group-wide list, and ``corpus`` none -- that list lives at the output
-    root and is deliberately left out of the per-group subcorpus.
-    """
-
-    if not options.write_list_person:
-        return []
-    if options.list_person_scope == "document":
-        return [
-            document_list_person_path(job).relative_to(group).as_posix()
-            for job in jobs
-            if document_list_person_path(job).is_file()
-        ]
-    if options.list_person_scope == "folder" and (group / "listPerson.xml").is_file():
-        return ["listPerson.xml"]
-    return []
-
-
-def _write_subcorpus_xml(
-    path: Path, *, root: ET.Element, options: BatchOptions
-) -> None:
+def _write_tei_xml(path: Path, *, root: ET.Element, options: BatchOptions) -> None:
     if options.pretty:
         ET.indent(root, space="  ")
     content = ET.tostring(
@@ -682,45 +676,164 @@ def _write_subcorpus_xml(
     path.write_bytes(content + (b"\n" if options.pretty else b""))
 
 
-def write_batch_subcorpus_outputs(
+def _corpus_header(
+    node: _CorpusNode, options: BatchOptions, subtree: Mapping[str, int]
+) -> ET.Element:
+    """A skeleton corpus ``teiHeader`` titled after the folder, with aggregates.
+
+    The parser fills each document's own header; here we only sum the already
+    computed speech/word counts over the whole subtree and title the corpus
+    after its folder, so the result is a valid, reviewable header ready to be
+    enriched by hand.
+    """
+
+    texts = subtree.get("texts", 0)
+    measures = [
+        Measure(unit="texts", quantity=str(texts), texts={"": f"{texts} texts"})
+    ]
+    for unit in ("speeches", "words"):
+        if subtree.get(unit):
+            measures.append(
+                Measure(
+                    unit=unit,
+                    quantity=str(subtree[unit]),
+                    texts={"": f"{subtree[unit]} {unit}"},
+                )
+            )
+    language = options.corpus_language
+    title = node.directory.name or "Corpus"
+    return TEIHeader(
+        tei_id=_corpus_id(node.directory),
+        language=language,
+        main_titles={language: title},
+        measures=measures,
+    ).build()
+
+
+def _build_corpus_element(
+    node: _CorpusNode, options: BatchOptions, subtree: Mapping[str, int]
+) -> ET.Element:
+    document_hrefs = [
+        document_path(job).relative_to(node.directory).as_posix()
+        for job in node.documents
+    ]
+    child_hrefs = [
+        _corpus_path(child.directory).relative_to(node.directory).as_posix()
+        for child in node.children
+    ]
+    list_person_hrefs = ["listPerson.xml"] if options.write_list_person else []
+    return build_tei_corpus(
+        document_hrefs + child_hrefs,
+        header=_corpus_header(node, options, subtree),
+        list_person_hrefs=list_person_hrefs,
+        corpus_id=_corpus_id(node.directory),
+        language=options.corpus_language,
+    )
+
+
+def _write_corpus_list_person(
+    destination: Path, node: _CorpusNode, options: BatchOptions
+) -> None:
+    """A recursive ``listPerson``: this folder's speakers plus child lists.
+
+    Speakers merged from documents held directly in this folder are inlined;
+    each child corpus contributes its own ``listPerson.xml`` by XInclude, so the
+    whole tree resolves to one nested speaker list.
+    """
+
+    direct = merge_speaker_mappings(
+        _bundle_speaker_mapping(job) for job in node.documents
+    )
+
+    def writer(path: Path) -> None:
+        if direct or not node.children:
+            root = build_list_person(
+                direct,
+                include_wikidata=options.include_wikidata,
+                wikidata_workers=4,
+                wikidata_timeout=options.wikidata_timeout,
+            )
+        else:
+            root = ET.Element("listPerson", {"xmlns": TEI_NAMESPACE})
+        if node.children:
+            root.set("xmlns:xi", XINCLUDE_NAMESPACE)
+            for child in node.children:
+                href = (
+                    (child.directory / "listPerson.xml")
+                    .relative_to(node.directory)
+                    .as_posix()
+                )
+                ET.SubElement(root, "xi:include", {"href": href})
+        _write_tei_xml(path, root=root, options=options)
+
+    _atomic_result_write(destination, writer)
+
+
+def _emit_corpus_node(
+    node: _CorpusNode,
+    options: BatchOptions,
+    counts: Mapping[Path, Mapping[str, int]],
+    corpus_files: list[Path],
+    list_person_files: list[Path],
+) -> Counter[str]:
+    """Emit ``listPerson`` and ``teiCorpus`` for ``node`` and its descendants.
+
+    Children are emitted first so the returned subtree totals (texts, speeches,
+    words) are available for this node's aggregated ``<extent>``.
+    """
+
+    subtree: Counter[str] = Counter()
+    subtree["texts"] += len(node.documents)
+    for job in node.documents:
+        subtree.update(counts.get(document_path(job), {}))
+    for child in node.children:
+        subtree.update(
+            _emit_corpus_node(child, options, counts, corpus_files, list_person_files)
+        )
+
+    if options.write_list_person:
+        list_person = node.directory / "listPerson.xml"
+        list_person.parent.mkdir(parents=True, exist_ok=True)
+        _write_corpus_list_person(list_person, node, options)
+        list_person_files.append(list_person)
+
+    corpus = _build_corpus_element(node, options, subtree)
+    destination = _corpus_path(node.directory)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    _atomic_result_write(
+        destination, partial(_write_tei_xml, root=corpus, options=options)
+    )
+    corpus_files.append(destination)
+    return subtree
+
+
+def write_batch_corpus_outputs(
     jobs: Sequence[BatchJob],
     output_root: str | Path,
     options: BatchOptions,
-) -> list[Path]:
-    """Emit one subcorpus ``teiCorpus`` per source folder, XIncluding its bundle.
+) -> tuple[list[Path], list[Path]]:
+    """Emit a recursive ``teiCorpus`` tree mirroring the output folders.
 
-    Each group's subcorpus file references that group's ``documents`` and, when a
-    speaker list exists at the active scope, its ``listPerson`` file(s). No
-    output is produced unless ``options.emit_subcorpus`` is set. These are the
-    per-group members of an eventual top-level corpus, not the corpus itself.
+    Every folder holding documents (directly or in a sub-folder) gets a
+    ``teiCorpus`` XML named after it that XIncludes its own documents and each
+    child corpus, plus a recursive ``listPerson.xml`` (this folder's merged
+    speakers followed by an XInclude of each child list). Nothing is produced
+    unless ``options.emit_corpus`` is set. Returns
+    ``(corpus_files, list_person_files)``.
     """
 
-    if not options.emit_subcorpus:
-        return []
-    grouped: dict[str, list[BatchJob]] = {}
-    for job in jobs:
-        grouped.setdefault(job.group, []).append(job)
+    if not options.emit_corpus or not jobs:
+        return [], []
+    root_node = _build_corpus_tree(jobs, output_root)
+    counts = {document_path(job): _document_counts(document_path(job)) for job in jobs}
+    corpus_files: list[Path] = []
+    list_person_files: list[Path] = []
+    _emit_corpus_node(root_node, options, counts, corpus_files, list_person_files)
 
-    written: list[Path] = []
-    for group_str in sorted(grouped):
-        group = Path(group_str)
-        group_jobs = sorted(grouped[group_str], key=lambda job: job.title.casefold())
-        document_hrefs = [
-            document_path(job).relative_to(group).as_posix() for job in group_jobs
-        ]
-        subcorpus = build_tei_corpus(
-            document_hrefs,
-            header=_subcorpus_header(group, group_jobs, options),
-            list_person_hrefs=_subcorpus_list_person_hrefs(group, group_jobs, options),
-            corpus_id=_subcorpus_id(group),
-            language=options.subcorpus_language,
-        )
-        destination = _subcorpus_path(group)
-        _atomic_result_write(
-            destination, partial(_write_subcorpus_xml, root=subcorpus, options=options)
-        )
-        written.append(destination)
-    return sorted(written, key=lambda path: str(path).casefold())
+    def by_path(path: Path) -> str:
+        return str(path).casefold()
+
+    return sorted(corpus_files, key=by_path), sorted(list_person_files, key=by_path)
 
 
 def _failure_parse_result(

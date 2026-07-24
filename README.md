@@ -107,17 +107,22 @@ reparsing PDFs. The selected scope and output paths are recorded in
 `batch-manifest.json`. Add `--include-wikidata` for best-effort enrichment or
 `--no-list-person` when no person list is needed.
 
-Add `--subcorpus` to also emit a per-group subcorpus — a `<teiCorpus>` file per
-source folder (modelled on the siParl mandate corpora), named after the folder
-and placed beside its `documents/`. These are the per-group members of an
-eventual top-level corpus, not the corpus itself. Each carries a generated
-`teiHeader` (titled after the folder, with the documents' speech/word counts
-summed into `<extent>`) and then references every constituent file with
-XInclude: one `<xi:include>` per document, plus the folder's `listPerson.xml`
-under `particDesc`. With `--list-person-scope document` it instead includes each
-per-document list; with `corpus` scope it emits no `listPerson` reference (that
-single list lives at the output root). `--subcorpus-lang` sets the header's
-`xml:lang` (default `sl`).
+Add `--emit-corpus-xml` to also build a **recursive corpus tree** mirroring the
+output folders (modelled on siParl). Every folder that holds documents —
+directly or anywhere below it — becomes a corpus, so a folder of sub-folders is
+itself a corpus whose members are the sub-folder corpora. Each corpus folder
+gets:
+
+- `<foldername>.xml` — a `<teiCorpus>` (titled after the folder, with its whole
+  subtree's document/speech/word counts summed into `<extent>`) that XIncludes
+  each document held directly in the folder *and* each child corpus file.
+- `listPerson.xml` — the speakers merged from the folder's own documents,
+  followed by an `<xi:include>` of every child folder's `listPerson.xml`, so the
+  root list resolves to one nested speaker list for the whole corpus.
+
+This replaces the flat `--list-person-scope` layout while emitting (it owns
+`listPerson.xml`); `--no-list-person` still suppresses all lists, and
+`--corpus-lang` sets the corpus headers' `xml:lang` (default `sl`).
 
 By default, the runner uses up to four document processes. When multiple
 documents run together, it forces each document's page extractor to one worker,

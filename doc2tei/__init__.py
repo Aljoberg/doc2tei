@@ -33,7 +33,7 @@ from .batch import (
     document_path,
     metadata_dir,
     run_batch,
-    write_batch_subcorpus_outputs,
+    write_batch_corpus_outputs,
     write_batch_list_person_outputs,
 )
 from .sistory import (
@@ -105,6 +105,6 @@ __all__ = [
     "rule",
     "rule_group",
     "run_batch",
-    "write_batch_subcorpus_outputs",
+    "write_batch_corpus_outputs",
     "write_batch_list_person_outputs",
 ]
