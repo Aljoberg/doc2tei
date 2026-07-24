@@ -135,6 +135,15 @@ with st.form("pipeline_form", border=True):
             value=True,
             disabled=is_running,
         )
+        include_root_corpus = st.checkbox(
+            "Include aggregate root corpus",
+            value=False,
+            help=(
+                "Forge an additional ParlaMint-SI.xml covering every document "
+                "in all top-level corpora."
+            ),
+            disabled=is_running,
+        )
         write_list_person = st.checkbox(
             "Generate listPerson and listOrg",
             value=True,
@@ -272,6 +281,7 @@ if submitted:
         write_list_person=write_list_person,
         list_person_scope=list_scope,
         emit_corpus=emit_corpus,
+        include_root_corpus=include_root_corpus,
         corpus_language=corpus_language.strip(),
         corpus_code=corpus_code.strip(),
         include_wikidata=include_wikidata,

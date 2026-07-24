@@ -158,6 +158,14 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--include-root-corpus",
+        action="store_true",
+        help=(
+            "also forge one aggregate corpus for the output container "
+            "(requires --emit-corpus-xml; default: disabled)"
+        ),
+    )
+    parser.add_argument(
         "--corpus-lang",
         default="sl",
         help="xml:lang for the emitted corpus headers (default: sl)",
@@ -321,6 +329,8 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("provide an input file/directory or --sistory-menu")
     if args.include_wikidata and args.no_list_person:
         parser.error("--include-wikidata cannot be used with --no-list-person")
+    if args.include_root_corpus and not args.emit_corpus_xml:
+        parser.error("--include-root-corpus requires --emit-corpus-xml")
 
     config = Path(args.config).expanduser().resolve()
     if not config.is_file():
@@ -352,6 +362,7 @@ def main(argv: list[str] | None = None) -> int:
         },
         "corpus": {
             "enabled": args.emit_corpus_xml,
+            "include_root": args.include_root_corpus,
             "code": args.corpus_code,
             "outputs": [],
         },
@@ -448,6 +459,7 @@ def main(argv: list[str] | None = None) -> int:
         page_workers=page_workers,
         overwrite=args.overwrite,
         emit_corpus=args.emit_corpus_xml,
+        include_root_corpus=args.include_root_corpus,
         corpus_language=args.corpus_lang,
         corpus_code=args.corpus_code,
     )
@@ -559,6 +571,7 @@ def main(argv: list[str] | None = None) -> int:
         },
         corpus={
             "enabled": args.emit_corpus_xml,
+            "include_root": args.include_root_corpus,
             "code": args.corpus_code,
             "outputs": [str(path) for path in corpus_paths],
             **({"error": corpus_error} if corpus_error else {}),

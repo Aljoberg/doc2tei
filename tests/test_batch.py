@@ -908,6 +908,47 @@ def test_write_batch_corpus_emits_independent_top_level_roots(tmp_path):
     assert 'unit="texts" quantity="1"' in assembly_xml
 
 
+def test_write_batch_corpus_can_forge_an_aggregate_root(tmp_path):
+    output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
+    assembly = output / "Assembly"
+    jobs.append(
+        _corpus_job(
+            tmp_path,
+            assembly,
+            "e",
+            {"#TinaKos": "Tina Kos (Independent):"},
+            speeches=7,
+            words=70,
+        )
+    )
+
+    corpus_files, list_person_files, list_org_files = write_batch_corpus_outputs(
+        jobs,
+        output,
+        _corpus_options(tmp_path, include_root_corpus=True),
+    )
+
+    root_path = output / "ParlaMint-SI.xml"
+    assert root_path in corpus_files
+    assert output / "ParlaMint-SI-mandate.xml" in corpus_files
+    assert output / "ParlaMint-SI-assembly.xml" in corpus_files
+    assert output / "ParlaMint-SI-listPerson.xml" in list_person_files
+    assert output / "ParlaMint-SI-listOrg.xml" in list_org_files
+
+    root_xml = root_path.read_text(encoding="utf-8")
+    assert 'href="Mandate/Sub1/a.xml"' in root_xml
+    assert 'href="Assembly/e.xml"' in root_xml
+    assert "ParlaMint-SI-mandate.xml" not in root_xml
+    assert "ParlaMint-SI-assembly.xml" not in root_xml
+    assert 'unit="texts" quantity="5"' in root_xml
+    assert 'unit="speeches" quantity="18"' in root_xml
+    assert 'unit="words" quantity="430"' in root_xml
+
+    resolved = _resolve_xincludes(root_path)
+    tei = "{http://www.tei-c.org/ns/1.0}"
+    assert len(list(resolved.iter(f"{tei}TEI"))) == 5
+
+
 def test_write_batch_corpus_without_list_person(tmp_path):
     output, mandate, sub1, sub2, jobs = _nested_corpus_jobs(tmp_path)
 

@@ -113,6 +113,7 @@ class PipelineRequest:
     write_list_person: bool = True
     list_person_scope: ListPersonScope = "document"
     emit_corpus: bool = True
+    include_root_corpus: bool = False
     corpus_language: str = "sl"
     corpus_code: str = "SI"
     include_wikidata: bool = False

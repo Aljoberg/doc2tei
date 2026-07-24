@@ -168,6 +168,12 @@ Each corpus is a standalone view of its complete subtree:
   `xml:id` values.
 - Corpus `<extent>` counts cover the same complete subtree.
 
+Add `--include-root-corpus` to also forge `OUTPUT_DIR/ParlaMint-SI.xml`
+(plus its aggregate lists when enabled) over every document in all top-level
+corpora. The root directly XIncludes documents, never the independent child
+corpus XML files. This flag requires `--emit-corpus-xml` and is disabled by
+default.
+
 Corpus generation replaces the flat list scope for that run.
 `--no-list-person` suppresses both person and organisation lists, and
 `--corpus-lang` controls corpus header `xml:lang` (default `sl`).
@@ -218,7 +224,8 @@ The private hash-named cache folders are not copied into the corpus layout.
 Instead, each actual menu-title folder downloaded by `sistory-dl` becomes a
 top-level folder inside `OUTPUT_DIR`. Repeating `--sistory-menu` produces
 multiple sibling folders and independent root corpus XML/list files; it does
-not create an aggregate corpus for `OUTPUT_DIR`.
+not create an aggregate corpus for `OUTPUT_DIR` unless
+`--include-root-corpus` is supplied.
 
 Download statistics and failures are stored in
 `METADATA_DIR/batch-manifest.json`. A partial menu download does not prevent

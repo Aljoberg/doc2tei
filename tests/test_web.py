@@ -33,6 +33,7 @@ def test_web_request_builds_the_canonical_batch_command(tmp_path):
         page_workers=1,
         list_person_scope="folder",
         emit_corpus=True,
+        include_root_corpus=True,
         include_wikidata=True,
         overwrite=True,
     )
@@ -51,6 +52,7 @@ def test_web_request_builds_the_canonical_batch_command(tmp_path):
     assert command[command.index("--page-workers") + 1] == "1"
     assert command[command.index("--sistory-menu") + 1] == "1/7/397/407"
     assert "--emit-corpus-xml" in command
+    assert "--include-root-corpus" in command
     assert "--include-wikidata" in command
     assert "--overwrite" in command
     assert command[-1] == str(source)
@@ -70,6 +72,19 @@ def test_web_request_rejects_nested_audit_and_missing_inputs(tmp_path):
 
     assert any("Choose at least one" in error for error in errors)
     assert any("separate, non-nested" in error for error in errors)
+
+    incompatible = PipelineRequest(
+        output_root=output,
+        metadata_root=tmp_path / "audit",
+        config=config,
+        local_inputs=(tmp_path,),
+        emit_corpus=False,
+        include_root_corpus=True,
+    )
+    assert any(
+        "aggregate root corpus requires" in error.casefold()
+        for error in validate_pipeline_request(incompatible)
+    )
 
 
 def test_web_uploads_are_safe_and_collision_free(tmp_path):

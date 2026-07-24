@@ -335,6 +335,7 @@ class BatchOptions:
     page_workers: int | None = None
     overwrite: bool = False
     emit_corpus: bool = False
+    include_root_corpus: bool = False
     corpus_language: str = "sl"
     corpus_code: str = DEFAULT_CORPUS_CODE
 
@@ -1453,13 +1454,14 @@ def write_batch_corpus_outputs(
 ) -> tuple[list[Path], list[Path], list[Path]]:
     """Emit a forest of standalone corpora below a neutral output container.
 
-    Every top-level source folder is an independent root corpus; ``output_root``
-    itself is only their container. A subcorpus keeps its document components
-    directly inside its directory, while its corpus root and ParlaMint-named
-    metadata files are owned by the parent directory. Every corpus directly
-    XIncludes all document components in its subtree; corpus roots and metadata
-    lists never XInclude child corpus artifacts. Nothing is produced unless
-    ``options.emit_corpus`` is set. Returns ``(corpus_files,
+    Every top-level source folder is an independent root corpus. ``output_root``
+    is only their container unless ``options.include_root_corpus`` requests an
+    additional aggregate corpus for the complete batch. A subcorpus keeps its
+    document components directly inside its directory, while its corpus root
+    and ParlaMint-named metadata files are owned by the parent directory. Every
+    corpus directly XIncludes all document components in its subtree; corpus
+    roots and metadata lists never XInclude child corpus artifacts. Nothing is
+    produced unless ``options.emit_corpus`` is set. Returns ``(corpus_files,
     list_person_files, list_org_files)``.
     """
 
@@ -1471,9 +1473,9 @@ def write_batch_corpus_outputs(
     corpus_files: list[Path] = []
     list_person_files: list[Path] = []
     list_org_files: list[Path] = []
-    for corpus_root in container.children:
+    if options.include_root_corpus:
         _emit_corpus_node(
-            corpus_root,
+            container,
             root,
             options,
             counts,
@@ -1481,8 +1483,19 @@ def write_batch_corpus_outputs(
             list_person_files,
             list_org_files,
         )
+    else:
+        for corpus_root in container.children:
+            _emit_corpus_node(
+                corpus_root,
+                root,
+                options,
+                counts,
+                corpus_files,
+                list_person_files,
+                list_org_files,
+            )
 
-    if container.documents:
+    if container.documents and not options.include_root_corpus:
         # Public discovery preserves input roots, so normal batches never put
         # documents directly in the neutral container. Keep a lossless fallback
         # for manually constructed jobs and third-party library integrations.

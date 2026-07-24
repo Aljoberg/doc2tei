@@ -1294,6 +1294,12 @@ lists are likewise flat, deduplicated subtree aggregates rather than recursive
 lists, preventing duplicate `xml:id` definitions. Corpus extent counts cover
 the same subtree.
 
+`--include-root-corpus` optionally forges an additional
+`OUTPUT_DIR/ParlaMint-SI.xml`, `listPerson`, and `listOrg` for the complete
+batch. Like every other corpus level, it directly includes descendant document
+components rather than child corpus XML files. It requires
+`--emit-corpus-xml` and is disabled by default.
+
 Corpus generation takes over from `--list-person-scope` while active (the
 manifest reports `recursive`). `--no-list-person` suppresses persons and
 organisations; `--corpus-lang` sets corpus header `xml:lang` (default `sl`).
@@ -1342,7 +1348,7 @@ Hash-named cache directories remain private audit details. The actual
 menu-title directory created by `sistory-dl` becomes the top-level corpus
 folder below `OUTPUT_DIR`. Multiple menu arguments therefore create multiple
 sibling corpus folders and independent root XML/list files, never an aggregate
-corpus for the output container.
+corpus for the output container unless `--include-root-corpus` is requested.
 
 SIstory acquisition results are embedded in
 `METADATA_DIR/batch-manifest.json`. Files already downloaded remain eligible

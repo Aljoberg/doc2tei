@@ -189,8 +189,10 @@ def test_batch_cli_emits_multiple_sistory_menus_as_sibling_corpora(
 
     def fake_download(menu_path, download_directory, **_kwargs):
         source_folder = Path(download_directory) / folder_names[menu_path]
-        source_folder.mkdir(parents=True)
-        (source_folder / "01 - publication.pdf").write_bytes(b"not a real PDF")
+        source_folder.mkdir(parents=True, exist_ok=True)
+        source = source_folder / "01 - publication.pdf"
+        if not source.exists():
+            source.write_bytes(b"not a real PDF")
         return SIstoryDownloadResult(
             menu_path=menu_path,
             output=str(download_directory),
@@ -247,4 +249,41 @@ def test_batch_cli_emits_multiple_sistory_menus_as_sibling_corpora(
     manifest = json.loads(
         (metadata / "batch-manifest.json").read_text(encoding="utf-8")
     )
+    assert manifest["corpus"]["include_root"] is False
     assert len(manifest["corpus"]["outputs"]) == 2
+
+    assert (
+        batch_parse.main(
+            [
+                "--sistory-menu",
+                "1/7/397/407",
+                "--sistory-menu",
+                "1/7/397/408",
+                "--output-dir",
+                str(output),
+                "--metadata-dir",
+                str(metadata),
+                "--emit-corpus-xml",
+                "--include-root-corpus",
+                "--no-list-person",
+                "--workers",
+                "1",
+                "--quiet",
+            ]
+        )
+        == 0
+    )
+
+    aggregate = output / "ParlaMint-SI.xml"
+    assert aggregate.is_file()
+    aggregate_xml = aggregate.read_text(encoding="utf-8")
+    assert 'href="menu-one/' in aggregate_xml
+    assert 'href="menu-two/' in aggregate_xml
+    assert "ParlaMint-SI-menu-one.xml" not in aggregate_xml
+    assert "ParlaMint-SI-menu-two.xml" not in aggregate_xml
+    manifest = json.loads(
+        (metadata / "batch-manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["corpus"]["include_root"] is True
+    assert len(manifest["corpus"]["outputs"]) == 3
+    assert manifest["counts"]["skipped"] == 2

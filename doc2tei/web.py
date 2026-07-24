@@ -63,6 +63,8 @@ def validate_pipeline_request(request: PipelineRequest) -> list[str]:
         errors.append("Page workers cannot be negative.")
     if request.include_wikidata and not request.write_list_person:
         errors.append("Wikidata enrichment requires person-list generation.")
+    if request.include_root_corpus and not request.emit_corpus:
+        errors.append("An aggregate root corpus requires recursive corpus XML.")
     try:
         normalize_corpus_code(request.corpus_code)
     except ValueError as error:
@@ -155,6 +157,8 @@ def build_batch_command(
         command.append("--no-list-person")
     if request.emit_corpus:
         command.append("--emit-corpus-xml")
+    if request.include_root_corpus:
+        command.append("--include-root-corpus")
     if request.include_wikidata:
         command.append("--include-wikidata")
     if request.pretty:
