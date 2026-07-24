@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Mapping, MutableMapping
 from pathlib import Path
+from typing import cast
 import xml.etree.ElementTree as ET
 
 import engine
@@ -20,6 +22,7 @@ from doc2tei.extractors import (
 )
 from doc2tei.helpers import build_list_org, build_list_person
 from engine import PDFPageContext, make_chunk
+from type_decs import WikidataBinding
 
 CONFIG_PATH = Path(__file__).parents[1] / "examples" / "general-config" / "config.py"
 
@@ -330,7 +333,9 @@ def test_speaker_aliases_merge_only_close_ocr_variants(tmp_path):
     who = [utterance.attrib["who"] for utterance in result.root.findall(".//u")]
     assert who[0] == who[1] == "#FerdoKozak"
     assert who[2] != who[3]
-    assert set(result.data["speakers"]) == {
+    speakers = result.data["speakers"]
+    assert isinstance(speakers, dict)
+    assert set(speakers) == {
         "#FerdoKozak",
         "#MihaMarinko",
         "#MilanMarinko",
@@ -402,7 +407,7 @@ def test_second_session_heading_opens_a_new_debate_section(tmp_path):
         if division.find("head[@type='sessionNumber']") is not None
     ]
     assert len(sessions) == 2
-    assert ["".join(division.find("head").itertext()) for division in sessions] == [
+    assert [division.findtext("head") for division in sessions] == [
         "12. SEJA",
         "13. SEJA",
     ]
@@ -893,13 +898,16 @@ def test_rules_are_normalized_once_per_document(tmp_path, monkeypatch):
         ],
     )
 
-    assert calls == len(loaded.config["rules"])
+    rules = loaded.config["rules"]
+    assert isinstance(rules, Mapping)
+    assert calls == len(rules)
 
 
 def test_disabled_debug_does_not_construct_chunk_repr(tmp_path, monkeypatch):
     source = tmp_path / "sample.pdf"
     source.touch()
     loaded = load_config(CONFIG_PATH)
+    assert isinstance(loaded.config, MutableMapping)
     loaded.config["debug"] = False
 
     def fail_repr(_chunk):
@@ -1078,7 +1086,9 @@ def test_list_person_recovers_roles_and_affiliations_from_labels():
     # A comma inside OCR text must not override a known leading role, while a
     # generic prose clause must not be invented as an affiliation role.
     assert people[2].findtext("affiliation/roleName") == "Predsednik"
-    assert people[3].find("affiliation").attrib["role"] == "sekretar"
+    fourth_affiliation = people[3].find("affiliation")
+    assert fourth_affiliation is not None
+    assert fourth_affiliation.attrib["role"] == "sekretar"
     assert people[4].find("affiliation") is None
 
 
@@ -1097,7 +1107,10 @@ def test_list_org_collects_and_ids_affiliation_organizations():
 
     # The listOrg id is exactly what the listPerson affiliation references.
     person = build_list_person({"#MihaKovac": "Miha Kovač (SDS):"}).find("person")
-    assert person.find("affiliation").attrib["ref"] == "#org.SDS"
+    assert person is not None
+    affiliation = person.find("affiliation")
+    assert affiliation is not None
+    assert affiliation.attrib["ref"] == "#org.SDS"
 
 
 def test_empty_list_org_uses_a_schema_safe_placeholder():
@@ -1112,12 +1125,15 @@ def test_empty_list_org_uses_a_schema_safe_placeholder():
 def test_wikidata_list_person_is_enriched_and_remains_fail_soft():
     calls: list[str] = []
 
-    def fetch(search_name: str):
+    def fetch(search_name: str) -> list[WikidataBinding]:
         calls.append(search_name)
         if search_name == "Broken Lookup":
             raise RuntimeError("network unavailable")
         if search_name == "Malformed Result":
-            return [{"p": "not a SPARQL value object"}]
+            return cast(
+                list[WikidataBinding],
+                [{"p": "not a SPARQL value object"}],
+            )
         return [
             {
                 "p": {"value": "http://www.wikidata.org/entity/Q123"},
@@ -1157,9 +1173,13 @@ def test_wikidata_list_person_is_enriched_and_remains_fail_soft():
     assert enriched.findtext("persName/surname") == "Novak"
     assert enriched.findtext("persName/forename") == "Janez"
     assert enriched.find("idno[@subtype='wikidata']") is not None
-    assert enriched.find("birth").attrib["when"] == "1920-01-02"
+    birth = enriched.find("birth")
+    sex = enriched.find("sex")
+    assert birth is not None
+    assert sex is not None
+    assert birth.attrib["when"] == "1920-01-02"
     assert enriched.findtext("birth/placeName") == "Ljubljana"
-    assert enriched.find("sex").attrib["value"] == "M"
+    assert sex.attrib["value"] == "M"
     assert enriched.findtext("occupation") == "politik"
     assert enriched.findtext("nationality") == "Slovenija"
     affiliations = enriched.findall("affiliation")
@@ -1236,7 +1256,9 @@ def test_rule_and_extractor_failures_are_recorded_without_losing_prior_text(tmp_
     source = tmp_path / "sample.pdf"
     source.touch()
     loaded = load_config(CONFIG_PATH)
+    assert isinstance(loaded.config, MutableMapping)
     original_rules = loaded.config["rules"]
+    assert isinstance(original_rules, Mapping)
 
     def broken_test(_chunk):
         raise RuntimeError("bad source-specific assumption")

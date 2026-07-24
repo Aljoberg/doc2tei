@@ -783,6 +783,11 @@ def _result_warning_count(result: ParseResult) -> int:
     return len(exported) if isinstance(exported, list) else 0
 
 
+def _status_count(status: Mapping[str, object], key: str) -> int:
+    value = status.get(key)
+    return value if isinstance(value, int) else 0
+
+
 def _enrich_document_header(
     root: ET.Element,
     job: BatchJob,
@@ -1541,10 +1546,10 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
             output=str(output),
             status="skipped",
             elapsed_seconds=time.perf_counter() - started,
-            chunk_count=int(previous.get("chunk_count", 0)),
-            recovery_count=int(previous.get("recovery_count", 0)),
+            chunk_count=_status_count(previous, "chunk_count"),
+            recovery_count=_status_count(previous, "recovery_count"),
             message="unchanged completed bundle",
-            warning_count=int(previous.get("warning_count", 0)),
+            warning_count=_status_count(previous, "warning_count"),
         )
 
     debug_temporary = _atomic_path(meta / "debug.log")
@@ -1678,10 +1683,14 @@ def run_batch(
         for job in jobs:
             record(process_batch_job(job, options))
     else:
-        executor_options: dict[str, object] = {"max_workers": worker_count}
         if recycle_workers and sys.version_info >= (3, 11):
-            executor_options["max_tasks_per_child"] = 1
-        with ProcessPoolExecutor(**executor_options) as executor:
+            executor = ProcessPoolExecutor(
+                max_workers=worker_count,
+                max_tasks_per_child=1,
+            )
+        else:
+            executor = ProcessPoolExecutor(max_workers=worker_count)
+        with executor:
             remaining = iter(jobs)
             pending: dict[Future[BatchItemResult], BatchJob] = {}
             exhausted = False

@@ -58,7 +58,8 @@ def is_front_matter(chunk: PDFChunk) -> bool:
 
 def page_left(chunk: PDFChunk) -> float:
     context = chunk.page_context
-    return float(context.metadata.get("page_left", chunk.x) if context else chunk.x)
+    value = context.metadata.get("page_left", chunk.x) if context else chunk.x
+    return float(value) if isinstance(value, int | float) else chunk.x
 
 
 def is_body_line(chunk: PDFChunk) -> bool:
@@ -71,6 +72,13 @@ def is_paragraph_start(chunk: PDFChunk) -> bool:
         and is_body_line(chunk)
         and not is_front_matter(chunk)
         and chunk.x >= page_left(chunk) + 14
+    )
+
+
+def is_generic_note(chunk: PDFChunk) -> bool:
+    return is_paragraph_start(chunk) and (
+        line_text(chunk).startswith("(")
+        or bool(re.match(r"^Seja\s+(?:je\s+)?bila\b", line_text(chunk)))
     )
 
 
@@ -267,11 +275,7 @@ CONFIG: PDFConfig = {
         # Debate body.  Order matters: stage directions and speakers are
         # paragraph starts too, so they must precede the generic SEG rule.
         "GENERIC_NOTE": {
-            "test": lambda chunk: is_paragraph_start(chunk)
-            and (
-                line_text(chunk).startswith("(")
-                or re.match(r"^Seja\s+(?:je\s+)?bila\b", line_text(chunk))
-            ),
+            "test": is_generic_note,
             "action": pop_and_push_to("div", tag="note", chunked=False),
         },
         "SPEAKER": {
@@ -326,7 +330,7 @@ def enrich_line(
     return {
         "front_matter": bool(
             page.metadata.get("session_page")
-            and start_time_index is not None
+            and isinstance(start_time_index, int)
             and index <= start_time_index
         )
     }

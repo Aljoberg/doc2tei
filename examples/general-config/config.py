@@ -1625,15 +1625,11 @@ def _record_page_error(page_num: int, error: Exception) -> None:
 
 
 def _make_extractor(mode: str):
-    common = dict(
-        page_enricher=enrich_page,
-        line_enricher=enrich_line,
-        page_error_handler=_record_page_error,
-    )
-    character_common = dict(
-        page_workers=int(CONFIG.get("page_workers", 0)),
-        merge_nearby_runs=bool(CONFIG.get("merge_nearby_runs", True)),
-        **common,
+    page_workers = CONFIG.get("page_workers", 0)
+    page_workers = page_workers if isinstance(page_workers, int) else 0
+    merge_nearby_runs = CONFIG.get("merge_nearby_runs", True)
+    merge_nearby_runs = (
+        merge_nearby_runs if isinstance(merge_nearby_runs, bool) else True
     )
     if mode == "ocr":
         return WordPDFExtractor(
@@ -1643,8 +1639,10 @@ def _make_extractor(mode: str):
             word_gap=0.6,
             join_line_end_hyphens=True,
             preserve_word_runs=True,
-            page_workers=int(CONFIG.get("page_workers", 0)),
-            **common,
+            page_workers=page_workers,
+            page_enricher=enrich_page,
+            line_enricher=enrich_line,
+            page_error_handler=_record_page_error,
         )
     if mode == "char-break":
         return CharacterPDFExtractor(
@@ -1653,12 +1651,20 @@ def _make_extractor(mode: str):
             literal_spaces="break",
             gap_threshold=1.7,
             max_run_x_gap=30,
-            **character_common,
+            page_workers=page_workers,
+            merge_nearby_runs=merge_nearby_runs,
+            page_enricher=enrich_page,
+            line_enricher=enrich_line,
+            page_error_handler=_record_page_error,
         )
     return CharacterPDFExtractor(
         line_tolerance=4.0,
         literal_spaces="preserve",
-        **character_common,
+        page_workers=page_workers,
+        merge_nearby_runs=merge_nearby_runs,
+        page_enricher=enrich_page,
+        line_enricher=enrich_line,
+        page_error_handler=_record_page_error,
     )
 
 

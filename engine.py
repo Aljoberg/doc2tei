@@ -513,7 +513,7 @@ def append_comment(text: str):
     text = xml_safe_text(text).replace("--", "- -")  # me when XSS
     if text.endswith("-"):
         text += " "
-    children.append(ET.Comment(text))
+    children.append(cast(ET.Element, ET.Comment(text)))
 
 
 def append(*chunks: Chunk, should_annotate: list[str] | Literal[True] = True):

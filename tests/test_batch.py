@@ -38,7 +38,11 @@ def _include_hrefs(parent: ET.Element) -> list[str]:
     ElementPath prefix lookups don't apply -- match the tag string directly.
     """
 
-    return [child.get("href") for child in parent if child.tag == "xi:include"]
+    return [
+        href
+        for child in parent
+        if child.tag == "xi:include" and (href := child.get("href")) is not None
+    ]
 
 
 def _fake_document(speeches: int, words: int) -> str:
@@ -63,7 +67,9 @@ def _splice_xincludes(element: ET.Element, base: Path) -> None:
     resolved = []
     for child in list(element):
         if child.tag == include_tag:
-            target = base / child.get("href")
+            href = child.get("href")
+            assert href is not None
+            target = base / href
             included = ET.parse(target).getroot()
             _splice_xincludes(included, target.parent)
             resolved.append(included)
@@ -79,13 +85,13 @@ def _splice_xincludes(element: ET.Element, base: Path) -> None:
 def _loaded_config(path: Path) -> LoadedConfig:
     module = ModuleType("batch_test_config")
     config: dict[str, object] = {"page_workers": 0}
-    module.CONFIG = config
+    setattr(module, "CONFIG", config)
     return LoadedConfig(
         module=module,
         path=path,
         config=config,
         cosmetic_annotations={},
-        get_chunks=lambda _filename: [],
+        get_chunks=lambda filename: [],
         log=lambda *_args, **_kwargs: None,
     )
 
@@ -218,13 +224,12 @@ def test_batch_adds_inferred_term_and_date_without_replacing_main_title(tmp_path
     assert meeting.get("n") == "1"
     assert meeting.get("ana") == "#parla.term"
     assert meeting.text == "1. sklic (1947-1950)"
-    assert (
-        root.find("teiHeader/fileDesc/sourceDesc/bibl/date").get("when") == "1947-12-15"
-    )
-    assert (
-        root.find("teiHeader/profileDesc/settingDesc/setting/date").get("when")
-        == "1947-12-15"
-    )
+    source_date = root.find("teiHeader/fileDesc/sourceDesc/bibl/date")
+    setting_date = root.find("teiHeader/profileDesc/settingDesc/setting/date")
+    assert source_date is not None
+    assert setting_date is not None
+    assert source_date.get("when") == "1947-12-15"
+    assert setting_date.get("when") == "1947-12-15"
 
 
 def test_batch_job_writes_outputs_and_skips_an_unchanged_bundle(tmp_path, monkeypatch):
@@ -645,8 +650,11 @@ def test_build_tei_corpus_structure_and_list_person_placement():
     # The header is retained and speaker lists are referenced from particDesc,
     # not inlined, without clobbering the header's existing settingDesc.
     profile = corpus.find("teiHeader/profileDesc")
+    assert profile is not None
     assert profile.find("settingDesc") is not None
-    assert _include_hrefs(profile.find("particDesc")) == ["listPerson.xml"]
+    partic_desc = profile.find("particDesc")
+    assert partic_desc is not None
+    assert _include_hrefs(partic_desc) == ["listPerson.xml"]
     # One document include per href, as direct children after the header.
     assert _include_hrefs(corpus) == ["documents/a.xml", "documents/b.xml"]
 
@@ -835,9 +843,9 @@ def test_write_batch_corpus_resolves_end_to_end(tmp_path):
     person_ids = {person.get(xml_id) for person in root.iter(f"{tei}person")}
     org_ids = {org.get(xml_id) for org in root.iter(f"{tei}org")}
     affiliation_refs = {
-        affiliation.get("ref")
+        reference
         for affiliation in root.iter(f"{tei}affiliation")
-        if affiliation.get("ref")
+        if (reference := affiliation.get("ref")) is not None
     }
 
     # Every document resolves exactly once because no child corpus is included.

@@ -36,6 +36,18 @@ class Chunk(Protocol):
     space_before: bool
 
 
+class CharacterGlyph(Protocol):
+    """Character geometry consumed by the PDF run reconstruction helpers."""
+
+    x0: float
+    x1: float
+    y0: float
+    fontname: str
+    size: float
+
+    def get_text(self) -> str: ...
+
+
 ChunkT = TypeVar("ChunkT", bound=Chunk)
 
 

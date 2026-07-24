@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from collections import Counter, deque
 from dataclasses import dataclass, field
 import os
@@ -10,6 +10,7 @@ from typing import cast, Iterator, Literal, TYPE_CHECKING
 
 from engine import PDFChunk, PDFPageContext, make_chunk
 from type_decs import (
+    CharacterGlyph,
     Chunk,
     ExtractedWord,
     LineBreakTest,
@@ -338,9 +339,9 @@ class CharacterPDFExtractor:
         self.pages = pages
         self.line_tolerance = line_tolerance
         self.line_break = line_break
-        self.line_break_mode = line_break_mode
+        self.line_break_mode: Literal["absolute", "downward"] = line_break_mode
         self.reverse_line_multiplier = max(1.0, reverse_line_multiplier)
-        self.literal_spaces = literal_spaces
+        self.literal_spaces: Literal["preserve", "break", "ignore"] = literal_spaces
         self.gap_threshold = gap_threshold
         self.max_run_x_gap = max_run_x_gap
         self.merge_nearby_runs = merge_nearby_runs
@@ -583,7 +584,9 @@ class CharacterPDFExtractor:
         return lines
 
     def _make_records(
-        self, lines: list[list[LTChar]], initial_pending_space: bool
+        self,
+        lines: Sequence[Sequence[CharacterGlyph]],
+        initial_pending_space: bool,
     ) -> tuple[list[LineRecord], list[bool]]:
         records, pending_values, _uses_initial = self._make_records_with_state(
             lines, initial_pending_space
@@ -591,7 +594,9 @@ class CharacterPDFExtractor:
         return records, pending_values
 
     def _make_records_with_state(
-        self, lines: list[list[LTChar]], initial_pending_space: bool
+        self,
+        lines: Sequence[Sequence[CharacterGlyph]],
+        initial_pending_space: bool,
     ) -> tuple[list[LineRecord], list[bool], bool]:
         records: list[LineRecord] = []
         pending_space = initial_pending_space
@@ -602,7 +607,7 @@ class CharacterPDFExtractor:
         while pending_lines:
             line = pending_lines.popleft()
             runs: list[_CharacterRun] = []
-            previous: LTChar | None = None
+            previous: CharacterGlyph | None = None
             broke = False
             for index, char in enumerate(line):
                 char_text = char.get_text()

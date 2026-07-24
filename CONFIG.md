@@ -1080,10 +1080,10 @@ you're not guessing:
   the cursor's **pdfplumber** coordinates (`x0/x1`, `y0/y1`, `top/bottom`) and the Δ
   between clicked markers. These are the exact `x`/`y` your `PDFChunk` tests see.
   Everything stays local (obviously).
-- **`tools/dump_text_coords.py`** - `python3 tools/dump_text_coords.py file.pdf
-[--page N] [--grep WORD]` dumps, per text chunk, the transformation-matrix
-  translations (`cm[4]/cm[5]`, `tm[4]/tm[5]`) and font size that pypdf reports, to
-  cross-check positions. Throw this to an AI agent, or something.
+- **`tools/dump_text_coords.py`** - `python tools/dump_text_coords.py file.pdf
+  [--page N] [--grep WORD] [--level line|char]` dumps pdfminer bounding boxes,
+  fonts, and sizes. Line mode is concise; character mode exposes mixed styles
+  and raised footnote markers using the same coordinate backend as doc2tei.
 
 Workflow: find an element you want to classify (a session header, a footnote
 marker), measure its x/y/size, and write a `test` that brackets those values with a

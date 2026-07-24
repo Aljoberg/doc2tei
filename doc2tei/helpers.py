@@ -116,7 +116,10 @@ class SpeakerUtteranceHook:
             str(raw_identifier).removeprefix("#"), prefix="speaker"
         )
         self.mapping.setdefault(identifier, text)
-        push(self.utterance_tag, **{self.who_attribute: identifier})
+        push(
+            self.utterance_tag,
+            attribs={self.who_attribute: identifier},
+        )
 
     def export(self, result: ResultWithData) -> None:
         result.data[self.data_key] = dict(self.mapping)
