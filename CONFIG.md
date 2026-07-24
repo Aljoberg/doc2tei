@@ -1296,9 +1296,6 @@ outside it by default: `OUTPUT_DIR-metadata/<folder>/<component>/` contains
 `data.json`, `diagnostics.json`, `status.json`, and any `debug.log`, while the
 audit root itself owns `batch-manifest.json` and the default SIstory cache.
 Choose an explicit location with `--metadata-dir REVIEW_DIR`.
-Legacy in-corpus sidecars and default batch artifacts are moved to that audit
-tree on a best-effort basis during the first rerun; conflicting files are
-retained with a `-legacy` suffix.
 
 Hard per-document failures are converted into reviewable fallback bundles and
 reported as `recovered`; they do not stop other documents or make the batch

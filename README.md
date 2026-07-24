@@ -90,9 +90,6 @@ paired with a sibling `tei-output-metadata` tree containing
 `<subcorpus>/<component>/data.json`, `diagnostics.json`, `status.json`, and any
 `debug.log`. The batch manifest and default SIstory source cache are kept there
 too. Use `--metadata-dir D:\review-files` to choose another audit location.
-On the first rerun after upgrading, recognized sidecars, the old manifest, and
-the old default SIstory cache are relocated from the corpus on a best-effort
-basis without discarding name conflicts.
 The original source filename is still the document's main TEI title. Reliably
 inferred folder/term and date metadata are added as a subordinate title,
 `<meeting>`, and header dates.

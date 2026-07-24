@@ -15,7 +15,6 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import sys
 import time
 import traceback
@@ -316,47 +315,6 @@ def default_metadata_root(output_root: str | Path) -> Path:
 
     output = Path(output_root).expanduser().resolve()
     return output.parent / f"{output.name or 'output'}-metadata"
-
-
-def _migrate_legacy_metadata(job: BatchJob) -> None:
-    """Best-effort relocation of sidecars made by the old in-corpus layout."""
-
-    if job.metadata_group is None:
-        return
-    legacy = Path(job.group) / "metadata" / job.title
-    destination = metadata_dir(job)
-    if os.path.normcase(str(legacy.absolute())) == os.path.normcase(
-        str(destination.absolute())
-    ):
-        return
-    try:
-        if not legacy.is_dir():
-            return
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        if not destination.exists():
-            shutil.move(str(legacy), str(destination))
-        else:
-            for child in legacy.iterdir():
-                target = destination / child.name
-                if target.exists():
-                    stem, suffix = (
-                        (child.stem, child.suffix)
-                        if child.is_file()
-                        else (child.name, "")
-                    )
-                    number = 1
-                    while target.exists():
-                        marker = "legacy" if number == 1 else f"legacy-{number}"
-                        target = destination / f"{stem}-{marker}{suffix}"
-                        number += 1
-                shutil.move(str(child), str(target))
-            legacy.rmdir()
-        # Concurrent jobs can race here; a non-empty/already-removed parent is
-        # harmless and must never turn an otherwise valid conversion into an
-        # error.
-        legacy.parent.rmdir()
-    except OSError:
-        pass
 
 
 def document_list_person_path(job: BatchJob) -> Path:
@@ -1574,7 +1532,6 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
     meta = metadata_dir(job)
     source = Path(job.source)
     config = Path(options.config)
-    _migrate_legacy_metadata(job)
     meta.mkdir(parents=True, exist_ok=True)
     fingerprint = _job_fingerprint(job, options)
     previous = _completed_status(job, fingerprint, options)
@@ -1666,7 +1623,6 @@ def _recover_worker_failure(
     source = Path(job.source)
     config = Path(options.config)
     try:
-        _migrate_legacy_metadata(job)
         metadata_dir(job).mkdir(parents=True, exist_ok=True)
         fallback = _failure_parse_result(
             source,

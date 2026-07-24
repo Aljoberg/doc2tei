@@ -433,31 +433,6 @@ def test_batch_shortens_unsafe_and_excessively_long_output_paths(tmp_path):
     )
 
 
-def test_batch_migrates_legacy_in_corpus_metadata_without_data_loss(tmp_path):
-    group = tmp_path / "corpus" / "conference"
-    external_group = tmp_path / "audit" / "conference"
-    legacy = group / "metadata" / "component"
-    destination = external_group / "component"
-    legacy.mkdir(parents=True)
-    destination.mkdir(parents=True)
-    (legacy / "data.json").write_text("old", encoding="utf-8")
-    (legacy / "status.json").write_text("status", encoding="utf-8")
-    (destination / "data.json").write_text("current", encoding="utf-8")
-    job = BatchJob(
-        "source.pdf",
-        str(group),
-        "component",
-        metadata_group=str(external_group),
-    )
-
-    batch_module._migrate_legacy_metadata(job)
-
-    assert (destination / "data.json").read_text(encoding="utf-8") == "current"
-    assert (destination / "data-legacy.json").read_text(encoding="utf-8") == "old"
-    assert (destination / "status.json").read_text(encoding="utf-8") == "status"
-    assert not (group / "metadata").exists()
-
-
 def test_batch_discovers_long_local_source_paths(tmp_path):
     source_root = tmp_path / "source"
     deep = source_root / ("a" * 100) / ("b" * 100)
