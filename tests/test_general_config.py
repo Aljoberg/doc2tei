@@ -1043,6 +1043,28 @@ def test_auto_ids_and_speaker_ids_recover_digit_prefixes(tmp_path):
     assert utterance.attrib["who"].startswith("#speaker-")
 
 
+def test_auto_ids_can_use_the_final_batch_component_stem(tmp_path):
+    source = tmp_path / "old source filename.pdf"
+    source.touch()
+    component = "ParlaMint-SI_1969-09-01-sklic-05-01"
+
+    result = parse_document(
+        source,
+        config=CONFIG_PATH,
+        chunks=[pdf_line("Predsednik Janez Novak: Pozdravljeni.")],
+        id_prefix=component,
+    )
+
+    generated = [
+        element.attrib["xml:id"]
+        for element in result.root.iter()
+        if "xml:id" in element.attrib and "." in element.attrib["xml:id"]
+    ]
+    assert generated
+    assert all(identifier.startswith(f"{component}.") for identifier in generated)
+    assert all("old-source-filename" not in identifier for identifier in generated)
+
+
 def test_empty_and_invalid_speaker_mappings_always_build_a_list_person():
     empty = build_list_person({})
     placeholder = empty.find("person")

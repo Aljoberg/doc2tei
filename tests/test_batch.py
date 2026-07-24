@@ -259,11 +259,12 @@ def test_batch_job_writes_outputs_and_skips_an_unchanged_bundle(tmp_path, monkey
     loaded = _loaded_config(config_path)
     calls = 0
 
-    def fake_parse(input_path, *, config):
+    def fake_parse(input_path, *, config, id_prefix=None):
         nonlocal calls
         calls += 1
         assert Path(input_path) == source
         assert config.config["page_workers"] == 1
+        assert id_prefix == job.title
         root, content = engine.default_document()
         ET.SubElement(content, "p").text = "retained text"
         return ParseResult(

@@ -123,7 +123,9 @@ paired with a sibling `tei-output-metadata` tree containing
 too. Use `--metadata-dir D:\review-files` to choose another audit location.
 The original source filename is still the document's main TEI title. Reliably
 inferred folder/term and date metadata are added as a subordinate title,
-`<meeting>`, and header dates.
+`<meeting>`, and header dates. Automatically generated structural `xml:id`
+values use the final ParlaMint component stem rather than the old source
+filename.
 
 `--corpus-code` controls the ISO country/region part of the filename (default
 `SI`; for example, `--corpus-code ES-CT`). When no defensible transcript date

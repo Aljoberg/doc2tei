@@ -625,7 +625,10 @@ a ParlaMint-style generated id (`<input-basename>.<tag><N>`, e.g.
 `slo-53-899.seg12`, counted per tag) unless the push already provides an
 explicit `xml:id`. Cosmetic wrappers (`<emph>`, `<hi>`, `<ref>`) are never
 auto-id'd. Invalid filename characters and digit-leading basenames are repaired
-to conservative XML names. The default is `False`.
+to conservative XML names. During batch conversion, the final ParlaMint
+component stem replaces the input basename, so the root and descendants use
+consistent IDs such as `ParlaMint-SI_1969-09-01-sklic-05-01.seg12`. The default
+is `False`.
 
 With `"recover_errors": True`, document-content failures in extraction, rule
 tests/actions, lifecycle hooks, stack closing, or header count filling are

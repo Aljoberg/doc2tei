@@ -127,29 +127,26 @@ filename: str
 # generated xml:id on structural (non-cosmetic) elements that don't have one
 auto_xml_ids = False
 id_counters = defaultdict(int)
+# Batch parsing supplies the final ParlaMint component stem before any rule
+# pushes an element. Standalone parsing leaves this unset and keeps using the
+# extensionless source filename.
+id_prefix: str | None = None
 
 
-def next_id(tag: str | ET.Element):
+def next_id(tag: str | ET.Element) -> int:
     # 1-based, following the ParlaMint id convention (seg1, u1, ...)
     name = tag if isinstance(tag, str) else tag.tag
     id_counters[name] += 1
     return id_counters[name]
 
 
-# (filename, extensionless form) pair so the split is not redone per element
-_id_prefix_cache: tuple[str, str] | None = None
-
-
-def gen_id(tag: str | ET.Element):
-    global _id_prefix_cache
+def gen_id(tag: str | ET.Element) -> str:
     idx = next_id(tag)
     name = tag if isinstance(tag, str) else tag.tag
-    cache = _id_prefix_cache
-    if cache is None or cache[0] != filename:
-        cache = (filename, ".".join(filename.split(".")[:-1]))
-        _id_prefix_cache = cache
-
-    return sanitize_xml_id(f"{cache[1]}.{name}{idx}", prefix="doc")
+    prefix = id_prefix
+    if prefix is None:
+        prefix = filename.rsplit(".", 1)[0] if "." in filename else filename
+    return sanitize_xml_id(f"{prefix}.{name}{idx}", prefix="doc")
 
 
 def reset(document: tuple[ET.Element, ET.Element] | None = None) -> None:
@@ -159,7 +156,7 @@ def reset(document: tuple[ET.Element, ET.Element] | None = None) -> None:
     content)`` tuple where ``content`` is the descendant element parsed
     content is appended into.
     """
-    global root, debate, children, stack, on_pop
+    global root, debate, children, stack, on_pop, id_prefix
     root, debate = document if document is not None else default_document()
     debate.text, debate.tail = "", ""
     children = []
@@ -167,6 +164,7 @@ def reset(document: tuple[ET.Element, ET.Element] | None = None) -> None:
         StackEntry(element=debate, children=children, last_elem=None, cosmetic=False)
     ]
     on_pop = None
+    id_prefix = None
     id_counters.clear()
 
 

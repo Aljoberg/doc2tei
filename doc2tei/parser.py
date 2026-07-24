@@ -680,8 +680,14 @@ def parse_document(
     *,
     config: str | Path | LoadedConfig,
     chunks: Iterable[Chunk] | None = None,
+    id_prefix: str | None = None,
 ) -> ParseResult:
-    """Parse one document and return XML, diagnostics and config-produced data."""
+    """Parse a document and return XML, diagnostics and config-produced data.
+
+    ``id_prefix`` optionally supplies the final component stem used by
+    automatically generated structural ``xml:id`` values. When omitted, IDs
+    retain the extensionless source filename used by standalone parsing.
+    """
 
     loaded = config if isinstance(config, LoadedConfig) else load_config(config)
     source = Path(input_path).expanduser().resolve()
@@ -707,6 +713,7 @@ def parse_document(
     on_pop = loaded.config.get("on_pop")
     engine.on_pop = cast(OnPop, on_pop) if callable(on_pop) else None
     engine.filename = basename(input_path)
+    engine.id_prefix = id_prefix
     engine.auto_xml_ids = bool(loaded.config.get("auto_xml_ids", False))
     try:
         header = _install_header(loaded.config.get("tei_header"))

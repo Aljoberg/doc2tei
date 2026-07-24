@@ -1650,7 +1650,11 @@ def process_batch_job(job: BatchJob, options: BatchOptions) -> BatchItemResult:
                 loaded = load_config(config)
                 _configure_page_workers(loaded, options.page_workers)
                 with redirect_stdout(debug_stream), redirect_stderr(debug_stream):
-                    parsed = parse_document(source, config=loaded)
+                    parsed = parse_document(
+                        source,
+                        config=loaded,
+                        id_prefix=job.title,
+                    )
                     _write_result_bundle(parsed, job, options)
                 recoveries = _result_recovery_count(parsed)
                 warnings = _result_warning_count(parsed)
