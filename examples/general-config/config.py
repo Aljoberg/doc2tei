@@ -1060,6 +1060,19 @@ def _merge_speaker_aliases(result) -> None:
 speaker_hook = SpeakerUtteranceHook(speaker_identifier)
 
 
+def make_document():
+    """Use ``body`` as the root for sibling front/debate/back divisions."""
+
+    tei = ET.Element(
+        "TEI",
+        version="3.3.0",
+        xmlns="http://www.tei-c.org/ns/1.0",
+    )
+    text = ET.SubElement(tei, "text")
+    body = ET.SubElement(text, "body")
+    return tei, body
+
+
 def _remove_empty_utterances(root: ET.Element) -> None:
     """Drop hook-created utterances that never received source text."""
 
@@ -1070,7 +1083,7 @@ def _remove_empty_utterances(root: ET.Element) -> None:
 
 
 def start_document():
-    """Keep the outer debate div division-only for schema-safe later heads."""
+    """Open front matter as the first direct division below ``body``."""
     reset_document_state()
     speaker_hook.reset()
     open_root_division("frontMatter")
@@ -1093,11 +1106,11 @@ def finish_document(result):
     if isinstance(profile_warnings, list) and profile_warnings:
         for warning in profile_warnings:
             result.diagnostics.recover("extractor.recovery", str(warning))
-    outer = engine.debate
-    for child in list(outer):
+    content_root = engine.debate
+    for child in list(content_root):
         if child.tag == "div" and child.attrib.get("type") == "frontMatter":
             if not ("".join(child.itertext()).strip() or list(child)):
-                outer.remove(child)
+                content_root.remove(child)
     artifacts = cast(list[dict[str, str]], _STATE["source_artifacts"])
     if artifacts:
         file_desc = result.root.find("teiHeader/fileDesc")
@@ -1511,6 +1524,7 @@ COSMETIC_ANNOTATIONS: PDFCosmeticAnnotations = {
 CONFIG: PDFConfig = {
     "debug": False,
     "mode": "pdf",
+    "document": make_document,
     "on_start": start_document,
     "on_pop": speaker_hook,
     "on_end": finish_document,

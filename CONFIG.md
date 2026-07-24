@@ -538,6 +538,11 @@ also start from it and just decorate (extra attributes, siblings, a
 different content `<div>`). `tei_header` composes with `document`: the header
 is inserted as the first child of whatever root the factory returns.
 
+The general config supplies its own body-rooted factory because it emits
+`frontMatter`, one or more `debateSection` divisions, and `backMatter` as
+siblings directly below `<body>`. The engine default remains division-rooted
+for older configs whose stack actions use that division as their anchor.
+
 ---
 
 ## The chunk model

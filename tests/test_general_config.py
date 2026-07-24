@@ -414,6 +414,31 @@ def test_second_session_heading_opens_a_new_debate_section(tmp_path):
     assert all(division.find("u") is not None for division in sessions)
 
 
+def test_general_divisions_are_identified_direct_children_of_body(tmp_path):
+    source = tmp_path / "sample.pdf"
+    source.touch()
+    result = parse_document(
+        source,
+        config=CONFIG_PATH,
+        chunks=[
+            pdf_line("Uvodno gradivo."),
+            pdf_line("12. SEJA", y=480.0, size=13.0),
+            pdf_line("Boris PreĹˇern: Hvala.", y=460.0),
+        ],
+    )
+
+    body = result.root.find("text/body")
+    assert body is not None
+    divisions = [child for child in body if child.tag == "div"]
+    assert [division.attrib.get("type") for division in divisions] == [
+        "frontMatter",
+        "debateSection",
+    ]
+    assert all(division.attrib.get("xml:id") for division in divisions)
+    assert body.find("div/div[@type='frontMatter']") is None
+    assert body.find("div/div[@type='debateSection']") is None
+
+
 def test_non_session_heading_uses_a_generic_section_division(tmp_path):
     source = tmp_path / "sample.pdf"
     source.touch()
